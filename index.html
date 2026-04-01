@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mes Commissions - Groupe Garcia</title>
+  <style>
+    /* ===== RESET ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ===== HEADER STICKY ===== */
+    .header {
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      padding: 24px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e8e8e8;
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.05s; }
+    .card:nth-child(3) { animation-delay: 0.1s; }
+    .card:nth-child(4) { animation-delay: 0.15s; }
+    .card:nth-child(5) { animation-delay: 0.2s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== CARD TITLES ===== */
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e60000;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .icon {
+      font-size: 18px;
+    }
+
+    /* ===== COMMISSION CARD (MAIN) ===== */
+    .commission-amount {
+      font-size: 52px;
+      font-weight: 800;
+      color: #e60000;
+      text-align: center;
+      line-height: 1;
+      margin: 20px 0;
+    }
+
+    .commission-label {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .commission-realise {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .commission-realise .amount {
+      color: #e60000;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    /* ===== JAUGE CIRCULAIRE ===== */
+    .gauge-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 16px auto 0;
+    }
+
+    .gauge-container svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .gauge-circle {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    .gauge-bg {
+      stroke: #e8e8e8;
+    }
+
+    .gauge-fill {
+      stroke: #e60000;
+      stroke-dasharray: 427;
+      stroke-dashoffset: 427;
+      transition: stroke-dashoffset 1.5s ease-out;
+    }
+
+    .gauge-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-weight: 700;
+      color: #e60000;
+      font-size: 16px;
+    }
+
+    /* ===== MARGD CARD ===== */
+    .marge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .marge-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .marge-label {
+      font-size: 13px;
+      color: #666;
+      flex: 1;
+    }
+
+    .marge-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e60000;
+      text-align: right;
+      min-width: 80px;
+    }
+
+    .marge-detail {
+      font-size: 12px;
+      color: #999;
+      text-align: right;
+    }
+
+    .palier-box {
+      background: #f9f9f9;
+      border-left: 4px solid #e60000;
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .palier-box strong {
+      color: #e60000;
+      font-weight: 700;
+    }
+
+    /* ===== ITEMS CARD ===== */
+    .item-row {
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    .item-values {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .item-value {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .item-value strong {
+      color: #e60000;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge.atteint {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge.en_cours {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.danger {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .badge.projection {
+      background: #e3f2fd;
+      color: #1565c0;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    /* ===== BARRE DE PROGRESSION ===== */
+    .progress-bar {
+      height: 8px;
+      background: #e8e8e8;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0;
+    }
+
+    .progress-fill.atteint {
+      background: linear-gradient(90deg, #28a745, #20c997);
+    }
+
+    .progress-fill.en_cours {
+      background: linear-gradient(90deg, #fd7e14, #ffc107);
+    }
+
+    .progress-fill.danger {
+      background: linear-gradient(90deg, #dc3545, #e74c3c);
+    }
+
+    .progress-subtext {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 12px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 120px);
+      padding: 20px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h2 {
+      color: #1a1a1a;
+      margin-bottom: 24px;
+      font-size: 20px;
+    }
+
+    .login-select {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 14px;
+      font-size: 16px;
+      background: #fafafa;
+      margin-bottom: 20px;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .login-select:focus {
+      outline: none;
+      border-color: #e60000;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .login-btn:active {
+      transform: scale(0.98);
+    }
+
+    .login-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* ===== LOADING SPINNER ===== */
+    .loading-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 120px);
+      gap: 20px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e8e8e8;
+      border-top-color: #e60000;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* ===== EOUTOH RETUURN ===== */
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 99;
+    }
+
+    .back-btn:active {
+      transform: scale(0.9);
+    }
+
+    .back-btn.visible {
+      display: flex;
+    }
+
+    /* ====== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .header {
+        padding: 20px 16px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 20px 16px;
+        margin-bottom: 12px;
+      }
+
+      .commission-amount {
+        font-size: 44px;
+      }
+
+      .gauge-container {
+        width: 140px;
+        height: 140px;
+      }
+    }
+  }
+  
+</style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mes Commissions - Groupe Garcia</title>
+  <style>
+    /* ===== RESET ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ===== HEADER STICKY ===== */
+    .header {
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      padding: 24px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e8e8e8;
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.05s; }
+    .card:nth-child(3) { animation-delay: 0.1s; }
+    .card:nth-child(4) { animation-delay: 0.15s; }
+    .card:nth-child(5) { animation-delay: 0.2s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== CARD TITLES ===== */
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e60000;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .icon {
+      font-size: 18px;
+    }
+
+in: 7000, max: 8000,  pct: 0.08 },
+      { min: 8000, max: 9000,  pct: 0.09 },
+      { min: 9000, max: Infinity, pct: 0.10 }
+    ];
+
+    // ===== BAREME RPV CHOLET =====
+    const PALIERS_RPV = [
+      { min: 0,     max: 18000, pct: 0 },
+      { min: 18000, max: 20000, pct: 0.01 },
+      { min: 20000, max: 22000, pct: 0.012 },
+      { min: 22000, max: 23000, pct: 0.024 },
+      { min: 23000, max: 24000, pct: 0.026 },
+      { min: 24000, max: 26000, pct: 0.028 },
+      { min: 26000, max: Infinity, pct: 0.03 }
+    ];
+
+    // ===== CODES D'AUTHENTIFICATION =====
+    const CODES_VENDEURS = {
+      "HASSENE":    "HASSENE1847",
+      "JULIE TLR":  "JULIE3291",
+      "AXEL":       "AXEL8903",
+      "PAULINE":    "PAULINE5274",
+      "RACHEL":     "RACHEL6138",
+      "ILIAN":      "ILIAN4562",
+      "ANAIS":      "ANAIS4721",
+      "LUCAS":      "LUCAS37395",
+      "LOUANE":      "LOUANE2648",
+      "EMMY":        "EMMY9173",
+      "CHLOE R":    "CHLOE8426",
+      "WILL":       "WILL3857",
+      "EMILIE":     "EMILIE6924",
+      "NATHAN":     "NATHAN1583",
+      "MEHDY":      "MEHDY7246",
+      "ROMAIN GP":  "ROMAIN5831"
+    };
+
+    // ===== CACHE DES DONNEES =====
+    let cachedSheetData = null;
+
+    // ============================================================
+    // LECTURE GOOGLE SHEETS (API publique gviz)
+    // ============================================================
+
+    /**
+     * Charger uº onglet du Google Sheet publie en JSON
+     * Utilise l'API Google Visualization Query
+     */
+    function fetchSheet(sheetName) {
+      return new Promise(function(resolve, reject) {
+        var url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+                  "/gviz/tqx?tqx=out:json&sheet=" + encodeURIComponent(sheetName);
+
+        fetch(url)
+          .then(function(response) { return response.text(); })
+          .then(function(text) {
+            // La reponse est est du JSONP : google.visualization.Query.setResponse({...})
+            var jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+            if (!jsonStr || !jsonStr[1]) {
+              reject(new Error("Format de reponse invalide pour l'onglet " + sheetName));
+              return;
+            }
+            var json = JSON.parse(jsonStr[1]);
+            if (json.status === "error") {
+              reject(new Error("Erreur Google Sheets: " + (json.errors ? json.errors[0].detailed_message : "inconnu")));
+              return;
+            }
+            // Convertir en tableau de lignes
+            var rows = [];
+            var table = json.table;
+            for (var i = 0; i < table.rows.length; i++) {
+              var row = [];
+              for (var j = 0; j < table.cols.length; j++) {
+                var cell = table.rows[i].c[j];
+                row.push(cell ? (cell.v !== null && cell.v !== undefined ? cell.v : "") : "");
+              }
+              rows.push(row);
+            }
+            resolve(rows);
+          })
+          .catch(reject);
+      });
+    }
+
+    /**
+     * Charge toutes les donnees necessaires
+     */
+    async function loadAllData() {
+      var results = await Promise.all([
+        fetchSheet("Dcnn\u00e9es_Commissions"),
+        fetchSheet("Items_Mois"),
+        fetchSheet("Config"),
+        fetchSheet("Mapping_Vendeurs")
+      ]);
+      return {
+        donneesCommissions: results[0],
+        itemsMois: results[1],
+        config: results[2],
+        mappingVendeurs: results[3]
+      };
+    }
+
+    // ============================================================
+    // AUTHENTIFICATION
+    // ============================================================
+
+    function verifierCode(codeEntre) {
+      var codeSaisi = codeEntre.trim().toUpperCase();
+
+      // D'abord chercher dans le mapping vendeurs (si charge)
+      if (cachedSheetData && cachedSheetData.mappingVendeurs) {
+        var mapping = cachedSheetData.mappingVendeurs;
+        // Chercher la colonne "Code"
+        // Les donnees du gviz n'incluent pas les en-tetes dans les rows si c'est la premiere ligne
+        // On va chercher dans toutes les lignes
+        for (var i = 0; i < mapping.length; i++) {
+          for (var j = 0; j < mapping[i].length; j++) {
+            if (mapping[i][j] && mapping[i][j].toString().toUpperCase().trim() === codeSaisi) {
+              var nomMapping = mapping[i][0] ? mapping[i][0].toString().trim() : "";
+              var nomComplet = trouverNomComplet(nomMapping);
+              return { success: true, nom: nomComplet || capitaliserNom(nomMapping) };
+            }
+          }
+        }
+      }
+
+      // Fallback : verifier dans les codes par defaut
+      var noms = Object.keys(CODES_VENDEURS);
+      for (var i = 0; i < noms.length; i++) {
+        if (CODES_VENDEURS[noms[i]].toUpperCase() === codeSaisi) {
+          var nomComplet = trouverNomComplet(noms[i]);
+          return { success: true, nom: nomComplet || capitaliserNom(noms[i]) };
+        }
+      }
+
+      return { success: false, message: "Code invalide. V\u00e9rifier votre code personnel." };
+    }
+
+    function trouverNomComplet(nomMapping) {
+      if (!cachedSheetData || !cachedSheetData.donneesCommissions) return null;var data = cachedSheetData.donneesCommissions;
+      var nomUpper = nomMapping.toUpperCase().trim();
+
+      for (var i = 0; i < data.length; i++) {
+        if (data[i][1] && data[i][1].toString().toUpperCase().trim().indexOf(nomUpper) >= 0) {
+          return data[i][1].toString().trim();
+        }
+      }
+      // Essayer avec le prenom seul
+      var prenom = nomUpper.split(' ')[0];
+      for (var i = 0; i < data.length; i++) {
+        if (data[i][1] && data[i][1].toString().toUpperCase().trim().indexOf(prenom) >= 0) {
+          return data[i][1].toString().trim();
+        }
+      }
+      return null;
+    }
+
+    function capitaliserNom(nom) {
+      return nom.split(' ').map(function(w) {
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+      }).join(' ');
+    }
+
+    // ============================================================
+    // CALCULS DE COMMUSSI%NOS
+    // ============================================================
+
+    function getCommissionsData(nomCollab) {
+      var data = cachedSheetData.donneesCommissions;
+      var collab = null;
+
+      for (var i = 0; i < data.length; i++) {
+        if (data[i][1] && data[i][1].toString().trim() === nomCollab) {
+          collab = {
+            codeBoutique: data[i][0] ? data[i][0].toString().trim() : "",
+            nom: data[i][1].toString().trim(),
+            role: data[i][2] ? data[i][2].toString().trim() : "Vendeur",
+            margeRealisee: parseFloat(data[i][3]) || 0,
+            nbMobiles: parseInt(data[i][4]) || 0,
+            nbGaranties: parseInt(data[i][5]) || 0,
+            nbCyber: parseInt(data[i][6]) || 0,
+            nbAssurances: parseInt(data[i][7]) || 0,
+            nbMobilesAssurance: parseInt(data[i][8]) || 0,
+            caAccessoires: parseFloat(data[i][9]) || 0,
+            jourOuvre: parseInt(data[i][10]) || 1,
+            nbJoursOuvres: parseInt(data[i][11]) || 22,
+            joursTravailles: parseInt(data[i][12]) || parseInt(data[i][11]) || 22
+          };
+          break;
+        }
+      }
+
+      if (!collab) return { error: "Collaborateur non trouv\u00e9" };
+
+      // Lire les items
+      var itemsData = cachedSheetData.itemsMois;
+      var items = [];
+      for (var i = 0; i < itemsData.length; i++) {
+        if (itemsData[i][0]) {
+          items.push({
+            nom: itemsData[i][0].toString().trim(),
+            objectif: parseFloat(itemsData[i][1]) || 0,
+            unite: itemsData[i][2] ? itemsData[i][2].toString().trim() : "",
+            poids: itemsData[i][3] ? itemsData[i][3].toString().trim() : "20%"
+          });
+        }
+      }
+
+      // Lire config
+      var configData = cachedSheetData.config;
+      var moisEnCours = (configData[0] && configData[0][0]) ? configData[0][0].toString().trim() : "Avril 2026";
+      var derniereMaj = (configData[0] && configData[0][1]) ? configData[0][1].toString().trim() : new Date().toLocaleString('fr-FR');
+
+      return calculerCommissions(collab, items, moisEnCours, derniereMaj);
+    }
+
+    function calculerCommissions(collab, items, moisEnCours, derniereMaj) {
+      if (collab.jourOuvre <= 0) collab.jourOuvre = 1;
+      if (collab.nbJoursOuvres <= 0) collab.nbJoursOuvres = 22;
+      if (!collab.joursTravailles || collab.joursTravailles <= 0) collab.joursTravailles = collab.nbJoursOuvres;
+
+      var joursTravaillesEcoules = Math.min(collab.jourOuvre, collab.joursTravailles);
+      var ratio = joursTravaillesEcoules / collab.joursTravailles;
+      var coefProjection = collab.joursTravailles / joursTravaillesEcoules;
+
+      var margeProjetee = collab.margeRealisee * coefProjection;
+      var paliers = collab.role === "RSV" ? PALIERS_RPV : PALIERS_VENDEUR;
+      var commissionRealisee = calculerCommissionMarge(collab.margeRealisee, paliers);
+      var commissionProjetee = calculerCommissionMarge(margeProjetee, paliers);
+
+      var prorata = collab.joursTravailles / collab.nbJoursOuvres;
+      var itemsResultat = calculerItems(collab, items, coefProjection, prorata);
+      var nbItemsAtteints = itemsResultat.filter(function(it) { return it.projectionAtteint; }).length;
+      var tauxItems = items.length > 0 ? nbItemsAtteints / items.length : 1;
+
+      var commissionModuleeRealisee = commissionRealisee * tauxItems;
+      var commissionModuleeProjetee = commissionProjetee * tauxItems;
+      var totalProjete = commissionModuleeProjetee;
+
+      var palierActuel = trouverPalier(margeProjetee, paliers);
+      var palierSuivant = trouverPalierSuivant(margeProjetee, paliers);
+return {
+        collab: {
+          nom: collab.nom,
+          boutique: BOUTIQUES[collab.codeBoutique] || collab.codeBoutique,
+          codeBoutique: collab.codeBoutique,
+          role: collab.role
+        },
+        mois: moisEnCours,
+        derniereMaj: derniereMaj,
+        progression: {
+          jourOuvre: collab.jourOuvre,
+          nbJoursOuvres: collab.nbJoursOuvres,
+          joursTravailles: collab.joursTravailles,
+          jpursTravaillesEcoules: jpursTravaillesEcoules,
+          ratio: ratio
+        },
+        marge: {
+          realisee: Math.round(collab.margeRealisee),
+          projetee: Math.round(margeProjetee),
+          palierActuel: palierActuel,
+          palierSuivant: palierSuivant,
+          manquePourProchainPalier: palierSuivant ? Math.max(0, palierSuivant.min - margeProjetee) : 0
+        },
+        commission: {
+          bruteRealisee: Math.round(commissionRealisee),
+          bruteProjetee: Math.round(commissionProjetee),
+          moduleeRealisee: Math.round(commissionModuleeRealisee),
+          moduleeProjetee: Math.round(commissionModuleeProjetee),
+          tauxItems: tauxItems,
+          nbItemsAtteints: nbItemsAtteints,
+          nbItemsTotal: items.length
+        },
+        items: itemsResultat,
+        total: {
+          projete: Math.round(totalProjete),
+          detail: "Commission marge modul\u00e9e par items"
+        }
+      };
+    }
+
+    function calculerCommissionMarge(marge, paliers) {
+      for (var i = paliers.length - 1; i >= 0; i--) {
+        if (marge >= paliers[i].min) {
+          return marge * paliers[i].pct;
+        }
+      }
+      return 0;
+    }
