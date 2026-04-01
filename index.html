@@ -905,7 +905,7 @@
       const m = data.marge;
       let html = '';
 
-      const pctProgressionCommission = Math.min((data.total.projete / (data.total.projete * 1.3)) * 100, 100);
+      const pctProgressionCommission = data.total.projete > 0 ? Math.min((data.total.projete / (data.total.projete * 1.3)) * 100, 100) : 0;
       const circumference = 2 * Math.PI * 68;
 
       html += `<div class="card"><div class="card-title"><span class="icon">💰</span> Commission projetée</div><div style="text-align: center;"><div class="commission-amount">${data.total.projete}€</div><div class="commission-label">Projection fin ${data.mois.split(' ')[0]}</div></div><div class="gauge-container"><svg width="100" height="100" viewBox="0 0 200 200"><circle class="gauge-circle gauge-bg" cx="100" cy="100" r="68"></circle><circle class="gauge-circle gauge-fill" cx="100" cy="100" r="68" data-percentage="${pctProgressionCommission}"></circle></svg><div class="gauge-text">${Math.round(pctProgressionCommission)}%</div></div><div class="commission-realise">Réalisé à date : <span class="amount">${c.moduleeRealisee}€</span><div style="font-size: 12px; color: #999; margin-top: 4px;">Jour ${data.progression.jourOuvre} / ${data.progression.joursTravailles || data.progression.nbJoursOuvres} travaillés${data.progression.joursTravailles && data.progression.joursTravailles < data.progression.nbJoursOuvres ? '<span style="font-size: 11px; color: #bbb;"> (sur ' + data.progression.nbJoursOuvres + ' ouvrés)</span>' : ''}</div></div></div>`;
