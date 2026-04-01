@@ -573,31 +573,44 @@
       document.getElementById('inputCode').focus();
     })();
 
+    var _jsonpCounter = 0;
     function fetchSheetData(sheetName) {
       return new Promise(function(resolve, reject) {
-        const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
-        const timeout = setTimeout(function() {
-          reject(new Error('Timeout: La feuille Google n\'a pas répondu après 10 secondes. Vérifiez que la feuille est publiée sur le web (Fichier > Partager > Publier sur le Web).'));
-        }, 10000);
+        var callbackName = '_sheetCallback_' + (++_jsonpCounter) + '_' + Date.now();
+        var timeout = setTimeout(function() {
+          delete window[callbackName];
+          var s = document.getElementById(callbackName);
+          if (s) s.remove();
+          reject(new Error('Timeout: La feuille Google n\'a pas répondu après 15 secondes. Vérifiez que la feuille est publiée sur le web (Fichier > Partager > Publier sur le Web).'));
+        }, 15000);
 
-        fetch(url)
-          .then(function(response) {
-            clearTimeout(timeout);
-            if (!response.ok) throw new Error('Erreur réseau: ' + response.status);
-            return response.text();
-          })
-          .then(function(text) {
-            const jsonStr = text.replace(/google\.visualization\.Query\.setResponse\(/, '').replace(/\);$/, '');
-            const json = JSON.parse(jsonStr);
-            if (json.status && json.status !== 'ok') {
-              throw new Error('Erreur Google Sheets: ' + (json.message || 'Feuille non trouvée'));
-            }
-            resolve(json);
-          })
-          .catch(function(error) {
-            clearTimeout(timeout);
-            reject(error);
-          });
+        window[callbackName] = function(response) {
+          clearTimeout(timeout);
+          delete window[callbackName];
+          var s = document.getElementById(callbackName);
+          if (s) s.remove();
+          if (response.status && response.status !== 'ok') {
+            reject(new Error('Erreur Google Sheets: ' + (response.message || 'Feuille non trouvée')));
+          } else {
+            resolve(response);
+          }
+        };
+
+        // Utiliser google.visualization.Query.setResponse comme callback JSONP
+        var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID
+          + '/gviz/tq?tqx=responseHandler:' + callbackName
+          + '&sheet=' + encodeURIComponent(sheetName);
+
+        var script = document.createElement('script');
+        script.id = callbackName;
+        script.src = url;
+        script.onerror = function() {
+          clearTimeout(timeout);
+          delete window[callbackName];
+          script.remove();
+          reject(new Error('Erreur réseau: impossible de charger les données. Vérifiez que la feuille est publiée sur le web.'));
+        };
+        document.head.appendChild(script);
       });
     }
 
