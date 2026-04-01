@@ -143,7 +143,7 @@
 
     .gauge-fill {
       stroke: #e60000;
-      stroke-dasharray: 427;
+      stroke-dasharray: 427; /* 2 * PI * 68 */
       stroke-dashoffset: 427;
       transition: stroke-dashoffset 1.5s ease-out;
     }
@@ -159,7 +159,7 @@
       font-size: 16px;
     }
 
-    /* ===== MARGD CARD ===== */
+    /* ===== MARGE CARD ===== */
     .marge-row {
       display: flex;
       justify-content: space-between;
@@ -425,7 +425,7 @@
       font-size: 14px;
     }
 
-    /* ===== EOUTOH RETUURN ===== */
+    /* ===== BOUTON RETOUR ===== */
     .back-btn {
       position: fixed;
       bottom: 20px;
@@ -454,7 +454,7 @@
       display: flex;
     }
 
-    /* ====== RESPONSIVE ===== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 600px) {
       .header {
         padding: 20px 16px;
@@ -482,378 +482,307 @@
         height: 140px;
       }
     }
-  }
-  
-</style>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mes Commissions - Groupe Garcia</title>
-  <style>
-    /* ===== RESET ===== */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  </style>
+</head>
+<body>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #1a1a1a;
-      min-height: 100vh;
-      padding-bottom: 100px;
-    }
+  <!-- HEADER -->
+  <div class="header">
+    <h1>MES COMMISSIONS</h1>
+    <p id="headerSubtitle">Groupe Garcia - Boutiques SFR</p>
+  </div>
 
-    /* ===== HEADER STICKY ===== */
-    .header {
-      background: linear-gradient(135deg, #e60000, #b30000);
-      color: white;
-      padding: 24px 20px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3);
-    }
+  <!-- ÉCRAN DE CONNEXION -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h2>Connexion</h2>
+      <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Entrez votre code personnel</p>
+      <input type="text" id="inputCode" class="login-select" placeholder="Ex: ANAIS4721" autocomplete="off" autocapitalize="characters" style="text-transform: uppercase; text-align: center; font-weight: 600; font-size: 20px; letter-spacing: 2px;">
+      <div id="loginError" style="color: #dc3545; font-size: 13px; margin-bottom: 12px; display: none;"></div>
+      <button class="login-btn" id="connectBtn" onclick="voirCommissions()">
+        CONNEXION
+      </button>
+    </div>
+  </div>
 
-    .header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin: 0;
-    }
+  <!-- ÉCRAN DASHBOARD -->
+  <div id="dashboard" class="container" style="display:none;"></div>
 
-    .header p {
-      font-size: 13px;
-      opacity: 0.85;
-      margin-top: 6px;
-    }
+  <!-- LOADING -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="spinner"></div>
+    <p class="loading-text">Calcul en cours...</p>
+  </div>
 
-    /* ===== CONTAINER ===== */
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 16px;
-    }
+  <!-- BOUTON RETOUR -->
+  <button class="back-btn" id="backBtn" onclick="retourLogin()" title="Changer de collaborateur">&#x2190;</button>
 
-    /* ===== CARD ===== */
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 24px 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border: 1px solid #e8e8e8;
-      animation: fadeInUp 0.4s ease-out forwards;
-    }
-
-    .card:nth-child(2) { animation-delay: 0.05s; }
-    .card:nth-child(3) { animation-delay: 0.1s; }
-    .card:nth-child(4) { animation-delay: 0.15s; }
-    .card:nth-child(5) { animation-delay: 0.2s; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== CARD TITLES ===== */
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #e60000;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-title .icon {
-      font-size: 18px;
-    }
-
-in: 7000, max: 8000,  pct: 0.08 },
-      { min: 8000, max: 9000,  pct: 0.09 },
-      { min: 9000, max: Infinity, pct: 0.10 }
-    ];
-
-    // ===== BAREME RPV CHOLET =====
-    const PALIERS_RPV = [
-      { min: 0,     max: 18000, pct: 0 },
-      { min: 18000, max: 20000, pct: 0.01 },
-      { min: 20000, max: 22000, pct: 0.012 },
-      { min: 22000, max: 23000, pct: 0.024 },
-      { min: 23000, max: 24000, pct: 0.026 },
-      { min: 24000, max: 26000, pct: 0.028 },
-      { min: 26000, max: Infinity, pct: 0.03 }
-    ];
-
-    // ===== CODES D'AUTHENTIFICATION =====
-    const CODES_VENDEURS = {
-      "HASSENE":    "HASSENE1847",
-      "JULIE TLR":  "JULIE3291",
-      "AXEL":       "AXEL8903",
-      "PAULINE":    "PAULINE5274",
-      "RACHEL":     "RACHEL6138",
-      "ILIAN":      "ILIAN4562",
-      "ANAIS":      "ANAIS4721",
-      "LUCAS":      "LUCAS37395",
-      "LOUANE":      "LOUANE2648",
-      "EMMY":        "EMMY9173",
-      "CHLOE R":    "CHLOE8426",
-      "WILL":       "WILL3857",
-      "EMILIE":     "EMILIE6924",
-      "NATHAN":     "NATHAN1583",
-      "MEHDY":      "MEHDY7246",
-      "ROMAIN GP":  "ROMAIN5831"
-    };
-
-    // ===== CACHE DES DONNEES =====
-    let cachedSheetData = null;
-
-    // ============================================================
-    // LECTURE GOOGLE SHEETS (API publique gviz)
-    // ============================================================
+  <script>
+    /**
+     * ===== INITIALISATION =====
+     * Écouter la touche Entrée sur le champ de code
+     */
+    (function initApp() {
+      document.getElementById('inputCode').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') voirCommissions();
+        // Masquer l'erreur quand l'utilisateur tape
+        document.getElementById('loginError').style.display = 'none';
+      });
+      // Focus auto sur le champ
+      document.getElementById('inputCode').focus();
+    })();
 
     /**
-     * Charger uº onglet du Google Sheet publie en JSON
-     * Utilise l'API Google Visualization Query
+     * ===== VOIR COMMISSIONS =====
+     * Vérifier le code puis charger les données
      */
-    function fetchSheet(sheetName) {
-      return new Promise(function(resolve, reject) {
-        var url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
-                  "/gviz/tqx?tqx=out:json&sheet=" + encodeURIComponent(sheetName);
+    function voirCommissions() {
+      const code = document.getElementById('inputCode').value.trim();
+      if (!code) {
+        afficherErreurLogin("Veuillez saisir votre code personnel");
+        return;
+      }
 
-        fetch(url)
-          .then(function(response) { return response.text(); })
-          .then(function(text) {
-            // La reponse est est du JSONP : google.visualization.Query.setResponse({...})
-            var jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
-            if (!jsonStr || !jsonStr[1]) {
-              reject(new Error("Format de reponse invalide pour l'onglet " + sheetName));
-              return;
-            }
-            var json = JSON.parse(jsonStr[1]);
-            if (json.status === "error") {
-              reject(new Error("Erreur Google Sheets: " + (json.errors ? json.errors[0].detailed_message : "inconnu")));
-              return;
-            }
-            // Convertir en tableau de lignes
-            var rows = [];
-            var table = json.table;
-            for (var i = 0; i < table.rows.length; i++) {
-              var row = [];
-              for (var j = 0; j < table.cols.length; j++) {
-                var cell = table.rows[i].c[j];
-                row.push(cell ? (cell.v !== null && cell.v !== undefined ? cell.v : "") : "");
-              }
-              rows.push(row);
-            }
-            resolve(rows);
-          })
-          .catch(reject);
+      // Désactiver le bouton pendant la vérification
+      document.getElementById('connectBtn').disabled = true;
+      document.getElementById('connectBtn').textContent = 'VÉRIFICATION...';
+      document.getElementById('loginError').style.display = 'none';
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result.success) {
+            // Code valide — charger les commissions
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'flex';
+            document.getElementById('backBtn').classList.add('visible');
+
+            google.script.run
+              .withSuccessHandler(afficherDashboard)
+              .withFailureHandler(function(err) {
+                console.error("Erreur calcul :", err);
+                afficherErreurLogin("Erreur de chargement. Réessayez.");
+                resetLoginBtn();
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('backBtn').classList.remove('visible');
+              })
+              .getCommissionsData(result.nom);
+          } else {
+            // Code invalide
+            afficherErreurLogin(result.message);
+            resetLoginBtn();
+          }
+        })
+        .withFailureHandler(function(err) {
+          console.error("Erreur vérification :", err);
+          afficherErreurLogin("Erreur de connexion. Réessayez.");
+          resetLoginBtn();
+        })
+        .verifierCode(code);
+    }
+
+    function afficherErreurLogin(msg) {
+      const el = document.getElementById('loginError');
+      el.textContent = msg;
+      el.style.display = 'block';
+      // Secouer le champ
+      const input = document.getElementById('inputCode');
+      input.style.borderColor = '#dc3545';
+      setTimeout(function() { input.style.borderColor = '#e0e0e0'; }, 1500);
+    }
+
+    function resetLoginBtn() {
+      document.getElementById('connectBtn').disabled = false;
+      document.getElementById('connectBtn').textContent = 'CONNEXION';
+    }
+
+    /**
+     * ===== AFFICHER LE DASHBOARD =====
+     */
+    function afficherDashboard(data) {
+      if (data.error) {
+        alert("Erreur : " + data.error);
+        retourLogin();
+        return;
+      }
+
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('headerSubtitle').textContent =
+        data.collab.nom + ' • ' + data.collab.boutique + ' • ' + data.mois;
+
+      const dashboard = document.getElementById('dashboard');
+      dashboard.style.display = 'block';
+      dashboard.innerHTML = construireDashboardHTML(data);
+
+      // Animer les jauges après le rendu
+      setTimeout(animerJauges, 100);
+    }
+
+    /**
+     * ===== CONSTRUIRE LE HTML DU DASHBOARD =====
+     */
+    function construireDashboardHTML(data) {
+      const c = data.commission;
+      const m = data.marge;
+
+      let html = '';
+
+      // CARD 1 : COMMISSION PROJETÉE
+      const pctProgressionCommission = Math.min((data.total.projete / (data.total.projete * 1.3)) * 100, 100);
+      const circumference = 2 * Math.PI * 68; // rayon 68px
+
+      html += `
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">💰</span> Commission projetée
+          </div>
+          <div style="text-align: center;">
+            <div class="commission-amount">${data.total.projete}€</div>
+            <div class="commission-label">Projection fin ${data.mois.split(' ')[0]}</div>
+          </div>
+
+          <div class="gauge-container">
+            <svg width="100" height="100" viewBox="0 0 200 200">
+              <circle class="gauge-circle gauge-bg" cx="100" cy="100" r="68"></circle>
+              <circle class="gauge-circle gauge-fill" cx="100" cy="100" r="68" data-percentage="${pctProgressionCommission}"></circle>
+            </svg>
+            <div class="gauge-text">${Math.round(pctProgressionCommission)}%</div>
+          </div>
+
+          <div class="commission-realise">
+            Réalisé à date : <span class="amount">${data.commission.moduleeRealisee}€</span>
+            <div style="font-size: 12px; color: #999; margin-top: 4px;">
+              Jour ${data.progression.jourOuvre} / ${data.progression.joursTravailles || data.progression.nbJoursOuvres} travaillés
+              ${data.progression.joursTravailles && data.progression.joursTravailles < data.progression.nbJoursOuvres
+                ? '<span style="font-size: 11px; color: #bbb;"> (sur ' + data.progression.nbJoursOuvres + ' ouvrés)</span>'
+                : ''}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // CARD 2 : MARGE
+      html += `
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">📊</span> Marge
+          </div>
+
+          <div class="marge-row">
+            <span class="marge-label">Réalisée</span>
+            <span class="marge-value">${m.realisee}€</span>
+          </div>
+
+          <div class="marge-row">
+            <span class="marge-label">Projetée fin de mois</span>
+            <span class="marge-value">${m.projetee}€</span>
+          </div>
+
+          <div class="marge-row">
+            <span class="marge-label">Palier actuel</span>
+            <span class="marge-value">${m.palierActuel.pct}%</span>
+            <span class="marge-detail">${m.palierActuel.min}€ - ${m.palierActuel.max === Infinity ? '+' : m.palierActuel.max}€</span>
+          </div>
+
+          ${m.palierSuivant ? `
+            <div class="palier-box">
+              <strong>Prochain palier :</strong> ${m.palierSuivant.pct}% à partir de ${m.palierSuivant.min}€
+              <br><strong style="color: #666;">Il manque :</strong> ${Math.round(m.manquePourProchainPalier)}€
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // CARD 3 : ITEMS DU MOIS
+      html += `
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">✅</span> Items du mois
+            <span style="margin-left: auto; font-size: 13px; font-weight: 600;">
+              ${c.nbItemsAtteints}/${c.nbItemsTotal} atteints
+            </span>
+          </div>
+      `;
+
+      data.items.forEach(function(item) {
+        const pctBar = Math.min((item.pctAtteinte / 1.5) * 100, 100);
+        const isRatio = item.nom.includes('Taux') || item.nom.includes('Garantie');
+        const labelRealise = isRatio ? item.realise + item.unite : item.realise + ' ' + item.unite;
+        const labelObjectif = isRatio ? item.objectif + item.unite : item.objectif + ' ' + item.unite;
+        const labelProjete = isRatio ? item.projete + item.unite : item.projete + ' ' + item.unite;
+        const isProratise = item.objectifBase && item.objectifBase !== item.objectif;
+
+        html += `
+          <div class="item-row">
+            <div class="item-header">
+              <span class="item-name">${item.nom}</span>
+              <span class="badge ${item.statut}">${item.statut === 'atteint' ? '✓ Atteint' : item.statut === 'en_cours' ? '◐ En cours' : '✗ Danger'}</span>
+            </div>
+            <div class="item-values">
+              <span class="item-value">
+                Réalisé: <strong>${labelRealise}</strong>
+              </span>
+              <span class="item-value">
+                / <strong>${labelObjectif}</strong>
+                ${isProratise ? '<span style="font-size: 11px; color: #bbb; text-decoration: line-through; margin-left: 4px;">' + item.objectifBase + '</span>' : ''}
+              </span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill ${item.statut}" data-width="${pctBar}"></div>
+            </div>
+            <div class="progress-subtext">
+              En projection: <strong>${labelProjete}</strong>
+              ${item.projectionAtteint ? '<span class="badge projection">✓ Atteint en fin de mois</span>' : '<span class="badge projection" style="background: #fff3cd; color: #856404;">⚠ Non atteint en projection</span>'}
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+
+      // FOOTER
+      html += `
+        <div class="footer">
+          Dernière mise à jour : ${data.derniereMaj}
+          <br><span style="font-size: 11px; color: #bbb;">v1.0 - Groupe Garcia</span>
+        </div>
+      `;
+
+      return html;
+    }
+
+    /**
+     * ===== ANIMER LES JAUGES =====
+     */
+    function animerJauges() {
+      document.querySelectorAll('.gauge-fill').forEach(function(circle) {
+        const pct = parseFloat(circle.dataset.percentage) || 0;
+        const circumference = 2 * Math.PI * 68;
+        const offset = circumference - (pct / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      });
+
+      document.querySelectorAll('.progress-fill').forEach(function(bar) {
+        const width = bar.dataset.width || '0';
+        bar.style.width = width + '%';
       });
     }
 
     /**
-     * Charge toutes les donnees necessaires
+     * ===== RETOUR À LA CONNEXION =====
      */
-    async function loadAllData() {
-      var results = await Promise.all([
-        fetchSheet("Dcnn\u00e9es_Commissions"),
-        fetchSheet("Items_Mois"),
-        fetchSheet("Config"),
-        fetchSheet("Mapping_Vendeurs")
-      ]);
-      return {
-        donneesCommissions: results[0],
-        itemsMois: results[1],
-        config: results[2],
-        mappingVendeurs: results[3]
-      };
+    function retourLogin() {
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('backBtn').classList.remove('visible');
+      document.getElementById('headerSubtitle').textContent = 'Groupe Garcia - Boutiques SFR';
+      document.getElementById('inputCode').value = '';
+      document.getElementById('loginError').style.display = 'none';
+      resetLoginBtn();
+      document.getElementById('inputCode').focus();
     }
+  </script>
 
-    // ============================================================
-    // AUTHENTIFICATION
-    // ============================================================
-
-    function verifierCode(codeEntre) {
-      var codeSaisi = codeEntre.trim().toUpperCase();
-
-      // D'abord chercher dans le mapping vendeurs (si charge)
-      if (cachedSheetData && cachedSheetData.mappingVendeurs) {
-        var mapping = cachedSheetData.mappingVendeurs;
-        // Chercher la colonne "Code"
-        // Les donnees du gviz n'incluent pas les en-tetes dans les rows si c'est la premiere ligne
-        // On va chercher dans toutes les lignes
-        for (var i = 0; i < mapping.length; i++) {
-          for (var j = 0; j < mapping[i].length; j++) {
-            if (mapping[i][j] && mapping[i][j].toString().toUpperCase().trim() === codeSaisi) {
-              var nomMapping = mapping[i][0] ? mapping[i][0].toString().trim() : "";
-              var nomComplet = trouverNomComplet(nomMapping);
-              return { success: true, nom: nomComplet || capitaliserNom(nomMapping) };
-            }
-          }
-        }
-      }
-
-      // Fallback : verifier dans les codes par defaut
-      var noms = Object.keys(CODES_VENDEURS);
-      for (var i = 0; i < noms.length; i++) {
-        if (CODES_VENDEURS[noms[i]].toUpperCase() === codeSaisi) {
-          var nomComplet = trouverNomComplet(noms[i]);
-          return { success: true, nom: nomComplet || capitaliserNom(noms[i]) };
-        }
-      }
-
-      return { success: false, message: "Code invalide. V\u00e9rifier votre code personnel." };
-    }
-
-    function trouverNomComplet(nomMapping) {
-      if (!cachedSheetData || !cachedSheetData.donneesCommissions) return null;var data = cachedSheetData.donneesCommissions;
-      var nomUpper = nomMapping.toUpperCase().trim();
-
-      for (var i = 0; i < data.length; i++) {
-        if (data[i][1] && data[i][1].toString().toUpperCase().trim().indexOf(nomUpper) >= 0) {
-          return data[i][1].toString().trim();
-        }
-      }
-      // Essayer avec le prenom seul
-      var prenom = nomUpper.split(' ')[0];
-      for (var i = 0; i < data.length; i++) {
-        if (data[i][1] && data[i][1].toString().toUpperCase().trim().indexOf(prenom) >= 0) {
-          return data[i][1].toString().trim();
-        }
-      }
-      return null;
-    }
-
-    function capitaliserNom(nom) {
-      return nom.split(' ').map(function(w) {
-        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-      }).join(' ');
-    }
-
-    // ============================================================
-    // CALCULS DE COMMUSSI%NOS
-    // ============================================================
-
-    function getCommissionsData(nomCollab) {
-      var data = cachedSheetData.donneesCommissions;
-      var collab = null;
-
-      for (var i = 0; i < data.length; i++) {
-        if (data[i][1] && data[i][1].toString().trim() === nomCollab) {
-          collab = {
-            codeBoutique: data[i][0] ? data[i][0].toString().trim() : "",
-            nom: data[i][1].toString().trim(),
-            role: data[i][2] ? data[i][2].toString().trim() : "Vendeur",
-            margeRealisee: parseFloat(data[i][3]) || 0,
-            nbMobiles: parseInt(data[i][4]) || 0,
-            nbGaranties: parseInt(data[i][5]) || 0,
-            nbCyber: parseInt(data[i][6]) || 0,
-            nbAssurances: parseInt(data[i][7]) || 0,
-            nbMobilesAssurance: parseInt(data[i][8]) || 0,
-            caAccessoires: parseFloat(data[i][9]) || 0,
-            jourOuvre: parseInt(data[i][10]) || 1,
-            nbJoursOuvres: parseInt(data[i][11]) || 22,
-            joursTravailles: parseInt(data[i][12]) || parseInt(data[i][11]) || 22
-          };
-          break;
-        }
-      }
-
-      if (!collab) return { error: "Collaborateur non trouv\u00e9" };
-
-      // Lire les items
-      var itemsData = cachedSheetData.itemsMois;
-      var items = [];
-      for (var i = 0; i < itemsData.length; i++) {
-        if (itemsData[i][0]) {
-          items.push({
-            nom: itemsData[i][0].toString().trim(),
-            objectif: parseFloat(itemsData[i][1]) || 0,
-            unite: itemsData[i][2] ? itemsData[i][2].toString().trim() : "",
-            poids: itemsData[i][3] ? itemsData[i][3].toString().trim() : "20%"
-          });
-        }
-      }
-
-      // Lire config
-      var configData = cachedSheetData.config;
-      var moisEnCours = (configData[0] && configData[0][0]) ? configData[0][0].toString().trim() : "Avril 2026";
-      var derniereMaj = (configData[0] && configData[0][1]) ? configData[0][1].toString().trim() : new Date().toLocaleString('fr-FR');
-
-      return calculerCommissions(collab, items, moisEnCours, derniereMaj);
-    }
-
-    function calculerCommissions(collab, items, moisEnCours, derniereMaj) {
-      if (collab.jourOuvre <= 0) collab.jourOuvre = 1;
-      if (collab.nbJoursOuvres <= 0) collab.nbJoursOuvres = 22;
-      if (!collab.joursTravailles || collab.joursTravailles <= 0) collab.joursTravailles = collab.nbJoursOuvres;
-
-      var joursTravaillesEcoules = Math.min(collab.jourOuvre, collab.joursTravailles);
-      var ratio = joursTravaillesEcoules / collab.joursTravailles;
-      var coefProjection = collab.joursTravailles / joursTravaillesEcoules;
-
-      var margeProjetee = collab.margeRealisee * coefProjection;
-      var paliers = collab.role === "RSV" ? PALIERS_RPV : PALIERS_VENDEUR;
-      var commissionRealisee = calculerCommissionMarge(collab.margeRealisee, paliers);
-      var commissionProjetee = calculerCommissionMarge(margeProjetee, paliers);
-
-      var prorata = collab.joursTravailles / collab.nbJoursOuvres;
-      var itemsResultat = calculerItems(collab, items, coefProjection, prorata);
-      var nbItemsAtteints = itemsResultat.filter(function(it) { return it.projectionAtteint; }).length;
-      var tauxItems = items.length > 0 ? nbItemsAtteints / items.length : 1;
-
-      var commissionModuleeRealisee = commissionRealisee * tauxItems;
-      var commissionModuleeProjetee = commissionProjetee * tauxItems;
-      var totalProjete = commissionModuleeProjetee;
-
-      var palierActuel = trouverPalier(margeProjetee, paliers);
-      var palierSuivant = trouverPalierSuivant(margeProjetee, paliers);
-return {
-        collab: {
-          nom: collab.nom,
-          boutique: BOUTIQUES[collab.codeBoutique] || collab.codeBoutique,
-          codeBoutique: collab.codeBoutique,
-          role: collab.role
-        },
-        mois: moisEnCours,
-        derniereMaj: derniereMaj,
-        progression: {
-          jourOuvre: collab.jourOuvre,
-          nbJoursOuvres: collab.nbJoursOuvres,
-          joursTravailles: collab.joursTravailles,
-          jpursTravaillesEcoules: jpursTravaillesEcoules,
-          ratio: ratio
-        },
-        marge: {
-          realisee: Math.round(collab.margeRealisee),
-          projetee: Math.round(margeProjetee),
-          palierActuel: palierActuel,
-          palierSuivant: palierSuivant,
-          manquePourProchainPalier: palierSuivant ? Math.max(0, palierSuivant.min - margeProjetee) : 0
-        },
-        commission: {
-          bruteRealisee: Math.round(commissionRealisee),
-          bruteProjetee: Math.round(commissionProjetee),
-          moduleeRealisee: Math.round(commissionModuleeRealisee),
-          moduleeProjetee: Math.round(commissionModuleeProjetee),
-          tauxItems: tauxItems,
-          nbItemsAtteints: nbItemsAtteints,
-          nbItemsTotal: items.length
-        },
-        items: itemsResultat,
-        total: {
-          projete: Math.round(totalProjete),
-          detail: "Commission marge modul\u00e9e par items"
-        }
-      };
-    }
-
-    function calculerCommissionMarge(marge, paliers) {
-      for (var i = paliers.length - 1; i >= 0; i--) {
-        if (marge >= paliers[i].min) {
-          return marge * paliers[i].pct;
-        }
-      }
-      return 0;
-    }
+</body>
+</html>
