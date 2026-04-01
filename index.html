@@ -1,984 +1,577 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mes Commissions - Groupe Garcia</title>
-  <style>
-    /* ===== RESET ===== */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #1a1a1a;
-      min-height: 100vh;
-      padding-bottom: 100px;
-    }
-
-    /* ===== HEADER STICKY ===== */
-    .header {
-      background: linear-gradient(135deg, #e60000, #b30000);
-      color: white;
-      padding: 24px 20px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3);
-    }
-
-    .header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin: 0;
-    }
-
-    .header p {
-      font-size: 13px;
-      opacity: 0.85;
-      margin-top: 6px;
-    }
-
-    /* ===== CONTAINER ===== */
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    /* ===== CARD ===== */
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 24px 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border: 1px solid #e8e8e8;
-      animation: fadeInUp 0.4s ease-out forwards;
-    }
-
-    .card:nth-child(2) { animation-delay: 0.05s; }
-    .card:nth-child(3) { animation-delay: 0.1s; }
-    .card:nth-child(4) { animation-delay: 0.15s; }
-    .card:nth-child(5) { animation-delay: 0.2s; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== CARD TITLES ===== */
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #e60000;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-title .icon {
-      font-size: 18px;
-    }
-
-    /* ===== COMMISSION CARD (MAIN) ===== */
-    .commission-amount {
-      font-size: 52px;
-      font-weight: 800;
-      color: #e60000;
-      text-align: center;
-      line-height: 1;
-      margin: 20px 0;
-    }
-
-    .commission-label {
-      text-align: center;
-      color: #888;
-      font-size: 13px;
-      margin-top: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .commission-realise {
-      text-align: center;
-      color: #666;
-      font-size: 14px;
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px solid #f0f0f0;
-    }
-
-    .commission-realise .amount {
-      color: #e60000;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    /* ===== JAUGE CIRCULAIRE ===== */
-    .gauge-container {
-      position: relative;
-      width: 160px;
-      height: 160px;
-      margin: 16px auto 0;
-    }
-
-    .gauge-container svg {
-      transform: rotate(-90deg);
-      width: 100%;
-      height: 100%;
-    }
-
-    .gauge-circle {
-      fill: none;
-      stroke-width: 8;
-      stroke-linecap: round;
-    }
-
-    .gauge-bg {
-      stroke: #e8e8e8;
-    }
-
-    .gauge-fill {
-      stroke: #e60000;
-      stroke-dasharray: 427;
-      stroke-dashoffset: 427;
-      transition: stroke-dashoffset 1.5s ease-out;
-    }
-
-    .gauge-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      font-weight: 700;
-      color: #e60000;
-      font-size: 16px;
-    }
-
-    /* ===== MARGE CARD ===== */
-    .marge-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .marge-row:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .marge-label {
-      font-size: 13px;
-      color: #666;
-      flex: 1;
-    }
-
-    .marge-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #e60000;
-      text-align: right;
-      min-width: 80px;
-    }
-
-    .marge-detail {
-      font-size: 12px;
-      color: #999;
-      text-align: right;
-    }
-
-    .palier-box {
-      background: #f9f9f9;
-      border-left: 4px solid #e60000;
-      padding: 12px 14px;
-      border-radius: 0 8px 8px 0;
-      margin-top: 12px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .palier-box strong {
-      color: #e60000;
-      font-weight: 700;
-    }
-
-    /* ===== ITEMS CARD ===== */
-    .item-row {
-      padding: 16px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .item-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .item-name {
-      font-weight: 600;
-      font-size: 14px;
-      color: #1a1a1a;
-    }
-
-    .item-values {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .item-value {
-      font-size: 13px;
-      color: #666;
-    }
-
-    .item-value strong {
-      color: #e60000;
-      font-weight: 700;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .badge.atteint {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .badge.en_cours {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .badge.danger {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .badge.projection {
-      background: #e3f2fd;
-      color: #1565c0;
-      font-size: 10px;
-      margin-top: 4px;
-    }
-
-    /* ===== BARRE DE PROGRESSION ===== */
-    .progress-bar {
-      height: 8px;
-      background: #e8e8e8;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      width: 0;
-    }
-
-    .progress-fill.atteint {
-      background: linear-gradient(90deg, #28a745, #20c997);
-    }
-
-    .progress-fill.en_cours {
-      background: linear-gradient(90deg, #fd7e14, #ffc107);
-    }
-
-    .progress-fill.danger {
-      background: linear-gradient(90deg, #dc3545, #e74c3c);
-    }
-
-    .progress-subtext {
-      font-size: 12px;
-      color: #999;
-      margin-top: 4px;
-      text-align: right;
-    }
-
-    /* ===== FOOTER ===== */
-    .footer {
-      text-align: center;
-      padding: 20px;
-      color: #999;
-      font-size: 12px;
-      background: #f9f9f9;
-      border-radius: 12px;
-      margin-top: 8px;
-    }
-
-    /* ===== LOGIN SCREEN ===== */
-    .login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 120px);
-      padding: 20px;
-    }
-
-    .login-card {
-      background: white;
-      border-radius: 16px;
-      padding: 40px 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .login-card h2 {
-      color: #1a1a1a;
-      margin-bottom: 24px;
-      font-size: 20px;
-    }
-
-    .login-select {
-      width: 100%;
-      padding: 16px;
-      border: 2px solid #e0e0e0;
-      border-radius: 14px;
-      font-size: 16px;
-      background: #fafafa;
-      margin-bottom: 20px;
-      -webkit-appearance: none;
-      appearance: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .login-select:focus {
-      outline: none;
-      border-color: #e60000;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, #e60000, #b30000);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .login-btn:active {
-      transform: scale(0.98);
-    }
-
-    .login-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* ===== LOADING SPINNER ===== */
-    .loading-screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 120px);
-      gap: 20px;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #e8e8e8;
-      border-top-color: #e60000;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading-text {
-      color: #666;
-      font-size: 14px;
-    }
-
-    /* ===== BOUTON RETOUR ===== */
-    .back-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #e60000, #b30000);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      z-index: 99;
-    }
-
-    .back-btn:active {
-      transform: scale(0.9);
-    }
-
-    .back-btn.visible {
-      display: flex;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 600px) {
-      .header {
-        padding: 20px 16px;
-      }
-
-      .header h1 {
-        font-size: 18px;
-      }
-
-      .container {
-        padding: 12px;
-      }
-
-      .card {
-        padding: 20px 16px;
-        margin-bottom: 12px;
-      }
-
-      .commission-amount {
-        font-size: 44px;
-      }
-
-      .gauge-container {
-        width: 140px;
-        height: 140px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Mes Commissions · SFR</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --sfr:#E2001A;--sfr2:#FF1A2E;--sfr-dark:#A8001A;
+  --pro:#0F0F1E;--pro2:#1A1A30;--pro3:#252548;
+  --white:#FFFFFF;--off:#F4F4F6;--border:#E4E4EA;
+  --text:#0F0F1E;--muted:#666;--light:#AAA;
+  --green:#00A651;--green-bg:#E6F7EE;--green-dark:#006633;
+  --orange:#F5A623;--orange-bg:#FFF4E0;--orange-dark:#B87A00;
+  --blue:#1565C0;--blue-bg:#E3F2FD;
+  --safe-b:env(safe-area-inset-bottom,16px);
+}
+html,body{height:100%;background:var(--off);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;color:var(--text);overflow-x:hidden}
+
+/* SCREENS */
+.screen{display:none;min-height:100dvh;flex-direction:column}
+.screen.active{display:flex}
+
+/* ── LOGIN ── */
+#login{background:var(--pro);align-items:stretch;justify-content:flex-end}
+.login-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.sfr-badge{width:80px;height:80px;background:var(--sfr);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.sfr-badge span{font-size:22px;font-weight:900;color:white;letter-spacing:-1px}
+.lt-title{font-size:28px;font-weight:800;color:white;text-align:center;letter-spacing:-.5px}
+.lt-sub{font-size:13px;color:rgba(255,255,255,.4);text-align:center;margin-top:6px}
+.login-bottom{background:white;border-radius:28px 28px 0 0;padding:2rem 1.5rem calc(1.5rem + var(--safe-b))}
+.lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+.code-inp{width:100%;padding:16px;border:2px solid var(--border);border-radius:14px;font-size:22px;font-weight:800;text-align:center;letter-spacing:4px;text-transform:uppercase;background:var(--off);color:var(--text);outline:none;transition:all .2s;font-family:inherit;margin-bottom:1.5rem}
+.code-inp:focus{border-color:var(--sfr);background:white}
+.btn-login{width:100%;padding:18px;background:var(--sfr);color:white;border:none;border-radius:14px;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.btn-login:active{background:var(--sfr-dark)}
+.btn-login:disabled{background:#CCC;cursor:not-allowed}
+.login-err{margin-top:1rem;padding:12px;background:#FFF0F0;color:var(--sfr);border-radius:10px;font-size:13px;font-weight:600;text-align:center;display:none}
+
+/* ── LOADING ── */
+#loading{align-items:center;justify-content:center;gap:1rem}
+.spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--sfr);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:14px;color:var(--muted)}
+
+/* ── HEADER ── */
+.header{background:var(--sfr);padding:52px 1.25rem 1rem;position:sticky;top:0;z-index:10}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start}
+.h-name{font-size:22px;font-weight:800;color:white;letter-spacing:-.3px}
+.h-boutique{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px;font-weight:500}
+.h-logout{background:rgba(255,255,255,.15);border:none;color:white;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
+.h-pills{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.h-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.85);font-weight:600}
+
+/* ── BODY ── */
+.body{flex:1;overflow-y:auto;padding:.75rem .75rem calc(1rem + var(--safe-b))}
+
+/* ── SEC TITLE ── */
+.sec{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.75rem .25rem .4rem}
+
+/* ── MARGE HERO ── */
+.marge-hero{background:var(--pro);border-radius:16px;padding:1.25rem;margin-bottom:.75rem}
+.mh-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.mh-block{background:var(--pro2);border-radius:12px;padding:1rem 1rem .9rem}
+.mhb-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+.mhb-amount{font-size:30px;font-weight:800;color:white;letter-spacing:-1.5px;line-height:1}
+.mhb-amount sup{font-size:14px;font-weight:400;opacity:.5;letter-spacing:0}
+.mhb-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:5px}
+.mh-block.proj{border:1.5px solid rgba(226,0,26,.35)}
+.mh-block.proj .mhb-label{color:rgba(255,120,120,.6)}
+.mh-block.proj .mhb-amount{color:#FF9090}
+
+/* ── COMMISSION CARD ── */
+.comm-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.75rem}
+.comm-big{text-align:center;padding:1.5rem 1rem 1rem}
+.cb-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.cb-amount{font-size:52px;font-weight:900;color:var(--sfr);line-height:1;margin:.5rem 0;letter-spacing:-2px}
+.cb-amount sup{font-size:22px;font-weight:400;opacity:.6}
+.cb-sub{font-size:13px;color:var(--muted)}
+/* Jauge */
+.gauge-wrap{position:relative;width:140px;height:140px;margin:.75rem auto}
+.gauge-wrap svg{transform:rotate(-90deg);width:100%;height:100%}
+.gauge-bg{fill:none;stroke:#E8E8E8;stroke-width:10}
+.gauge-fill{fill:none;stroke:var(--sfr);stroke-width:10;stroke-linecap:round;stroke-dasharray:377;stroke-dashoffset:377;transition:stroke-dashoffset 1.5s ease-out}
+.gauge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.gc-pct{font-size:22px;font-weight:900;color:var(--sfr)}
+.gc-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+/* Palier */
+.palier-block{background:var(--off);border-top:1px solid var(--border);padding:1rem}
+.pb-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.pb-next{font-size:13px;color:var(--text);line-height:1.5}
+.pb-next strong{color:var(--sfr)}
+.pb-bar-bg{height:6px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:.75rem}
+.pb-bar-fill{height:100%;background:var(--sfr);border-radius:10px;transition:width 1s ease}
+
+/* ── ITEMS ── */
+.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem}
+.ic{background:white;border:1px solid var(--border);border-radius:14px;padding:.9rem}
+.ic-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.ic-icon{font-size:20px;line-height:1}
+.ic-badge{font-size:12px;font-weight:800;padding:3px 9px;border-radius:8px}
+.b-great{background:#FEF3C7;color:#92400E}
+.b-ok{background:var(--green-bg);color:var(--green-dark)}
+.b-warn{background:var(--orange-bg);color:var(--orange-dark)}
+.b-bad{background:#FFF0F0;color:var(--sfr-dark)}
+.ic-name{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.2px;margin-bottom:.5rem}
+.prog-bg{height:5px;background:var(--border);border-radius:10px;margin:.4rem 0;overflow:hidden}
+.prog-fill{height:100%;border-radius:10px;transition:width .8s}
+.pf-great{background:#F59E0B}
+.pf-ok{background:var(--green)}
+.pf-warn{background:var(--orange)}
+.pf-bad{background:var(--sfr)}
+.ic-vals{display:flex;flex-direction:column;gap:3px}
+.iv{display:flex;justify-content:space-between;align-items:baseline}
+.iv-l{font-size:10px;color:var(--light)}
+.iv-r{font-size:13px;font-weight:700;color:var(--text)}
+.iv-r.proj{color:var(--sfr);font-size:11px}
+
+/* ── DÉTAIL COMMISSION ── */
+.detail-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.75rem}
+.det-row{display:flex;justify-content:space-between;align-items:center;padding:11px 1rem;border-bottom:1px solid var(--border)}
+.det-row:last-child{border-bottom:none}
+.dr-n{font-size:13px;color:var(--text)}
+.dr-v{font-size:13px;font-weight:700;color:var(--text)}
+.det-total{background:var(--pro);padding:13px 1rem;display:flex;justify-content:space-between;align-items:center}
+.dt-n{font-size:12px;color:rgba(255,255,255,.5)}
+.dt-v{font-size:20px;font-weight:900;color:white}
+.det-proj{background:#FFF0F0;padding:11px 1rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #FFD0D0}
+.dp-n{font-size:12px;color:var(--sfr);font-weight:700}
+.dp-v{font-size:16px;font-weight:900;color:var(--sfr)}
+
+/* ── STATUT BANNER ── */
+.statut{border-radius:14px;padding:12px 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:12px}
+.s-great{background:linear-gradient(135deg,var(--green-dark),var(--green));color:white}
+.s-ok{background:linear-gradient(135deg,#1565C0,#1976D2);color:white}
+.s-warn{background:linear-gradient(135deg,#E65100,#F57C00);color:white}
+.s-bad{background:linear-gradient(135deg,var(--sfr-dark),var(--sfr));color:white}
+.st-icon{font-size:26px;flex-shrink:0}
+.st-title{font-size:15px;font-weight:800}
+.st-sub{font-size:11px;opacity:.8;margin-top:2px}
+
+/* ── PRÉSENCE ── */
+.pres{background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.75rem}
+.pres-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.pres-lbl{font-size:13px;font-weight:700;color:var(--text)}
+.pres-val{font-size:26px;font-weight:900;color:var(--pro)}
+.pres-sub{font-size:11px;color:var(--muted);margin-bottom:.5rem}
+.pres-bar-bg{height:5px;background:var(--border);border-radius:10px;overflow:hidden}
+.pres-bar-fill{height:100%;background:var(--sfr);border-radius:10px}
+
+/* ── REFRESH ── */
+.refresh{text-align:center;padding:1rem;font-size:11px;color:var(--light);display:flex;align-items:center;justify-content:center;gap:6px}
+.live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── ERREUR ── */
+.err-card{background:white;border-radius:16px;padding:2rem;text-align:center;margin:1rem}
+.err-icon{font-size:40px;margin-bottom:1rem}
+.err-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.err-msg{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:1.5rem}
+.err-btn{padding:12px 24px;background:var(--sfr);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+</style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>MES COMMISSIONS</h1>
-    <p id="headerSubtitle">Groupe Garcia - Boutiques SFR</p>
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login" class="screen active">
+  <div class="login-top">
+    <div class="sfr-badge"><span>SFR</span></div>
+    <div class="lt-title">Mes Commissions</div>
+    <div class="lt-sub">Groupe Garcia · Boutiques SFR</div>
   </div>
+  <div class="login-bottom">
+    <span class="lbl">Code personnel</span>
+    <input class="code-inp" type="text" id="code-inp" placeholder="XXXXXXXX" maxlength="12" autocomplete="off" autocapitalize="characters" />
+    <button class="btn-login" id="btn-login" onclick="doLogin()">CONNEXION</button>
+    <div class="login-err" id="login-err">Code invalide. Réessayez.</div>
+  </div>
+</div>
 
-  <div id="loginScreen" class="login-screen">
-    <div class="login-card">
-      <h2>Connexion</h2>
-      <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Entrez votre code personnel</p>
-      <input type="text" id="inputCode" class="login-select" placeholder="Votre code personnel" autocomplete="off" autocapitalize="characters" style="text-transform: uppercase; text-align: center; font-weight: 600; font-size: 20px; letter-spacing: 2px;">
-      <div id="loginError" style="color: #dc3545; font-size: 13px; margin-bottom: 12px; display: none;"></div>
-      <button class="login-btn" id="connectBtn" onclick="voirCommissions()">CONNEXION</button>
+<!-- ══════════ LOADING ══════════ -->
+<div id="loading" class="screen">
+  <div class="spinner"></div>
+  <div class="loading-txt">Chargement de vos données…</div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="dash" class="screen">
+  <div class="header">
+    <div class="header-row">
+      <div>
+        <div class="h-name" id="h-name">—</div>
+        <div class="h-boutique" id="h-boutique">—</div>
+      </div>
+      <button class="h-logout" onclick="doLogout()">← Retour</button>
+    </div>
+    <div class="h-pills">
+      <span class="h-pill" id="h-mois">—</span>
+      <span class="h-pill" id="h-jour">J— / —</span>
+      <span class="h-pill" id="h-maj">—</span>
     </div>
   </div>
+  <div class="body" id="dash-body"></div>
+</div>
 
-  <div id="dashboard" class="container" style="display:none;"></div>
+<script>
+const SHEET_ID = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
 
-  <div id="loadingScreen" class="loading-screen">
-    <div class="spinner"></div>
-    <p class="loading-text">Chargement en cours...</p>
-  </div>
+const CODES = {
+  "HASSENE":"HASSENE1847","JULIE TLR":"JULIE3291","AXEL":"AXEL8903",
+  "PAULINE":"PAULINE5274","RACHEL":"RACHEL6138","ILIAN":"ILIAN4562",
+  "ANAIS":"ANAIS8356","LUCAS":"LUCAS7395","LOUANE":"LOUANE2648",
+  "EMMY":"EMMY9173","CHLOE R":"CHLOE8426","WILL":"WILL3857",
+  "EMILIE":"EMILIE6924","NATHAN":"NATHAN1583","MEHDY":"MEHDY7246",
+  "ROMAIN GP":"ROMAIN5831","VICTOR":"VICTOR6247","HAVAL":"HAVAL3918"
+};
 
-  <button class="back-btn" id="backBtn" onclick="retourLogin()" title="Changer de collaborateur">&#x2190;</button>
+const BOUTIQUES_MAP = {
+  "ALR":"SFR Angers","TLR":"SFR Amboise","CLR":"SFR Châteaudun",
+  "CHOLET":"SFR Cholet","RLR":"SFR Romorantin","VLR":"SFR Vendôme"
+};
 
-  <script>
-    const SHEET_ID = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
+const PALIERS_V = [
+  {min:0,max:2000,pct:0},{min:2000,max:3000,pct:0.02},
+  {min:3000,max:4000,pct:0.03},{min:4000,max:5000,pct:0.05},
+  {min:5000,max:6000,pct:0.06},{min:6000,max:7000,pct:0.07},
+  {min:7000,max:8000,pct:0.08},{min:8000,max:9000,pct:0.09},
+  {min:9000,max:Infinity,pct:0.10}
+];
+const PALIERS_RPV = [
+  {min:0,max:18000,pct:0},{min:18000,max:20000,pct:0.01},
+  {min:20000,max:22000,pct:0.012},{min:22000,max:23000,pct:0.024},
+  {min:23000,max:24000,pct:0.026},{min:24000,max:26000,pct:0.028},
+  {min:26000,max:Infinity,pct:0.03}
+];
 
-    const CODES_VENDEURS = {
-      "HASSENE": "HASSENE1847",
-      "JULIE TLR": "JULIE3291",
-      "AXEL": "AXEL8903",
-      "PAULINE": "PAULINE5274",
-      "RACHEL": "RACHEL6138",
-      "ILIAN": "ILIAN4562",
-      "ANAIS": "ANAIS8356",
-      "LUCAS": "LUCAS7395",
-      "LOUANE": "LOUANE2648",
-      "EMMY": "EMMY9173",
-      "CHLOE R": "CHLOE8426",
-      "WILL": "WILL3857",
-      "EMILIE": "EMILIE6924",
-      "NATHAN": "NATHAN1583",
-      "MEHDY": "MEHDY7246",
-      "ROMAIN GP": "ROMAIN5831",
-      "VICTOR": "VICTOR6247",
-      "HAVAL": "HAVAL3918"
+const COL = {
+  'Code boutique':'codeBoutique','Nom collaborateur':'nom','Rôle':'role',
+  'Marge réalisée (€)':'margeRealisee','Nb mobiles vendus':'nbMobiles',
+  'Nb garanties 3ème année':'nbGaranties','Nb SFR Cyber vendus':'nbCyber',
+  'Nb assurances vendues':'nbAssurances','Nb mobiles pour taux assurance':'nbMobilesAssurance',
+  'CA accessoires total (€)':'caAccessoires','Jour ouvré courant':'jourOuvre',
+  'Nb jours ouvrés total':'nbJoursOuvres','Jours travaillés (individuel)':'joursTravailles',
+  "Nom de l'item":'nomItem','Objectif':'objectif','Unité':'unite',
+  'Poids (% rému)':'poids','Mois en cours':'moisEnCours','Dernière MAJ':'derniereMaj'
+};
+
+let _jc = 0;
+function fetchSheet(sheet) {
+  return new Promise((res, rej) => {
+    const cb = '_sc_' + (++_jc) + '_' + Date.now();
+    const to = setTimeout(() => { delete window[cb]; rej(new Error('Timeout')); }, 15000);
+    window[cb] = r => {
+      clearTimeout(to); delete window[cb];
+      const s = document.getElementById(cb); if(s) s.remove();
+      r.status && r.status !== 'ok' ? rej(new Error(r.message||'Erreur')) : res(r);
     };
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cb}&sheet=${encodeURIComponent(sheet)}`;
+    const s = document.createElement('script');
+    s.id = cb; s.src = url;
+    s.onerror = () => { clearTimeout(to); delete window[cb]; s.remove(); rej(new Error('Réseau')); };
+    document.head.appendChild(s);
+  });
+}
 
-    const BOUTIQUES = {
-      "ALR": "SFR Angers",
-      "TLR": "SFR Amboise",
-      "CLR": "SFR Châteaudun",
-      "CHOLET": "SFR Cholet",
-      "RLR": "SFR Romorantin",
-      "VLR": "SFR Vendôme"
-    };
-
-    const PALIERS_VENDEUR = [
-      { min: 0, max: 2000, pct: 0 },
-      { min: 2000, max: 3000, pct: 0.02 },
-      { min: 3000, max: 4000, pct: 0.03 },
-      { min: 4000, max: 5000, pct: 0.05 },
-      { min: 5000, max: 6000, pct: 0.06 },
-      { min: 6000, max: 7000, pct: 0.07 },
-      { min: 7000, max: 8000, pct: 0.08 },
-      { min: 8000, max: 9000, pct: 0.09 },
-      { min: 9000, max: Infinity, pct: 0.10 }
-    ];
-
-    const PALIERS_RPV = [
-      { min: 0, max: 18000, pct: 0 },
-      { min: 18000, max: 20000, pct: 0.01 },
-      { min: 20000, max: 22000, pct: 0.012 },
-      { min: 22000, max: 23000, pct: 0.024 },
-      { min: 23000, max: 24000, pct: 0.026 },
-      { min: 24000, max: 26000, pct: 0.028 },
-      { min: 26000, max: Infinity, pct: 0.03 }
-    ];
-
-    (function initApp() {
-      document.getElementById('inputCode').addEventListener('keyup', function(e) {
-        if (e.key === 'Enter') voirCommissions();
-        document.getElementById('loginError').style.display = 'none';
-      });
-      document.getElementById('inputCode').focus();
-    })();
-
-    var _jsonpCounter = 0;
-    function fetchSheetData(sheetName) {
-      return new Promise(function(resolve, reject) {
-        var callbackName = '_sheetCallback_' + (++_jsonpCounter) + '_' + Date.now();
-        var timeout = setTimeout(function() {
-          delete window[callbackName];
-          var s = document.getElementById(callbackName);
-          if (s) s.remove();
-          reject(new Error('Timeout: La feuille Google n\'a pas répondu après 15 secondes. Vérifiez que la feuille est publiée sur le web (Fichier > Partager > Publier sur le Web).'));
-        }, 15000);
-
-        window[callbackName] = function(response) {
-          clearTimeout(timeout);
-          delete window[callbackName];
-          var s = document.getElementById(callbackName);
-          if (s) s.remove();
-          if (response.status && response.status !== 'ok') {
-            reject(new Error('Erreur Google Sheets: ' + (response.message || 'Feuille non trouvée')));
-          } else {
-            resolve(response);
-          }
-        };
-
-        // Utiliser google.visualization.Query.setResponse comme callback JSONP
-        var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID
-          + '/gviz/tq?tqx=responseHandler:' + callbackName
-          + '&sheet=' + encodeURIComponent(sheetName);
-
-        var script = document.createElement('script');
-        script.id = callbackName;
-        script.src = url;
-        script.onerror = function() {
-          clearTimeout(timeout);
-          delete window[callbackName];
-          script.remove();
-          reject(new Error('Erreur réseau: impossible de charger les données. Vérifiez que la feuille est publiée sur le web.'));
-        };
-        document.head.appendChild(script);
-      });
-    }
-
-    // Mapping des noms de colonnes Google Sheet vers noms courts du code
-    var COL_MAP = {
-      'Code boutique': 'codeBoutique',
-      'Nom collaborateur': 'nom',
-      'Rôle': 'role',
-      'Marge réalisée (€)': 'margeRealisee',
-      'Nb mobiles vendus': 'nbMobiles',
-      'Nb garanties 3ème année': 'nbGaranties',
-      'Nb SFR Cyber vendus': 'nbCyber',
-      'Nb assurances vendues': 'nbAssurances',
-      'Nb mobiles pour taux assurance': 'nbMobilesAssurance',
-      'CA accessoires total (€)': 'caAccessoires',
-      'Jour ouvré courant': 'jourOuvre',
-      'Nb jours ouvrés total': 'nbJoursOuvres',
-      'Jours travaillés (individuel)': 'joursTravailles',
-      "Nom de l'item": 'nomItem',
-      'Objectif': 'objectif',
-      'Unité': 'unite',
-      'Poids (% rému)': 'poids',
-      'Mois en cours': 'moisEnCours',
-      'Dernière MAJ': 'derniereMaj'
-    };
-
-    function parseSheetRows(response) {
-      var rows = [];
-      if (!response.table || !response.table.rows) return rows;
-      response.table.rows.forEach(function(row) {
-        var obj = {};
-        response.table.cols.forEach(function(col, idx) {
-          var val = row.c[idx];
-          var key = COL_MAP[col.label] || col.label;
-          var v = val ? val.v : null;
-          // Convertir les dates Google en string lisible
-          if (v && typeof v === 'string' && v.indexOf('Date(') === 0) {
-            var parts = v.replace('Date(', '').replace(')', '').split(',');
-            var d = new Date(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2] || 1));
-            var moisNoms = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-            if (key === 'derniereMaj') {
-              v = d.toLocaleDateString('fr-FR');
-            } else {
-              v = moisNoms[d.getMonth()] + ' ' + d.getFullYear();
-            }
-          }
-          obj[key] = v;
-        });
-        rows.push(obj);
-      });
-      return rows;
-    }
-
-    function voirCommissions() {
-      const code = document.getElementById('inputCode').value.trim().toUpperCase();
-      if (!code) {
-        afficherErreurLogin("Veuillez saisir votre code personnel");
-        return;
+function parseRows(r) {
+  const rows = [];
+  if (!r.table || !r.table.rows) return rows;
+  r.table.rows.forEach(row => {
+    const obj = {};
+    r.table.cols.forEach((col, i) => {
+      let v = row.c[i] ? row.c[i].v : null;
+      const key = COL[col.label] || col.label;
+      if (v && typeof v === 'string' && v.startsWith('Date(')) {
+        const p = v.replace('Date(','').replace(')','').split(',');
+        const d = new Date(+p[0], +p[1], +(p[2]||1));
+        const mois = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+        v = key === 'derniereMaj' ? d.toLocaleDateString('fr-FR') : mois[d.getMonth()] + ' ' + d.getFullYear();
       }
+      obj[key] = v;
+    });
+    rows.push(obj);
+  });
+  return rows;
+}
 
-      let vendeurNom = null;
-      for (let nom in CODES_VENDEURS) {
-        if (CODES_VENDEURS[nom].toUpperCase() === code) {
-          vendeurNom = nom;
-          break;
-        }
-      }
+function calcComm(marge, paliers) {
+  for (let i = paliers.length-1; i >= 0; i--) {
+    if (marge >= paliers[i].min) return Math.round(marge * paliers[i].pct);
+  }
+  return 0;
+}
 
-      if (!vendeurNom) {
-        afficherErreurLogin("Code invalide. Veuillez réessayer.");
-        return;
-      }
-
-      document.getElementById('connectBtn').disabled = true;
-      document.getElementById('connectBtn').textContent = 'CHARGEMENT...';
-      document.getElementById('loginError').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('loadingScreen').style.display = 'flex';
-      document.getElementById('backBtn').classList.add('visible');
-
-      chargerCommissionsData(vendeurNom);
+function nextPalier(marge, paliers) {
+  for (let p of paliers) {
+    if (marge < p.max && p.pct > 0) {
+      const reste = Math.round(p.max - marge);
+      const gain = Math.round(p.max * p.pct);
+      return { reste, gain, max: p.max, pct: Math.round(p.pct*100) };
     }
+  }
+  return null;
+}
 
-    function chargerCommissionsData(vendeurNom) {
-      Promise.all([
-        fetchSheetData('Données_Commissions'),
-        fetchSheetData('Items_Mois'),
-        fetchSheetData('Config')
-      ])
-        .then(function(responses) {
-          const donnees = parseSheetRows(responses[0]);
-          const itemsMois = parseSheetRows(responses[1]);
-          const config = parseSheetRows(responses[2]);
+// ── AUTH ──
+document.getElementById('code-inp').addEventListener('keyup', e => { if(e.key==='Enter') doLogin(); });
 
-          const vendeurRow = donnees.find(function(row) {
-            return row.nom && row.nom.toUpperCase().includes(vendeurNom.toUpperCase());
-          });
+let currentVendeur = null;
+function doLogin() {
+  const code = document.getElementById('code-inp').value.trim().toUpperCase();
+  const err = document.getElementById('login-err');
+  let found = null;
+  for (let nom in CODES) { if (CODES[nom].toUpperCase() === code) { found = nom; break; } }
+  if (!found) { err.style.display='block'; return; }
+  err.style.display='none';
+  currentVendeur = found;
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true; btn.textContent = 'CHARGEMENT...';
+  show('loading');
+  loadData(found);
+}
 
-          if (!vendeurRow) {
-            afficherErreurCalcul("Vendeur non trouvé dans la base de données");
-            return;
-          }
+function doLogout() {
+  currentVendeur = null;
+  document.getElementById('code-inp').value = '';
+  document.getElementById('btn-login').disabled = false;
+  document.getElementById('btn-login').textContent = 'CONNEXION';
+  show('login');
+}
 
-          const moisEnCours = config[0] ? config[0]['moisEnCours'] : 'Avril 2026';
-          const derniereMaj = config[0] ? config[0]['derniereMaj'] : new Date().toLocaleDateString('fr-FR');
+function show(id) {
+  ['login','loading','dash'].forEach(s => {
+    document.getElementById(s).classList.remove('active');
+    document.getElementById(s).style.display = '';
+  });
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.style.display = 'flex';
+}
 
-          const result = calculerCommissions(vendeurRow, itemsMois, moisEnCours, derniereMaj);
-          afficherDashboard(result);
-        })
-        .catch(function(error) {
-          console.error('Erreur:', error);
-          afficherErreurCalcul(error.message || 'Erreur de chargement des données');
-        });
-    }
+// ── LOAD ──
+function loadData(vendeurNom) {
+  Promise.all([fetchSheet('Données_Commissions'), fetchSheet('Items_Mois'), fetchSheet('Config')])
+    .then(([r1, r2, r3]) => {
+      const donnees = parseRows(r1);
+      const items   = parseRows(r2);
+      const config  = parseRows(r3);
+      renderDash(vendeurNom, donnees, items, config);
+    })
+    .catch(e => {
+      show('dash');
+      document.getElementById('dash-body').innerHTML = `
+        <div class="err-card">
+          <div class="err-icon">⚠️</div>
+          <div class="err-title">Erreur de chargement</div>
+          <div class="err-msg">${e.message}<br>Vérifiez que la feuille Google est bien publiée sur le web.</div>
+          <button class="err-btn" onclick="doLogout()">Retour</button>
+        </div>`;
+    });
+}
 
-    function calculerCommissions(vendeurRow, itemsMois, moisEnCours, derniereMaj) {
-      const nom = vendeurRow.nom || 'Inconnu';
-      const role = vendeurRow.role || 'Vendeur';
-      const codeBoutique = vendeurRow.codeBoutique || '';
-      const boutique = BOUTIQUES[codeBoutique] || codeBoutique;
+// ── RENDER ──
+function fmt(n) { return Math.round(n).toLocaleString('fr-FR'); }
+function pct(real, obj) { return obj > 0 ? Math.min(Math.round(real/obj*100), 200) : (real > 0 ? 100 : 0); }
+function pctClass(p) { return p>=100?'b-great':p>=75?'b-ok':p>=50?'b-warn':'b-bad'; }
+function fillClass(p) { return p>=100?'pf-great':p>=75?'pf-ok':p>=50?'pf-warn':'pf-bad'; }
 
-      const margeRealisee = parseFloat(vendeurRow.margeRealisee) || 0;
-      const nbMobiles = parseFloat(vendeurRow.nbMobiles) || 0;
-      const nbGaranties = parseFloat(vendeurRow.nbGaranties) || 0;
-      const nbCyber = parseFloat(vendeurRow.nbCyber) || 0;
-      const nbAssurances = parseFloat(vendeurRow.nbAssurances) || 0;
-      const nbMobilesAssurance = parseFloat(vendeurRow.nbMobilesAssurance) || 0;
-      const caAccessoires = parseFloat(vendeurRow.caAccessoires) || 0;
-      const jourOuvre = parseFloat(vendeurRow.jourOuvre) || 0;
-      const nbJoursOuvres = parseFloat(vendeurRow.nbJoursOuvres) || 0;
-      const joursTravailles = parseFloat(vendeurRow.joursTravailles) || nbJoursOuvres;
+function renderDash(nom, donnees, items, config) {
+  // Trouver le vendeur
+  const v = donnees.find(d => d.nom && d.nom.toUpperCase() === nom.toUpperCase());
+  if (!v) {
+    show('dash');
+    document.getElementById('dash-body').innerHTML = `<div class="err-card"><div class="err-icon">🔍</div><div class="err-title">Données introuvables</div><div class="err-msg">Aucune donnée pour ${nom}. Contactez votre manager.</div><button class="err-btn" onclick="doLogout()">Retour</button></div>`;
+    return;
+  }
 
-      const paliers = role === 'RPV' ? PALIERS_RPV : PALIERS_VENDEUR;
-      const joursTravaillesEcoules = Math.min(jourOuvre, joursTravailles);
-      const coefProjection = joursTravailles > 0 ? joursTravailles / joursTravaillesEcoules : 1;
-      const margeProjetee = Math.round(margeRealisee * coefProjection);
-      const commissionRealisee = calculerCommissionMarge(margeRealisee, paliers);
-      const commissionProjetee = calculerCommissionMarge(margeProjetee, paliers);
-      const prorata = joursTravailles > 0 ? joursTravailles / nbJoursOuvres : 1;
+  const isRPV = (v.role || '').toLowerCase().includes('rpv') || (v.role || '').toLowerCase().includes('manager');
+  const paliers = isRPV ? PALIERS_RPV : PALIERS_V;
+  const boutique = BOUTIQUES_MAP[v.codeBoutique] || v.codeBoutique || '';
+  const marge = parseFloat(v.margeRealisee) || 0;
+  const jourOuvre = parseInt(v.jourOuvre) || 1;
+  const nbJours = parseInt(v.nbJoursOuvres) || 22;
+  const joursTrav = parseInt(v.joursTravailles) || nbJours;
 
-      const items = [];
-      const nbItemsTotal = 5;
-      let nbItemsAtteints = 0;
+  // Projection linéaire
+  const coefProj = joursTrav > 0 ? jourOuvre / joursTrav : 0;
+  const margeProj = coefProj > 0 ? Math.round(marge / coefProj) : marge;
 
-      const mobiles = {
-        nom: 'Mobiles',
-        realise: Math.round(nbMobiles),
-        unite: '',
-        objectifBase: Math.round(itemsMois[0] ? parseFloat(itemsMois[0].objectif) || 0 : 0),
-        poids: itemsMois[0] ? parseFloat(itemsMois[0].poids) || 0 : 0
-      };
-      mobiles.objectif = Math.round(mobiles.objectifBase * prorata);
-      mobiles.projete = Math.round(mobiles.realise * coefProjection);
-      mobiles.pctAtteinte = mobiles.objectif > 0 ? (mobiles.realise / mobiles.objectif) * 100 : 0;
-      mobiles.statut = mobiles.pctAtteinte >= 100 ? 'atteint' : mobiles.pctAtteinte >= 75 ? 'en_cours' : 'danger';
-      mobiles.projectionAtteint = mobiles.projete >= mobiles.objectif;
-      if (mobiles.statut === 'atteint') nbItemsAtteints++;
-      items.push(mobiles);
+  const commR = calcComm(marge, paliers);
+  const commP = calcComm(margeProj, paliers);
+  const palierAct = (() => { for(let i=paliers.length-1;i>=0;i--) if(marge>=paliers[i].min) return paliers[i]; return paliers[0]; })();
+  const next = nextPalier(marge, paliers);
 
-      const garantie = {
-        nom: 'Garantie 3ème Année',
-        realise: nbMobiles > 0 ? Math.round((nbGaranties / nbMobiles) * 100) : 0,
-        unite: '%',
-        objectif: Math.round(itemsMois[1] ? parseFloat(itemsMois[1].objectif) || 0 : 0),
-        objectifBase: Math.round(itemsMois[1] ? parseFloat(itemsMois[1].objectif) || 0 : 0),
-        poids: itemsMois[1] ? parseFloat(itemsMois[1].poids) || 0 : 0
-      };
-      garantie.projete = garantie.realise;
-      garantie.pctAtteinte = garantie.objectif > 0 ? (garantie.realise / garantie.objectif) * 100 : 0;
-      garantie.statut = garantie.pctAtteinte >= 100 ? 'atteint' : garantie.pctAtteinte >= 75 ? 'en_cours' : 'danger';
-      garantie.projectionAtteint = garantie.projete >= garantie.objectif;
-      if (garantie.statut === 'atteint') nbItemsAtteints++;
-      items.push(garantie);
+  // Config
+  const cfg = config[0] || {};
+  const moisLabel = cfg.moisEnCours || 'Mois en cours';
+  const majDate = cfg.derniereMaj || '';
 
-      const cyber = {
-        nom: 'SFR Cyber',
-        realise: Math.round(nbCyber),
-        unite: '',
-        objectifBase: Math.round(itemsMois[2] ? parseFloat(itemsMois[2].objectif) || 0 : 0),
-        poids: itemsMois[2] ? parseFloat(itemsMois[2].poids) || 0 : 0
-      };
-      cyber.objectif = Math.round(cyber.objectifBase * prorata);
-      cyber.projete = Math.round(cyber.realise * coefProjection);
-      cyber.pctAtteinte = cyber.objectif > 0 ? (cyber.realise / cyber.objectif) * 100 : 0;
-      cyber.statut = cyber.pctAtteinte >= 100 ? 'atteint' : cyber.pctAtteinte >= 75 ? 'en_cours' : 'danger';
-      cyber.projectionAtteint = cyber.projete >= cyber.objectif;
-      if (cyber.statut === 'atteint') nbItemsAtteints++;
-      items.push(cyber);
+  // Items payplan
+  const itemsVendeur = items.filter(it => it.nomItem);
 
-      const assurance = {
-        nom: 'Taux d\'Assurance',
-        realise: nbMobilesAssurance > 0 ? Math.round((nbAssurances / nbMobilesAssurance) * 100) : 0,
-        unite: '%',
-        objectif: Math.round(itemsMois[3] ? parseFloat(itemsMois[3].objectif) || 0 : 0),
-        objectifBase: Math.round(itemsMois[3] ? parseFloat(itemsMois[3].objectif) || 0 : 0),
-        poids: itemsMois[3] ? parseFloat(itemsMois[3].poids) || 0 : 0
-      };
-      assurance.projete = assurance.realise;
-      assurance.pctAtteinte = assurance.objectif > 0 ? (assurance.realise / assurance.objectif) * 100 : 0;
-      assurance.statut = assurance.pctAtteinte >= 100 ? 'atteint' : assurance.pctAtteinte >= 75 ? 'en_cours' : 'danger';
-      assurance.projectionAtteint = assurance.projete >= assurance.objectif;
-      if (assurance.statut === 'atteint') nbItemsAtteints++;
-      items.push(assurance);
+  // Calcul des réalisés items
+  const nbMob = parseFloat(v.nbMobiles) || 0;
+  const nbG3A = parseFloat(v.nbGaranties) || 0;
+  const nbCyber = parseFloat(v.nbCyber) || 0;
+  const nbAssu = parseFloat(v.nbAssurances) || 0;
+  const nbMobAssu = parseFloat(v.nbMobilesAssurance) || nbMob || 1;
+  const caAcc = parseFloat(v.caAccessoires) || 0;
+  const txAssu = nbMobAssu > 0 ? Math.round((nbAssu / nbMobAssu) * 100) : 0;
+  const txG3A  = nbMob > 0 ? Math.round((nbG3A / nbMob) * 100) : 0;
+  const accParMob = nbMob > 0 ? Math.round(caAcc / nbMob) : 0;
 
-      const accessoire = {
-        nom: 'Taux d\'Accessoire',
-        realise: nbMobiles > 0 ? parseFloat((caAccessoires / nbMobiles).toFixed(2)) : 0,
-        unite: '€',
-        objectif: parseFloat((itemsMois[4] ? parseFloat(itemsMois[4].objectif) || 0 : 0).toFixed(2)),
-        objectifBase: parseFloat((itemsMois[4] ? parseFloat(itemsMois[4].objectif) || 0 : 0).toFixed(2)),
-        poids: itemsMois[4] ? parseFloat(itemsMois[4].poids) || 0 : 0
-      };
-      accessoire.projete = accessoire.realise;
-      accessoire.pctAtteinte = accessoire.objectif > 0 ? (accessoire.realise / accessoire.objectif) * 100 : 0;
-      accessoire.statut = accessoire.pctAtteinte >= 100 ? 'atteint' : accessoire.pctAtteinte >= 75 ? 'en_cours' : 'danger';
-      accessoire.projectionAtteint = accessoire.projete >= accessoire.objectif;
-      if (accessoire.statut === 'atteint') nbItemsAtteints++;
-      items.push(accessoire);
+  const realMap = {
+    'Mobiles': { real: nbMob, proj: coefProj>0 ? Math.round(nbMob/coefProj) : nbMob, icon:'📱' },
+    'Garantie 3ème Année': { real: txG3A, proj: txG3A, icon:'🛡️' },
+    'SFR Cyber': { real: nbCyber, proj: coefProj>0 ? Math.round(nbCyber/coefProj) : nbCyber, icon:'🔒' },
+    "Taux d'Assurance": { real: txAssu, proj: txAssu, icon:'⚡' },
+    "Taux d'Accessoire": { real: accParMob, proj: accParMob, icon:'🎧' },
+  };
 
-      const commissionModulee = Math.round(commissionProjetee * (nbItemsAtteints / nbItemsTotal));
-      const palierActuel = trouverPalier(margeRealisee, paliers);
-      const palierSuivant = trouverPalierSuivant(margeRealisee, paliers);
-      const manquePourProchainPalier = palierSuivant ? Math.max(0, palierSuivant.min - margeRealisee) : 0;
+  // Statut global
+  const pctsMoy = itemsVendeur.length > 0
+    ? Math.round(itemsVendeur.map(it => {
+        const r = realMap[it.nomItem]; const obj = parseFloat(it.objectif)||1;
+        return r ? pct(r.real, obj) : 0;
+      }).reduce((a,b)=>a+b,0) / itemsVendeur.length)
+    : pct(marge, 3000);
 
-      return {
-        collab: { nom: nom, boutique: boutique, role: role },
-        mois: moisEnCours,
-        derniereMaj: derniereMaj,
-        marge: {
-          realisee: Math.round(margeRealisee),
-          projetee: Math.round(margeProjetee),
-          palierActuel: { min: palierActuel.min, max: palierActuel.max, pct: (palierActuel.pct * 100) + '%' },
-          palierSuivant: palierSuivant ? { min: palierSuivant.min, max: palierSuivant.max, pct: (palierSuivant.pct * 100) + '%' } : null,
-          manquePourProchainPalier: Math.round(manquePourProchainPalier)
-        },
-        commission: {
-          realisee: Math.round(commissionRealisee),
-          moduleeRealisee: Math.round(commissionRealisee),
-          projete: Math.round(commissionModulee),
-          nbItemsAtteints: nbItemsAtteints,
-          nbItemsTotal: nbItemsTotal
-        },
-        total: {
-          projete: Math.round(commissionModulee)
-        },
-        progression: {
-          jourOuvre: Math.round(jourOuvre),
-          joursTravailles: Math.round(joursTravailles),
-          nbJoursOuvres: Math.round(nbJoursOuvres)
-        },
-        items: items
-      };
-    }
+  let stClass, stIcon, stTitle, stSub;
+  if (pctsMoy>=100){stClass='s-great';stIcon='🏆';stTitle='Objectifs atteints !';stSub='Excellent mois, continue comme ça !'}
+  else if(pctsMoy>=75){stClass='s-ok';stIcon='✅';stTitle='En bonne voie';stSub='Maintiens ce rythme jusqu\'à la fin du mois'}
+  else if(pctsMoy>=40){stClass='s-warn';stIcon='⚡';stTitle='À accélérer';stSub='Il te reste du temps — serre les dents !'}
+  else{stClass='s-bad';stIcon='🚨';stTitle='Décroché';stSub='Reprends contact avec ton manager'}
 
-    function trouverPalier(marge, paliers) {
-      for (let i = paliers.length - 1; i >= 0; i--) {
-        if (marge >= paliers[i].min) {
-          return paliers[i];
-        }
-      }
-      return paliers[0];
-    }
+  // Jauge
+  const jaugePct = Math.min(Math.round((marge / (isRPV ? 26000 : 9000)) * 100), 100);
+  const jaugeDash = Math.round(377 * (1 - jaugePct/100));
 
-    function trouverPalierSuivant(marge, paliers) {
-      for (let i = 0; i < paliers.length; i++) {
-        if (marge < paliers[i].min) {
-          return paliers[i];
-        }
-      }
-      return null;
-    }
+  // Pct palier actuel
+  const palierPct = palierAct.max === Infinity ? 100 :
+    Math.round(((marge - palierAct.min) / (palierAct.max - palierAct.min)) * 100);
 
-    function calculerCommissionMarge(marge, paliers) {
-      const palier = trouverPalier(marge, paliers);
-      return marge * palier.pct;
-    }
+  // Header
+  document.getElementById('h-name').textContent = nom;
+  document.getElementById('h-boutique').textContent = boutique;
+  document.getElementById('h-mois').textContent = moisLabel;
+  document.getElementById('h-jour').textContent = `J${jourOuvre} / ${nbJours}`;
+  document.getElementById('h-maj').textContent = majDate ? `MAJ ${majDate}` : 'Temps réel';
 
-    function afficherDashboard(data) {
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('headerSubtitle').textContent =
-        data.collab.nom + ' • ' + data.collab.boutique + ' • ' + data.mois;
+  // Items HTML
+  const itemsHTML = itemsVendeur.map(it => {
+    const key = it.nomItem;
+    const r = realMap[key] || { real:0, proj:0, icon:'📊' };
+    const obj = parseFloat(it.objectif) || 1;
+    const unite = (it.unite || '').trim();
+    const p = pct(r.real, obj);
+    const fmtU = v => unite === '%' ? v+'%' : unite === '€' || unite.includes('€') ? v+'€' : ''+v;
+    return `<div class="ic">
+      <div class="ic-top">
+        <span class="ic-icon">${r.icon||'📊'}</span>
+        <span class="ic-badge ${pctClass(p)}">${p}%</span>
+      </div>
+      <div class="ic-name">${key}</div>
+      <div class="prog-bg"><div class="prog-fill ${fillClass(p)}" style="width:${Math.min(p,100)}%"></div></div>
+      <div class="ic-vals">
+        <div class="iv"><span class="iv-l">Réalisé</span><span class="iv-r">${fmtU(r.real)}</span></div>
+        <div class="iv"><span class="iv-l">Objectif</span><span class="iv-r" style="color:var(--muted)">${fmtU(obj)}</span></div>
+        <div class="iv"><span class="iv-l">Proj.</span><span class="iv-r proj">${fmtU(r.proj)}</span></div>
+      </div>
+    </div>`;
+  }).join('');
 
-      const dashboard = document.getElementById('dashboard');
-      dashboard.style.display = 'block';
-      dashboard.innerHTML = construireDashboardHTML(data);
+  // Détail commission
+  const commLignes = [
+    { n:`📱 Mobiles (${Math.round(nbMob)})`, v: Math.round(nbMob*30)+' €' },
+    { n:`🛡️ G3A (${Math.round(nbG3A)} × 15€)`, v: Math.round(nbG3A*15)+' €' },
+    { n:`🔒 SFR Cyber (${Math.round(nbCyber)} × 8€)`, v: Math.round(nbCyber*8)+' €' },
+    { n:`⚡ Bonus assurance (${txAssu}%)`, v: (txAssu>=40?200:txAssu>=25?80:0)+' €' },
+    { n:`🎧 Acc. marge (~40%)`, v: Math.round(caAcc*0.4)+' €' },
+  ];
 
-      setTimeout(animerJauges, 100);
-    }
+  document.getElementById('dash-body').innerHTML = `
 
-    function construireDashboardHTML(data) {
-      const c = data.commission;
-      const m = data.marge;
-      let html = '';
+    <div class="statut ${stClass}">
+      <span class="st-icon">${stIcon}</span>
+      <div><div class="st-title">${stTitle}</div><div class="st-sub">${stSub}</div></div>
+    </div>
 
-      const pctProgressionCommission = data.total.projete > 0 ? Math.min((data.total.projete / (data.total.projete * 1.3)) * 100, 100) : 0;
-      const circumference = 2 * Math.PI * 68;
+    <!-- Marge réelle + projetée -->
+    <div class="marge-hero">
+      <div class="mh-row">
+        <div class="mh-block">
+          <div class="mhb-label">Marge réalisée</div>
+          <div class="mhb-amount">${fmt(marge)}<sup> €</sup></div>
+          <div class="mhb-sub">J${jourOuvre} sur ${joursTrav}j travaillés</div>
+        </div>
+        <div class="mh-block proj">
+          <div class="mhb-label">Projection fin mois</div>
+          <div class="mhb-amount">${fmt(margeProj)}<sup> €</sup></div>
+          <div class="mhb-sub">Si rythme maintenu</div>
+        </div>
+      </div>
+    </div>
 
-      html += `<div class="card"><div class="card-title"><span class="icon">💰</span> Commission projetée</div><div style="text-align: center;"><div class="commission-amount">${data.total.projete}€</div><div class="commission-label">Projection fin ${data.mois.split(' ')[0]}</div></div><div class="gauge-container"><svg width="100" height="100" viewBox="0 0 200 200"><circle class="gauge-circle gauge-bg" cx="100" cy="100" r="68"></circle><circle class="gauge-circle gauge-fill" cx="100" cy="100" r="68" data-percentage="${pctProgressionCommission}"></circle></svg><div class="gauge-text">${Math.round(pctProgressionCommission)}%</div></div><div class="commission-realise">Réalisé à date : <span class="amount">${c.moduleeRealisee}€</span><div style="font-size: 12px; color: #999; margin-top: 4px;">Jour ${data.progression.jourOuvre} / ${data.progression.joursTravailles || data.progression.nbJoursOuvres} travaillés${data.progression.joursTravailles && data.progression.joursTravailles < data.progression.nbJoursOuvres ? '<span style="font-size: 11px; color: #bbb;"> (sur ' + data.progression.nbJoursOuvres + ' ouvrés)</span>' : ''}</div></div></div>`;
+    <!-- Commission avec jauge -->
+    <div class="comm-card">
+      <div class="comm-big">
+        <div class="cb-lbl">Commission sur marge réalisée</div>
+        <div class="cb-amount">${fmt(commR)}<sup> €</sup></div>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 130 130">
+            <circle class="gauge-bg" cx="65" cy="65" r="60"/>
+            <circle class="gauge-fill" id="gauge-fill" cx="65" cy="65" r="60"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gc-pct">${jaugePct}%</div>
+            <div class="gc-lbl">du max</div>
+          </div>
+        </div>
+        <div class="cb-sub">Palier actuel : <strong style="color:var(--sfr)">${Math.round(palierAct.pct*100)}%</strong> de la marge</div>
+      </div>
+      ${next ? `
+      <div class="palier-block">
+        <div class="pb-title">🎯 Prochain palier</div>
+        <div class="pb-next">Encore <strong>${fmt(next.reste)} €</strong> de marge pour atteindre le palier <strong>${next.pct}%</strong> (commission jusqu'à <strong>${fmt(next.gain)} €</strong>)</div>
+        <div class="pb-bar-bg"><div class="pb-bar-fill" style="width:${palierPct}%"></div></div>
+      </div>` : `<div class="palier-block"><div class="pb-title">🏆 Palier maximum atteint</div><div class="pb-next">Tu es au <strong style="color:var(--sfr)">palier 10%</strong> — maximum de commission !</div></div>`}
+    </div>
 
-      html += `<div class="card"><div class="card-title"><span class="icon">📊</span> Marge</div><div class="marge-row"><span class="marge-label">Réalisée</span><span class="marge-value">${m.realisee}€</span></div><div class="marge-row"><span class="marge-label">Projetée fin de mois</span><span class="marge-value">${m.projetee}€</span></div><div class="marge-row"><span class="marge-label">Palier actuel</span><span class="marge-value">${m.palierActuel.pct}</span><span class="marge-detail">${m.palierActuel.min}€ - ${m.palierActuel.max === Infinity ? '+' : m.palierActuel.max}€</span></div>${m.palierSuivant ? `<div class="palier-box"><strong>Prochain palier :</strong> ${m.palierSuivant.pct} à partir de ${m.palierSuivant.min}€<br><strong style="color: #666;">Il manque :</strong> ${m.manquePourProchainPalier}€</div>` : ''}</div>`;
+    <!-- Commission projetée -->
+    <div style="background:#FFF0F0;border:1px solid #FFD0D0;border-radius:14px;padding:1rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sfr);margin-bottom:3px">Commission projetée fin de mois</div>
+        <div style="font-size:12px;color:var(--muted)">Sur ${fmt(margeProj)} € de marge</div>
+      </div>
+      <div style="font-size:28px;font-weight:900;color:var(--sfr)">${fmt(commP)} €</div>
+    </div>
 
-      html += `<div class="card"><div class="card-title"><span class="icon">✅</span> Items du mois<span style="margin-left: auto; font-size: 13px; font-weight: 600;">${c.nbItemsAtteints}/${c.nbItemsTotal} atteints</span></div>`;
+    <!-- Présence -->
+    <div class="pres">
+      <div class="pres-top">
+        <span class="pres-lbl">⏱️ Présence</span>
+        <span class="pres-val">${joursTrav}j</span>
+      </div>
+      <div class="pres-sub">sur ${nbJours} jours ouvrables · objectifs proratisés à ${Math.round(joursTrav/nbJours*100)}%</div>
+      <div class="pres-bar-bg"><div class="pres-bar-fill" style="width:${Math.round(joursTrav/nbJours*100)}%"></div></div>
+    </div>
 
-      data.items.forEach(function(item) {
-        const pctBar = Math.min((item.pctAtteinte / 1.5) * 100, 100);
-        const isRatio = item.nom.includes('Taux') || item.nom.includes('Garantie');
-        const labelRealise = isRatio ? item.realise + item.unite : item.realise + ' ' + item.unite;
-        const labelObjectif = isRatio ? item.objectif + item.unite : item.objectif + ' ' + item.unite;
-        const labelProjete = isRatio ? item.projete + item.unite : item.projete + ' ' + item.unite;
-        const isProratise = item.objectifBase && item.objectifBase !== item.objectif;
+    <!-- 5 Items -->
+    <div class="sec">Les 5 items payplan</div>
+    <div class="items-grid">${itemsHTML || '<div style="grid-column:1/-1;padding:1rem;text-align:center;color:var(--muted);font-size:13px">Items en cours de chargement…</div>'}</div>
 
-        html += `<div class="item-row"><div class="item-header"><span class="item-name">${item.nom}</span><span class="badge ${item.statut}">${item.statut === 'atteint' ? '✓ Atteint' : item.statut === 'en_cours' ? '◐ En cours' : '✗ Danger'}</span></div><div class="item-values"><span class="item-value">Réalisé: <strong>${labelRealise}</strong></span><span class="item-value">/ <strong>${labelObjectif}</strong>${isProratise ? '<span style="font-size: 11px; color: #bbb; text-decoration: line-through; margin-left: 4px;">' + item.objectifBase + '</span>' : ''}</span></div><div class="progress-bar"><div class="progress-fill ${item.statut}" data-width="${pctBar}"></div></div><div class="progress-subtext">En projection: <strong>${labelProjete}</strong>${item.projectionAtteint ? '<span class="badge projection">✓ Atteint en fin de mois</span>' : '<span class="badge projection" style="background: #fff3cd; color: #856404;">⚠ Non atteint en projection</span>'}</div></div>`;
-      });
+    <!-- Détail -->
+    <div class="sec">Détail des commissions</div>
+    <div class="detail-card">
+      ${commLignes.map(l=>`<div class="det-row"><span class="dr-n">${l.n}</span><span class="dr-v">${l.v}</span></div>`).join('')}
+      <div class="det-total"><span class="dt-n">Commission actuelle</span><span class="dt-v">${fmt(commR)} €</span></div>
+      <div class="det-proj"><span class="dp-n">🎯 Projection fin de mois</span><span class="dp-v">${fmt(commP)} €</span></div>
+    </div>
 
-      html += `</div>`;
-      html += `<div class="footer">Dernière mise à jour : ${data.derniereMaj}<br><span style="font-size: 11px; color: #bbb;">v2.0 Standalone - Groupe Garcia</span></div>`;
+    <div class="refresh"><div class="live"></div>Données Google Sheet · ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+  `;
 
-      return html;
-    }
+  show('dash');
 
-    function animerJauges() {
-      document.querySelectorAll('.gauge-fill').forEach(function(circle) {
-        const pct = parseFloat(circle.dataset.percentage) || 0;
-        const circumference = 2 * Math.PI * 68;
-        const offset = circumference - (pct / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
-      });
-
-      document.querySelectorAll('.progress-fill').forEach(function(bar) {
-        const width = bar.dataset.width || '0';
-        bar.style.width = width + '%';
-      });
-    }
-
-    function afficherErreurLogin(msg) {
-      const el = document.getElementById('loginError');
-      el.textContent = msg;
-      el.style.display = 'block';
-      const input = document.getElementById('inputCode');
-      input.style.borderColor = '#dc3545';
-      setTimeout(function() { input.style.borderColor = '#e0e0e0'; }, 1500);
-    }
-
-    function afficherErreurCalcul(msg) {
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('backBtn').classList.remove('visible');
-      afficherErreurLogin(msg);
-      resetLoginBtn();
-    }
-
-    function resetLoginBtn() {
-      document.getElementById('connectBtn').disabled = false;
-      document.getElementById('connectBtn').textContent = 'CONNEXION';
-    }
-
-    function retourLogin() {
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('backBtn').classList.remove('visible');
-      document.getElementById('headerSubtitle').textContent = 'Groupe Garcia - Boutiques SFR';
-      document.getElementById('inputCode').value = '';
-      document.getElementById('loginError').style.display = 'none';
-      resetLoginBtn();
-      document.getElementById('inputCode').focus();
-    }
-  </script>
-
+  // Animer la jauge
+  setTimeout(() => {
+    const g = document.getElementById('gauge-fill');
+    if (g) g.style.strokeDashoffset = jaugeDash;
+  }, 100);
+}
+</script>
 </body>
 </html>
