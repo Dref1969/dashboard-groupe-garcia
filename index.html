@@ -5,151 +5,140 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mes Commissions · SFR</title>
+<title>Mes Résultats · SFR</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --sfr:#E2001A;--sfr2:#FF1A2E;--sfr-dark:#A8001A;
-  --pro:#0F0F1E;--pro2:#1A1A30;--pro3:#252548;
-  --white:#FFFFFF;--off:#F4F4F6;--border:#E4E4EA;
+  --sfr:#E2001A;--sfr-dark:#A8001A;
+  --pro:#0F0F1E;--pro2:#1A1A2E;--pro3:#252548;
+  --off:#F4F4F7;--white:#FFF;--border:#E2E2EA;
   --text:#0F0F1E;--muted:#666;--light:#AAA;
-  --green:#00A651;--green-bg:#E6F7EE;--green-dark:#006633;
-  --orange:#F5A623;--orange-bg:#FFF4E0;--orange-dark:#B87A00;
-  --blue:#1565C0;--blue-bg:#E3F2FD;
-  --safe-b:env(safe-area-inset-bottom,16px);
+  --green:#00A651;--green-bg:#E6F7EE;--green-dk:#006633;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+  --orange:#EA580C;--orange-bg:#FFF0E8;
+  --safe:env(safe-area-inset-bottom,16px);
 }
 html,body{height:100%;background:var(--off);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;color:var(--text);overflow-x:hidden}
-
-/* SCREENS */
 .screen{display:none;min-height:100dvh;flex-direction:column}
 .screen.active{display:flex}
 
 /* ── LOGIN ── */
-#login{background:var(--pro);align-items:stretch;justify-content:flex-end}
-.login-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
-.sfr-badge{width:80px;height:80px;background:var(--sfr);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
-.sfr-badge span{font-size:22px;font-weight:900;color:white;letter-spacing:-1px}
-.lt-title{font-size:28px;font-weight:800;color:white;text-align:center;letter-spacing:-.5px}
-.lt-sub{font-size:13px;color:rgba(255,255,255,.4);text-align:center;margin-top:6px}
-.login-bottom{background:white;border-radius:28px 28px 0 0;padding:2rem 1.5rem calc(1.5rem + var(--safe-b))}
+#login{background:var(--pro);justify-content:flex-end}
+.login-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem}
+.sfr-logo{width:80px;height:80px;background:var(--sfr);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;flex-shrink:0}
+.sfr-logo span{font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px}
+.lt-h{font-size:26px;font-weight:800;color:#fff;text-align:center;letter-spacing:-.5px}
+.lt-s{font-size:13px;color:rgba(255,255,255,.4);text-align:center;margin-top:5px}
+.login-card{background:#fff;border-radius:28px 28px 0 0;padding:2rem 1.5rem calc(1.5rem + var(--safe))}
 .lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
-.code-inp{width:100%;padding:16px;border:2px solid var(--border);border-radius:14px;font-size:22px;font-weight:800;text-align:center;letter-spacing:4px;text-transform:uppercase;background:var(--off);color:var(--text);outline:none;transition:all .2s;font-family:inherit;margin-bottom:1.5rem}
-.code-inp:focus{border-color:var(--sfr);background:white}
-.btn-login{width:100%;padding:18px;background:var(--sfr);color:white;border:none;border-radius:14px;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;letter-spacing:.5px;transition:background .15s}
-.btn-login:active{background:var(--sfr-dark)}
-.btn-login:disabled{background:#CCC;cursor:not-allowed}
+.field-inp{width:100%;padding:15px 16px;border:2px solid var(--border);border-radius:13px;font-size:17px;font-family:inherit;background:var(--off);color:var(--text);outline:none;transition:border-color .2s;margin-bottom:1.25rem}
+.field-inp:focus{border-color:var(--sfr);background:#fff}
+.pin-row{display:flex;gap:10px;margin-bottom:1.5rem}
+.pin-d{flex:1;height:62px;border:2px solid var(--border);border-radius:13px;font-size:28px;font-weight:800;text-align:center;background:var(--off);color:var(--text);outline:none;transition:all .2s;-webkit-appearance:none;font-family:inherit}
+.pin-d:focus{border-color:var(--sfr);background:#fff}
+.btn-main{width:100%;padding:17px;background:var(--sfr);color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;transition:background .15s}
+.btn-main:active{background:var(--sfr-dark)}
+.btn-main:disabled{background:#CCC}
 .login-err{margin-top:1rem;padding:12px;background:#FFF0F0;color:var(--sfr);border-radius:10px;font-size:13px;font-weight:600;text-align:center;display:none}
 
 /* ── LOADING ── */
 #loading{align-items:center;justify-content:center;gap:1rem}
 .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--sfr);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:14px;color:var(--muted)}
+.load-txt{font-size:14px;color:var(--muted)}
 
 /* ── HEADER ── */
-.header{background:var(--sfr);padding:52px 1.25rem 1rem;position:sticky;top:0;z-index:10}
-.header-row{display:flex;justify-content:space-between;align-items:flex-start}
-.h-name{font-size:22px;font-weight:800;color:white;letter-spacing:-.3px}
-.h-boutique{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px;font-weight:500}
-.h-logout{background:rgba(255,255,255,.15);border:none;color:white;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
-.h-pills{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.h-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.85);font-weight:600}
+.header{background:var(--sfr);padding:50px 1.25rem .9rem;position:sticky;top:0;z-index:10}
+.h-row{display:flex;justify-content:space-between;align-items:flex-start}
+.h-name{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.h-boutique{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px;font-weight:500}
+.h-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
+.h-pills{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.h-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.85);font-weight:600;letter-spacing:.3px}
 
 /* ── BODY ── */
-.body{flex:1;overflow-y:auto;padding:.75rem .75rem calc(1rem + var(--safe-b))}
+.body{flex:1;overflow-y:auto;padding:.75rem .75rem calc(1rem + var(--safe))}
+.sec{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.75rem .2rem .4rem}
 
-/* ── SEC TITLE ── */
-.sec{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.75rem .25rem .4rem}
+/* ── STATUT ── */
+.statut{border-radius:14px;padding:13px 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:12px}
+.st-great{background:linear-gradient(135deg,var(--green-dk),var(--green))}
+.st-ok{background:linear-gradient(135deg,#1565C0,#1976D2)}
+.st-warn{background:linear-gradient(135deg,#B45309,var(--amber))}
+.st-bad{background:linear-gradient(135deg,var(--sfr-dark),var(--sfr))}
+.st-icon{font-size:26px;flex-shrink:0}
+.st-txt h3{font-size:15px;font-weight:800;color:#fff}
+.st-txt p{font-size:11px;color:rgba(255,255,255,.8);margin-top:2px}
 
-/* ── MARGE HERO ── */
-.marge-hero{background:var(--pro);border-radius:16px;padding:1.25rem;margin-bottom:.75rem}
-.mh-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.mh-block{background:var(--pro2);border-radius:12px;padding:1rem 1rem .9rem}
-.mhb-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
-.mhb-amount{font-size:30px;font-weight:800;color:white;letter-spacing:-1.5px;line-height:1}
-.mhb-amount sup{font-size:14px;font-weight:400;opacity:.5;letter-spacing:0}
-.mhb-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:5px}
-.mh-block.proj{border:1.5px solid rgba(226,0,26,.35)}
-.mh-block.proj .mhb-label{color:rgba(255,120,120,.6)}
-.mh-block.proj .mhb-amount{color:#FF9090}
+/* ── COMMISSION HERO ── */
+.comm-hero{background:var(--pro);border-radius:16px;padding:1.25rem;margin-bottom:.75rem}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.ch-block{background:var(--pro2);border-radius:12px;padding:1rem}
+.chb-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
+.chb-val{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1}
+.chb-val sup{font-size:13px;font-weight:400;opacity:.45}
+.chb-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:4px}
+.ch-block.proj{border:1.5px solid rgba(226,0,26,.4)}
+.ch-block.proj .chb-lbl{color:rgba(255,120,120,.55)}
+.ch-block.proj .chb-val{color:#FF9090}
 
-/* ── COMMISSION CARD ── */
-.comm-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.75rem}
-.comm-big{text-align:center;padding:1.5rem 1rem 1rem}
-.cb-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.cb-amount{font-size:52px;font-weight:900;color:var(--sfr);line-height:1;margin:.5rem 0;letter-spacing:-2px}
-.cb-amount sup{font-size:22px;font-weight:400;opacity:.6}
-.cb-sub{font-size:13px;color:var(--muted)}
-/* Jauge */
-.gauge-wrap{position:relative;width:140px;height:140px;margin:.75rem auto}
-.gauge-wrap svg{transform:rotate(-90deg);width:100%;height:100%}
-.gauge-bg{fill:none;stroke:#E8E8E8;stroke-width:10}
-.gauge-fill{fill:none;stroke:var(--sfr);stroke-width:10;stroke-linecap:round;stroke-dasharray:377;stroke-dashoffset:377;transition:stroke-dashoffset 1.5s ease-out}
-.gauge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.gc-pct{font-size:22px;font-weight:900;color:var(--sfr)}
-.gc-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-top:2px}
-/* Palier */
-.palier-block{background:var(--off);border-top:1px solid var(--border);padding:1rem}
-.pb-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
-.pb-next{font-size:13px;color:var(--text);line-height:1.5}
-.pb-next strong{color:var(--sfr)}
-.pb-bar-bg{height:6px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:.75rem}
-.pb-bar-fill{height:100%;background:var(--sfr);border-radius:10px;transition:width 1s ease}
+/* Commission nette avec malus */
+.comm-nette{background:var(--pro3);border-radius:12px;padding:1rem}
+.cn-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
+.cn-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cn-val{font-size:36px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1}
+.cn-val sup{font-size:16px;font-weight:400;opacity:.5}
+.cn-malus{font-size:12px;font-weight:700;padding:3px 8px;border-radius:8px;background:rgba(226,0,26,.25);color:#FF9090}
+.cn-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:6px}
+
+/* ── JAUGE PALIER ── */
+.palier-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.75rem}
+.pc-top{display:flex;justify-content:space-between;align-items:center;padding:1rem 1rem .75rem}
+.pc-tl{font-size:13px;font-weight:700;color:var(--text)}
+.pc-pct{font-size:24px;font-weight:900;color:var(--sfr)}
+.palier-bar-bg{height:8px;background:var(--border);margin:0 1rem;border-radius:10px;overflow:hidden}
+.palier-bar-fill{height:100%;background:var(--sfr);border-radius:10px;transition:width 1s ease}
+.palier-labels{display:flex;justify-content:space-between;padding:.4rem 1rem .75rem;font-size:10px;color:var(--light)}
+.palier-next{background:var(--off);border-top:1px solid var(--border);padding:.75rem 1rem}
+.pn-txt{font-size:13px;color:var(--text);line-height:1.5}
+.pn-txt strong{color:var(--sfr)}
 
 /* ── ITEMS ── */
 .items-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem}
-.ic{background:white;border:1px solid var(--border);border-radius:14px;padding:.9rem}
-.ic-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-.ic-icon{font-size:20px;line-height:1}
-.ic-badge{font-size:12px;font-weight:800;padding:3px 9px;border-radius:8px}
-.b-great{background:#FEF3C7;color:#92400E}
-.b-ok{background:var(--green-bg);color:var(--green-dark)}
-.b-warn{background:var(--orange-bg);color:var(--orange-dark)}
-.b-bad{background:#FFF0F0;color:var(--sfr-dark)}
-.ic-name{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.2px;margin-bottom:.5rem}
-.prog-bg{height:5px;background:var(--border);border-radius:10px;margin:.4rem 0;overflow:hidden}
+.item-c{background:#fff;border:1px solid var(--border);border-radius:14px;padding:.9rem;position:relative}
+.item-c.item-ok{border-color:#86EFAC}
+.item-c.item-bad{border-color:#FCA5A5}
+.ic-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.ic-icon{font-size:20px}
+.ic-pct-badge{font-size:12px;font-weight:800;padding:3px 8px;border-radius:8px}
+.b-great{background:var(--amber-bg);color:var(--amber)}
+.b-ok{background:var(--green-bg);color:var(--green-dk)}
+.b-warn{background:var(--orange-bg);color:var(--orange)}
+.b-bad{background:#FEE2E2;color:var(--sfr-dark)}
+.ic-name{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.3px;margin-bottom:.45rem;line-height:1.3}
+.prog-bg{height:4px;background:var(--border);border-radius:10px;margin-bottom:.45rem;overflow:hidden}
 .prog-fill{height:100%;border-radius:10px;transition:width .8s}
-.pf-great{background:#F59E0B}
+.pf-great{background:var(--amber)}
 .pf-ok{background:var(--green)}
 .pf-warn{background:var(--orange)}
 .pf-bad{background:var(--sfr)}
 .ic-vals{display:flex;flex-direction:column;gap:3px}
-.iv{display:flex;justify-content:space-between;align-items:baseline}
-.iv-l{font-size:10px;color:var(--light)}
-.iv-r{font-size:13px;font-weight:700;color:var(--text)}
-.iv-r.proj{color:var(--sfr);font-size:11px}
-
-/* ── DÉTAIL COMMISSION ── */
-.detail-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.75rem}
-.det-row{display:flex;justify-content:space-between;align-items:center;padding:11px 1rem;border-bottom:1px solid var(--border)}
-.det-row:last-child{border-bottom:none}
-.dr-n{font-size:13px;color:var(--text)}
-.dr-v{font-size:13px;font-weight:700;color:var(--text)}
-.det-total{background:var(--pro);padding:13px 1rem;display:flex;justify-content:space-between;align-items:center}
-.dt-n{font-size:12px;color:rgba(255,255,255,.5)}
-.dt-v{font-size:20px;font-weight:900;color:white}
-.det-proj{background:#FFF0F0;padding:11px 1rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #FFD0D0}
-.dp-n{font-size:12px;color:var(--sfr);font-weight:700}
-.dp-v{font-size:16px;font-weight:900;color:var(--sfr)}
-
-/* ── STATUT BANNER ── */
-.statut{border-radius:14px;padding:12px 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:12px}
-.s-great{background:linear-gradient(135deg,var(--green-dark),var(--green));color:white}
-.s-ok{background:linear-gradient(135deg,#1565C0,#1976D2);color:white}
-.s-warn{background:linear-gradient(135deg,#E65100,#F57C00);color:white}
-.s-bad{background:linear-gradient(135deg,var(--sfr-dark),var(--sfr));color:white}
-.st-icon{font-size:26px;flex-shrink:0}
-.st-title{font-size:15px;font-weight:800}
-.st-sub{font-size:11px;opacity:.8;margin-top:2px}
+.iv{display:flex;justify-content:space-between;align-items:baseline;gap:4px}
+.iv-l{font-size:10px;color:var(--light);flex-shrink:0}
+.iv-r{font-size:12px;font-weight:700;color:var(--text);text-align:right}
+.iv-r.red{color:var(--sfr)}
+/* Indicateur malus */
+.malus-tag{position:absolute;top:.6rem;right:.6rem;font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;background:#FEE2E2;color:var(--sfr-dark)}
+.ok-tag{position:absolute;top:.6rem;right:.6rem;font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--green-bg);color:var(--green-dk)}
 
 /* ── PRÉSENCE ── */
-.pres{background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.75rem}
-.pres-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-.pres-lbl{font-size:13px;font-weight:700;color:var(--text)}
-.pres-val{font-size:26px;font-weight:900;color:var(--pro)}
+.pres-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.75rem}
+.pres-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.pres-lbl{font-size:13px;font-weight:700}
+.pres-val{font-size:24px;font-weight:900;color:var(--pro)}
 .pres-sub{font-size:11px;color:var(--muted);margin-bottom:.5rem}
-.pres-bar-bg{height:5px;background:var(--border);border-radius:10px;overflow:hidden}
-.pres-bar-fill{height:100%;background:var(--sfr);border-radius:10px}
+.pres-bar{height:5px;background:var(--border);border-radius:10px;overflow:hidden}
+.pres-fill{height:100%;background:var(--sfr);border-radius:10px}
 
 /* ── REFRESH ── */
 .refresh{text-align:center;padding:1rem;font-size:11px;color:var(--light);display:flex;align-items:center;justify-content:center;gap:6px}
@@ -157,40 +146,46 @@ html,body{height:100%;background:var(--off);font-family:-apple-system,BlinkMacSy
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
 /* ── ERREUR ── */
-.err-card{background:white;border-radius:16px;padding:2rem;text-align:center;margin:1rem}
+.err-wrap{padding:2rem 1rem;text-align:center}
 .err-icon{font-size:40px;margin-bottom:1rem}
-.err-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.err-title{font-size:16px;font-weight:700;margin-bottom:.5rem}
 .err-msg{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:1.5rem}
-.err-btn{padding:12px 24px;background:var(--sfr);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
 
-<!-- ══════════ LOGIN ══════════ -->
+<!-- ═══════ LOGIN ═══════ -->
 <div id="login" class="screen active">
   <div class="login-top">
-    <div class="sfr-badge"><span>SFR</span></div>
-    <div class="lt-title">Mes Commissions</div>
-    <div class="lt-sub">Groupe Garcia · Boutiques SFR</div>
+    <div class="sfr-logo"><span>SFR</span></div>
+    <div class="lt-h">Mes Résultats</div>
+    <div class="lt-s">Groupe Garcia · Avril 2026</div>
   </div>
-  <div class="login-bottom">
-    <span class="lbl">Code personnel</span>
-    <input class="code-inp" type="text" id="code-inp" placeholder="XXXXXXXX" maxlength="12" autocomplete="off" autocapitalize="characters" />
-    <button class="btn-login" id="btn-login" onclick="doLogin()">CONNEXION</button>
-    <div class="login-err" id="login-err">Code invalide. Réessayez.</div>
+  <div class="login-card">
+    <span class="lbl">Prénom</span>
+    <input class="field-inp" type="text" id="inp-prenom" placeholder="Ton prénom" autocomplete="off" autocapitalize="words" />
+    <span class="lbl">Code d'accès</span>
+    <div class="pin-row">
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+    </div>
+    <button class="btn-main" id="btn-login" onclick="tryLogin()">Accéder →</button>
+    <div class="login-err" id="login-err">Prénom ou code incorrect</div>
   </div>
 </div>
 
-<!-- ══════════ LOADING ══════════ -->
+<!-- ═══════ LOADING ═══════ -->
 <div id="loading" class="screen">
   <div class="spinner"></div>
-  <div class="loading-txt">Chargement de vos données…</div>
+  <div class="load-txt">Chargement de vos données…</div>
 </div>
 
-<!-- ══════════ DASHBOARD ══════════ -->
+<!-- ═══════ DASHBOARD ═══════ -->
 <div id="dash" class="screen">
   <div class="header">
-    <div class="header-row">
+    <div class="h-row">
       <div>
         <div class="h-name" id="h-name">—</div>
         <div class="h-boutique" id="h-boutique">—</div>
@@ -198,8 +193,8 @@ html,body{height:100%;background:var(--off);font-family:-apple-system,BlinkMacSy
       <button class="h-logout" onclick="doLogout()">← Retour</button>
     </div>
     <div class="h-pills">
-      <span class="h-pill" id="h-mois">—</span>
-      <span class="h-pill" id="h-jour">J— / —</span>
+      <span class="h-pill" id="h-mois">Avril 2026</span>
+      <span class="h-pill" id="h-jour">—</span>
       <span class="h-pill" id="h-maj">—</span>
     </div>
   </div>
@@ -207,78 +202,144 @@ html,body{height:100%;background:var(--off);font-family:-apple-system,BlinkMacSy
 </div>
 
 <script>
+/* ════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════ */
 const SHEET_ID = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
 
-const CODES = {
-  "HASSENE":"HASSENE1847","JULIE TLR":"JULIE3291","AXEL":"AXEL8903",
-  "PAULINE":"PAULINE5274","RACHEL":"RACHEL6138","ILIAN":"ILIAN4562",
-  "ANAIS":"ANAIS8356","LUCAS":"LUCAS7395","LOUANE":"LOUANE2648",
-  "EMMY":"EMMY9173","CHLOE R":"CHLOE8426","WILL":"WILL3857",
-  "EMILIE":"EMILIE6924","NATHAN":"NATHAN1583","MEHDY":"MEHDY7246",
-  "ROMAIN GP":"ROMAIN5831","VICTOR":"VICTOR6247","HAVAL":"HAVAL3918"
+// Login : prénom normalisé → { pin, nomSheet }
+// nomSheet = nom exact dans 3GWIN / Google Sheet
+const VENDEURS_AUTH = {
+  'anais':   { pin:'7342', nomSheet:'ANAIS' },
+  'axel':    { pin:'5819', nomSheet:'AXEL' },
+  'chloe':   { pin:'2967', nomSheet:'CHLOE R' },
+  'emilie':  { pin:'8403', nomSheet:'EMILIE' },
+  'emmy':    { pin:'4651', nomSheet:'EMMY' },
+  'hassene': { pin:'9274', nomSheet:'HASSENE' },
+  'ilian':   { pin:'3586', nomSheet:'ILIAN' },
+  'julie':   { pin:'6038', nomSheet:'JULIE TLR' },
+  'louane':  { pin:'1847', nomSheet:'LOUANE' },
+  'lucas':   { pin:'7520', nomSheet:'LUCAS' },
+  'mehdy':   { pin:'4913', nomSheet:'MEHDY' },
+  'nathan':  { pin:'8261', nomSheet:'NATHAN' },
+  'pauline': { pin:'3074', nomSheet:'PAULINE' },
+  'rachel':  { pin:'6425', nomSheet:'RACHEL' },
+  'will':    { pin:'9130', nomSheet:'WILL' },
 };
 
-const BOUTIQUES_MAP = {
-  "ALR":"SFR Angers","TLR":"SFR Amboise","CLR":"SFR Châteaudun",
-  "CHOLET":"SFR Cholet","RLR":"SFR Romorantin","VLR":"SFR Vendôme"
+const BOUTIQUES = {
+  'ALR':'SFR Angers','TLR':'SFR Amboise','CLR':'SFR Châteaudun',
+  'CHOLET':'SFR Cholet','RLR':'SFR Romorantin','VLR':'SFR Vendôme'
 };
 
-const PALIERS_V = [
-  {min:0,max:2000,pct:0},{min:2000,max:3000,pct:0.02},
-  {min:3000,max:4000,pct:0.03},{min:4000,max:5000,pct:0.05},
-  {min:5000,max:6000,pct:0.06},{min:6000,max:7000,pct:0.07},
-  {min:7000,max:8000,pct:0.08},{min:8000,max:9000,pct:0.09},
-  {min:9000,max:Infinity,pct:0.10}
-];
-const PALIERS_RPV = [
-  {min:0,max:18000,pct:0},{min:18000,max:20000,pct:0.01},
-  {min:20000,max:22000,pct:0.012},{min:22000,max:23000,pct:0.024},
-  {min:23000,max:24000,pct:0.026},{min:24000,max:26000,pct:0.028},
-  {min:26000,max:Infinity,pct:0.03}
+// Paliers marge vendeur
+const PALIERS = [
+  {min:0,    max:2000,     pct:0},
+  {min:2000, max:3000,     pct:0.02},
+  {min:3000, max:4000,     pct:0.03},
+  {min:4000, max:5000,     pct:0.05},
+  {min:5000, max:6000,     pct:0.06},
+  {min:6000, max:7000,     pct:0.07},
+  {min:7000, max:8000,     pct:0.08},
+  {min:8000, max:9000,     pct:0.09},
+  {min:9000, max:Infinity, pct:0.10},
 ];
 
+// Colonnes Google Sheet → noms courts
 const COL = {
   'Code boutique':'codeBoutique','Nom collaborateur':'nom','Rôle':'role',
   'Marge réalisée (€)':'margeRealisee','Nb mobiles vendus':'nbMobiles',
   'Nb garanties 3ème année':'nbGaranties','Nb SFR Cyber vendus':'nbCyber',
-  'Nb assurances vendues':'nbAssurances','Nb mobiles pour taux assurance':'nbMobilesAssurance',
-  'CA accessoires total (€)':'caAccessoires','Jour ouvré courant':'jourOuvre',
+  'Nb assurances vendues':'nbAssurances','Nb mobiles pour taux assurance':'nbMobilesAssu',
+  'CA accessoires total (€)':'caAcc','Jour ouvré courant':'jourOuvre',
   'Nb jours ouvrés total':'nbJoursOuvres','Jours travaillés (individuel)':'joursTravailles',
   "Nom de l'item":'nomItem','Objectif':'objectif','Unité':'unite',
-  'Poids (% rému)':'poids','Mois en cours':'moisEnCours','Dernière MAJ':'derniereMaj'
+  'Mois en cours':'moisEnCours','Dernière MAJ':'derniereMaj'
 };
 
+/* ════════════════════════════════════════
+   CALCULS
+════════════════════════════════════════ */
+
+// Commission brute sur marge selon paliers
+function commBrute(marge) {
+  for (let i = PALIERS.length - 1; i >= 0; i--) {
+    if (marge >= PALIERS[i].min) return Math.round(marge * PALIERS[i].pct);
+  }
+  return 0;
+}
+
+// Palier actuel
+function palierActuel(marge) {
+  for (let i = PALIERS.length - 1; i >= 0; i--) {
+    if (marge >= PALIERS[i].min) return PALIERS[i];
+  }
+  return PALIERS[0];
+}
+
+// Prochain palier
+function prochainPalier(marge) {
+  for (let p of PALIERS) {
+    if (marge < p.max && p.pct > 0 && marge < p.min + (p.max - p.min)) {
+      if (marge < p.min) return { reste: Math.round(p.min - marge), palier: p };
+      if (marge < p.max) {
+        // dans ce palier, prochain = palier suivant
+        const idx = PALIERS.indexOf(p);
+        if (idx < PALIERS.length - 1 && PALIERS[idx+1].max !== Infinity) {
+          return { reste: Math.round(PALIERS[idx+1].min - marge), palier: PALIERS[idx+1] };
+        }
+      }
+    }
+  }
+  // chercher le prochain palier non encore atteint
+  for (let p of PALIERS) {
+    if (marge < p.min) return { reste: Math.round(p.min - marge), palier: p };
+  }
+  return null;
+}
+
+// Commission nette = commission brute × (1 - items_ratés × 0.20)
+// items_atteints = nb items à 100%+
+function commNette(commBr, itemsAtteints, totalItems) {
+  const ratés = Math.max(0, totalItems - itemsAtteints);
+  const malus = Math.min(ratés * 0.20, 1.0);
+  return { nette: Math.round(commBr * (1 - malus)), malus: Math.round(malus * 100), ratés };
+}
+
+/* ════════════════════════════════════════
+   GOOGLE SHEET FETCH (JSONP)
+════════════════════════════════════════ */
 let _jc = 0;
 function fetchSheet(sheet) {
   return new Promise((res, rej) => {
     const cb = '_sc_' + (++_jc) + '_' + Date.now();
-    const to = setTimeout(() => { delete window[cb]; rej(new Error('Timeout')); }, 15000);
+    const to = setTimeout(() => { delete window[cb]; rej(new Error('Timeout réseau')); }, 15000);
     window[cb] = r => {
       clearTimeout(to); delete window[cb];
-      const s = document.getElementById(cb); if(s) s.remove();
-      r.status && r.status !== 'ok' ? rej(new Error(r.message||'Erreur')) : res(r);
+      document.getElementById(cb)?.remove();
+      r.status && r.status !== 'ok' ? rej(new Error(r.message || 'Erreur Sheet')) : res(r);
     };
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cb}&sheet=${encodeURIComponent(sheet)}`;
     const s = document.createElement('script');
-    s.id = cb; s.src = url;
-    s.onerror = () => { clearTimeout(to); delete window[cb]; s.remove(); rej(new Error('Réseau')); };
+    s.id = cb;
+    s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cb}&sheet=${encodeURIComponent(sheet)}`;
+    s.onerror = () => { clearTimeout(to); delete window[cb]; s.remove(); rej(new Error('Erreur réseau')); };
     document.head.appendChild(s);
   });
 }
 
 function parseRows(r) {
   const rows = [];
-  if (!r.table || !r.table.rows) return rows;
+  if (!r.table?.rows) return rows;
   r.table.rows.forEach(row => {
     const obj = {};
     r.table.cols.forEach((col, i) => {
-      let v = row.c[i] ? row.c[i].v : null;
+      let v = row.c[i]?.v ?? null;
       const key = COL[col.label] || col.label;
-      if (v && typeof v === 'string' && v.startsWith('Date(')) {
-        const p = v.replace('Date(','').replace(')','').split(',');
+      if (typeof v === 'string' && v.startsWith('Date(')) {
+        const p = v.slice(5,-1).split(',');
         const d = new Date(+p[0], +p[1], +(p[2]||1));
-        const mois = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-        v = key === 'derniereMaj' ? d.toLocaleDateString('fr-FR') : mois[d.getMonth()] + ' ' + d.getFullYear();
+        const M = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+        v = key === 'derniereMaj' ? d.toLocaleDateString('fr-FR') : M[d.getMonth()] + ' ' + d.getFullYear();
       }
       obj[key] = v;
     });
@@ -287,290 +348,300 @@ function parseRows(r) {
   return rows;
 }
 
-function calcComm(marge, paliers) {
-  for (let i = paliers.length-1; i >= 0; i--) {
-    if (marge >= paliers[i].min) return Math.round(marge * paliers[i].pct);
-  }
-  return 0;
-}
+/* ════════════════════════════════════════
+   AUTH
+════════════════════════════════════════ */
+const pins = [...document.querySelectorAll('.pin-d')];
+pins.forEach((p,i) => {
+  p.addEventListener('input', () => {
+    p.value = p.value.replace(/\D/,'');
+    if (p.value && i < 3) pins[i+1].focus();
+    if (i === 3 && p.value) tryLogin();
+  });
+  p.addEventListener('keydown', e => {
+    if (e.key==='Backspace' && !p.value && i > 0) { pins[i-1].focus(); pins[i-1].value=''; }
+  });
+});
+document.getElementById('inp-prenom').addEventListener('keydown', e => { if(e.key==='Enter') pins[0].focus(); });
 
-function nextPalier(marge, paliers) {
-  for (let p of paliers) {
-    if (marge < p.max && p.pct > 0) {
-      const reste = Math.round(p.max - marge);
-      const gain = Math.round(p.max * p.pct);
-      return { reste, gain, max: p.max, pct: Math.round(p.pct*100) };
-    }
-  }
-  return null;
-}
+function norm(s){ return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function getPin(){ return pins.map(p=>p.value).join(''); }
+let currentAuth = null;
 
-// ── AUTH ──
-document.getElementById('code-inp').addEventListener('keyup', e => { if(e.key==='Enter') doLogin(); });
-
-let currentVendeur = null;
-function doLogin() {
-  const code = document.getElementById('code-inp').value.trim().toUpperCase();
+function tryLogin() {
+  const prenom = norm(document.getElementById('inp-prenom').value);
+  const pin = getPin();
+  const auth = VENDEURS_AUTH[prenom];
   const err = document.getElementById('login-err');
-  let found = null;
-  for (let nom in CODES) { if (CODES[nom].toUpperCase() === code) { found = nom; break; } }
-  if (!found) { err.style.display='block'; return; }
-  err.style.display='none';
-  currentVendeur = found;
-  const btn = document.getElementById('btn-login');
-  btn.disabled = true; btn.textContent = 'CHARGEMENT...';
-  show('loading');
-  loadData(found);
+  if (auth && auth.pin === pin) {
+    err.style.display = 'none';
+    currentAuth = auth;
+    document.getElementById('btn-login').disabled = true;
+    showScreen('loading');
+    loadData(auth);
+  } else {
+    err.style.display = 'block';
+    pins.forEach(p=>p.value='');
+    pins[0].focus();
+  }
 }
 
 function doLogout() {
-  currentVendeur = null;
-  document.getElementById('code-inp').value = '';
+  currentAuth = null;
+  document.getElementById('inp-prenom').value = '';
+  pins.forEach(p=>p.value='');
   document.getElementById('btn-login').disabled = false;
-  document.getElementById('btn-login').textContent = 'CONNEXION';
-  show('login');
+  showScreen('login');
 }
 
-function show(id) {
+function showScreen(id) {
   ['login','loading','dash'].forEach(s => {
-    document.getElementById(s).classList.remove('active');
-    document.getElementById(s).style.display = '';
+    const el = document.getElementById(s);
+    el.classList.remove('active');
+    el.style.display = '';
   });
   const el = document.getElementById(id);
   el.classList.add('active');
   el.style.display = 'flex';
 }
 
-// ── LOAD ──
-function loadData(vendeurNom) {
+/* ════════════════════════════════════════
+   LOAD DATA
+════════════════════════════════════════ */
+function loadData(auth) {
   Promise.all([fetchSheet('Données_Commissions'), fetchSheet('Items_Mois'), fetchSheet('Config')])
     .then(([r1, r2, r3]) => {
       const donnees = parseRows(r1);
       const items   = parseRows(r2);
       const config  = parseRows(r3);
-      renderDash(vendeurNom, donnees, items, config);
+      renderDash(auth, donnees, items, config);
     })
     .catch(e => {
-      show('dash');
+      showScreen('dash');
       document.getElementById('dash-body').innerHTML = `
-        <div class="err-card">
+        <div class="err-wrap">
           <div class="err-icon">⚠️</div>
-          <div class="err-title">Erreur de chargement</div>
-          <div class="err-msg">${e.message}<br>Vérifiez que la feuille Google est bien publiée sur le web.</div>
-          <button class="err-btn" onclick="doLogout()">Retour</button>
+          <div class="err-title">Erreur de connexion</div>
+          <div class="err-msg">${e.message}<br><br>Vérifiez que la feuille Google est publiée sur le web.</div>
+          <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
         </div>`;
     });
 }
 
-// ── RENDER ──
-function fmt(n) { return Math.round(n).toLocaleString('fr-FR'); }
-function pct(real, obj) { return obj > 0 ? Math.min(Math.round(real/obj*100), 200) : (real > 0 ? 100 : 0); }
-function pctClass(p) { return p>=100?'b-great':p>=75?'b-ok':p>=50?'b-warn':'b-bad'; }
-function fillClass(p) { return p>=100?'pf-great':p>=75?'pf-ok':p>=50?'pf-warn':'pf-bad'; }
+/* ════════════════════════════════════════
+   RENDER
+════════════════════════════════════════ */
+function fmt(n){ return Math.round(n).toLocaleString('fr-FR'); }
+function pct(real, obj){ return obj > 0 ? Math.min(Math.round(real/obj*100), 200) : (real>0?100:0); }
+function badgeClass(p){ return p>=100?'b-great':p>=75?'b-ok':p>=50?'b-warn':'b-bad'; }
+function fillClass(p){ return p>=100?'pf-great':p>=75?'pf-ok':p>=50?'pf-warn':'pf-bad'; }
 
-function renderDash(nom, donnees, items, config) {
-  // Trouver le vendeur
-  const v = donnees.find(d => d.nom && d.nom.toUpperCase() === nom.toUpperCase());
+function renderDash(auth, donnees, items, config) {
+  // Trouver le vendeur dans le Sheet
+  const nomSheet = auth.nomSheet;
+  const v = donnees.find(d => d.nom && d.nom.toUpperCase().trim() === nomSheet.toUpperCase());
+
   if (!v) {
-    show('dash');
-    document.getElementById('dash-body').innerHTML = `<div class="err-card"><div class="err-icon">🔍</div><div class="err-title">Données introuvables</div><div class="err-msg">Aucune donnée pour ${nom}. Contactez votre manager.</div><button class="err-btn" onclick="doLogout()">Retour</button></div>`;
+    showScreen('dash');
+    document.getElementById('dash-body').innerHTML = `
+      <div class="err-wrap">
+        <div class="err-icon">🔍</div>
+        <div class="err-title">Données introuvables</div>
+        <div class="err-msg">Aucune donnée pour ${nomSheet}.<br>Contactez votre manager.</div>
+        <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
+      </div>`;
     return;
   }
 
-  const isRPV = (v.role || '').toLowerCase().includes('rpv') || (v.role || '').toLowerCase().includes('manager');
-  const paliers = isRPV ? PALIERS_RPV : PALIERS_V;
-  const boutique = BOUTIQUES_MAP[v.codeBoutique] || v.codeBoutique || '';
-  const marge = parseFloat(v.margeRealisee) || 0;
-  const jourOuvre = parseInt(v.jourOuvre) || 1;
-  const nbJours = parseInt(v.nbJoursOuvres) || 22;
-  const joursTrav = parseInt(v.joursTravailles) || nbJours;
-
-  // Projection linéaire
-  const coefProj = joursTrav > 0 ? jourOuvre / joursTrav : 0;
-  const margeProj = coefProj > 0 ? Math.round(marge / coefProj) : marge;
-
-  const commR = calcComm(marge, paliers);
-  const commP = calcComm(margeProj, paliers);
-  const palierAct = (() => { for(let i=paliers.length-1;i>=0;i--) if(marge>=paliers[i].min) return paliers[i]; return paliers[0]; })();
-  const next = nextPalier(marge, paliers);
-
   // Config
   const cfg = config[0] || {};
-  const moisLabel = cfg.moisEnCours || 'Mois en cours';
-  const majDate = cfg.derniereMaj || '';
+  const moisLabel = cfg.moisEnCours || 'Avril 2026';
+  const majDate   = cfg.derniereMaj || '';
+  const boutique  = BOUTIQUES[v.codeBoutique] || v.codeBoutique || '';
 
-  // Items payplan
-  const itemsVendeur = items.filter(it => it.nomItem);
-
-  // Calcul des réalisés items
-  const nbMob = parseFloat(v.nbMobiles) || 0;
-  const nbG3A = parseFloat(v.nbGaranties) || 0;
-  const nbCyber = parseFloat(v.nbCyber) || 0;
-  const nbAssu = parseFloat(v.nbAssurances) || 0;
-  const nbMobAssu = parseFloat(v.nbMobilesAssurance) || nbMob || 1;
-  const caAcc = parseFloat(v.caAccessoires) || 0;
-  const txAssu = nbMobAssu > 0 ? Math.round((nbAssu / nbMobAssu) * 100) : 0;
-  const txG3A  = nbMob > 0 ? Math.round((nbG3A / nbMob) * 100) : 0;
+  // Données brutes
+  const marge     = parseFloat(v.margeRealisee) || 0;
+  const jourOuvre = parseInt(v.jourOuvre) || 1;
+  const nbJours   = parseInt(v.nbJoursOuvres) || 22;
+  const joursTrav = parseInt(v.joursTravailles) || nbJours;
+  const nbMob     = parseFloat(v.nbMobiles) || 0;
+  const nbG3A     = parseFloat(v.nbGaranties) || 0;
+  const nbCyber   = parseFloat(v.nbCyber) || 0;
+  const nbAssu    = parseFloat(v.nbAssurances) || 0;
+  const nbMobAssu = parseFloat(v.nbMobilesAssu) || nbMob || 1;
+  const caAcc     = parseFloat(v.caAcc) || 0;
+  const txAssu    = nbMobAssu > 0 ? Math.round((nbAssu / nbMobAssu) * 100) : 0;
+  const txG3A     = nbMob > 0 ? Math.round((nbG3A / nbMob) * 100) : 0;
   const accParMob = nbMob > 0 ? Math.round(caAcc / nbMob) : 0;
 
+  // Coefficient de projection (basé sur jours passés vs jours présence)
+  const coef = jourOuvre > 0 && joursTrav > 0 ? joursTrav / jourOuvre : 1;
+
+  // ── MARGE PROJETÉE ──
+  const margeProj = Math.round(marge * coef);
+
+  // ── ITEMS : réalisé & projeté ──
+  const itemsDefs = items.filter(it => it.nomItem);
+
+  // Map réel + projeté par item
   const realMap = {
-    'Mobiles': { real: nbMob, proj: coefProj>0 ? Math.round(nbMob/coefProj) : nbMob, icon:'📱' },
-    'Garantie 3ème Année': { real: txG3A, proj: txG3A, icon:'🛡️' },
-    'SFR Cyber': { real: nbCyber, proj: coefProj>0 ? Math.round(nbCyber/coefProj) : nbCyber, icon:'🔒' },
-    "Taux d'Assurance": { real: txAssu, proj: txAssu, icon:'⚡' },
-    "Taux d'Accessoire": { real: accParMob, proj: accParMob, icon:'🎧' },
+    'Mobiles':              { real: nbMob,     proj: Math.round(nbMob*coef),     icon:'📱', unite:'unités' },
+    'Garantie 3ème Année':  { real: txG3A,     proj: txG3A,                      icon:'🛡️', unite:'%' },
+    'SFR Cyber':            { real: nbCyber,   proj: Math.round(nbCyber*coef),   icon:'🔒', unite:'unités' },
+    "Taux d'Assurance":     { real: txAssu,    proj: txAssu,                     icon:'⚡', unite:'%' },
+    "Taux d'Accessoire":    { real: accParMob, proj: accParMob,                  icon:'🎧', unite:'€/mob' },
   };
 
+  // Items atteints (réalisé ≥ objectif)
+  let itemsAtteints = 0;
+  const totalItems = itemsDefs.length || 5;
+
+  itemsDefs.forEach(it => {
+    const r = realMap[it.nomItem];
+    const obj = parseFloat(it.objectif) || 1;
+    if (r && r.real >= obj) itemsAtteints++;
+  });
+
+  // ── COMMISSIONS ──
+  const commBrR = commBrute(marge);       // sur réalisé actuel
+  const commBrP = commBrute(margeProj);   // sur marge projetée
+  const palierP = palierActuel(margeProj);
+  const { nette: commNetteP, malus: malusPct, ratés } = commNette(commBrP, itemsAtteints, totalItems);
+  const next = prochainPalier(margeProj);
+
+  // Progression dans le palier projeté
+  const palierMin = palierP.min;
+  const palierMax = palierP.max === Infinity ? palierMin + 1000 : palierP.max;
+  const progPalier = Math.min(Math.round(((margeProj - palierMin) / (palierMax - palierMin)) * 100), 100);
+
   // Statut global
-  const pctsMoy = itemsVendeur.length > 0
-    ? Math.round(itemsVendeur.map(it => {
+  const avgPct = itemsDefs.length > 0
+    ? Math.round(itemsDefs.map(it => {
         const r = realMap[it.nomItem]; const obj = parseFloat(it.objectif)||1;
         return r ? pct(r.real, obj) : 0;
-      }).reduce((a,b)=>a+b,0) / itemsVendeur.length)
-    : pct(marge, 3000);
+      }).reduce((a,b)=>a+b,0) / itemsDefs.length)
+    : 50;
 
-  let stClass, stIcon, stTitle, stSub;
-  if (pctsMoy>=100){stClass='s-great';stIcon='🏆';stTitle='Objectifs atteints !';stSub='Excellent mois, continue comme ça !'}
-  else if(pctsMoy>=75){stClass='s-ok';stIcon='✅';stTitle='En bonne voie';stSub='Maintiens ce rythme jusqu\'à la fin du mois'}
-  else if(pctsMoy>=40){stClass='s-warn';stIcon='⚡';stTitle='À accélérer';stSub='Il te reste du temps — serre les dents !'}
-  else{stClass='s-bad';stIcon='🚨';stTitle='Décroché';stSub='Reprends contact avec ton manager'}
-
-  // Jauge
-  const jaugePct = Math.min(Math.round((marge / (isRPV ? 26000 : 9000)) * 100), 100);
-  const jaugeDash = Math.round(377 * (1 - jaugePct/100));
-
-  // Pct palier actuel
-  const palierPct = palierAct.max === Infinity ? 100 :
-    Math.round(((marge - palierAct.min) / (palierAct.max - palierAct.min)) * 100);
+  let stClass, stIcon, stH, stP;
+  if (avgPct>=100){stClass='st-great';stIcon='🏆';stH='Objectifs atteints !';stP='Commission pleine, 0 malus — excellent !'}
+  else if(avgPct>=75){stClass='st-ok';stIcon='✅';stH='En bonne voie';stP='Maintiens ce rythme jusqu\'à la fin du mois'}
+  else if(avgPct>=40){stClass='st-warn';stIcon='⚡';stH='À accélérer';stP='Chaque item non atteint = -20% de commission'}
+  else{stClass='st-bad';stIcon='🚨';stH='Décroché';stP='Reprends contact avec ton manager'}
 
   // Header
-  document.getElementById('h-name').textContent = nom;
+  document.getElementById('h-name').textContent = nomSheet.charAt(0)+nomSheet.slice(1).toLowerCase();
   document.getElementById('h-boutique').textContent = boutique;
   document.getElementById('h-mois').textContent = moisLabel;
   document.getElementById('h-jour').textContent = `J${jourOuvre} / ${nbJours}`;
-  document.getElementById('h-maj').textContent = majDate ? `MAJ ${majDate}` : 'Temps réel';
+  document.getElementById('h-maj').textContent = majDate ? `MAJ ${majDate}` : 'En direct';
 
   // Items HTML
-  const itemsHTML = itemsVendeur.map(it => {
-    const key = it.nomItem;
-    const r = realMap[key] || { real:0, proj:0, icon:'📊' };
-    const obj = parseFloat(it.objectif) || 1;
-    const unite = (it.unite || '').trim();
-    const p = pct(r.real, obj);
-    const fmtU = v => unite === '%' ? v+'%' : unite === '€' || unite.includes('€') ? v+'€' : ''+v;
-    return `<div class="ic">
+  const itemsHTML = itemsDefs.map(it => {
+    const r = realMap[it.nomItem] || { real:0, proj:0, icon:'📊', unite:'' };
+    const objVal = parseFloat(it.objectif) || 1;
+    const p = pct(r.real, objVal);
+    const atteint = r.real >= objVal;
+    const fmtV = val => it.unite === '%' || r.unite === '%' ? val+'%'
+                      : it.unite?.includes('€') || r.unite?.includes('€') ? val+'€'
+                      : ''+val;
+    return `<div class="item-c ${atteint?'item-ok':'item-bad'}">
+      ${atteint
+        ? `<span class="ok-tag">+0%</span>`
+        : `<span class="malus-tag">-20%</span>`}
       <div class="ic-top">
-        <span class="ic-icon">${r.icon||'📊'}</span>
-        <span class="ic-badge ${pctClass(p)}">${p}%</span>
+        <span class="ic-icon">${r.icon}</span>
+        <span class="ic-pct-badge ${badgeClass(p)}">${p}%</span>
       </div>
-      <div class="ic-name">${key}</div>
+      <div class="ic-name">${it.nomItem}</div>
       <div class="prog-bg"><div class="prog-fill ${fillClass(p)}" style="width:${Math.min(p,100)}%"></div></div>
       <div class="ic-vals">
-        <div class="iv"><span class="iv-l">Réalisé</span><span class="iv-r">${fmtU(r.real)}</span></div>
-        <div class="iv"><span class="iv-l">Objectif</span><span class="iv-r" style="color:var(--muted)">${fmtU(obj)}</span></div>
-        <div class="iv"><span class="iv-l">Proj.</span><span class="iv-r proj">${fmtU(r.proj)}</span></div>
+        <div class="iv"><span class="iv-l">Réalisé</span><span class="iv-r">${fmtV(r.real)}</span></div>
+        <div class="iv"><span class="iv-l">Objectif</span><span class="iv-r" style="color:var(--muted)">${fmtV(objVal)}</span></div>
+        <div class="iv"><span class="iv-l">Proj. fin mois</span><span class="iv-r red">${fmtV(r.proj)}</span></div>
       </div>
     </div>`;
   }).join('');
 
-  // Détail commission
-  const commLignes = [
-    { n:`📱 Mobiles (${Math.round(nbMob)})`, v: Math.round(nbMob*30)+' €' },
-    { n:`🛡️ G3A (${Math.round(nbG3A)} × 15€)`, v: Math.round(nbG3A*15)+' €' },
-    { n:`🔒 SFR Cyber (${Math.round(nbCyber)} × 8€)`, v: Math.round(nbCyber*8)+' €' },
-    { n:`⚡ Bonus assurance (${txAssu}%)`, v: (txAssu>=40?200:txAssu>=25?80:0)+' €' },
-    { n:`🎧 Acc. marge (~40%)`, v: Math.round(caAcc*0.4)+' €' },
-  ];
+  // Malus expliqué
+  const malusExplain = ratés === 0
+    ? `<span style="color:var(--green-dk);font-weight:700">✓ Tous les items atteints — commission pleine !</span>`
+    : `<span style="color:var(--sfr)">⚠️ ${ratés} item${ratés>1?'s':''} non atteint${ratés>1?'s':''} → malus de ${malusPct}%</span>`;
 
   document.getElementById('dash-body').innerHTML = `
 
+    <!-- Statut -->
     <div class="statut ${stClass}">
       <span class="st-icon">${stIcon}</span>
-      <div><div class="st-title">${stTitle}</div><div class="st-sub">${stSub}</div></div>
+      <div class="st-txt"><h3>${stH}</h3><p>${stP}</p></div>
     </div>
 
-    <!-- Marge réelle + projetée -->
-    <div class="marge-hero">
-      <div class="mh-row">
-        <div class="mh-block">
-          <div class="mhb-label">Marge réalisée</div>
-          <div class="mhb-amount">${fmt(marge)}<sup> €</sup></div>
-          <div class="mhb-sub">J${jourOuvre} sur ${joursTrav}j travaillés</div>
+    <!-- Commission hero -->
+    <div class="comm-hero">
+      <div class="ch-grid">
+        <div class="ch-block">
+          <div class="chb-lbl">Marge réalisée</div>
+          <div class="chb-val">${fmt(marge)}<sup> €</sup></div>
+          <div class="chb-sub">J${jourOuvre} · palier ${Math.round(palierActuel(marge).pct*100)}%</div>
         </div>
-        <div class="mh-block proj">
-          <div class="mhb-label">Projection fin mois</div>
-          <div class="mhb-amount">${fmt(margeProj)}<sup> €</sup></div>
-          <div class="mhb-sub">Si rythme maintenu</div>
+        <div class="ch-block proj">
+          <div class="chb-lbl">Marge projetée</div>
+          <div class="chb-val">${fmt(margeProj)}<sup> €</sup></div>
+          <div class="chb-sub">Fin de mois · palier ${Math.round(palierP.pct*100)}%</div>
         </div>
+      </div>
+
+      <!-- Commission nette projetée -->
+      <div class="comm-nette">
+        <div class="cn-lbl">Commission nette projetée</div>
+        <div class="cn-main">
+          <div class="cn-val">${fmt(commNetteP)}<sup> €</sup></div>
+          ${malusPct > 0 ? `<span class="cn-malus">-${malusPct}% malus</span>` : '<span class="cn-malus" style="background:rgba(0,166,81,.2);color:#86EFAC">0% malus</span>'}
+        </div>
+        <div class="cn-sub" style="margin-top:8px;font-size:11px">
+          ${malusExplain}
+        </div>
+        <div class="cn-sub" style="margin-top:4px">Commission brute ${fmt(commBrP)} € × ${100-malusPct}% = <strong style="color:rgba(255,255,255,.7)">${fmt(commNetteP)} €</strong></div>
       </div>
     </div>
 
-    <!-- Commission avec jauge -->
-    <div class="comm-card">
-      <div class="comm-big">
-        <div class="cb-lbl">Commission sur marge réalisée</div>
-        <div class="cb-amount">${fmt(commR)}<sup> €</sup></div>
-        <div class="gauge-wrap">
-          <svg viewBox="0 0 130 130">
-            <circle class="gauge-bg" cx="65" cy="65" r="60"/>
-            <circle class="gauge-fill" id="gauge-fill" cx="65" cy="65" r="60"/>
-          </svg>
-          <div class="gauge-center">
-            <div class="gc-pct">${jaugePct}%</div>
-            <div class="gc-lbl">du max</div>
-          </div>
+    <!-- Palier -->
+    <div class="palier-card">
+      <div class="pc-top">
+        <div>
+          <div class="pc-tl">Palier de marge projeté</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${fmt(palierMin)} € → ${palierP.max===Infinity?'+9 000 €':fmt(palierMax)+' €'}</div>
         </div>
-        <div class="cb-sub">Palier actuel : <strong style="color:var(--sfr)">${Math.round(palierAct.pct*100)}%</strong> de la marge</div>
+        <div class="pc-pct">${Math.round(palierP.pct*100)}%</div>
       </div>
+      <div class="palier-bar-bg"><div class="palier-bar-fill" id="palier-bar" style="width:${progPalier}%"></div></div>
+      <div class="palier-labels"><span>${fmt(palierMin)} €</span><span>${palierP.max===Infinity?'MAX':fmt(palierMax)+' €'}</span></div>
       ${next ? `
-      <div class="palier-block">
-        <div class="pb-title">🎯 Prochain palier</div>
-        <div class="pb-next">Encore <strong>${fmt(next.reste)} €</strong> de marge pour atteindre le palier <strong>${next.pct}%</strong> (commission jusqu'à <strong>${fmt(next.gain)} €</strong>)</div>
-        <div class="pb-bar-bg"><div class="pb-bar-fill" style="width:${palierPct}%"></div></div>
-      </div>` : `<div class="palier-block"><div class="pb-title">🏆 Palier maximum atteint</div><div class="pb-next">Tu es au <strong style="color:var(--sfr)">palier 10%</strong> — maximum de commission !</div></div>`}
-    </div>
-
-    <!-- Commission projetée -->
-    <div style="background:#FFF0F0;border:1px solid #FFD0D0;border-radius:14px;padding:1rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sfr);margin-bottom:3px">Commission projetée fin de mois</div>
-        <div style="font-size:12px;color:var(--muted)">Sur ${fmt(margeProj)} € de marge</div>
-      </div>
-      <div style="font-size:28px;font-weight:900;color:var(--sfr)">${fmt(commP)} €</div>
+      <div class="palier-next">
+        <div class="pn-txt">Encore <strong>${fmt(next.reste)} €</strong> de marge projetée pour atteindre le palier <strong>${Math.round(next.palier.pct*100)}%</strong></div>
+      </div>` : `<div class="palier-next"><div class="pn-txt" style="color:var(--green-dk);font-weight:700">🏆 Palier maximum atteint !</div></div>`}
     </div>
 
     <!-- Présence -->
-    <div class="pres">
-      <div class="pres-top">
-        <span class="pres-lbl">⏱️ Présence</span>
+    <div class="pres-card">
+      <div class="pres-row">
+        <span class="pres-lbl">⏱️ Présence du mois</span>
         <span class="pres-val">${joursTrav}j</span>
       </div>
       <div class="pres-sub">sur ${nbJours} jours ouvrables · objectifs proratisés à ${Math.round(joursTrav/nbJours*100)}%</div>
-      <div class="pres-bar-bg"><div class="pres-bar-fill" style="width:${Math.round(joursTrav/nbJours*100)}%"></div></div>
+      <div class="pres-bar"><div class="pres-fill" style="width:${Math.round(joursTrav/nbJours*100)}%"></div></div>
     </div>
 
     <!-- 5 Items -->
-    <div class="sec">Les 5 items payplan</div>
-    <div class="items-grid">${itemsHTML || '<div style="grid-column:1/-1;padding:1rem;text-align:center;color:var(--muted);font-size:13px">Items en cours de chargement…</div>'}</div>
-
-    <!-- Détail -->
-    <div class="sec">Détail des commissions</div>
-    <div class="detail-card">
-      ${commLignes.map(l=>`<div class="det-row"><span class="dr-n">${l.n}</span><span class="dr-v">${l.v}</span></div>`).join('')}
-      <div class="det-total"><span class="dt-n">Commission actuelle</span><span class="dt-v">${fmt(commR)} €</span></div>
-      <div class="det-proj"><span class="dp-n">🎯 Projection fin de mois</span><span class="dp-v">${fmt(commP)} €</span></div>
+    <div class="sec">Les 5 items — impact sur commission</div>
+    <div style="background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:.75rem 1rem;margin-bottom:.75rem;font-size:12px;color:var(--amber);font-weight:600;line-height:1.5">
+      ⚠️ Chaque item non atteint = <strong>-20%</strong> de commission.<br>5/5 atteints = commission pleine (${Math.round(palierP.pct*100)}% de ta marge projetée)
     </div>
+    <div class="items-grid">${itemsHTML || '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:1rem;font-size:13px">Items en cours de chargement…</div>'}</div>
 
-    <div class="refresh"><div class="live"></div>Données Google Sheet · ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+    <div class="refresh"><div class="live"></div>Google Sheet · ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
   `;
 
-  show('dash');
-
-  // Animer la jauge
-  setTimeout(() => {
-    const g = document.getElementById('gauge-fill');
-    if (g) g.style.strokeDashoffset = jaugeDash;
-  }, 100);
+  showScreen('dash');
 }
 </script>
 </body>
