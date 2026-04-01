@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mes Commissions - Groupe Garcia</title>
+  <style>
+    /* ===== RESET ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ===== HEADER STICKY ===== */
+    .header {
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      padding: 24px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e8e8e8;
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.05s; }
+    .card:nth-child(3) { animation-delay: 0.1s; }
+    .card:nth-child(4) { animation-delay: 0.15s; }
+    .card:nth-child(5) { animation-delay: 0.2s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== CARD TITLES ===== */
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e60000;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .icon {
+      font-size: 18px;
+    }
+
+    /* ===== COMMISSION CARD (MAIN) ===== */
+    .commission-amount {
+      font-size: 52px;
+      font-weight: 800;
+      color: #e60000;
+      text-align: center;
+      line-height: 1;
+      margin: 20px 0;
+    }
+
+    .commission-label {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .commission-realise {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .commission-realise .amount {
+      color: #e60000;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    /* ===== JAUGE CIRCULAIRE ===== */
+    .gauge-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 16px auto 0;
+    }
+
+    .gauge-container svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .gauge-circle {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    .gauge-bg {
+      stroke: #e8e8e8;
+    }
+
+    .gauge-fill {
+      stroke: #e60000;
+      stroke-dasharray: 427; /* 2 * PI * 68 */
+      stroke-dashoffset: 427;
+      transition: stroke-dashoffset 1.5s ease-out;
+    }
+
+    .gauge-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-weight: 700;
+      color: #e60000;
+      font-size: 16px;
+    }
+
+    /* ===== MARGE CARD ===== */
+    .marge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .marge-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .marge-label {
+      font-size: 13px;
+      color: #666;
+      flex: 1;
+    }
+
+    .marge-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e60000;
+      text-align: right;
+      min-width: 80px;
+    }
+
+    .marge-detail {
+      font-size: 12px;
+      color: #999;
+      text-align: right;
+    }
+
+    .palier-box {
+      background: #f9f9f9;
+      border-left: 4px solid #e60000;
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .palier-box strong {
+      color: #e60000;
+      font-weight: 700;
+    }
+
+    /* ===== ITEMS CARD ===== */
+    .item-row {
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    .item-values {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .item-value {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .item-value strong {
+      color: #e60000;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge.atteint {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge.en_cours {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.danger {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .badge.projection {
+      background: #e3f2fd;
+      color: #1565c0;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    /* ===== BARRE DE PROGRESSION ===== */
+    .progress-bar {
+      height: 8px;
+      background: #e8e8e8;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0;
+    }
+
+    .progress-fill.atteint {
+      background: linear-gradient(90deg, #28a745, #20c997);
+    }
+
+    .progress-fill.en_cours {
+      background: linear-gradient(90deg, #fd7e14, #ffc107);
+    }
+
+    .progress-fill.danger {
+      background: linear-gradient(90deg, #dc3545, #e74c3c);
+    }
+
+    .progress-subtext {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 12px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 120px);
+      padding: 20px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h2 {
+      color: #1a1a1a;
+      margin-bottom: 24px;
+      font-size: 20px;
+    }
+
+    .login-select {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 14px;
+      font-size: 16px;
+      background: #fafafa;
+      margin-bottom: 20px;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .login-select:focus {
+      outline: none;
+      border-color: #e60000;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .login-btn:active {
+      transform: scale(0.98);
+    }
+
+    .login-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* ===== LOADING SPINNER ===== */
+    .loading-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 120px);
+      gap: 20px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e8e8e8;
+      border-top-color: #e60000;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* ===== BOUTON RETOUR ===== */
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #e60000, #b30000);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 99;
+    }
+
+    .back-btn:active {
+      transform: scale(0.9);
+    }
+
+    .back-btn.visible {
+      display: flex;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .header {
+        padding: 20px 16px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 20px 16px;
+        margin-bottom: 12px;
+      }
+
+      .commission-amount {
+        font-size: 44px;
+      }
+
+      .gauge-container {
+        width: 140px;
+        height: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>MES COMMISSIONS</h1>
+    <p id="headerSubtitle">Groupe Garcia - Boutiques SFR</p>
+  </div>
+
+  <!-- ÉCRAN DE CONNEXION -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h2>Connexion</h2>
+      <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Entrez votre code personnel</p>
+      <input type="text" id="inputCode" class="login-select" placeholder="Ex: ANAIS4721" autocomplete="off" autocapitalize="characters" style="text-transform: uppercase; text-align: center; font-weight: 600; font-size: 20px; letter-spacing: 2px;">
+      <div id="loginError" style="color: #dc3545; font-size: 13px; margin-bottom: 12px; display: none;"></div>
+      <button class="login-btn" id="connectBtn" onclick="voirCommissions()">
+        CONNEXION
+      </button>
+    </div>
+  </div>
+
+  <!-- ÉCRAN DASHBOARD -->
+  <div id="dashboard" class="container" style="display:none;"></div>
+
+  <!-- LOADING -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="spinner"></div>
+    <p class="loading-text">Calcul en cours...</p>
+  </div>
+
+  <!-- BOUTON RETOUR -->
+  <button class="back-btn" id="backBtn" onclick="retourLogin()" title="Changer de collaborateur">&#x2190;</button>
+
+  <script>
+    /**
+     * ===== INITIALISATION =====
+     * Écouter la touche Entrée sur le champ de code
+     */
+    (function initApp() {
+      document.getElementById('inputCode').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') voirCommissions();
+        // Masquer l'erreur quand l'utilisateur tape
+        document.getElementById('loginError').style.display = 'none';
+      });
+      // Focus auto sur le champ
+      document.getElementById('inputCode').focus();
+    })();
+
+    /**
+     * ===== VOIR COMMISSIONS =====
+     * Vérifier le code puis charger les données
+     */
+    function voirCommissions() {
+      const code = document.getElementById('inputCode').value.trim();
+      if (!code) {
+        afficherErreurLogin("Veuillez saisir votre code personnel");
+        return;
+      }
+
+      // Désactiver le bouton pendant la vérification
+      document.getElementById('connectBtn').disabled = true;
+      document.getElementById('connectBtn').textContent = 'VÉRIFICATION...';
+      document.getElementById('loginError').style.display = 'none';
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result.success) {
+            // Code valide — charger les commissions
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'flex';
+            document.getElementById('backBtn').classList.add('visible');
+
+            google.script.run
+              .withSuccessHandler(afficherDashboard)
+              .withFailureHandler(function(err) {
+                console.error("Erreur calcul :", err);
+                afficherErreurLogin("Erreur de chargement. Réessayez.");
+                resetLoginBtn();
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('backBtn').classList.remove('visible');
+              })
+              .getCommissionsData(result.nom);
+          } else {
+            // Code invalide
+            afficherErreurLogin(result.message);
+            resetLoginBtn();
+          }
+        })
+        .withFailureHandler(function(err) {
+          console.error("Erreur vérification :", err);
+          afficherErreurLogin("Erreur de connexion. Réessayez.");
+          resetLoginBtn();
+        })
+        .verifierCode(code);
+    }
+
+    function afficherErreurLogin(msg) {
+      const el = document.getElementById('loginError');
+      el.textContent = msg;
+      el.style.display = 'block';
+      // Secouer le champ
+      const input = document.getElementById('inputCode');
+      input.style.borderColor = '#dc3545';
+      setTimeout(function() { input.style.borderColor = '#e0e0e0'; }, 1500);
+    }
+
+    function resetLoginBtn() {
+      document.getElementById('connectBtn').disabled = false;
+      document.getElementById('connectBtn').textContent = 'CONNEXION';
+    }
+
+    /**
+     * ===== AFFICHER LE DASHBOARD =====
+     */
+    function afficherDashboard(data) {
+      if (data.error) {
+        alert("Erreur : " + data.error);
+        retourLogin();
+        return;
+      }
+
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('headerSubtitle').textContent =
+        data.collab.nom + ' • ' + data.collab.boutique + ' • ' + data.mois;
+
+      const dashboard = document.getElementById('dashboard');
+      dashboard.style.display = 'block';
+      dashboard.innerHTML = construireDashboardHTML(data);
+
+      // Animer les jauges après le rendu
+      setTimeout(animerJauges, 100);
+    }
+
+    /**
+     * ===== CONSTRUIRE LE HTML DU DASHBOARD =====
+     */
+    function construireDashboardHTML(data) {
+      const c = data.commission;
+      const m = data.marge;
+
+      let html = '';
+
+      // CARD 1 : COMMISSION PROJETÉE
+      const pctProgressionCommission = Math.min((data.total.projete / (data.total.projete * 1.3)) * 100, 100);
+      const circumference = 2 * Math.PI * 68; // rayon 68px
+
+      html += `
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">💰</span> Commission projetée
+          </div>
+          <div style="text-align: center;">
+            <div class="commission-amount">${data.total.projete}€</div>
+            <div class="commission-label">Projection fin ${data.mois.split(' ')[0]}</div>
+          </div>
+
+          <div class="gauge-container">
+            <svg width="100" height="100" viewBox="0 0 200 200">
+              <circle class="gauge-circle gauge-bg" cx="100" cy="100" r="68"></circle>
+              <circle class="gauge-circle gauge-fill" cx="100" cy="100" r="68" data-percentage="${pctProgressionCommission}"></circle>
+            </svg>
+            <div class="gauge-text">${Math.round(pctProgressionCommission)}%</div>
+          </div>
+
+          <div class="commission-realise">
+            Réalisé à date : <span class="amount">${data.commission.moduleeRealisee}€</span>
+            <div style="font-size: 12px; color: #999; margin-top: 4px;">
+              Jour ${data.progression.jourOuvre} / ${data.progression.joursTravailles || data.progression.nbJoursOuvres} travaillés
+              ${data.progression.joursTravailles && data.progression.joursTravailles < data.progression.nbJoursOuvres
+                ? '<span style="font-size: 11px; color: #bbb;"> (sur ' + data.progression.nbJoursOuvres + ' ouvrés)</span>'
+                : ''}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // CARD 2 : MARGE
+      html += `
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">📊</span> Marge
+          </div>
+
+          <div class="marge-row">
+            <span class="marge-label">Réalisée</span>
+            <span class="marge-value">${m.realisee}€</span>
+          </div>
+
+          <div class="marge-row">
+            <span class="marge-label">Projetée fin de mois</span>
+            <span class="marge-value">${m.projetee}€</span>
+          </div>
+
+          <div class="marge-row">
+            <span class="marge-label">Palier actuel</span>
+            <span class="marge-value">${m.palierActuel.pct}%</span>
+            <span class="marge-detail">${m.palierActuel.min}€ - ${m.palierActuel.max === Infinity ? '+' : m.palierActuel.max}€</span>
+          </div>
+
+          ${m.palierSuivant ? `
+            <div class="palier-box">
+              <strong>Prochain palier :</strong> ${m.palierSuivant.pct}% à partir de ${m.palierSuivant.min}€
+              <br><strong style="color: #666;">Il manque :</strong> ${Math.round(m.manquePourProchainPalier)}€
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // CARD 3 : ITEMS DU MOIS
+      html += `
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">✅</span> Items du mois
+            <span style="margin-left: auto; font-size: 13px; font-weight: 600;">
+              ${c.nbItemsAtteints}/${c.nbItemsTotal} atteints
+            </span>
+          </div>
+      `;
+
+      data.items.forEach(function(item) {
+        const pctBar = Math.min((item.pctAtteinte / 1.5) * 100, 100);
+        const isRatio = item.nom.includes('Taux') || item.nom.includes('Garantie');
+        const labelRealise = isRatio ? item.realise + item.unite : item.realise + ' ' + item.unite;
+        const labelObjectif = isRatio ? item.objectif + item.unite : item.objectif + ' ' + item.unite;
+        const labelProjete = isRatio ? item.projete + item.unite : item.projete + ' ' + item.unite;
+        const isProratise = item.objectifBase && item.objectifBase !== item.objectif;
+
+        html += `
+          <div class="item-row">
+            <div class="item-header">
+              <span class="item-name">${item.nom}</span>
+              <span class="badge ${item.statut}">${item.statut === 'atteint' ? '✓ Atteint' : item.statut === 'en_cours' ? '◐ En cours' : '✗ Danger'}</span>
+            </div>
+            <div class="item-values">
+              <span class="item-value">
+                Réalisé: <strong>${labelRealise}</strong>
+              </span>
+              <span class="item-value">
+                / <strong>${labelObjectif}</strong>
+                ${isProratise ? '<span style="font-size: 11px; color: #bbb; text-decoration: line-through; margin-left: 4px;">' + item.objectifBase + '</span>' : ''}
+              </span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill ${item.statut}" data-width="${pctBar}"></div>
+            </div>
+            <div class="progress-subtext">
+              En projection: <strong>${labelProjete}</strong>
+              ${item.projectionAtteint ? '<span class="badge projection">✓ Atteint en fin de mois</span>' : '<span class="badge projection" style="background: #fff3cd; color: #856404;">⚠ Non atteint en projection</span>'}
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+
+      // FOOTER
+      html += `
+        <div class="footer">
+          Dernière mise à jour : ${data.derniereMaj}
+          <br><span style="font-size: 11px; color: #bbb;">v1.0 - Groupe Garcia</span>
+        </div>
+      `;
+
+      return html;
+    }
+
+    /**
+     * ===== ANIMER LES JAUGES =====
+     */
+    function animerJauges() {
+      document.querySelectorAll('.gauge-fill').forEach(function(circle) {
+        const pct = parseFloat(circle.dataset.percentage) || 0;
+        const circumference = 2 * Math.PI * 68;
+        const offset = circumference - (pct / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      });
+
+      document.querySelectorAll('.progress-fill').forEach(function(bar) {
+        const width = bar.dataset.width || '0';
+        bar.style.width = width + '%';
+      });
+    }
+
+    /**
+     * ===== RETOUR À LA CONNEXION =====
+     */
+    function retourLogin() {
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('backBtn').classList.remove('visible');
+      document.getElementById('headerSubtitle').textContent = 'Groupe Garcia - Boutiques SFR';
+      document.getElementById('inputCode').value = '';
+      document.getElementById('loginError').style.display = 'none';
+      resetLoginBtn();
+      document.getElementById('inputCode').focus();
+    }
+  </script>
+
+</body>
+</html>

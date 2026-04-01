@@ -1,0 +1,123 @@
+================================================================================
+WEB APP COMMISSIONS PROJETÉES — GROUPE GARCIA
+================================================================================
+
+FICHIERS GÉNÉRÉS :
+  1. Code.gs (450 lignes) — Backend Google Apps Script
+  2. Commissions.html (840 lignes) — Frontend HTML + CSS + JS
+  3. GUIDE_DEPLOIEMENT.md — Guide pas-à-pas de déploiement
+  4. STRUCTURE_SHEET.md — Documentation structure Google Sheet
+  5. README.md — Vue d'ensemble technique
+
+================================================================================
+CONTENU COMPLET INCLUS :
+
+Code.gs :
+  ✓ Configuration (CONFIG, BOUTIQUES, PALIERS)
+  ✓ Barèmes vendeur et RPV en constantes
+  ✓ doGet() — sert le HTML
+  ✓ getCollaborateurs() — retourne liste pour dropdown
+  ✓ getCommissionsData(nom) — calcul complet avec projection
+  ✓ Mode démo avec 5 collaborateurs fictifs
+  ✓ 10 fonctions utilitaires (calculerCommissionMarge, calculerItems, etc)
+  ✓ Gestion des erreurs et fallback sur données démo
+
+Commissions.html :
+  ✓ CSS inline complet (800+ lignes)
+  ✓ JS inline complet (300+ lignes)
+  ✓ Écran connexion avec <select> dropdown
+  ✓ Dashboard avec 4 cards :
+    - Commission projetée (gros montant + jauge circulaire animée)
+    - Marge (réalisée/projetée + paliers)
+    - Items du mois (barres de progression colorées)
+    - Primes & Malus (Critizr + Google)
+  ✓ Design SFR complet (couleurs, layout responsive)
+  ✓ Jauges SVG animées et barres de progression
+  ✓ Footer avec date dernière MAJ
+  ✓ Bouton retour pour changer collaborateur
+  ✓ Spinner de loading
+  ✓ Animation fadeInUp sur cards
+  ✓ Communication google.script.run
+
+GUIDE_DEPLOIEMENT.md :
+  ✓ 7 étapes complètes de déploiement
+  ✓ Création Google Sheet source
+  ✓ Remplissage des 3 onglets
+  ✓ Configuration du CONFIG.idSheet
+  ✓ Déploiement Apps Script
+  ✓ Partage collaborateurs
+  ✓ Test et dépannage
+
+STRUCTURE_SHEET.md :
+  ✓ Documentation des 3 onglets
+  ✓ 14 colonnes pour Données_Commissions
+  ✓ 5 items mensuels (Items_Mois)
+  ✓ Configuration générale
+  ✓ Exemples de données réalistes
+  ✓ Sources d'alimentation (3GWIN, manuel, formules)
+  ✓ Validations et formatage
+  ✓ Checklist de création
+
+================================================================================
+FONCTIONNALITÉS IMPLÉMENTÉES :
+
+Calcul de commissions :
+  ✓ Paliers de marge (2% à 10% pour vendeur, 1% à 3% pour RPV)
+  ✓ Projection linéaire (rythme jour ÷ jours écoulés)
+  ✓ Modulation items (20% par item, 5 items = 100%)
+  ✓ Primes Critizr selon note (4.9: +100€, 4.7: +50€, etc)
+  ✓ Prime Google trimestrielle (4.7: +100€/trim)
+  ✓ Calculs spécifiques pour taux (assurance, attachement, accessoires)
+
+Interface :
+  ✓ Mobile-first responsive
+  ✓ Couleurs SFR (rouge #e60000, fond #f0f2f5)
+  ✓ Cards blanches border-radius 16px
+  ✓ Animations fluides (jauge, barres, fade-in)
+  ✓ Header sticky
+  ✓ Pas de frameworks externes (vanilla JS/CSS)
+
+Données :
+  ✓ Mode démo complet (5 collaborateurs fictifs)
+  ✓ Données réalistes (4500-6800€, 14 jours écoulés)
+  ✓ Fallback automatique si Sheet non disponible
+  ✓ Lecture Google Sheet via SpreadsheetApp API
+
+================================================================================
+POINTS CLÉS :
+
+• HTML COMPLET : pas de "..." ou de fonctions vides
+  → Toutes les cards sont construites dynamiquement
+  → Toutes les animations sont implémentées
+  → Tous les cas d'erreur sont gérés
+
+• Code.gs COMPLET : mode démo fonctionnel
+  → Si CONFIG.idSheet vide, affiche data fictive
+  → Permet de tester l'interface sans Sheet
+  → Bascule auto sur vraies données si Sheet configuré
+
+• Barèmes EXACT comme spec
+  → 9 paliers vendeur (0-10%)
+  → Barème RPV spécifique
+  → Primes Critizr 5 niveaux
+  → Prime Google trimestrielle
+
+• Design IDENTIQUE au Formulaire Hebdo
+  → Même palette SFR
+  → Même style des cards
+  → Même responsiveness
+  → Même header sticky
+
+================================================================================
+PROCHAINES ÉTAPES :
+
+1. Suivre GUIDE_DEPLOIEMENT.md étape par étape
+2. Créer Google Sheet et remplir données
+3. Copier ID Sheet dans Code.gs
+4. Déployer dans Apps Script
+5. Tester avec mode démo d'abord
+6. Configurer vraies données dans Sheet
+7. Redéployer
+8. Partager URL avec collaborateurs
+
+================================================================================

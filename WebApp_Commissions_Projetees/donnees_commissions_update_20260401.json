@@ -1,0 +1,326 @@
+{
+  "date": "2026-04-01",
+  "mois": "Avril 2026",
+  "joursOuvresEcoules": 1,
+  "joursOuvresTotal": 21,
+  "vendeurs": [
+    {
+      "A": "ALR",
+      "B": "AXEL",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 22
+    },
+    {
+      "A": "ALR",
+      "B": "PAULINE",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 17
+    },
+    {
+      "A": "CHOLET",
+      "B": "ANAIS",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 19
+    },
+    {
+      "A": "CHOLET",
+      "B": "CHLOE R",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 11
+    },
+    {
+      "A": "CHOLET",
+      "B": "EMMY",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 6
+    },
+    {
+      "A": "CHOLET",
+      "B": "LOUANE",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 21
+    },
+    {
+      "A": "CHOLET",
+      "B": "LUCAS",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 21
+    },
+    {
+      "A": "CLR",
+      "B": "ILIAN",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 13
+    },
+    {
+      "A": "CLR",
+      "B": "RACHEL",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 9
+    },
+    {
+      "A": "RLR",
+      "B": "EMILIE",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 20
+    },
+    {
+      "A": "RLR",
+      "B": "NATHAN",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 13
+    },
+    {
+      "A": "RLR",
+      "B": "WILL",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 22
+    },
+    {
+      "A": "TLR",
+      "B": "HASSENE",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 22
+    },
+    {
+      "A": "TLR",
+      "B": "JULIE TLR",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 10
+    },
+    {
+      "A": "VLR",
+      "B": "MEHDY",
+      "C": "Vendeur",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 22
+    },
+    {
+      "A": "VLR",
+      "B": "ROMAIN GP",
+      "C": "RPV",
+      "D": 0,
+      "E": 0,
+      "F": 0,
+      "G": 0,
+      "H": 0,
+      "I": 0,
+      "J": 0,
+      "K": 1,
+      "L": 21,
+      "M": 21
+    }
+  ],
+  "status": {
+    "boutiques": {
+      "CHOLET": {
+        "date_range": [
+          "01/04/26",
+          "01/04/26"
+        ],
+        "is_april": true,
+        "nb_vendors": 0,
+        "has_data": false,
+        "vendor_names": []
+      },
+      "VLR": {
+        "date_range": [
+          "01/04/26",
+          "01/04/26"
+        ],
+        "is_april": true,
+        "nb_vendors": 0,
+        "has_data": false,
+        "vendor_names": []
+      },
+      "RLR": {
+        "date_range": [
+          "01/03/26",
+          "31/03/26"
+        ],
+        "is_april": false,
+        "nb_vendors": 5,
+        "has_data": true,
+        "vendor_names": [
+          "ANAIS",
+          "EMILIE",
+          "NATHAN",
+          "ROMAIN GP",
+          "WILL"
+        ]
+      },
+      "CLR": {
+        "date_range": [
+          "01/03/26",
+          "31/03/26"
+        ],
+        "is_april": false,
+        "nb_vendors": 6,
+        "has_data": true,
+        "vendor_names": [
+          "ANAIS",
+          "HASSENE",
+          "ILIAN",
+          "MEHDY",
+          "RACHEL",
+          "ROMAIN GP"
+        ]
+      },
+      "TLR": {
+        "date_range": [
+          "01/04/26",
+          "01/04/26"
+        ],
+        "is_april": true,
+        "nb_vendors": 0,
+        "has_data": false,
+        "vendor_names": []
+      },
+      "ALR": {
+        "date_range": [
+          "01/04/26",
+          "01/04/26"
+        ],
+        "is_april": true,
+        "nb_vendors": 0,
+        "has_data": false,
+        "vendor_names": []
+      }
+    },
+    "note": "Premier jour du mois - toutes les données sont à 0 (normal)"
+  }
+}
