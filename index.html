@@ -614,14 +614,50 @@
       });
     }
 
+    // Mapping des noms de colonnes Google Sheet vers noms courts du code
+    var COL_MAP = {
+      'Code boutique': 'codeBoutique',
+      'Nom collaborateur': 'nom',
+      'Rôle': 'role',
+      'Marge réalisée (€)': 'margeRealisee',
+      'Nb mobiles vendus': 'nbMobiles',
+      'Nb garanties 3ème année': 'nbGaranties',
+      'Nb SFR Cyber vendus': 'nbCyber',
+      'Nb assurances vendues': 'nbAssurances',
+      'Nb mobiles pour taux assurance': 'nbMobilesAssurance',
+      'CA accessoires total (€)': 'caAccessoires',
+      'Jour ouvré courant': 'jourOuvre',
+      'Nb jours ouvrés total': 'nbJoursOuvres',
+      'Jours travaillés (individuel)': 'joursTravailles',
+      "Nom de l'item": 'nomItem',
+      'Objectif': 'objectif',
+      'Unité': 'unite',
+      'Poids (% rému)': 'poids',
+      'Mois en cours': 'moisEnCours',
+      'Dernière MAJ': 'derniereMaj'
+    };
+
     function parseSheetRows(response) {
-      const rows = [];
+      var rows = [];
       if (!response.table || !response.table.rows) return rows;
       response.table.rows.forEach(function(row) {
-        const obj = {};
+        var obj = {};
         response.table.cols.forEach(function(col, idx) {
-          const val = row.c[idx];
-          obj[col.label] = val ? val.v : null;
+          var val = row.c[idx];
+          var key = COL_MAP[col.label] || col.label;
+          var v = val ? val.v : null;
+          // Convertir les dates Google en string lisible
+          if (v && typeof v === 'string' && v.indexOf('Date(') === 0) {
+            var parts = v.replace('Date(', '').replace(')', '').split(',');
+            var d = new Date(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2] || 1));
+            var moisNoms = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+            if (key === 'derniereMaj') {
+              v = d.toLocaleDateString('fr-FR');
+            } else {
+              v = moisNoms[d.getMonth()] + ' ' + d.getFullYear();
+            }
+          }
+          obj[key] = v;
         });
         rows.push(obj);
       });
@@ -678,8 +714,8 @@
             return;
           }
 
-          const moisEnCours = config[1] ? config[1]['moisEnCours'] : 'Mars 2026';
-          const derniereMaj = config[1] ? config[1]['derniereMaj'] : new Date().toLocaleDateString('fr-FR');
+          const moisEnCours = config[0] ? config[0]['moisEnCours'] : 'Avril 2026';
+          const derniereMaj = config[0] ? config[0]['derniereMaj'] : new Date().toLocaleDateString('fr-FR');
 
           const result = calculerCommissions(vendeurRow, itemsMois, moisEnCours, derniereMaj);
           afficherDashboard(result);
