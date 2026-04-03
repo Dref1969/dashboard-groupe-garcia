@@ -215,7 +215,7 @@ const MANAGERS = ['ROMAIN GP', 'LOUANE', 'HASSENE'];
 
 const BOUTIQUES = {
   'ALR':'SFR Angers','TLR':'SFR Amboise','CLR':'SFR Ch\u00e2teaudun',
-  'CHOLET':'SFR Cholet','RLR':'SFR Romorantin','VLR':'SFR Vend\u00f4me'
+  'CHOLET':'SFR Cholet','RLR':'SFR Romorantin','VLR':'SFR Vendôme'
 };
 
 const PALIERS = [
@@ -237,9 +237,9 @@ const COL = {
   'Assurance':'nbAssurances','MobAssu':'nbMobilesAssu',
   'CAccessoires':'caAcc','JourOuvre':'jourOuvre',
   'JoursOuvresTotal':'nbJoursOuvres','JoursTravailles':'joursTravailles',
-  "Nom de l'item":'nomItem','Objectif':'objectif','Unit\u00e9':'unite',
-  'Poids (% r\u00e9mu)':'poids',
-  'Mois en cours':'moisEnCours','Derni\u00e8re MAJ':'derniereMaj'
+  "Nom de l'item":'nomItem','Objectif':'objectif','Unité':'unite',
+  'Poids (% rému)':'poids',
+  'Mois en cours':'moisEnCours','Dernière MAJ':'derniereMaj'
 };
 
 function commBrute(marge) {
@@ -275,16 +275,16 @@ function prochainPalier(marge) {
 }
 
 function commNette(commBr, itemsAtteints, totalItems) {
-  const rat\u00e9s = Math.max(0, totalItems - itemsAtteints);
-  const pctRetenu = Math.max(0, 100 - rat\u00e9s * 20);
-  return { nette: Math.round(commBr * pctRetenu / 100), malus: 100 - pctRetenu, rat\u00e9s, pctRetenu };
+  const ratés = Math.max(0, totalItems - itemsAtteints);
+  const pctRetenu = Math.max(0, 100 - ratés * 20);
+  return { nette: Math.round(commBr * pctRetenu / 100), malus: 100 - pctRetenu, ratés, pctRetenu };
 }
 
 let _jc = 0;
 function fetchSheet(sheet) {
   return new Promise((res, rej) => {
     const cb = '_sc_' + (++_jc) + '_' + Date.now();
-    const to = setTimeout(() => { delete window[cb]; rej(new Error('Timeout r\u00e9seau')); }, 15000);
+    const to = setTimeout(() => { delete window[cb]; rej(new Error('Timeout réseau')); }, 15000);
     window[cb] = r => {
       clearTimeout(to); delete window[cb]; document.getElementById(cb)?.remove();
       r.status && r.status !== 'ok' ? rej(new Error(r.message || 'Erreur Sheet')) : res(r);
@@ -292,7 +292,7 @@ function fetchSheet(sheet) {
     const s = document.createElement('script');
     s.id = cb;
     s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cb}&sheet=${encodeURIComponent(sheet)}`;
-    s.onerror = () => { clearTimeout(to); delete window[cb]; s.remove(); rej(new Error('Erreur r\u00e9seau')); };
+    s.onerror = () => { clearTimeout(to); delete window[cb]; s.remove(); rej(new Error('Erreur réseau')); };
     document.head.appendChild(s);
   });
 }
@@ -308,7 +308,7 @@ function parseRows(r) {
       if (typeof v === 'string' && v.startsWith('Date(')) {
         const p = v.slice(5,-1).split(',');
         const d = new Date(+p[0], +p[1], +(p[2]||1));
-        const M = ['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
+        const M = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','Décembre'];
         v = key === 'derniereMaj' ? d.toLocaleDateString('fr-FR') : M[d.getMonth()] + ' ' + d.getFullYear();
       }
       obj[key] = v;
@@ -390,7 +390,7 @@ function showScreen(id) {
 function loadData(auth) {
   const isManager = MANAGERS.includes(auth.nomSheet);
   const fetches = [
-    fetchSheet('Donn\u00e9es_Commissions'),
+    fetchSheet('Données_Commissions'),
     fetchSheet('Items_Mois'),
     fetchSheet('Config')
   ];
@@ -409,9 +409,9 @@ function loadData(auth) {
       showScreen('dash');
       document.getElementById('dash-body').innerHTML = `
         <div class="err-wrap">
-          <div class="err-icon">\u26a0\ufe0f</div>
+          <div class="err-icon">⚠️</div>
           <div class="err-title">Erreur de connexion</div>
-          <div class="err-msg">${e.message}<br><br>V\u00e9rifiez que la feuille Google est publi\u00e9e sur le web.</div>
+          <div class="err-msg">${e.message}<br><br>Vérifiez que la feuille Google est publiée sur le web.</div>
           <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
         </div>`;
     });
@@ -438,7 +438,7 @@ function renderDilaxSection(dilaxData) {
     return pmB - pmA;
   });
   let rowsHTML = boutiques.map((r, i) => {
-    const boutName = r['Boutique'] || r['Code'] || '\u2014';
+    const boutName = r['Boutique'] || r['Code'] || '—';
     const visiteurs = parseInt(r['Visiteurs']) || 0;
     const marge = parseFloat(r['Marge']) || 0;
     const panierMoyen = parseFloat(r['Panier Moyen']) || 0;
@@ -446,8 +446,8 @@ function renderDilaxSection(dilaxData) {
     return `<tr>
       <td><span class="dilax-rank ${rankClass}">${i+1}</span>${boutName}</td>
       <td>${fmt(visiteurs)}</td>
-      <td>${fmtDec(marge, 0)} \u20ac</td>
-      <td class="dilax-pm">${fmtDec(panierMoyen, 2)} \u20ac</td>
+      <td>${fmtDec(marge, 0)} €</td>
+      <td class="dilax-pm">${fmtDec(panierMoyen, 2)} €</td>
     </tr>`;
   }).join('');
   if (totalRow) {
@@ -457,15 +457,15 @@ function renderDilaxSection(dilaxData) {
     rowsHTML += `<tr class="dilax-total">
       <td>TOTAL GROUPE</td>
       <td>${fmt(tVisiteurs)}</td>
-      <td>${fmtDec(tMarge, 0)} \u20ac</td>
-      <td class="dilax-pm">${fmtDec(tPM, 2)} \u20ac</td>
+      <td>${fmtDec(tMarge, 0)} €</td>
+      <td class="dilax-pm">${fmtDec(tPM, 2)} €</td>
     </tr>`;
   }
   return `
-    <div class="sec">Flux visiteurs \u00b7 DILAX</div>
+    <div class="sec">Flux visiteurs · DILAX</div>
     <div class="dilax-card">
       <div class="dilax-title">
-        <h3>\ud83d\udc65 Flux Visiteurs</h3>
+        <h3>👥 Flux Visiteurs</h3>
         <span class="dilax-badge">Manager</span>
       </div>
       <table class="dilax-table">
@@ -493,9 +493,9 @@ function renderDash(auth, donnees, items, config, dilaxData) {
     showScreen('dash');
     document.getElementById('dash-body').innerHTML = `
       <div class="err-wrap">
-        <div class="err-icon">\ud83d\udd0d</div>
-        <div class="err-title">Donn\u00e9es introuvables</div>
-        <div class="err-msg">Aucune donn\u00e9e pour ${nomSheet}.<br>Contactez votre manager.</div>
+        <div class="err-icon">🔍</div>
+        <div class="err-title">Données introuvables</div>
+        <div class="err-msg">Aucune donnée pour ${nomSheet}.<br>Contactez votre manager.</div>
         <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
       </div>`;
     return;
@@ -521,11 +521,11 @@ function renderDash(auth, donnees, items, config, dilaxData) {
   const margeProj = Math.round(marge * coef);
   const itemsDefs = items.filter(it => it.nomItem);
   const realMap = {
-    'Mobiles': { real: nbMob, proj: Math.round(nbMob*coef), icon:'\ud83d\udcf1', unite:'unit\u00e9s' },
-    'Garantie 3\u00e8me Ann\u00e9e': { real: txG3A, proj: txG3A, icon:'\ud83d\udee1\ufe0f', unite:'%' },
-    'SFR Cyber': { real: nbCyber, proj: Math.round(nbCyber*coef), icon:'\ud83d\udd12', unite:'unit\u00e9s' },
-    "Taux d'Assurance": { real: txAssu, proj: txAssu, icon:'\u26a1', unite:'%' },
-    "Taux d'Accessoire": { real: accParMob, proj: accParMob, icon:'\ud83c\udfa7', unite:'\u20ac/mob' },
+    'Mobiles': { real: nbMob, proj: Math.round(nbMob*coef), icon:'📱', unite:'unités' },
+    'Garantie 3ème Année': { real: txG3A, proj: txG3A, icon:'🛡️', unite:'%' },
+    'SFR Cyber': { real: nbCyber, proj: Math.round(nbCyber*coef), icon:'🔒', unite:'unités' },
+    "Taux d'Assurance": { real: txAssu, proj: txAssu, icon:'⚡', unite:'%' },
+    "Taux d'Accessoire": { real: accParMob, proj: accParMob, icon:'🎧', unite:'€/mob' },
   };
   let itemsAtteints = 0;
   const totalItems = itemsDefs.length || 5;
@@ -537,7 +537,7 @@ function renderDash(auth, donnees, items, config, dilaxData) {
   const commBrR = commBrute(marge);
   const commBrP = commBrute(margeProj);
   const palierP = palierActuel(margeProj);
-  const { nette: commNetteP, malus: malusPct, rat\u00e9s } = commNette(commBrP, itemsAtteints, totalItems);
+  const { nette: commNetteP, malus: malusPct, ratés } = commNette(commBrP, itemsAtteints, totalItems);
   const next = prochainPalier(margeProj);
   const palierMin = palierP.min;
   const palierMax = palierP.max === Infinity ? palierMin + 1000 : palierP.max;
@@ -550,22 +550,22 @@ function renderDash(auth, donnees, items, config, dilaxData) {
       }).reduce((a,b)=>a+b,0) / itemsDefs.length)
     : 50;
   let stClass, stIcon, stH, stP;
-  if (avgPct>=100){stClass='st-great';stIcon='\ud83c\udfc6';stH='Objectifs atteints !';stP='Commission pleine, 0 malus \u2014 excellent !'}
-  else if(avgPct>=75){stClass='st-ok';stIcon='\u2705';stH='En bonne voie';stP='Maintiens ce rythme jusqu\'\u00e0 la fin du mois'}
-  else if(avgPct>=40){stClass='st-warn';stIcon='\u26a1';stH='\u00c0 acc\u00e9l\u00e9rer';stP='Chaque item non atteint = -20% de commission'}
-  else{stClass='st-bad';stIcon='\ud83d\udea8';stH='D\u00e9croch\u00e9';stP='Reprends contact avec ton manager'}
+  if (avgPct>=100){stClass='st-great';stIcon='🏆';stH='Objectifs atteints !';stP='Commission pleine, 0 malus — excellent !'}
+  else if(avgPct>=75){stClass='st-ok';stIcon='✅';stH='En bonne voie';stP='Maintiens ce rythme jusqu\'à la fin du mois'}
+  else if(avgPct>=40){stClass='st-warn';stIcon='⚡';stH='À accélérer';stP='Chaque item non atteint = -20% de commission'}
+  else{stClass='st-bad';stIcon='🚨';stH='Décroché';stP='Reprends contact avec ton manager'}
   document.getElementById('h-name').textContent = nomSheet.charAt(0)+nomSheet.slice(1).toLowerCase();
   document.getElementById('h-boutique').textContent = boutique;
   document.getElementById('h-mois').textContent = moisLabel;
   document.getElementById('h-jour').textContent = `J${jourOuvre} / ${nbJours}`;
   document.getElementById('h-maj').textContent = majDate ? `MAJ ${majDate}` : 'En direct';
   const itemsHTML = itemsDefs.map(it => {
-    const r = realMap[it.nomItem] || { real:0, proj:0, icon:'\ud83d\udcca', unite:'' };
+    const r = realMap[it.nomItem] || { real:0, proj:0, icon:'📊', unite:'' };
     const objVal = parseFloat(it.objectif) || 1;
     const p = pct(r.real, objVal);
     const pProj = pct(r.proj, objVal);
     const projOk = r.proj >= objVal;
-    const fmtV = val => it.unite === '%' || r.unite === '%' ? val+'%' : it.unite?.includes('\u20ac') || r.unite?.includes('\u20ac') ? val+'\u20ac' : ''+val;
+    const fmtV = val => it.unite === '%' || r.unite === '%' ? val+'%' : it.unite?.includes('€') || r.unite?.includes('€') ? val+'€' : ''+val;
     return `<div class="item-c ${projOk?'item-ok':'item-bad'}">
       <div class="ic-top">
         <span class="ic-icon">${r.icon}</span>
@@ -574,15 +574,15 @@ function renderDash(auth, donnees, items, config, dilaxData) {
       <div class="ic-name">${it.nomItem}</div>
       <div class="prog-bg"><div class="prog-fill ${fillClass(p)}" style="width:${Math.min(p,100)}%"></div></div>
       <div class="ic-vals">
-        <div class="iv"><span class="iv-l">R\u00e9alis\u00e9</span><span class="iv-r">${fmtV(r.real)}</span></div>
+        <div class="iv"><span class="iv-l">Réalisé</span><span class="iv-r">${fmtV(r.real)}</span></div>
         <div class="iv"><span class="iv-l">Objectif</span><span class="iv-r" style="color:var(--muted)">${fmtV(objVal)}</span></div>
         <div class="iv"><span class="iv-l">Proj. fin mois</span><span class="iv-r red">${fmtV(r.proj)}</span></div>
       </div>
     </div>`;
   }).join('');
-  const malusExplain = rat\u00e9s === 0
-    ? `<span style="color:var(--green-dk);font-weight:700">\u2713 Tous les items atteints \u2014 commission pleine !</span>`
-    : `<span style="color:var(--sfr)">\u26a0\ufe0f ${rat\u00e9s} item${rat\u00e9s>1?'s':''} non atteint${rat\u00e9s>1?'s':''} \u2192 malus de ${malusPct}%</span>`;
+  const malusExplain = ratés === 0
+    ? `<span style="color:var(--green-dk);font-weight:700">✓ Tous les items atteints — commission pleine !</span>`
+    : `<span style="color:var(--sfr)">⚠️ ${ratés} item${ratés>1?'s':''} non atteint${ratés>1?'s':''} → malus de ${malusPct}%</span>`;
   const dilaxHTML = (isManager && dilaxData && dilaxData.length > 0)
     ? renderDilaxSection(dilaxData)
     : '';
@@ -594,63 +594,63 @@ function renderDash(auth, donnees, items, config, dilaxData) {
     <div class="comm-hero">
       <div class="ch-grid">
         <div class="ch-block">
-          <div class="chb-lbl">Marge r\u00e9alis\u00e9e</div>
-          <div class="chb-val">${fmt(marge)}<sup> \u20ac</sup></div>
-          <div class="chb-sub">J${jourOuvre} \u00b7 palier ${Math.round(palierActuel(marge).pct*100)}%</div>
+          <div class="chb-lbl">Marge réalisée</div>
+          <div class="chb-val">${fmt(marge)}<sup> €</sup></div>
+          <div class="chb-sub">J${jourOuvre} · palier ${Math.round(palierActuel(marge).pct*100)}%</div>
         </div>
         <div class="ch-block proj">
-          <div class="chb-lbl">Marge projet\u00e9e</div>
-          <div class="chb-val">${fmt(margeProj)}<sup> \u20ac</sup></div>
-          <div class="chb-sub">Fin de mois \u00b7 palier ${Math.round(palierP.pct*100)}%</div>
+          <div class="chb-lbl">Marge projetée</div>
+          <div class="chb-val">${fmt(margeProj)}<sup> €</sup></div>
+          <div class="chb-sub">Fin de mois · palier ${Math.round(palierP.pct*100)}%</div>
         </div>
       </div>
       <div class="comm-nette">
-        <div class="cn-lbl">Commission nette projet\u00e9e</div>
+        <div class="cn-lbl">Commission nette projetée</div>
         <div class="cn-main">
-          <div class="cn-val">${fmt(commNetteP)}<sup> \u20ac</sup></div>
+          <div class="cn-val">${fmt(commNetteP)}<sup> €</sup></div>
           ${malusPct > 0
-            ? `<span class="cn-malus">-${malusPct}% \u00b7 ${100-malusPct}% retenu</span>`
-            : '<span class="cn-malus" style="background:rgba(0,166,81,.2);color:#86EFAC">\u2713 100% retenu</span>'}
+            ? `<span class="cn-malus">-${malusPct}% · ${100-malusPct}% retenu</span>`
+            : '<span class="cn-malus" style="background:rgba(0,166,81,.2);color:#86EFAC">✓ 100% retenu</span>'}
         </div>
         <div class="cn-sub" style="margin-top:8px;font-size:11px">
           ${malusExplain}
         </div>
-        <div class="cn-sub" style="margin-top:4px">${fmt(commBrP)} \u20ac \u00d7 ${100-malusPct}% (${5-rat\u00e9s}/5 items) = <strong style="color:rgba(255,255,255,.7)">${fmt(commNetteP)} \u20ac</strong></div>
+        <div class="cn-sub" style="margin-top:4px">${fmt(commBrP)} € × ${100-malusPct}% (${5-ratés}/5 items) = <strong style="color:rgba(255,255,255,.7)">${fmt(commNetteP)} €</strong></div>
       </div>
     </div>
     <div class="palier-card">
       <div class="pc-top">
         <div>
-          <div class="pc-tl">Palier de marge projet\u00e9</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">${fmt(palierMin)} \u20ac \u2192 ${palierP.max===Infinity?'+9 000 \u20ac':fmt(palierMax)+' \u20ac'}</div>
+          <div class="pc-tl">Palier de marge projeté</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${fmt(palierMin)} € → ${palierP.max===Infinity?'+9 000 €':fmt(palierMax)+' €'}</div>
         </div>
         <div class="pc-pct">${Math.round(palierP.pct*100)}%</div>
       </div>
       <div class="palier-bar-bg"><div class="palier-bar-fill" id="palier-bar" style="width:${progPalier}%"></div></div>
-      <div class="palier-labels"><span>${fmt(palierMin)} \u20ac</span><span>${palierP.max===Infinity?'MAX':fmt(palierMax)+' \u20ac'}</span></div>
+      <div class="palier-labels"><span>${fmt(palierMin)} €</span><span>${palierP.max===Infinity?'MAX':fmt(palierMax)+' €'}</span></div>
       ${next ? `
       <div class="palier-next">
-        <div class="pn-txt">Encore <strong>${fmt(next.reste)} \u20ac</strong> de marge projet\u00e9e pour atteindre le palier <strong>${Math.round(next.palier.pct*100)}%</strong></div>
-      </div>` : `<div class="palier-next"><div class="pn-txt" style="color:var(--green-dk);font-weight:700">\ud83c\udfc6 Palier maximum atteint !</div></div>`}
+        <div class="pn-txt">Encore <strong>${fmt(next.reste)} €</strong> de marge projetée pour atteindre le palier <strong>${Math.round(next.palier.pct*100)}%</strong></div>
+      </div>` : `<div class="palier-next"><div class="pn-txt" style="color:var(--green-dk);font-weight:700">🏆 Palier maximum atteint !</div></div>`}
     </div>
     <div class="pres-card">
       <div class="pres-row">
-        <span class="pres-lbl">\u23f1\ufe0f Pr\u00e9sence du mois</span>
+        <span class="pres-lbl">⏱️ Présence du mois</span>
         <span class="pres-val">${joursTrav}j</span>
       </div>
-      <div class="pres-sub">sur ${nbJours} jours ouvrables \u00b7 objectifs proratisés \u00e0 ${Math.round(joursTrav/nbJours*100)}%</div>
+      <div class="pres-sub">sur ${nbJours} jours ouvrables · objectifs proratisés à ${Math.round(joursTrav/nbJours*100)}%</div>
       <div class="pres-bar"><div class="pres-fill" style="width:${Math.round(joursTrav/nbJours*100)}%"></div></div>
     </div>
-    <div class="sec">Les 5 items \u2014 impact sur commission</div>
+    <div class="sec">Les 5 items — impact sur commission</div>
     <div style="background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:.75rem 1rem;margin-bottom:.75rem;font-size:12px;color:var(--amber);font-weight:600;line-height:1.5">
-      \u26a0\ufe0f Chaque item non atteint = <strong>-20%</strong> de commission.<br>5/5 atteints = commission pleine (${Math.round(palierP.pct*100)}% de ta marge projet\u00e9e)
+      ⚠️ Chaque item non atteint = <strong>-20%</strong> de commission.<br>5/5 atteints = commission pleine (${Math.round(palierP.pct*100)}% de ta marge projetée)
     </div>
-    <div class="items-grid">${itemsHTML || '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:1rem;font-size:13px">Items en cours de chargement\u2026</div>'}</div>
+    <div class="items-grid">${itemsHTML || '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:1rem;font-size:13px">Items en cours de chargement…</div>'}</div>
     ${dilaxHTML}
-    <div class="refresh"><div class="live"></div>Google Sheet \u00b7 ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+    <div class="refresh"><div class="live"></div>Google Sheet · ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
   `;
   showScreen('dash');
 }
-<\/script>
+</script>
 </body>
 </html>
