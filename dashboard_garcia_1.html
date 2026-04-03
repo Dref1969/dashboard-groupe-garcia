@@ -6,6 +6,7 @@
 <title>Groupe Garcia — Dashboard Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root{--bg:#F0F2F5;--card:#FFF;--hdr:#0F172A;--txt:#0F1419;--sub:#64748B;--mut:#94A3B8;--brd:#E2E8F0;--blue:#2563EB;--purple:#7C3AED;--green:#059669;--orange:#D97706;--red:#DC2626;--cyan:#0891B2;--r:10px}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -69,6 +70,7 @@ function eH(v){if(v==null)return"";return`<span class="ev ${v>=0?"eu":"ed"}">${v
 function bH(v,c){return`<div class="bar"><div class="barf" style="width:${Math.min(100,(v||0)*100)}%;background:${c}"></div></div>`}
 
 let D=null,ITEMS=[],N1=0,CT="synthese",SV=null,charts=[],isDemo=false,lastMAJ="";
+Chart.register(ChartDataLabels);
 
 /* ═══ CSV PARSER ═══ */
 function parseCSV(t){const ls=t.split("\n").filter(l=>l.trim());if(ls.length<2)return[];const pr=l=>{const r=[];let c="",q=0;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"'){if(q&&l[i+1]==='"'){c+='"';i++}else q=!q}else if(ch===','&&!q){r.push(c.trim());c=""}else c+=ch}r.push(c.trim());return r};const h=pr(ls[0]);return ls.slice(1).map(l=>{const v=pr(l),o={};h.forEach((k,i)=>o[k]=v[i]||"");return o})}
@@ -187,7 +189,7 @@ function R(){if(!D)return;dC();const C=eD(D),m=document.getElementById("mc");
   if(CT==="synthese")setTimeout(()=>drawS(C),60);
 }
 
-function co(o){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10,family:"Plus Jakarta Sans"},boxWidth:10,padding:10}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10},...(o.yT||{})},grid:{color:"#F1F5F9"}},x:{ticks:{font:{size:10}},grid:{display:false}}}}}
+function co(o){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10,family:"Plus Jakarta Sans"},boxWidth:10,padding:10}},datalabels:{display:true,anchor:"end",align:"end",font:{size:9,weight:"600",family:"Plus Jakarta Sans"},color:function(ctx){return ctx.datasetIndex===0?"#0F172A":"#94A3B8"},formatter:function(v,ctx){if(v===0||v===null)return"";if(o.yT&&o.yT.callback){return o.yT.callback(v)}return v}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10},...(o.yT||{})},grid:{color:"#F1F5F9"}},x:{ticks:{font:{size:10}},grid:{display:false}}}}}
 
 /* ═══ SYNTHESE ═══ */
 function rS(C){const eG=C.mN>0?(C.mG-C.mN)/C.mN:0,mj=C.mG/Math.max(1,C.rk.length)/Math.max(1,C.jc);const evF=C.vGN1>0?(C.vG-C.vGN1)/C.vGN1:0;
