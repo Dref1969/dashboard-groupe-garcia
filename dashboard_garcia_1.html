@@ -111,6 +111,8 @@ async function loadReal(){
   let vi={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
   let viN1={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
   try{const dr=await fetchTab("DILAX");dr.forEach(r=>{const c=r["Code"];const v=pNum(r["Visiteurs"]);if(c&&vi.hasOwnProperty(c))vi[c]=v;});}catch(e){console.log("DILAX fallback:",e);}
+  // Visiteurs N-1 depuis onglet Donnees_N1
+  try{const n1r=await fetchTab("Donnees_N1");n1r.forEach(r=>{const b=r["Boutique"];const vn=pNum(r["VisiteursN1"]);if(b&&viN1.hasOwnProperty(b))viN1[b]=vn;});}catch(e){console.log("VisiteursN1 fallback:",e);}
   return{vs,n1,gd,gl,vi,viN1,moisEnCours};
 }
 
