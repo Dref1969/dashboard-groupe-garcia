@@ -105,9 +105,10 @@ async function loadReal(){
   let gd={},gl={};
   try{const gr=await fetchTab("Goodays");gr.forEach(r=>{const b=r["Boutique"];const ns=pNum(r["NoteSat"]),ps=pNum(r["PartSat"]),ng=pNum(r["NoteGoogle"]),ag=pNum(r["AvisGoogle"]);
   gd[b]={nt:ns,pt:ps};gl[b]={nt:ng,tt:ag,ms:ag}});}catch(e){console.log("Goodays fallback:",e);gd={ALR:{nt:0,pt:0},TLR:{nt:0,pt:0},CLR:{nt:0,pt:0},CHOLET:{nt:0,pt:0},RLR:{nt:0,pt:0},VLR:{nt:0,pt:0}};gl={ALR:{nt:0,tt:0,ms:0},TLR:{nt:0,tt:0,ms:0},CLR:{nt:0,tt:0,ms:0},CHOLET:{nt:0,tt:0,ms:0},RLR:{nt:0,tt:0,ms:0},VLR:{nt:0,tt:0,ms:0}};}
-  // Visites DILAX (sera mis à jour via onglet DILAX quand disponible)
-  const vi={ALR:45,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
-  const viN1={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
+  // Visites DILAX depuis onglet DILAX du Google Sheet
+  let vi={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
+  let viN1={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
+  try{const dr=await fetchTab("DILAX");dr.forEach(r=>{const c=r["Code"];const v=pNum(r["Visiteurs"]);if(c&&vi.hasOwnProperty(c))vi[c]=v;});}catch(e){console.log("DILAX fallback:",e);}
   return{vs,n1,gd,gl,vi,viN1,moisEnCours};
 }
 
