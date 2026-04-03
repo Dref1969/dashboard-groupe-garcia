@@ -141,12 +141,13 @@ function eD(d){
       let r;
       if(it.k==="txA")r=v.ta;
       else if(it.k==="txC")r=v.tx;
+      else if(it.k==="g3a")r=v.mb>0?Math.round(v.g3/v.mb*10000)/100:0;
       else if(it.field)r=v[it.field]||0;
       else r=0;
       return{...it,o,r,ok:r>=o,rf:o-r};
     });
     const ia=its.filter(i=>i.ok).length,co=ia/5,cb=cC(pj),gn=gd[v.bq]?.nt||0,pg=gP(gn),cf=Math.max(0,cb*co+pg);
-    const v1=n1.find(x=>x.nm===v.nm);
+    const v1=n1.find(x=>x.bq===v.bq);
     return{...v,mj,pj,its,ia,co,cb,cf,pg,gn,v1};
   });
   const rk=[...en].sort((a,b)=>b.mj-a.mj);rk.forEach((v,i)=>v.rk=i+1);
@@ -154,21 +155,21 @@ function eD(d){
   B.forEach(b=>{
     const bv=rk.filter(v=>v.bq===b.c);if(!bv.length)return;
     const mg=bv.reduce((s,v)=>s+v.mg,0),pj=bv.reduce((s,v)=>s+v.pj,0);
-    const vv=vi[b.c]||0,pm=vv>0?mg/vv:0,mn=bv.reduce((s,v)=>s+(v.v1?.mg||0),0);
+    const vv=vi[b.c]||0,pm=vv>0?mg/vv:0,mn=bv[0]?.v1?.mg||0;
     const vvN1=viN1[b.c]||0,pmN1=vvN1>0?mn/vvN1:0;
-    const mobN=bv.reduce((s,v)=>s+v.mb,0),mobN1=bv.reduce((s,v)=>s+(v.v1?.mb||0),0);
-    const cyN=bv.reduce((s,v)=>s+v.cy,0),cyN1=bv.reduce((s,v)=>s+(v.v1?.cy||0),0);
-    const ia=RI.map(it=>{const tr=bv.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=bv.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);return it.pc||it.cu?{...it,tr:tr/Math.max(1,bv.length),to:it.ob}:{...it,tr,to}});
+    const mobN=bv.reduce((s,v)=>s+v.mb,0),mobN1=bv[0]?.v1?.mb||0;
+    const cyN=bv.reduce((s,v)=>s+v.cy,0),cyN1=bv[0]?.v1?.cy||0;
+    const ia=RI.map(it=>{const tr=bv.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=bv.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);if(it.k==="g3a"){const tg3=bv.reduce((s,v)=>s+v.g3,0),tmb=bv.reduce((s,v)=>s+v.mb,0);return{...it,tr:tmb>0?Math.round(tg3/tmb*10000)/100:0,to:it.ob}}return it.pc||it.cu?{...it,tr:tr/Math.max(1,bv.length),to:it.ob}:{...it,tr,to}});
     pb[b.c]={...b,bv,mg,pj,vv,pm,mn,vvN1,pmN1,mobN,mobN1,cyN,cyN1,ia,g:gd[b.c],gl:gl[b.c],ev:mn>0?(mg-mn)/mn:0};
   });
-  const mG=rk.reduce((s,v)=>s+v.mg,0),pG=rk.reduce((s,v)=>s+v.pj,0),mN=rk.reduce((s,v)=>s+(v.v1?.mg||0),0);
+  const mG=rk.reduce((s,v)=>s+v.mg,0),pG=rk.reduce((s,v)=>s+v.pj,0),mN=Object.values(pb).reduce((s,b)=>s+b.mn,0);
   const vG=Object.values(vi).reduce((s,v)=>s+v,0),vGN1=Object.values(viN1).reduce((s,v)=>s+v,0);
   const pmG=vG>0?mG/vG:0,pmGN1=vGN1>0?mN/vGN1:0;
   const gM=Object.values(gd).reduce((s,g)=>s+g.nt,0)/Object.keys(gd).length;
   const gT=Object.values(gl).reduce((s,g)=>s+g.tt,0),gMo=Object.values(gl).reduce((s,g)=>s+g.ms,0);
-  const iG=RI.map(it=>{const t=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);return it.pc||it.cu?{...it,tr:t/Math.max(1,rk.length),to:it.ob}:{...it,tr:t,to}});
-  const mobGN=rk.reduce((s,v)=>s+v.mb,0),mobGN1=rk.reduce((s,v)=>s+(v.v1?.mb||0),0);
-  const cyGN=rk.reduce((s,v)=>s+v.cy,0),cyGN1=rk.reduce((s,v)=>s+(v.v1?.cy||0),0);
+  const iG=RI.map(it=>{const t=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);if(it.k==="g3a"){const tg3=rk.reduce((s,v)=>s+v.g3,0),tmb=rk.reduce((s,v)=>s+v.mb,0);return{...it,tr:tmb>0?Math.round(tg3/tmb*10000)/100:0,to:it.ob}}return it.pc||it.cu?{...it,tr:t/Math.max(1,rk.length),to:it.ob}:{...it,tr:t,to}});
+  const mobGN=rk.reduce((s,v)=>s+v.mb,0),mobGN1=Object.values(pb).reduce((s,b)=>s+b.mobN1,0);
+  const cyGN=rk.reduce((s,v)=>s+v.cy,0),cyGN1=Object.values(pb).reduce((s,b)=>s+b.cyN1,0);
   return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,RI};
 }
 
@@ -206,8 +207,8 @@ return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</
 <div class="sec">Items prioritaires — Groupe</div>
 <div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Mobiles par boutique — N vs N-1</div><div class="chart-wrap"><canvas id="chMo"></canvas></div></div>
 <div class="cd"><div class="kpi-label" style="margin-bottom:8px">SFR Cyber par boutique — N vs N-1</div><div class="chart-wrap"><canvas id="chCy"></canvas></div></div></div>
-<div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires vs N-1</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé N</th><th class="tc">Objectif</th><th class="tc">Atteinte</th><th class="tc">N-1</th><th class="tc">Évolution</th></tr></thead><tbody>
-${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const ok=p>=1;let n1V="—",ev=null;if(it.k==="mob"){n1V=$(C.mobGN1);ev=C.mobGN1>0?(C.mobGN-C.mobGN1)/C.mobGN1:0}else if(it.k==="cyber"){n1V=$(C.cyGN1);ev=C.cyGN1>0?(C.cyGN-C.cyGN1)/C.cyGN1:0}return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${ok?"var(--green)":"var(--red)"}">${val}</td><td class="tc">${obj}</td><td class="tc"><span class="pl ${ok?"p1":"p3"}">${(p*100).toFixed(0)}%</span></td><td class="tc">${n1V}</td><td class="tc">${ev!=null?eH(ev):"—"}</td></tr>`}).join("")}</tbody></table></div></div>`}
+<div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires vs N-1</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé N</th><th class="tc">Objectif</th><th class="tc">Projection</th><th class="tc">N-1</th><th class="tc">Évolution</th></tr></thead><tbody>
+${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const jc=C.jc||1,jt=C.jt||21;const jr=Math.max(0,jt-jc);const proj=it.pc||it.cu?it.tr:Math.round(it.tr+(it.tr/Math.max(1,jc))*jr);const projV=it.pc?$D(proj,1)+"%":it.cu?$D(proj,1)+"€":$(proj);const projOk=it.pc||it.cu?proj>=it.to:proj>=it.to;let n1V="—",ev=null;if(it.k==="mob"){n1V=$(C.mobGN1);ev=C.mobGN1>0?(C.mobGN-C.mobGN1)/C.mobGN1:0}else if(it.k==="cyber"){n1V=$(C.cyGN1);ev=C.cyGN1>0?(C.cyGN-C.cyGN1)/C.cyGN1:0}return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${p>=1?"var(--green)":"var(--red)"}">${val}</td><td class="tc">${obj}</td><td class="tc" style="font-weight:700;color:${projOk?"var(--green)":"var(--red)"}">${projV}</td><td class="tc">${n1V}</td><td class="tc">${ev!=null?eH(ev):"—"}</td></tr>`}).join("")}</tbody></table></div></div>`}
 
 function drawS(C){const lb=B.filter(b=>C.pb[b.c]).map(b=>b.n);const chO={borderRadius:4,barPercentage:.55};
 const c1=new Chart(document.getElementById("chM"),{type:"bar",data:{labels:lb,datasets:[{label:"N",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].mg),backgroundColor:B.filter(b=>C.pb[b.c]).map(b=>b.cl),...chO},{label:"N-1",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].mn),backgroundColor:"#CBD5E1",...chO}]},options:co({yT:{callback:v=>(v/1000).toFixed(0)+"k"}})});charts.push(c1);
