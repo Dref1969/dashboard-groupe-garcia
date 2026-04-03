@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Mes Résultats · SFR</title>
+    <style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --sfr:#E2001A;--sfr-dark:#A8001A;
+  --pro:#0F0F1E;--pro2:#1A1A2E;--pro3:#252548;
+  --off:#F4F4F7;--white:#FFF;--border:#E2E2EA;
+  --text:#0F0F1E;--muted:#666;--light:#AAA;
+  --green:#00A651;--green-bg:#E6F7EE;--green-dk:#006633;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+  --orange:#EA580C;--orange-bg:#FFF0E8;
+  --safe:env(safe-area-inset-bottom,16px);
+}
+html,body{height:100%;background:var(--off);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;color:var(--text);overflow-x:hidden}
+.screen{display:none;min-height:100dvh;flex-direction:column}
+.screen.active{display:flex}
+#login{background:var(--pro);justify-content:flex-end}
+.login-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem}
+.sfr-logo{width:80px;height:80px;background:var(--sfr);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;flex-shrink:0}
+.sfr-logo span{font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px}
+.lt-h{font-size:26px;font-weight:800;color:#fff;text-align:center;letter-spacing:-.5px}
+.lt-s{font-size:13px;color:rgba(255,255,255,.4);text-align:center;margin-top:5px}
+.login-card{background:#fff;border-radius:28px 28px 0 0;padding:2rem 1.5rem calc(1.5rem + var(--safe))}
+.lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+.field-inp{width:100%;padding:15px 16px;border:2px solid var(--border);border-radius:13px;font-size:17px;font-family:inherit;background:var(--off);color:var(--text);outline:none;transition:border-color .2s;margin-bottom:1.25rem}
+.field-inp:focus{border-color:var(--sfr);background:#fff}
+.pin-row{display:flex;gap:10px;margin-bottom:1.5rem}
+.pin-d{flex:1;height:62px;border:2px solid var(--border);border-radius:13px;font-size:28px;font-weight:800;text-align:center;background:var(--off);color:var(--text);outline:none;transition:all .2s;-webkit-appearance:none;font-family:inherit}
+.pin-d:focus{border-color:var(--sfr);background:#fff}
+.btn-main{width:100%;padding:17px;background:var(--sfr);color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;transition:background .15s}
+.btn-main:active{background:var(--sfr-dark)}
+.btn-main:disabled{background:#CCC}
+.login-err{margin-top:1rem;padding:12px;background:#FFF0F0;color:var(--sfr);border-radius:10px;font-size:13px;font-weight:600;text-align:center;display:none}
+#loading{align-items:center;justify-content:center;gap:1rem}
+.spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--sfr);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:14px;color:var(--muted)}
+.header{background:var(--sfr);padding:50px 1.25rem .9rem;position:sticky;top:0;z-index:10}
+.h-row{display:flex;justify-content:space-between;align-items:flex-start}
+.h-name{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.h-boutique{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px;font-weight:500}
+.h-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
+.h-pills{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.h-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.85);font-weight:600;letter-spacing:.3px}
+.body{flex:1;overflow-y:auto;padding:.75rem .75rem calc(1rem + var(--safe))}
+.sec{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.75rem .2rem .4rem}
+.statut{border-radius:14px;padding:13px 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:12px}
+.st-great{background:linear-gradient(135deg,var(--green-dk),var(--green))}
+.st-ok{background:linear-gradient(135deg,#1565C0,#1976D2)}
+.st-warn{background:linear-gradient(135deg,#B45309,var(--amber))}
+.st-bad{background:linear-gradient(135deg,var(--sfr-dark),var(--sfr))}
+.st-icon{font-size:26px;flex-shrink:0}
+.st-txt h3{font-size:15px;font-weight:800;color:#fff}
+.st-txt p{font-size:11px;color:rgba(255,255,255,.8);margin-top:2px}
+.comm-hero{background:var(--pro);border-radius:16px;padding:1.25rem;margin-bottom:.75rem}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.ch-block{background:var(--pro2);border-radius:12px;padding:1rem}
+.chb-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
+.chb-val{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1}
+.chb-val sup{font-size:13px;font-weight:400;opacity:.45}
+.chb-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:4px}
+.ch-block.proj{border:1.5px solid rgba(226,0,26,.4)}
+.ch-block.proj .chb-lbl{color:rgba(255,120,120,.55)}
+.ch-block.proj .chb-val{color:#FF9090}
+.comm-nette{background:var(--pro3);border-radius:12px;padding:1rem}
+.cn-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
+.cn-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cn-val{font-size:36px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1}
+.cn-val sup{font-size:16px;font-weight:400;opacity:.5}
+.cn-malus{font-size:12px;font-weight:700;padding:3px 8px;border-radius:8px;background:rgba(226,0,26,.25);color:#FF9090}
+.cn-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:6px}
+.palier-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.75rem}
+.pc-top{display:flex;justify-content:space-between;align-items:center;padding:1rem 1rem .75rem}
+.pc-tl{font-size:13px;font-weight:700;color:var(--text)}
+.pc-pct{font-size:24px;font-weight:900;color:var(--sfr)}
+.palier-bar-bg{height:8px;background:var(--border);margin:0 1rem;border-radius:10px;overflow:hidden}
+.palier-bar-fill{height:100%;background:var(--sfr);border-radius:10px;transition:width 1s ease}
+.palier-labels{display:flex;justify-content:space-between;padding:.4rem 1rem .75rem;font-size:10px;color:var(--light)}
+.palier-next{background:var(--off);border-top:1px solid var(--border);padding:.75rem 1rem}
+.pn-txt{font-size:13px;color:var(--text);line-height:1.5}
+.pn-txt strong{color:var(--sfr)}
+.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem}
+.item-c{background:#fff;border:1px solid var(--border);border-radius:14px;padding:.9rem;position:relative}
+.item-c.item-ok{border-color:#86EFAC}
+.item-c.item-bad{border-color:#FCA5A5}
+.ic-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.ic-icon{font-size:20px}
+.ic-pct-badge{font-size:12px;font-weight:800;padding:3px 8px;border-radius:8px}
+.b-great{background:var(--amber-bg);color:var(--amber)}
+.b-ok{background:var(--green-bg);color:var(--green-dk)}
+.b-warn{background:var(--orange-bg);color:var(--orange)}
+.b-bad{background:#FEE2E2;color:var(--sfr-dark)}
+.ic-name{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.3px;margin-bottom:.45rem;line-height:1.3}
+.prog-bg{height:4px;background:var(--border);border-radius:10px;margin-bottom:.45rem;overflow:hidden}
+.prog-fill{height:100%;border-radius:10px;transition:width .8s}
+.pf-great{background:var(--amber)}
+.pf-ok{background:var(--green)}
+.pf-warn{background:var(--orange)}
+.pf-bad{background:var(--sfr)}
+.ic-vals{display:flex;flex-direction:column;gap:3px}
+.iv{display:flex;justify-content:space-between;align-items:baseline;gap:4px}
+.iv-l{font-size:10px;color:var(--light);flex-shrink:0}
+.iv-r{font-size:12px;font-weight:700;color:var(--text);text-align:right}
+.iv-r.red{color:var(--sfr)}
+.pres-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.75rem}
+.pres-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.pres-lbl{font-size:13px;font-weight:700}
+.pres-val{font-size:24px;font-weight:900;color:var(--pro)}
+.pres-sub{font-size:11px;color:var(--muted);margin-bottom:.5rem}
+.pres-bar{height:5px;background:var(--border);border-radius:10px;overflow:hidden}
+.pres-fill{height:100%;background:var(--sfr);border-radius:10px}
+.refresh{text-align:center;padding:1rem;font-size:11px;color:var(--light);display:flex;align-items:center;justify-content:center;gap:6px}
+.live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.err-wrap{padding:2rem 1rem;text-align:center}
+.err-icon{font-size:40px;margin-bottom:1rem}
+.err-title{font-size:16px;font-weight:700;margin-bottom:.5rem}
+.err-msg{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:1.5rem}
+.dilax-card{background:var(--pro);border-radius:16px;padding:1.25rem;margin-bottom:.75rem}
+.dilax-title{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.dilax-title h3{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.dilax-title .dilax-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:3px 8px;border-radius:6px}
+.dilax-table{width:100%;border-collapse:collapse}
+.dilax-table th{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dilax-table th:not(:first-child){text-align:right}
+.dilax-table td{font-size:13px;color:#fff;padding:8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.dilax-table td:not(:first-child){text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.dilax-table tr:last-child td{border-bottom:none}
+.dilax-table .dilax-total td{border-top:2px solid rgba(255,255,255,.15);font-weight:900;color:var(--sfr);padding-top:10px}
+.dilax-table .dilax-total td:first-child{color:#fff}
+.dilax-rank{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:900;margin-right:6px;flex-shrink:0}
+.dilax-rank.r1{background:#FFD700;color:#000}
+.dilax-rank.r2{background:#C0C0C0;color:#000}
+.dilax-rank.r3{background:#CD7F32;color:#fff}
+.dilax-rank.rn{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.dilax-pm{color:#86EFAC !important}
+/* Animation confettis palier */
+@keyframes confetti-fall{0%{transform:translateY(-100vh) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes palier-glow{0%{box-shadow:0 0 0 0 rgba(0,166,81,.4)}50%{box-shadow:0 0 30px 10px rgba(0,166,81,.3)}100%{box-shadow:0 0 0 0 rgba(0,166,81,0)}}
+@keyframes palier-pop{0%{transform:scale(0.5);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.confetti-piece{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;animation:confetti-fall 3s ease-in forwards}
+.palier-celebrate{animation:palier-glow 1.5s ease 2}
+.palier-pop{animation:palier-pop 0.6s ease forwards}
+.palier-badge-new{display:inline-block;background:linear-gradient(135deg,#00A651,#34D399);color:#fff;font-size:14px;font-weight:800;padding:6px 16px;border-radius:20px;margin-top:8px;animation:palier-pop 0.5s ease forwards}
+    </style>
+</head>
+<body>
+
+<div id="login" class="screen active">
+  <div class="login-top">
+    <div class="sfr-logo"><span>SFR</span></div>
+    <div class="lt-h">Mes Résultats</div>
+    <div class="lt-s">Groupe Garcia · Avril 2026</div>
+  </div>
+  <div class="login-card">
+    <span class="lbl">Prénom</span>
+    <input class="field-inp" type="text" id="inp-prenom" placeholder="Ton prénom" autocomplete="off" autocapitalize="words" />
+    <span class="lbl">Code d’accès</span>
+    <div class="pin-row">
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+      <input class="pin-d" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+    </div>
+    <button class="btn-main" id="btn-login" onclick="tryLogin()">Accéder →</button>
+    <div class="login-err" id="login-err">Prénom ou code incorrect</div>
+  </div>
+</div>
+
+<div id="loading" class="screen">
+  <div class="spinner"></div>
+  <div class="load-txt">Chargement de vos données…</div>
+</div>
+
+<div id="dash" class="screen">
+  <div class="header">
+    <div class="h-row">
+      <div>
+        <div class="h-name" id="h-name">—</div>
+        <div class="h-boutique" id="h-boutique">—</div>
+      </div>
+      <button class="h-logout" onclick="doLogout()">← Retour</button>
+    </div>
+    <div class="h-pills">
+      <span class="h-pill" id="h-mois">Avril 2026</span>
+      <span class="h-pill" id="h-jour">—</span>
+      <span class="h-pill" id="h-maj">—</span>
+    </div>
+  </div>
+  <div class="body" id="dash-body"></div>
+</div>
+
+<script>
+const SHEET_ID = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
+
+const VENDEURS_AUTH = {
+  'anais':   { pin:'7342', nomSheet:'ANAIS' },
+  'axel':    { pin:'5819', nomSheet:'AXEL' },
+  'chloe':   { pin:'2967', nomSheet:'CHLOE R' },
+  'emilie':  { pin:'8403', nomSheet:'EMILIE' },
+  'emmy':    { pin:'4651', nomSheet:'EMMY' },
+  'hassene': { pin:'9274', nomSheet:'HASSENE' },
+  'ilian':   { pin:'3586', nomSheet:'ILIAN' },
+  'julie':   { pin:'6038', nomSheet:'JULIE TLR' },
+  'louane':  { pin:'1847', nomSheet:'LOUANE' },
+  'lucas':   { pin:'7520', nomSheet:'LUCAS' },
+  'mehdy':   { pin:'4913', nomSheet:'MEHDY' },
+  'nathan':  { pin:'8261', nomSheet:'NATHAN' },
+  'pauline': { pin:'3074', nomSheet:'PAULINE' },
+  'rachel':  { pin:'6425', nomSheet:'RACHEL' },
+  'romain':  { pin:'5831', nomSheet:'ROMAIN GP' },
+  'will':    { pin:'9130', nomSheet:'WILL' },
+};
+
+const MANAGERS = ['ROMAIN GP', 'LOUANE', 'HASSENE'];
+
+const BOUTIQUES = {
+  'ALR':'SFR Angers','TLR':'SFR Amboise','CLR':'SFR Ch\u00e2teaudun',
+  'CHOLET':'SFR Cholet','RLR':'SFR Romorantin','VLR':'SFR Vendôme'
+};
+
+const PALIERS = [
+  {min:0, max:2000, pct:0},
+  {min:2000, max:3000, pct:0.02},
+  {min:3000, max:4000, pct:0.03},
+  {min:4000, max:5000, pct:0.05},
+  {min:5000, max:6000, pct:0.06},
+  {min:6000, max:7000, pct:0.07},
+  {min:7000, max:8000, pct:0.08},
+  {min:8000, max:9000, pct:0.09},
+  {min:9000, max:Infinity, pct:0.10},
+];
+
+const COL = {
+  'CodeBoutique':'codeBoutique','Vendeur':'nom','Role':'role',
+  'Marge':'margeRealisee','Mobiles':'nbMobiles',
+  'G3A':'nbGaranties','Cyber':'nbCyber',
+  'Assurance':'nbAssurances','MobAssu':'nbMobilesAssu',
+  'CAccessoires':'caAcc','JourOuvre':'jourOuvre',
+  'JoursOuvresTotal':'nbJoursOuvres','JoursTravailles':'joursTravailles',
+  "Nom de l'item":'nomItem','Objectif':'objectif','Unité':'unite',
+  'Poids (% rému)':'poids',
+  'Mois en cours':'moisEnCours','Dernière MAJ':'derniereMaj'
+};
+
+function commBrute(marge) {
+  for (let i = PALIERS.length - 1; i >= 0; i--) {
+    if (marge >= PALIERS[i].min) return Math.round(marge * PALIERS[i].pct);
+  }
+  return 0;
+}
+
+function lancerConfettis() {
+  const colors = ['#E2001A','#00A651','#FFD700','#2563EB','#7C3AED','#FF6B6B','#34D399','#FBBF24'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.width=(6+Math.random()*8)+'px';
+    c.style.height=(6+Math.random()*8)+'px';
+    c.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    c.style.animationDuration=(2+Math.random()*2)+'s';
+    c.style.animationDelay=(Math.random()*1.5)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
+function palierActuel(marge) {
+  for (let i = PALIERS.length - 1; i >= 0; i--) {
+    if (marge >= PALIERS[i].min) return PALIERS[i];
+  }
+  return PALIERS[0];
+}
+
+function prochainPalier(marge) {
+  for (let p of PALIERS) {
+    if (marge < p.max && p.pct > 0 && marge < p.min + (p.max - p.min)) {
+      if (marge < p.min) return { reste: Math.round(p.min - marge), palier: p };
+      if (marge < p.max) {
+        const idx = PALIERS.indexOf(p);
+        if (idx < PALIERS.length - 1 && PALIERS[idx+1].max !== Infinity) {
+          return { reste: Math.round(PALIERS[idx+1].min - marge), palier: PALIERS[idx+1] };
+        }
+      }
+    }
+  }
+  for (let p of PALIERS) {
+    if (marge < p.min) return { reste: Math.round(p.min - marge), palier: p };
+  }
+  return null;
+}
+
+function commNette(commBr, itemsAtteints, totalItems) {
+  const ratés = Math.max(0, totalItems - itemsAtteints);
+  const pctRetenu = Math.max(0, 100 - ratés * 20);
+  return { nette: Math.round(commBr * pctRetenu / 100), malus: 100 - pctRetenu, ratés, pctRetenu };
+}
+
+let _jc = 0;
+function fetchSheet(sheet) {
+  return new Promise((res, rej) => {
+    const cb = '_sc_' + (++_jc) + '_' + Date.now();
+    const to = setTimeout(() => { delete window[cb]; rej(new Error('Timeout réseau')); }, 15000);
+    window[cb] = r => {
+      clearTimeout(to); delete window[cb]; document.getElementById(cb)?.remove();
+      r.status && r.status !== 'ok' ? rej(new Error(r.message || 'Erreur Sheet')) : res(r);
+    };
+    const s = document.createElement('script');
+    s.id = cb;
+    s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cb}&sheet=${encodeURIComponent(sheet)}`;
+    s.onerror = () => { clearTimeout(to); delete window[cb]; s.remove(); rej(new Error('Erreur réseau')); };
+    document.head.appendChild(s);
+  });
+}
+
+function parseRows(r) {
+  const rows = [];
+  if (!r.table?.rows) return rows;
+  r.table.rows.forEach(row => {
+    const obj = {};
+    r.table.cols.forEach((col, i) => {
+      let v = row.c[i]?.v ?? null;
+      const key = COL[col.label] || col.label;
+      if (typeof v === 'string' && v.startsWith('Date(')) {
+        const p = v.slice(5,-1).split(',');
+        const d = new Date(+p[0], +p[1], +(p[2]||1));
+        const M = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','Décembre'];
+        v = key === 'derniereMaj' ? d.toLocaleDateString('fr-FR') : M[d.getMonth()] + ' ' + d.getFullYear();
+      }
+      obj[key] = v;
+    });
+    rows.push(obj);
+  });
+  return rows;
+}
+
+function parseDilaxRows(r) {
+  const rows = [];
+  if (!r.table?.rows) return rows;
+  r.table.rows.forEach(row => {
+    const obj = {};
+    r.table.cols.forEach((col, i) => {
+      let v = row.c[i]?.v ?? null;
+      obj[col.label] = v;
+    });
+    rows.push(obj);
+  });
+  return rows;
+}
+
+const pins = [...document.querySelectorAll('.pin-d')];
+pins.forEach((p,i) => {
+  p.addEventListener('input', () => {
+    p.value = p.value.replace(/\D/,'');
+    if (p.value && i < 3) pins[i+1].focus();
+    if (i === 3 && p.value) tryLogin();
+  });
+  p.addEventListener('keydown', e => {
+    if (e.key==='Backspace' && !p.value && i > 0) { pins[i-1].focus(); pins[i-1].value=''; }
+  });
+});
+document.getElementById('inp-prenom').addEventListener('keydown', e => { if(e.key==='Enter') pins[0].focus(); });
+
+function norm(s){ return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function getPin(){ return pins.map(p=>p.value).join(''); }
+
+let currentAuth = null;
+
+function tryLogin() {
+  const prenom = norm(document.getElementById('inp-prenom').value);
+  const pin = getPin();
+  const auth = VENDEURS_AUTH[prenom];
+  const err = document.getElementById('login-err');
+  if (auth && auth.pin === pin) {
+    err.style.display = 'none';
+    currentAuth = auth;
+    document.getElementById('btn-login').disabled = true;
+    showScreen('loading');
+    loadData(auth);
+  } else {
+    err.style.display = 'block';
+    pins.forEach(p=>p.value='');
+    pins[0].focus();
+  }
+}
+
+function doLogout() {
+  currentAuth = null;
+  document.getElementById('inp-prenom').value = '';
+  pins.forEach(p=>p.value='');
+  document.getElementById('btn-login').disabled = false;
+  showScreen('login');
+}
+
+function showScreen(id) {
+  ['login','loading','dash'].forEach(s => {
+    const el = document.getElementById(s);
+    el.classList.remove('active');
+    el.style.display = '';
+  });
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.style.display = 'flex';
+}
+
+function loadData(auth) {
+  const isManager = MANAGERS.includes(auth.nomSheet);
+  const fetches = [
+    fetchSheet('Données_Commissions'),
+    fetchSheet('Items_Mois'),
+    fetchSheet('Config')
+  ];
+  if (isManager) {
+    fetches.push(fetchSheet('DILAX'));
+  }
+  Promise.all(fetches)
+    .then((results) => {
+      const donnees = parseRows(results[0]);
+      const items = parseRows(results[1]);
+      const config = parseRows(results[2]);
+      const dilax = isManager ? parseDilaxRows(results[3]) : [];
+      renderDash(auth, donnees, items, config, dilax);
+    })
+    .catch(e => {
+      showScreen('dash');
+      document.getElementById('dash-body').innerHTML = `
+        <div class="err-wrap">
+          <div class="err-icon">⚠️</div>
+          <div class="err-title">Erreur de connexion</div>
+          <div class="err-msg">${e.message}<br><br>Vérifiez que la feuille Google est publiée sur le web.</div>
+          <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
+        </div>`;
+    });
+}
+
+function fmt(n){ return Math.round(n).toLocaleString('fr-FR'); }
+function fmtDec(n, d){ return n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function pct(real, obj){ return obj > 0 ? Math.min(Math.round(real/obj*100), 200) : (real>0?100:0); }
+function badgeClass(p){ return p>=100?'b-great':p>=75?'b-ok':p>=50?'b-warn':'b-bad'; }
+function fillClass(p){ return p>=100?'pf-great':p>=75?'pf-ok':p>=50?'pf-warn':'pf-bad'; }
+
+function renderDilaxSection(dilaxData) {
+  const boutiques = dilaxData.filter(r => {
+    const code = r['Code'] || '';
+    return code && Object.keys(BOUTIQUES).includes(code.toUpperCase().trim());
+  });
+  const totalRow = dilaxData.find(r => {
+    const bout = (r['Boutique'] || '').toUpperCase().trim();
+    return bout.includes('TOTAL');
+  });
+  boutiques.sort((a, b) => {
+    const pmA = parseFloat(a['Panier Moyen']) || 0;
+    const pmB = parseFloat(b['Panier Moyen']) || 0;
+    return pmB - pmA;
+  });
+  let rowsHTML = boutiques.map((r, i) => {
+    const boutName = r['Boutique'] || r['Code'] || '—';
+    const visiteurs = parseInt(r['Visiteurs']) || 0;
+    const marge = parseFloat(r['Marge']) || 0;
+    const panierMoyen = parseFloat(r['Panier Moyen']) || 0;
+    const rankClass = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : 'rn';
+    return `<tr>
+      <td><span class="dilax-rank ${rankClass}">${i+1}</span>${boutName}</td>
+      <td>${fmt(visiteurs)}</td>
+      <td>${fmtDec(marge, 0)} €</td>
+      <td class="dilax-pm">${fmtDec(panierMoyen, 2)} €</td>
+    </tr>`;
+  }).join('');
+  if (totalRow) {
+    const tVisiteurs = parseInt(totalRow['Visiteurs']) || 0;
+    const tMarge = parseFloat(totalRow['Marge']) || 0;
+    const tPM = parseFloat(totalRow['Panier Moyen']) || 0;
+    rowsHTML += `<tr class="dilax-total">
+      <td>TOTAL GROUPE</td>
+      <td>${fmt(tVisiteurs)}</td>
+      <td>${fmtDec(tMarge, 0)} €</td>
+      <td class="dilax-pm">${fmtDec(tPM, 2)} €</td>
+    </tr>`;
+  }
+  return `
+    <div class="sec">Flux visiteurs · DILAX</div>
+    <div class="dilax-card">
+      <div class="dilax-title">
+        <h3>👥 Flux Visiteurs</h3>
+        <span class="dilax-badge">Manager</span>
+      </div>
+      <table class="dilax-table">
+        <thead>
+          <tr>
+            <th>Boutique</th>
+            <th>Visiteurs</th>
+            <th>Marge</th>
+            <th>Panier Moy.</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHTML}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderDash(auth, donnees, items, config, dilaxData) {
+  const nomSheet = auth.nomSheet;
+  const isManager = MANAGERS.includes(nomSheet);
+  const v = donnees.find(d => d.nom && d.nom.toUpperCase().trim() === nomSheet.toUpperCase());
+  if (!v) {
+    showScreen('dash');
+    document.getElementById('dash-body').innerHTML = `
+      <div class="err-wrap">
+        <div class="err-icon">🔍</div>
+        <div class="err-title">Données introuvables</div>
+        <div class="err-msg">Aucune donnée pour ${nomSheet}.<br>Contactez votre manager.</div>
+        <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
+      </div>`;
+    return;
+  }
+  const cfg = config[0] || {};
+  const moisLabel = cfg.moisEnCours || 'Avril 2026';
+  const majDate = cfg.derniereMaj || '';
+  const boutique = BOUTIQUES[v.codeBoutique] || v.codeBoutique || '';
+  const marge = parseFloat(v.margeRealisee) || 0;
+  const jourOuvre = parseInt(v.jourOuvre) || 1;
+  const nbJours = parseInt(v.nbJoursOuvres) || 22;
+  const joursTrav = parseInt(v.joursTravailles) || nbJours;
+  const nbMob = parseFloat(v.nbMobiles) || 0;
+  const nbG3A = parseFloat(v.nbGaranties) || 0;
+  const nbCyber = parseFloat(v.nbCyber) || 0;
+  const nbAssu = parseFloat(v.nbAssurances) || 0;
+  const nbMobAssu = parseFloat(v.nbMobilesAssu) || nbMob || 1;
+  const caAcc = parseFloat(v.caAcc) || 0;
+  const txAssu = nbMobAssu > 0 ? Math.round((nbAssu / nbMobAssu) * 100) : 0;
+  const txG3A = nbMob > 0 ? Math.round((nbG3A / nbMob) * 100) : 0;
+  const accParMob = nbMob > 0 ? Math.round(caAcc / nbMob) : 0;
+  const coef = jourOuvre > 0 && joursTrav > 0 ? joursTrav / jourOuvre : 1;
+  const margeProj = Math.round(marge * coef);
+  const itemsDefs = items.filter(it => it.nomItem);
+  const realMap = {
+    'Mobiles': { real: nbMob, proj: Math.round(nbMob*coef), icon:'📱', unite:'unités' },
+    'Garantie 3ème Année': { real: txG3A, proj: txG3A, icon:'🛡️', unite:'%' },
+    'SFR Cyber': { real: nbCyber, proj: Math.round(nbCyber*coef), icon:'🔒', unite:'unités' },
+    "Taux d'Assurance": { real: txAssu, proj: txAssu, icon:'⚡', unite:'%' },
+    "Taux d'Accessoire": { real: accParMob, proj: accParMob, icon:'🎧', unite:'€/mob' },
+  };
+  let itemsAtteints = 0;
+  const totalItems = itemsDefs.length || 5;
+  itemsDefs.forEach(it => {
+    const r = realMap[it.nomItem];
+    const obj = parseFloat(it.objectif) || 1;
+    if (r && r.proj >= obj) itemsAtteints++;
+  });
+  const commBrR = commBrute(marge);
+  const commBrP = commBrute(margeProj);
+  const palierP = palierActuel(margeProj);
+  const { nette: commNetteP, malus: malusPct, ratés } = commNette(commBrP, itemsAtteints, totalItems);
+  const next = prochainPalier(margeProj);
+  const palierMin = palierP.min;
+  const palierMax = palierP.max === Infinity ? palierMin + 1000 : palierP.max;
+  const progPalier = Math.min(Math.round(((margeProj - palierMin) / (palierMax - palierMin)) * 100), 100);
+  const avgPct = itemsDefs.length > 0
+    ? Math.round(itemsDefs.map(it => {
+        const r = realMap[it.nomItem];
+        const obj = parseFloat(it.objectif)||1;
+        return r ? pct(r.real, obj) : 0;
+      }).reduce((a,b)=>a+b,0) / itemsDefs.length)
+    : 50;
+  let stClass, stIcon, stH, stP;
+  if (avgPct>=100){stClass='st-great';stIcon='🏆';stH='Objectifs atteints !';stP='Commission pleine — excellent !'}
+  else if(avgPct>=75){stClass='st-ok';stIcon='✅';stH='En bonne voie';stP='Maintiens ce rythme jusqu\'à la fin du mois'}
+  else if(avgPct>=40){stClass='st-warn';stIcon='⚡';stH='À accélérer';stP='Chaque item non atteint = -20% sur la commission'}
+  else{stClass='st-bad';stIcon='🚨';stH='Décroché';stP='Reprends contact avec ton manager'}
+  document.getElementById('h-name').textContent = nomSheet.charAt(0)+nomSheet.slice(1).toLowerCase();
+  document.getElementById('h-boutique').textContent = boutique;
+  document.getElementById('h-mois').textContent = moisLabel;
+  document.getElementById('h-jour').textContent = `J${jourOuvre} / ${nbJours}`;
+  document.getElementById('h-maj').textContent = majDate ? `MAJ ${majDate}` : 'En direct';
+  const itemsHTML = itemsDefs.map(it => {
+    const r = realMap[it.nomItem] || { real:0, proj:0, icon:'📊', unite:'' };
+    const objVal = parseFloat(it.objectif) || 1;
+    const p = pct(r.real, objVal);
+    const pProj = pct(r.proj, objVal);
+    const projOk = r.proj >= objVal;
+    const fmtV = val => it.unite === '%' || r.unite === '%' ? val+'%' : it.unite?.includes('€') || r.unite?.includes('€') ? val+'€' : ''+val;
+    return `<div class="item-c ${projOk?'item-ok':'item-bad'}">
+      <div class="ic-top">
+        <span class="ic-icon">${r.icon}</span>
+        <span class="ic-pct-badge ${badgeClass(pProj)}">${pProj}%</span>
+      </div>
+      <div class="ic-name">${it.nomItem}</div>
+      <div class="prog-bg"><div class="prog-fill ${fillClass(p)}" style="width:${Math.min(p,100)}%"></div></div>
+      <div class="ic-vals">
+        <div class="iv"><span class="iv-l">Réalisé</span><span class="iv-r">${fmtV(r.real)}</span></div>
+        <div class="iv"><span class="iv-l">Objectif</span><span class="iv-r" style="color:var(--muted)">${fmtV(objVal)}</span></div>
+        <div class="iv"><span class="iv-l">Proj. fin mois</span><span class="iv-r red">${fmtV(r.proj)}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+  const malusExplain = ratés === 0
+    ? `<span style="color:var(--green-dk);font-weight:700">✓ Tous les items atteints — commission pleine !</span>`
+    : `<span style="color:var(--sfr)">⚠️ ${ratés} item${ratés>1?'s':''} non atteint${ratés>1?'s':''} → -${malusPct}% sur la commission</span>`;
+  const dilaxHTML = '';
+  document.getElementById('dash-body').innerHTML = `
+    <div class="statut ${stClass}">
+      <span class="st-icon">${stIcon}</span>
+      <div class="st-txt"><h3>${stH}</h3><p>${stP}</p></div>
+    </div>
+    <div class="comm-hero">
+      <div class="ch-grid">
+        <div class="ch-block">
+          <div class="chb-lbl">Marge réalisée</div>
+          <div class="chb-val">${fmt(marge)}<sup> €</sup></div>
+          <div class="chb-sub">J${jourOuvre} · palier ${Math.round(palierActuel(marge).pct*100)}%</div>
+        </div>
+        <div class="ch-block proj">
+          <div class="chb-lbl">Marge projetée</div>
+          <div class="chb-val">${fmt(margeProj)}<sup> €</sup></div>
+          <div class="chb-sub">Fin de mois · palier ${Math.round(palierP.pct*100)}%</div>
+        </div>
+      </div>
+      <div class="comm-nette">
+        <div class="cn-lbl">Commission nette projetée</div>
+        <div class="cn-main">
+          <div class="cn-val">${fmt(commNetteP)}<sup> €</sup></div>
+          ${malusPct > 0
+            ? `<span class="cn-malus">-${malusPct}% · ${100-malusPct}% retenu</span>`
+            : '<span class="cn-malus" style="background:rgba(0,166,81,.2);color:#86EFAC">✓ 100% retenu</span>'}
+        </div>
+        <div class="cn-sub" style="margin-top:8px;font-size:11px">
+          ${malusExplain}
+        </div>
+        <div class="cn-sub" style="margin-top:4px">${fmt(commBrP)} € × ${100-malusPct}% (${5-ratés}/5 items) = <strong style="color:rgba(255,255,255,.7)">${fmt(commNetteP)} €</strong></div>
+      </div>
+    </div>
+    <div class="palier-card">
+      <div class="pc-top">
+        <div>
+          <div class="pc-tl">Palier de marge projeté</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${fmt(palierMin)} € → ${palierP.max===Infinity?'+9 000 €':fmt(palierMax)+' €'}</div>
+        </div>
+        <div class="pc-pct">${Math.round(palierP.pct*100)}%</div>
+      </div>
+      <div class="palier-bar-bg"><div class="palier-bar-fill" id="palier-bar" style="width:${progPalier}%"></div></div>
+      <div class="palier-labels"><span>${fmt(palierMin)} €</span><span>${palierP.max===Infinity?'MAX':fmt(palierMax)+' €'}</span></div>
+      ${next ? `
+      <div class="palier-next">
+        <div class="pn-txt">Encore <strong>${fmt(next.reste)} €</strong> de marge projetée pour atteindre le palier <strong>${Math.round(next.palier.pct*100)}%</strong></div>
+      </div>` : `<div class="palier-next palier-celebrate"><div class="pn-txt palier-pop" style="color:var(--green-dk);font-weight:700">🏆 Palier maximum atteint !</div><div class="palier-badge-new">🎉 PALIER 10% DÉBLOQUÉ</div></div>`}
+    </div>
+    ${palierActuel(margeProj).pct > palierActuel(marge).pct ? '<script>setTimeout(()=>lancerConfettis(),800)<\/script>' : ''}
+    <div class="pres-card">
+      <div class="pres-row">
+        <span class="pres-lbl">⏱️ Présence du mois</span>
+        <span class="pres-val">${joursTrav}j</span>
+      </div>
+      <div class="pres-sub">sur ${nbJours} jours ouvrables · objectifs proratisés à ${Math.round(joursTrav/nbJours*100)}%</div>
+      <div class="pres-bar"><div class="pres-fill" style="width:${Math.round(joursTrav/nbJours*100)}%"></div></div>
+    </div>
+    <div class="sec">Les 5 items — impact sur commission</div>
+    <div style="background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:.75rem 1rem;margin-bottom:.75rem;font-size:12px;color:var(--amber);font-weight:600;line-height:1.5">
+      ⚠️ Chaque item non atteint = <strong>-20%</strong> de commission.<br>5/5 atteints = commission pleine (${Math.round(palierP.pct*100)}% de ta marge projetée)
+    </div>
+    <div class="items-grid">${itemsHTML || '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:1rem;font-size:13px">Items en cours de chargement…</div>'}</div>
+    ${dilaxHTML}
+    <div class="refresh"><div class="live"></div>Google Sheet · ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+  `;
+  showScreen('dash');
+}
+</script>
+</body>
+</html>
