@@ -335,7 +335,7 @@ function parseDilaxRows(r) {
 const pins = [...document.querySelectorAll('.pin-d')];
 pins.forEach((p,i) => {
   p.addEventListener('input', () => {
-    p.value = p.value.replace(/\\D/,'');
+    p.value = p.value.replace(/\D/,'');
     if (p.value && i < 3) pins[i+1].focus();
     if (i === 3 && p.value) tryLogin();
   });
@@ -345,7 +345,7 @@ pins.forEach((p,i) => {
 });
 document.getElementById('inp-prenom').addEventListener('keydown', e => { if(e.key==='Enter') pins[0].focus(); });
 
-function norm(s){ return s.trim().toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,''); }
+function norm(s){ return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function getPin(){ return pins.map(p=>p.value).join(''); }
 
 let currentAuth = null;
