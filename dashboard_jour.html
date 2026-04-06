@@ -6,122 +6,50 @@
 <title>Groupe Garcia — Résultats du Jour</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #e8ecf1; color: #1a2332; min-height: 100vh;
-}
-
-/* === SPLASH SCREEN === */
-.splash {
-  position: fixed; inset: 0; z-index: 9999;
-  background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #e8ecf1; color: #1a2332; min-height: 100vh; }
+.splash { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s ease; }
 .splash.hide { opacity: 0; visibility: hidden; }
-.sp-logo {
-  font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 1px;
-  opacity: 0; transform: translateY(20px); animation: spU 0.8s ease 0.2s forwards;
-}
+.sp-logo { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 1px; opacity: 0; transform: translateY(20px); animation: spU 0.8s ease 0.2s forwards; }
 .sp-logo span { font-weight: 400; font-size: 16px; opacity: .6; margin-left: 10px; }
-.sp-badge {
-  display: inline-block; background: #ff9500; color: #fff; font-size: 10px;
-  font-weight: 800; padding: 2px 10px; border-radius: 10px; letter-spacing: 1.5px;
-  margin-left: 10px; vertical-align: middle;
-}
-.sp-line {
-  width: 0; height: 2px; margin-top: 20px; border-radius: 2px;
-  background: linear-gradient(90deg, #ff9500, #ec4899);
-  animation: spL 1.2s ease 0.6s forwards;
-}
-.sp-kpis {
-  margin-top: 28px; display: flex; gap: 40px;
-  opacity: 0; transform: translateY(12px); animation: spU 0.6s ease 1.2s forwards;
-}
+.sp-badge { display: inline-block; background: #ff9500; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 10px; border-radius: 10px; letter-spacing: 1.5px; margin-left: 10px; vertical-align: middle; }
+.sp-line { width: 0; height: 2px; margin-top: 20px; border-radius: 2px; background: linear-gradient(90deg, #ff9500, #ec4899); animation: spL 1.2s ease 0.6s forwards; }
+.sp-kpis { margin-top: 28px; display: flex; gap: 40px; opacity: 0; transform: translateY(12px); animation: spU 0.6s ease 1.2s forwards; }
 .sp-kpi { text-align: center; }
 .sp-kpi-val { font-size: 36px; font-weight: 800; color: #ff9500; font-variant-numeric: tabular-nums; }
 .sp-kpi-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-.sp-status {
-  margin-top: 32px; display: flex; align-items: center; gap: 8px;
-  opacity: 0; animation: spU 0.5s ease 1.8s forwards;
-}
+.sp-status { margin-top: 32px; display: flex; align-items: center; gap: 8px; opacity: 0; animation: spU 0.5s ease 1.8s forwards; }
 .sp-status-text { font-size: 12px; color: rgba(255,255,255,.4); font-weight: 500; }
 .sp-dot { width: 5px; height: 5px; border-radius: 50%; background: #ff9500; animation: spP 0.8s ease infinite; }
-.sp-dot:nth-child(2) { animation-delay: 0.15s; }
-.sp-dot:nth-child(3) { animation-delay: 0.3s; }
+.sp-dot:nth-child(2) { animation-delay: 0.15s; } .sp-dot:nth-child(3) { animation-delay: 0.3s; }
 @keyframes spU { to { opacity: 1; transform: translateY(0); } }
 @keyframes spL { to { width: 180px; } }
 @keyframes spP { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-
-/* === PAGE LOAD TRANSITIONS === */
-.header, .tabs, .container, .footer {
-  opacity: 0; transform: translateY(12px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+.header, .tabs, .container, .footer { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
 body.loaded .header { opacity: 1; transform: none; transition-delay: 0.05s; }
 body.loaded .tabs { opacity: 1; transform: none; transition-delay: 0.15s; }
 body.loaded .container { opacity: 1; transform: none; transition-delay: 0.25s; }
 body.loaded .footer { opacity: 1; transform: none; transition-delay: 0.35s; }
-
-/* === KPI CARD ANIMATIONS === */
-.kpi-card {
-  opacity: 0; transform: translateY(16px);
-  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.2s ease;
-}
-body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(1) { transition-delay: 0.3s; }
-body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(2) { transition-delay: 0.4s; }
-body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(3) { transition-delay: 0.5s; }
-body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(4) { transition-delay: 0.6s; }
-body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(1) { transition-delay: 0.5s; }
-body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(2) { transition-delay: 0.6s; }
-body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(3) { transition-delay: 0.7s; }
-body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(4) { transition-delay: 0.8s; }
+.kpi-card { opacity: 0; transform: translateY(16px); transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.2s ease; }
 body.loaded .kpi-card { opacity: 1; transform: none; }
 .kpi-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px) !important; }
-
-/* === BAR & SECTION ANIMATIONS === */
 .bar { transition: height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .bar-value { opacity: 0; transition: opacity 0.4s ease 0.8s; }
 body.loaded .bar-value { opacity: 1; }
 .section { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-body.loaded .grid-2 .section:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.6s; }
-body.loaded .grid-2 .section:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.75s; }
-body.loaded #boutiques { opacity: 1; transform: none; transition-delay: 0.9s; }
-body.loaded #vendeurs { opacity: 1; transform: none; transition-delay: 1.05s; }
-
-/* === MAIN STYLES === */
-.header {
-  background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%); color: #fff;
-  padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.15);
-}
+body.loaded .section { opacity: 1; transform: none; }
+.header { background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%); color: #fff; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.15); }
 .header-left { display: flex; align-items: center; gap: 16px; }
 .header h1 { font-size: 20px; font-weight: 800; letter-spacing: .5px; }
 .header .subtitle { font-size: 13px; color: rgba(255,255,255,.6); font-weight: 500; }
-.header .badge-live {
-  display: inline-block; background: #ff9500; color: #fff; font-size: 10px;
-  font-weight: 800; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; margin-left: 8px;
-}
+.badge-live { display: inline-block; background: #ff9500; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; margin-left: 8px; }
 .header-right { display: flex; gap: 10px; }
-.btn {
-  background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2);
-  padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  cursor: pointer; text-decoration: none; transition: all .15s;
-}
+.btn { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2); padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .15s; }
 .btn:hover { background: rgba(255,255,255,.2); }
 .btn-accent { background: #ff9500; border-color: #ff9500; }
 .btn-accent:hover { background: #e68600; }
-.tabs {
-  background: #fff; display: flex; gap: 0; padding: 0 32px;
-  border-bottom: 1px solid #dde1e7; overflow-x: auto;
-}
-.tab {
-  padding: 14px 20px; font-size: 13px; font-weight: 600; color: #6b7a8d;
-  cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap;
-  text-decoration: none; transition: all .2s;
-}
-.tab:hover { color: #1a2332; }
-.tab.active { color: #1a2332; border-bottom-color: #ff9500; }
+.tabs { background: #fff; display: flex; gap: 0; padding: 0 32px; border-bottom: 1px solid #dde1e7; overflow-x: auto; }
+.tab { padding: 14px 20px; font-size: 13px; font-weight: 600; color: #6b7a8d; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; text-decoration: none; transition: all .2s; }
+.tab:hover { color: #1a2332; } .tab.active { color: #1a2332; border-bottom-color: #ff9500; }
 .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
 .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
 .kpi-card { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
@@ -129,12 +57,8 @@ body.loaded #vendeurs { opacity: 1; transform: none; transition-delay: 1.05s; }
 .kpi-value { font-size: 32px; font-weight: 800; letter-spacing: -.5px; line-height: 1.1; }
 .kpi-sub { font-size: 12px; color: #8e99a8; margin-top: 4px; }
 .section { margin-bottom: 24px; }
-.section-title {
-  font-size: 14px; font-weight: 700; color: #1a2332; text-transform: uppercase;
-  letter-spacing: .5px; margin-bottom: 12px; padding-left: 12px; border-left: 4px solid #1a2332;
-}
-.card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); transition: box-shadow 0.2s; }
-.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.section-title { font-size: 14px; font-weight: 700; color: #1a2332; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; padding-left: 12px; border-left: 4px solid #1a2332; }
+.card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
 .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .data-table th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; color: #8e99a8; text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid #e8ecf1; }
 .data-table th.num { text-align: right; }
@@ -142,10 +66,8 @@ body.loaded #vendeurs { opacity: 1; transform: none; transition-delay: 1.05s; }
 .data-table td.num { text-align: right; font-weight: 600; }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr:hover td { background: #f8f9fb; }
-.data-table tr { transition: background 0.15s ease; }
 .data-table tr.row-total td { font-weight: 800; background: #f0f7f0; border-top: 2px solid #34c759; border-bottom: none; }
-.rank { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; transition: transform 0.2s; }
-.rank:hover { transform: scale(1.15); }
+.rank { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; }
 .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
 .rank-2 { background: linear-gradient(135deg, #C0C0C0, #999); color: #000; }
 .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); }
@@ -161,14 +83,7 @@ body.loaded #vendeurs { opacity: 1; transform: none; transition-delay: 1.05s; }
 .color-clr { background: #ec4899; } .color-cholet { background: #10b981; }
 .color-rlr { background: #f59e0b; } .color-vlr { background: #f97316; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-@media (max-width: 768px) {
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-  .grid-2 { grid-template-columns: 1fr; }
-  .header { padding: 12px 16px; } .container { padding: 16px; }
-  .tabs { padding: 0 16px; } .kpi-value { font-size: 24px; }
-  .sp-kpis { gap: 20px; } .sp-kpi-val { font-size: 28px; }
-}
-@media (max-width: 480px) { .kpi-row { grid-template-columns: 1fr 1fr; } .bar-chart { height: 140px; } }
+@media (max-width: 768px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .header { padding: 12px 16px; } .container { padding: 16px; } .tabs { padding: 0 16px; } .kpi-value { font-size: 24px; } }
 </style>
 </head>
 <body>
@@ -188,104 +103,251 @@ body.loaded #vendeurs { opacity: 1; transform: none; transition-delay: 1.05s; }
 <div class="header">
   <div class="header-left"><div>
     <h1>GROUPE GARCIA <span style="font-weight:400;font-size:15px;opacity:.7">Dashboard Jour</span></h1>
-    <div class="subtitle">Lundi 6 Avril 2026 <span class="badge-live">JOUR</span></div>
+    <div class="subtitle" id="hdr-date">Chargement... <span class="badge-live">JOUR</span></div>
   </div></div>
   <div class="header-right"><button class="btn btn-accent" onclick="location.reload()">Actualiser</button></div>
 </div>
 <div class="tabs"><a class="tab active" href="#">Synthèse Jour</a></div>
 <div class="container">
   <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-label">Marge du jour</div><div class="kpi-value" style="color:#10b981">1 847 €</div><div class="kpi-sub">6 boutiques</div></div>
-    <div class="kpi-card"><div class="kpi-label">Panier moyen</div><div class="kpi-value" style="color:#3b82f6">9.36 €</div><div class="kpi-sub">marge / flux</div></div>
-    <div class="kpi-card"><div class="kpi-label">Mobiles vendus</div><div class="kpi-value" style="color:#1a2332">9</div><div class="kpi-sub">dont 7 H/W2S</div></div>
-    <div class="kpi-card"><div class="kpi-label">SFR Cyber</div><div class="kpi-value" style="color:#8b5cf6">5</div></div>
+    <div class="kpi-card"><div class="kpi-label">Marge du jour</div><div class="kpi-value" style="color:#10b981" id="k-marge">—</div><div class="kpi-sub" id="k-btq">— boutiques</div></div>
+    <div class="kpi-card"><div class="kpi-label">Mobiles vendus</div><div class="kpi-value" style="color:#1a2332" id="k-mob">—</div><div class="kpi-sub" id="k-hw2s">dont — H/W2S</div></div>
+    <div class="kpi-card"><div class="kpi-label">SFR Cyber</div><div class="kpi-value" style="color:#8b5cf6" id="k-cyber">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Box du jour</div><div class="kpi-value" style="color:#10b981" id="k-box">—</div></div>
   </div>
   <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-label">Taux assurance</div><div class="kpi-value" style="color:#ec4899">44 %</div><div class="kpi-sub">4 / 9 mobiles</div></div>
-    <div class="kpi-card"><div class="kpi-label">Taux Alba</div><div class="kpi-value" style="color:#f59e0b">22 %</div><div class="kpi-sub">2 / 9 mobiles</div></div>
-    <div class="kpi-card"><div class="kpi-label">Assurances</div><div class="kpi-value" style="color:#ec4899">4</div><div class="kpi-sub">Chubb</div></div>
-    <div class="kpi-card"><div class="kpi-label">Box du jour</div><div class="kpi-value" style="color:#10b981">1</div><div class="kpi-sub">raccordement</div></div>
+    <div class="kpi-card"><div class="kpi-label">Taux assurance</div><div class="kpi-value" style="color:#ec4899" id="k-assu">—</div><div class="kpi-sub" id="k-assu-sub">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Taux Alba</div><div class="kpi-value" style="color:#f59e0b" id="k-alba">—</div><div class="kpi-sub" id="k-alba-sub">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Panier moyen</div><div class="kpi-value" style="color:#3b82f6" id="k-panier">—</div><div class="kpi-sub">marge / mob</div></div>
+    <div class="kpi-card"><div class="kpi-label">Accessoires</div><div class="kpi-value" style="color:#f97316" id="k-access">—</div></div>
   </div>
   <div class="grid-2">
-    <div class="section"><div class="section-title">Marge par boutique — Jour</div><div class="card"><div class="bar-chart" id="chart-marge">
-      <div class="bar-group"><div class="bar color-alr" data-height="21%" style="height:0%"><div class="bar-value" style="color:#3b82f6">195 €</div></div><div class="bar-label">Angers</div></div>
-      <div class="bar-group"><div class="bar color-tlr" data-height="42%" style="height:0%"><div class="bar-value" style="color:#8b5cf6">389 €</div></div><div class="bar-label">Amboise</div></div>
-      <div class="bar-group"><div class="bar color-clr" data-height="16%" style="height:0%"><div class="bar-value" style="color:#ec4899">148 €</div></div><div class="bar-label">Châteaudun</div></div>
-      <div class="bar-group"><div class="bar color-cholet" data-height="100%" style="height:0%"><div class="bar-value" style="color:#10b981">582 €</div></div><div class="bar-label">Cholet</div></div>
-      <div class="bar-group"><div class="bar color-rlr" data-height="36%" style="height:0%"><div class="bar-value" style="color:#f59e0b">335 €</div></div><div class="bar-label">Romorantin</div></div>
-      <div class="bar-group"><div class="bar color-vlr" data-height="22%" style="height:0%"><div class="bar-value" style="color:#f97316">198 €</div></div><div class="bar-label">Vendôme</div></div>
-    </div></div></div>
-    <div class="section"><div class="section-title">Panier moyen par boutique — Jour</div><div class="card"><div class="bar-chart">
-      <div class="bar-group"><div class="bar color-alr" data-height="58%" style="height:0%"><div class="bar-value" style="color:#3b82f6">6.87 €</div></div><div class="bar-label">Angers</div></div>
-      <div class="bar-group"><div class="bar color-tlr" data-height="100%" style="height:0%"><div class="bar-value" style="color:#8b5cf6">16.02 €</div></div><div class="bar-label">Amboise</div></div>
-      <div class="bar-group"><div class="bar color-clr" data-height="52%" style="height:0%"><div class="bar-value" style="color:#ec4899">8.34 €</div></div><div class="bar-label">Châteaudun</div></div>
-      <div class="bar-group"><div class="bar color-cholet" data-height="65%" style="height:0%"><div class="bar-value" style="color:#10b981">10.39 €</div></div><div class="bar-label">Cholet</div></div>
-      <div class="bar-group"><div class="bar color-rlr" data-height="42%" style="height:0%"><div class="bar-value" style="color:#f59e0b">6.80 €</div></div><div class="bar-label">Romorantin</div></div>
-      <div class="bar-group"><div class="bar color-vlr" data-height="40%" style="height:0%"><div class="bar-value" style="color:#f97316">6.45 €</div></div><div class="bar-label">Vendôme</div></div>
-    </div></div></div>
+    <div class="section"><div class="section-title">Marge par boutique — Jour</div><div class="card"><div class="bar-chart" id="chart-marge"></div></div></div>
+    <div class="section"><div class="section-title">Mobiles par boutique — Jour</div><div class="card"><div class="bar-chart" id="chart-mob"></div></div></div>
   </div>
   <div class="section" id="boutiques"><div class="section-title">Détail par boutique — Jour</div><div class="card"><table class="data-table">
-    <thead><tr><th>Boutique</th><th class="num">Marge</th><th class="num">Panier Moy.</th><th class="num">Mob</th><th class="num">Box</th><th class="num">Assu</th><th class="num">Cyber</th><th class="num">Alba</th><th class="num">Access</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Angers</strong></td><td class="num">195 €</td><td class="num">6.87 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">45 €</td></tr>
-      <tr><td><strong>Amboise</strong></td><td class="num">389 €</td><td class="num" style="color:#10b981;font-weight:700">16.02 €</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">82 €</td></tr>
-      <tr><td><strong>Châteaudun</strong></td><td class="num">148 €</td><td class="num">8.34 €</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">28 €</td></tr>
-      <tr><td><strong>Cholet</strong></td><td class="num">582 €</td><td class="num">10.39 €</td><td class="num">3</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">115 €</td></tr>
-      <tr><td><strong>Romorantin</strong></td><td class="num">335 €</td><td class="num">6.80 €</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">67 €</td></tr>
-      <tr><td><strong>Vendôme</strong></td><td class="num">198 €</td><td class="num">6.45 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38 €</td></tr>
-      <tr class="row-total"><td><strong>TOTAL GROUPE</strong></td><td class="num">1 847 €</td><td class="num">9.36 €</td><td class="num">9</td><td class="num">1</td><td class="num">4</td><td class="num">5</td><td class="num">2</td><td class="num">375 €</td></tr>
-    </tbody></table></div></div>
+    <thead><tr><th>Boutique</th><th class="num">Marge</th><th class="num">Mob</th><th class="num">Box</th><th class="num">Assu</th><th class="num">Cyber</th><th class="num">Alba</th><th class="num">Access</th></tr></thead>
+    <tbody id="tbody-boutiques"></tbody>
+  </table></div></div>
   <div class="section" id="vendeurs"><div class="section-title">Classement vendeurs — Jour</div><div class="card"><table class="data-table">
-    <thead><tr><th style="width:40px">#</th><th>Vendeur</th><th class="num">Marge</th><th class="num">Mobiles</th><th class="num">Cyber</th><th class="num">Assurances</th><th class="num">Alba</th><th class="num">Accessoires</th></tr></thead>
-    <tbody>
-      <tr><td><span class="rank rank-1">1</span></td><td><span class="vendeur-name">LUCAS</span><span class="badge-boutique">CHOLET</span></td><td class="num" style="color:#10b981;font-weight:800">312 €</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">65 €</td></tr>
-      <tr><td><span class="rank rank-2">2</span></td><td><span class="vendeur-name">HASSENE</span><span class="badge-boutique">TLR</span></td><td class="num" style="color:#10b981;font-weight:800">278 €</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">52 €</td></tr>
-      <tr><td><span class="rank rank-3">3</span></td><td><span class="vendeur-name">WILL</span><span class="badge-boutique">RLR</span></td><td class="num" style="color:#10b981;font-weight:800">245 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">42 €</td></tr>
-      <tr><td><span class="rank rank-other">4</span></td><td><span class="vendeur-name">ANAIS</span><span class="badge-boutique">CHOLET</span></td><td class="num">198 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">35 €</td></tr>
-      <tr><td><span class="rank rank-other">5</span></td><td><span class="vendeur-name">AXEL</span><span class="badge-boutique">ALR</span></td><td class="num">195 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">45 €</td></tr>
-      <tr><td><span class="rank rank-other">6</span></td><td><span class="vendeur-name">RACHEL</span><span class="badge-boutique">CLR</span></td><td class="num">148 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">28 €</td></tr>
-      <tr><td><span class="rank rank-other">7</span></td><td><span class="vendeur-name">JULIE TLR</span><span class="badge-boutique">TLR</span></td><td class="num">111 €</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">30 €</td></tr>
-      <tr><td><span class="rank rank-other">8</span></td><td><span class="vendeur-name">EMILIE</span><span class="badge-boutique">RLR</span></td><td class="num">90 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">25 €</td></tr>
-      <tr><td><span class="rank rank-other">9</span></td><td><span class="vendeur-name">EMMY</span><span class="badge-boutique">CHOLET</span></td><td class="num">72 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">15 €</td></tr>
-      <tr><td><span class="rank rank-other">10</span></td><td><span class="vendeur-name">MEHDY</span><span class="badge-boutique">VLR</span></td><td class="num">198 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38 €</td></tr>
-      <tr><td><span class="rank rank-other">11</span></td><td><span class="vendeur-name">PAULINE</span><span class="badge-boutique">ALR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
-      <tr><td><span class="rank rank-other">12</span></td><td><span class="vendeur-name">ILIAN</span><span class="badge-boutique">CLR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
-      <tr><td><span class="rank rank-other">13</span></td><td><span class="vendeur-name">NATHAN</span><span class="badge-boutique">RLR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
-      <tr class="row-total"><td></td><td><strong>TOTAL</strong></td><td class="num">1 847 €</td><td class="num">9</td><td class="num">5</td><td class="num">4</td><td class="num">2</td><td class="num">375 €</td></tr>
-    </tbody></table></div></div>
+    <thead><tr><th style="width:40px">#</th><th>Vendeur</th><th class="num">Marge</th><th class="num">Mob</th><th class="num">Cyber</th><th class="num">Assu</th><th class="num">Alba</th><th class="num">Access</th></tr></thead>
+    <tbody id="tbody-vendeurs"></tbody>
+  </table></div></div>
 </div>
 <div class="footer" style="text-align:center;padding:16px 32px 32px;font-size:11px;color:#8e99a8">
-  3GWIN • Données du 06/04/2026 • Groupe Garcia • <span style="color:#ff9500">Données de démonstration</span>
+  3GWIN • Groupe Garcia • <span id="footer-date">—</span> • <span style="color:#10b981" id="footer-status">Connexion en cours...</span>
 </div>
+
 <script>
-(function() {
-  var spMargeEl = document.getElementById('sp-marge');
-  var spMobEl = document.getElementById('sp-mob');
-  var spBtqEl = document.getElementById('sp-btq');
-  var spTarget = 1847, spMobTarget = 9, spBtqTarget = 6;
-  var spStart = performance.now();
-  function formatEuro(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' \u20ac'; }
-  function spAnim(now) {
-    var elapsed = now - spStart;
-    var p = Math.min(elapsed / 1400, 1);
-    var ease = 1 - Math.pow(1 - p, 3);
-    spMargeEl.textContent = formatEuro(Math.round(spTarget * ease));
-    spMobEl.textContent = Math.round(spMobTarget * ease);
-    spBtqEl.textContent = Math.round(spBtqTarget * ease);
-    if (p < 1) requestAnimationFrame(spAnim);
+// ── CONFIG ──
+var SHEET_ID = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
+var SHEET_NAME = 'Données_Jour';
+
+var BOUTIQUES_CONFIG = {
+  'TLR': { label: 'Amboise', color: '#8b5cf6', cssClass: 'color-tlr' },
+  'ALR': { label: 'Angers', color: '#3b82f6', cssClass: 'color-alr' },
+  'CLR': { label: 'Châteaudun', color: '#ec4899', cssClass: 'color-clr' },
+  'CHOLET': { label: 'Cholet', color: '#10b981', cssClass: 'color-cholet' },
+  'RLR': { label: 'Romorantin', color: '#f59e0b', cssClass: 'color-rlr' },
+  'VLR': { label: 'Vendôme', color: '#f97316', cssClass: 'color-vlr' }
+};
+
+function fmt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f') + '\u202f€'; }
+function fmtN(n) { return Math.round(n * 10) / 10; }
+
+function chargerDonnees() {
+  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+    '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(SHEET_NAME) + '&t=' + Date.now();
+
+  var script = document.createElement('script');
+  script.src = url.replace('out:json', 'out:json&tqx=responseHandler:handleGviz');
+  document.head.appendChild(script);
+
+  // Fallback fetch
+  fetch(url)
+    .then(function(r) { return r.text(); })
+    .then(function(text) {
+      var json = text.replace(/^[^{]+/, '').replace(/[^}]+$/, '');
+      var data = JSON.parse(json);
+      traiterDonnees(data);
+    })
+    .catch(function(e) {
+      console.error('Erreur chargement:', e);
+      afficherErreur();
+    });
+}
+
+function traiterDonnees(data) {
+  if (!data || !data.table || !data.table.rows) { afficherErreur(); return; }
+
+  var rows = data.table.rows;
+  var vendeurs = [];
+  var mags = [];
+  var dateJour = '';
+  var mode = null; // 'vendeurs' ou 'mags'
+
+  rows.forEach(function(row) {
+    if (!row.c || !row.c[0] || !row.c[0].v) return;
+    var col0 = row.c[0].v.toString().trim();
+
+    if (col0.indexOf('VENDEURS DU JOUR') === 0) {
+      mode = 'vendeurs';
+      dateJour = col0.replace('VENDEURS DU JOUR — ', '');
+      return;
+    }
+    if (col0.indexOf('BOUTIQUES DU JOUR') === 0) { mode = 'mags'; return; }
+    if (col0 === 'Boutique' || col0 === 'Boutique') return;
+
+    if (mode === 'vendeurs' && row.c.length >= 8) {
+      var marge = parseFloat((row.c[3] && row.c[3].v) || 0);
+      if (row.c[1] && row.c[1].v && marge > 0) {
+        vendeurs.push({
+          code: col0, nom: row.c[1].v, role: row.c[2] && row.c[2].v,
+          marge: marge, mob: parseInt(row.c[4] && row.c[4].v || 0),
+          g3a: parseInt(row.c[5] && row.c[5].v || 0),
+          cyber: parseInt(row.c[6] && row.c[6].v || 0),
+          assu: parseInt(row.c[7] && row.c[7].v || 0),
+          access: parseFloat(row.c[9] && row.c[9].v || 0)
+        });
+      }
+    }
+
+    if (mode === 'mags' && row.c.length >= 6) {
+      var margeM = parseFloat((row.c[2] && row.c[2].v) || 0);
+      if (col0 && margeM > 0) {
+        mags.push({
+          boutique: col0, code: row.c[1] && row.c[1].v,
+          marge: margeM, mob: parseInt(row.c[3] && row.c[3].v || 0),
+          box: parseInt(row.c[4] && row.c[4].v || 0),
+          assu: parseInt(row.c[5] && row.c[5].v || 0),
+          cyber: parseInt(row.c[6] && row.c[6].v || 0),
+          alba: parseInt(row.c[7] && row.c[7].v || 0),
+          access: parseFloat(row.c[9] && row.c[9].v || 0)
+        });
+      }
+    }
+  });
+
+  afficherDashboard(vendeurs, mags, dateJour);
+}
+
+function afficherDashboard(vendeurs, mags, dateJour) {
+  // Totaux
+  var totalMarge = mags.reduce(function(s, m) { return s + m.marge; }, 0);
+  var totalMob = mags.reduce(function(s, m) { return s + m.mob; }, 0);
+  var totalBox = mags.reduce(function(s, m) { return s + m.box; }, 0);
+  var totalCyber = mags.reduce(function(s, m) { return s + m.cyber; }, 0);
+  var totalAssu = mags.reduce(function(s, m) { return s + m.assu; }, 0);
+  var totalAlba = mags.reduce(function(s, m) { return s + m.alba; }, 0);
+  var totalAccess = mags.reduce(function(s, m) { return s + m.access; }, 0);
+  var totalMobV = vendeurs.reduce(function(s, v) { return s + v.mob; }, 0);
+
+  // KPIs
+  document.getElementById('k-marge').textContent = fmt(totalMarge);
+  document.getElementById('k-btq').textContent = mags.length + ' boutiques';
+  document.getElementById('k-mob').textContent = totalMob;
+  document.getElementById('k-hw2s').textContent = 'dont ' + totalMobV + ' H/W2S';
+  document.getElementById('k-cyber').textContent = totalCyber;
+  document.getElementById('k-box').textContent = totalBox;
+  document.getElementById('k-access').textContent = fmt(totalAccess);
+  var txAssu = totalMob > 0 ? Math.round(totalAssu / totalMob * 100) : 0;
+  var txAlba = totalMob > 0 ? Math.round(totalAlba / totalMob * 100) : 0;
+  document.getElementById('k-assu').textContent = txAssu + ' %';
+  document.getElementById('k-assu-sub').textContent = totalAssu + ' / ' + totalMob + ' mobiles';
+  document.getElementById('k-alba').textContent = txAlba + ' %';
+  document.getElementById('k-alba-sub').textContent = totalAlba + ' / ' + totalMob + ' mobiles';
+  var panier = totalMob > 0 ? Math.round(totalMarge / totalMob * 100) / 100 : 0;
+  document.getElementById('k-panier').textContent = panier.toFixed(2) + ' €';
+
+  // Date header
+  if (dateJour) {
+    document.getElementById('hdr-date').innerHTML = dateJour + ' <span class="badge-live">JOUR</span>';
+    document.getElementById('footer-date').textContent = 'Données du ' + dateJour;
   }
-  setTimeout(function() { spStart = performance.now(); requestAnimationFrame(spAnim); }, 1200);
+  document.getElementById('footer-status').textContent = 'Données en temps réel';
+  document.getElementById('footer-status').style.color = '#10b981';
+
+  // Graphique marge
+  var maxMarge = Math.max.apply(null, mags.map(function(m) { return m.marge; }));
+  var chartMarge = document.getElementById('chart-marge');
+  chartMarge.innerHTML = '';
+  mags.forEach(function(m) {
+    var cfg = BOUTIQUES_CONFIG[m.code] || { label: m.boutique, color: '#888', cssClass: '' };
+    var pct = maxMarge > 0 ? Math.round(m.marge / maxMarge * 100) : 0;
+    var g = document.createElement('div'); g.className = 'bar-group';
+    g.innerHTML = '<div class="bar ' + cfg.cssClass + '" data-height="' + pct + '%" style="height:0%"><div class="bar-value" style="color:' + cfg.color + '">' + fmt(m.marge) + '</div></div><div class="bar-label">' + cfg.label + '</div>';
+    chartMarge.appendChild(g);
+  });
+
+  // Graphique mobiles
+  var maxMob = Math.max.apply(null, mags.map(function(m) { return m.mob; }));
+  var chartMob = document.getElementById('chart-mob');
+  chartMob.innerHTML = '';
+  mags.forEach(function(m) {
+    var cfg = BOUTIQUES_CONFIG[m.code] || { label: m.boutique, color: '#888', cssClass: '' };
+    var pct = maxMob > 0 ? Math.round(m.mob / maxMob * 100) : 0;
+    var g = document.createElement('div'); g.className = 'bar-group';
+    g.innerHTML = '<div class="bar ' + cfg.cssClass + '" data-height="' + pct + '%" style="height:0%"><div class="bar-value" style="color:' + cfg.color + '">' + m.mob + '</div></div><div class="bar-label">' + cfg.label + '</div>';
+    chartMob.appendChild(g);
+  });
+
+  // Tableau boutiques
+  var tbodyB = document.getElementById('tbody-boutiques');
+  tbodyB.innerHTML = '';
+  mags.forEach(function(m) {
+    var cfg = BOUTIQUES_CONFIG[m.code] || { label: m.boutique };
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><strong>' + cfg.label + '</strong></td><td class="num">' + fmt(m.marge) + '</td><td class="num">' + m.mob + '</td><td class="num">' + m.box + '</td><td class="num">' + m.assu + '</td><td class="num">' + m.cyber + '</td><td class="num">' + m.alba + '</td><td class="num">' + fmt(m.access) + '</td>';
+    tbodyB.appendChild(tr);
+  });
+  var trTot = document.createElement('tr'); trTot.className = 'row-total';
+  trTot.innerHTML = '<td><strong>TOTAL GROUPE</strong></td><td class="num">' + fmt(totalMarge) + '</td><td class="num">' + totalMob + '</td><td class="num">' + totalBox + '</td><td class="num">' + totalAssu + '</td><td class="num">' + totalCyber + '</td><td class="num">' + totalAlba + '</td><td class="num">' + fmt(totalAccess) + '</td>';
+  tbodyB.appendChild(trTot);
+
+  // Tableau vendeurs (trié par marge)
+  var vTri = vendeurs.slice().sort(function(a, b) { return b.marge - a.marge; });
+  var tbodyV = document.getElementById('tbody-vendeurs');
+  tbodyV.innerHTML = '';
+  vTri.forEach(function(v, i) {
+    var rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+    var margeStyle = i < 3 ? 'style="color:#10b981;font-weight:800"' : '';
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><span class="rank ' + rankClass + '">' + (i+1) + '</span></td><td><span class="vendeur-name">' + v.nom + '</span><span class="badge-boutique">' + v.code + '</span></td><td class="num" ' + margeStyle + '>' + fmt(v.marge) + '</td><td class="num">' + v.mob + '</td><td class="num">' + v.cyber + '</td><td class="num">' + v.assu + '</td><td class="num">' + v.g3a + '</td><td class="num">' + fmt(v.access) + '</td>';
+    tbodyV.appendChild(tr);
+  });
+  var vTotalMarge = vTri.reduce(function(s, v) { return s + v.marge; }, 0);
+  var trVTot = document.createElement('tr'); trVTot.className = 'row-total';
+  trVTot.innerHTML = '<td></td><td><strong>TOTAL</strong></td><td class="num">' + fmt(vTotalMarge) + '</td><td class="num">' + totalMobV + '</td><td class="num">' + vendeurs.reduce(function(s,v){return s+v.cyber;},0) + '</td><td class="num">' + vendeurs.reduce(function(s,v){return s+v.assu;},0) + '</td><td class="num">' + vendeurs.reduce(function(s,v){return s+v.g3a;},0) + '</td><td class="num">' + fmt(vendeurs.reduce(function(s,v){return s+v.access;},0)) + '</td>';
+  tbodyV.appendChild(trVTot);
+
+  // Splash update
+  document.getElementById('sp-marge').textContent = fmt(totalMarge);
+  document.getElementById('sp-mob').textContent = totalMob;
+  document.getElementById('sp-btq').textContent = mags.length;
+
+  // Afficher
   setTimeout(function() {
-    var splash = document.getElementById('splash');
-    splash.classList.add('hide');
+    document.getElementById('splash').classList.add('hide');
     document.body.classList.add('loaded');
     setTimeout(function() {
-      var bars = document.querySelectorAll('.bar[data-height]');
-      bars.forEach(function(bar) { bar.style.height = bar.getAttribute('data-height'); });
+      document.querySelectorAll('.bar[data-height]').forEach(function(bar) {
+        bar.style.height = bar.getAttribute('data-height');
+      });
+      document.getElementById('splash').style.display = 'none';
     }, 400);
-    setTimeout(function() { splash.style.display = 'none'; }, 600);
-  }, 2800);
-})();
+  }, 2000);
+}
+
+function afficherErreur() {
+  document.getElementById('footer-status').textContent = 'Données indisponibles — réessayez plus tard';
+  document.getElementById('footer-status').style.color = '#ff3b30';
+  document.getElementById('splash').classList.add('hide');
+  document.body.classList.add('loaded');
+  setTimeout(function() { document.getElementById('splash').style.display = 'none'; }, 600);
+}
+
+// Lancement
+chargerDonnees();
 </script>
 </body>
 </html>
