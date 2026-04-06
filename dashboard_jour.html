@@ -8,276 +8,284 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #e8ecf1;
-  color: #1a2332;
-  min-height: 100vh;
+  background: #e8ecf1; color: #1a2332; min-height: 100vh;
 }
-.header {
+
+/* === SPLASH SCREEN === */
+.splash {
+  position: fixed; inset: 0; z-index: 9999;
   background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%);
-  color: #fff;
-  padding: 16px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.splash.hide { opacity: 0; visibility: hidden; }
+.sp-logo {
+  font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 1px;
+  opacity: 0; transform: translateY(20px); animation: spU 0.8s ease 0.2s forwards;
+}
+.sp-logo span { font-weight: 400; font-size: 16px; opacity: .6; margin-left: 10px; }
+.sp-badge {
+  display: inline-block; background: #ff9500; color: #fff; font-size: 10px;
+  font-weight: 800; padding: 2px 10px; border-radius: 10px; letter-spacing: 1.5px;
+  margin-left: 10px; vertical-align: middle;
+}
+.sp-line {
+  width: 0; height: 2px; margin-top: 20px; border-radius: 2px;
+  background: linear-gradient(90deg, #ff9500, #ec4899);
+  animation: spL 1.2s ease 0.6s forwards;
+}
+.sp-kpis {
+  margin-top: 28px; display: flex; gap: 40px;
+  opacity: 0; transform: translateY(12px); animation: spU 0.6s ease 1.2s forwards;
+}
+.sp-kpi { text-align: center; }
+.sp-kpi-val { font-size: 36px; font-weight: 800; color: #ff9500; font-variant-numeric: tabular-nums; }
+.sp-kpi-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.sp-status {
+  margin-top: 32px; display: flex; align-items: center; gap: 8px;
+  opacity: 0; animation: spU 0.5s ease 1.8s forwards;
+}
+.sp-status-text { font-size: 12px; color: rgba(255,255,255,.4); font-weight: 500; }
+.sp-dot { width: 5px; height: 5px; border-radius: 50%; background: #ff9500; animation: spP 0.8s ease infinite; }
+.sp-dot:nth-child(2) { animation-delay: 0.15s; }
+.sp-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes spU { to { opacity: 1; transform: translateY(0); } }
+@keyframes spL { to { width: 180px; } }
+@keyframes spP { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+/* === PAGE LOAD TRANSITIONS === */
+.header, .tabs, .container, .footer {
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+body.loaded .header { opacity: 1; transform: none; transition-delay: 0.05s; }
+body.loaded .tabs { opacity: 1; transform: none; transition-delay: 0.15s; }
+body.loaded .container { opacity: 1; transform: none; transition-delay: 0.25s; }
+body.loaded .footer { opacity: 1; transform: none; transition-delay: 0.35s; }
+
+/* === KPI CARD ANIMATIONS === */
+.kpi-card {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.2s ease;
+}
+body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(1) { transition-delay: 0.3s; }
+body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(2) { transition-delay: 0.4s; }
+body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(3) { transition-delay: 0.5s; }
+body.loaded .kpi-row:nth-child(1) .kpi-card:nth-child(4) { transition-delay: 0.6s; }
+body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(1) { transition-delay: 0.5s; }
+body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(2) { transition-delay: 0.6s; }
+body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(3) { transition-delay: 0.7s; }
+body.loaded .kpi-row:nth-child(2) .kpi-card:nth-child(4) { transition-delay: 0.8s; }
+body.loaded .kpi-card { opacity: 1; transform: none; }
+.kpi-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px) !important; }
+
+/* === BAR & SECTION ANIMATIONS === */
+.bar { transition: height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.bar-value { opacity: 0; transition: opacity 0.4s ease 0.8s; }
+body.loaded .bar-value { opacity: 1; }
+.section { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+body.loaded .grid-2 .section:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.6s; }
+body.loaded .grid-2 .section:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.75s; }
+body.loaded #boutiques { opacity: 1; transform: none; transition-delay: 0.9s; }
+body.loaded #vendeurs { opacity: 1; transform: none; transition-delay: 1.05s; }
+
+/* === MAIN STYLES === */
+.header {
+  background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%); color: #fff;
+  padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.15);
 }
 .header-left { display: flex; align-items: center; gap: 16px; }
 .header h1 { font-size: 20px; font-weight: 800; letter-spacing: .5px; }
 .header .subtitle { font-size: 13px; color: rgba(255,255,255,.6); font-weight: 500; }
 .header .badge-live {
-  display: inline-block; background: #ff9500; color: #fff;
-  font-size: 10px; font-weight: 800; padding: 2px 8px;
-  border-radius: 10px; letter-spacing: 1px; margin-left: 8px;
+  display: inline-block; background: #ff9500; color: #fff; font-size: 10px;
+  font-weight: 800; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; margin-left: 8px;
 }
 .header-right { display: flex; gap: 10px; }
 .btn {
-  background: rgba(255,255,255,.12); color: #fff;
-  border: 1px solid rgba(255,255,255,.2); padding: 8px 18px;
-  border-radius: 8px; font-size: 13px; font-weight: 600;
-  cursor: pointer; text-decoration: none; transition: background .2s;
+  background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2);
+  padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: all .15s;
 }
 .btn:hover { background: rgba(255,255,255,.2); }
 .btn-accent { background: #ff9500; border-color: #ff9500; }
+.btn-accent:hover { background: #e68600; }
 .tabs {
   background: #fff; display: flex; gap: 0; padding: 0 32px;
   border-bottom: 1px solid #dde1e7; overflow-x: auto;
 }
 .tab {
   padding: 14px 20px; font-size: 13px; font-weight: 600; color: #6b7a8d;
-  cursor: pointer; border-bottom: 3px solid transparent;
-  white-space: nowrap; text-decoration: none; transition: all .2s;
+  cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap;
+  text-decoration: none; transition: all .2s;
 }
 .tab:hover { color: #1a2332; }
 .tab.active { color: #1a2332; border-bottom-color: #ff9500; }
 .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-.kpi-row {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 16px; margin-bottom: 24px;
-}
-.kpi-card {
-  background: #fff; border-radius: 12px; padding: 20px 24px;
-  box-shadow: 0 1px 6px rgba(0,0,0,.06);
-}
-.kpi-label {
-  font-size: 11px; font-weight: 700; color: #8e99a8;
-  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px;
-}
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi-card { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+.kpi-label { font-size: 11px; font-weight: 700; color: #8e99a8; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
 .kpi-value { font-size: 32px; font-weight: 800; letter-spacing: -.5px; line-height: 1.1; }
 .kpi-sub { font-size: 12px; color: #8e99a8; margin-top: 4px; }
 .section { margin-bottom: 24px; }
 .section-title {
-  font-size: 14px; font-weight: 700; color: #1a2332;
-  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px;
-  padding-left: 12px; border-left: 4px solid #1a2332;
+  font-size: 14px; font-weight: 700; color: #1a2332; text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: 12px; padding-left: 12px; border-left: 4px solid #1a2332;
 }
-.card {
-  background: #fff; border-radius: 12px; padding: 24px;
-  box-shadow: 0 1px 6px rgba(0,0,0,.06);
-}
+.card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); transition: box-shadow 0.2s; }
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
 .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.data-table th {
-  text-align: left; padding: 10px 12px; font-size: 11px;
-  font-weight: 700; color: #8e99a8; text-transform: uppercase;
-  letter-spacing: .5px; border-bottom: 2px solid #e8ecf1;
-}
+.data-table th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; color: #8e99a8; text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid #e8ecf1; }
 .data-table th.num { text-align: right; }
 .data-table td { padding: 12px; border-bottom: 1px solid #f0f2f5; font-variant-numeric: tabular-nums; }
 .data-table td.num { text-align: right; font-weight: 600; }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr:hover td { background: #f8f9fb; }
-.data-table tr.row-total td {
-  font-weight: 800; background: #f0f7f0;
-  border-top: 2px solid #34c759; border-bottom: none;
-}
-.rank {
-  display: inline-flex; width: 26px; height: 26px; border-radius: 50%;
-  align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff;
-}
+.data-table tr { transition: background 0.15s ease; }
+.data-table tr.row-total td { font-weight: 800; background: #f0f7f0; border-top: 2px solid #34c759; border-bottom: none; }
+.rank { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; transition: transform 0.2s; }
+.rank:hover { transform: scale(1.15); }
 .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
 .rank-2 { background: linear-gradient(135deg, #C0C0C0, #999); color: #000; }
 .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); }
 .rank-other { background: #e5e5ea; color: #8e8e93; }
-.badge-boutique {
-  display: inline-block; background: #e8ecf1; border-radius: 6px;
-  padding: 2px 8px; font-size: 10px; font-weight: 700; color: #6b7a8d; margin-left: 8px;
-}
+.badge-boutique { display: inline-block; background: #e8ecf1; border-radius: 6px; padding: 2px 8px; font-size: 10px; font-weight: 700; color: #6b7a8d; margin-left: 8px; }
 .vendeur-name { font-weight: 700; }
-.bar-chart {
-  display: flex; align-items: flex-end; gap: 16px; height: 180px;
-  padding: 0 8px; margin-top: 16px;
-}
+.bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 180px; padding: 0 8px; margin-top: 16px; }
 .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
-.bar { width: 100%; max-width: 60px; border-radius: 6px 6px 0 0; position: relative; transition: height .6s ease; }
+.bar { width: 100%; max-width: 60px; border-radius: 6px 6px 0 0; position: relative; }
 .bar-value { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; white-space: nowrap; }
 .bar-label { margin-top: 8px; font-size: 11px; font-weight: 600; color: #6b7a8d; text-align: center; }
-.color-alr { background: #3b82f6; }
-.color-tlr { background: #8b5cf6; }
-.color-clr { background: #ec4899; }
-.color-cholet { background: #10b981; }
-.color-rlr { background: #f59e0b; }
-.color-vlr { background: #f97316; }
+.color-alr { background: #3b82f6; } .color-tlr { background: #8b5cf6; }
+.color-clr { background: #ec4899; } .color-cholet { background: #10b981; }
+.color-rlr { background: #f59e0b; } .color-vlr { background: #f97316; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.date-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
-  border-radius: 20px; padding: 6px 16px; font-size: 14px; font-weight: 700; color: #ff9500;
-}
 @media (max-width: 768px) {
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
-  .header { padding: 12px 16px; }
-  .container { padding: 16px; }
-  .tabs { padding: 0 16px; }
-  .kpi-value { font-size: 24px; }
+  .header { padding: 12px 16px; } .container { padding: 16px; }
+  .tabs { padding: 0 16px; } .kpi-value { font-size: 24px; }
+  .sp-kpis { gap: 20px; } .sp-kpi-val { font-size: 28px; }
 }
-@media (max-width: 480px) {
-  .kpi-row { grid-template-columns: 1fr 1fr; }
-  .bar-chart { height: 140px; }
-}
+@media (max-width: 480px) { .kpi-row { grid-template-columns: 1fr 1fr; } .bar-chart { height: 140px; } }
 </style>
 </head>
 <body>
+<div class="splash" id="splash">
+  <div class="sp-logo">GROUPE GARCIA <span>Dashboard Jour</span> <span class="sp-badge">JOUR</span></div>
+  <div class="sp-line"></div>
+  <div class="sp-kpis">
+    <div class="sp-kpi"><div class="sp-kpi-val" id="sp-marge">0 €</div><div class="sp-kpi-label">Marge du jour</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val" id="sp-mob">0</div><div class="sp-kpi-label">Mobiles</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val" id="sp-btq">0</div><div class="sp-kpi-label">Boutiques</div></div>
+  </div>
+  <div class="sp-status">
+    <span class="sp-status-text">Chargement des données</span>
+    <span class="sp-dot"></span><span class="sp-dot"></span><span class="sp-dot"></span>
+  </div>
+</div>
 <div class="header">
-  <div class="header-left">
-    <div>
-      <h1>GROUPE GARCIA <span style="font-weight:400;font-size:15px;opacity:.7">Dashboard Jour</span></h1>
-      <div class="subtitle">Lundi 6 Avril 2026 <span class="badge-live">JOUR</span></div>
-    </div>
-  </div>
-  <div class="header-right">
-    <button class="btn btn-accent" onclick="location.reload()">Actualiser</button>
-  </div>
+  <div class="header-left"><div>
+    <h1>GROUPE GARCIA <span style="font-weight:400;font-size:15px;opacity:.7">Dashboard Jour</span></h1>
+    <div class="subtitle">Lundi 6 Avril 2026 <span class="badge-live">JOUR</span></div>
+  </div></div>
+  <div class="header-right"><button class="btn btn-accent" onclick="location.reload()">Actualiser</button></div>
 </div>
-<div class="tabs">
-  <a class="tab active" href="#">Synthèse Jour</a>
-</div>
+<div class="tabs"><a class="tab active" href="#">Synthèse Jour</a></div>
 <div class="container">
   <div class="kpi-row">
-    <div class="kpi-card">
-      <div class="kpi-label">Marge du jour</div>
-      <div class="kpi-value" style="color:#10b981">1 847 €</div>
-      <div class="kpi-sub">6 boutiques</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Panier moyen</div>
-      <div class="kpi-value" style="color:#3b82f6">9.36 €</div>
-      <div class="kpi-sub">marge / flux</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Mobiles vendus</div>
-      <div class="kpi-value" style="color:#1a2332">9</div>
-      <div class="kpi-sub">dont 7 H/W2S</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">SFR Cyber</div>
-      <div class="kpi-value" style="color:#8b5cf6">5</div>
-    </div>
+    <div class="kpi-card"><div class="kpi-label">Marge du jour</div><div class="kpi-value" style="color:#10b981">1 847 €</div><div class="kpi-sub">6 boutiques</div></div>
+    <div class="kpi-card"><div class="kpi-label">Panier moyen</div><div class="kpi-value" style="color:#3b82f6">9.36 €</div><div class="kpi-sub">marge / flux</div></div>
+    <div class="kpi-card"><div class="kpi-label">Mobiles vendus</div><div class="kpi-value" style="color:#1a2332">9</div><div class="kpi-sub">dont 7 H/W2S</div></div>
+    <div class="kpi-card"><div class="kpi-label">SFR Cyber</div><div class="kpi-value" style="color:#8b5cf6">5</div></div>
   </div>
   <div class="kpi-row">
-    <div class="kpi-card">
-      <div class="kpi-label">Taux assurance</div>
-      <div class="kpi-value" style="color:#ec4899">44 %</div>
-      <div class="kpi-sub">4 / 9 mobiles</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Taux Alba</div>
-      <div class="kpi-value" style="color:#f59e0b">22 %</div>
-      <div class="kpi-sub">2 / 9 mobiles</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Assurances</div>
-      <div class="kpi-value" style="color:#ec4899">4</div>
-      <div class="kpi-sub">Chubb</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Box du jour</div>
-      <div class="kpi-value" style="color:#10b981">1</div>
-      <div class="kpi-sub">raccordement</div>
-    </div>
+    <div class="kpi-card"><div class="kpi-label">Taux assurance</div><div class="kpi-value" style="color:#ec4899">44 %</div><div class="kpi-sub">4 / 9 mobiles</div></div>
+    <div class="kpi-card"><div class="kpi-label">Taux Alba</div><div class="kpi-value" style="color:#f59e0b">22 %</div><div class="kpi-sub">2 / 9 mobiles</div></div>
+    <div class="kpi-card"><div class="kpi-label">Assurances</div><div class="kpi-value" style="color:#ec4899">4</div><div class="kpi-sub">Chubb</div></div>
+    <div class="kpi-card"><div class="kpi-label">Box du jour</div><div class="kpi-value" style="color:#10b981">1</div><div class="kpi-sub">raccordement</div></div>
   </div>
   <div class="grid-2">
-    <div class="section">
-      <div class="section-title">Marge par boutique — Jour</div>
-      <div class="card">
-        <div class="bar-chart" id="chart-marge">
-          <div class="bar-group"><div class="bar color-alr" style="height:21%"><div class="bar-value" style="color:#3b82f6">195 €</div></div><div class="bar-label">Angers</div></div>
-          <div class="bar-group"><div class="bar color-tlr" style="height:42%"><div class="bar-value" style="color:#8b5cf6">389 €</div></div><div class="bar-label">Amboise</div></div>
-          <div class="bar-group"><div class="bar color-clr" style="height:16%"><div class="bar-value" style="color:#ec4899">148 €</div></div><div class="bar-label">Châteaudun</div></div>
-          <div class="bar-group"><div class="bar color-cholet" style="height:100%"><div class="bar-value" style="color:#10b981">582 €</div></div><div class="bar-label">Cholet</div></div>
-          <div class="bar-group"><div class="bar color-rlr" style="height:36%"><div class="bar-value" style="color:#f59e0b">335 €</div></div><div class="bar-label">Romorantin</div></div>
-          <div class="bar-group"><div class="bar color-vlr" style="height:22%"><div class="bar-value" style="color:#f97316">198 €</div></div><div class="bar-label">Vendôme</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Panier moyen par boutique — Jour</div>
-      <div class="card">
-        <div class="bar-chart">
-          <div class="bar-group"><div class="bar color-alr" style="height:58%"><div class="bar-value" style="color:#3b82f6">6.87 €</div></div><div class="bar-label">Angers</div></div>
-          <div class="bar-group"><div class="bar color-tlr" style="height:100%"><div class="bar-value" style="color:#8b5cf6">16.02 €</div></div><div class="bar-label">Amboise</div></div>
-          <div class="bar-group"><div class="bar color-clr" style="height:52%"><div class="bar-value" style="color:#ec4899">8.34 €</div></div><div class="bar-label">Châteaudun</div></div>
-          <div class="bar-group"><div class="bar color-cholet" style="height:65%"><div class="bar-value" style="color:#10b981">10.39 €</div></div><div class="bar-label">Cholet</div></div>
-          <div class="bar-group"><div class="bar color-rlr" style="height:42%"><div class="bar-value" style="color:#f59e0b">6.80 €</div></div><div class="bar-label">Romorantin</div></div>
-          <div class="bar-group"><div class="bar color-vlr" style="height:40%"><div class="bar-value" style="color:#f97316">6.45 €</div></div><div class="bar-label">Vendôme</div></div>
-        </div>
-      </div>
-    </div>
+    <div class="section"><div class="section-title">Marge par boutique — Jour</div><div class="card"><div class="bar-chart" id="chart-marge">
+      <div class="bar-group"><div class="bar color-alr" data-height="21%" style="height:0%"><div class="bar-value" style="color:#3b82f6">195 €</div></div><div class="bar-label">Angers</div></div>
+      <div class="bar-group"><div class="bar color-tlr" data-height="42%" style="height:0%"><div class="bar-value" style="color:#8b5cf6">389 €</div></div><div class="bar-label">Amboise</div></div>
+      <div class="bar-group"><div class="bar color-clr" data-height="16%" style="height:0%"><div class="bar-value" style="color:#ec4899">148 €</div></div><div class="bar-label">Châteaudun</div></div>
+      <div class="bar-group"><div class="bar color-cholet" data-height="100%" style="height:0%"><div class="bar-value" style="color:#10b981">582 €</div></div><div class="bar-label">Cholet</div></div>
+      <div class="bar-group"><div class="bar color-rlr" data-height="36%" style="height:0%"><div class="bar-value" style="color:#f59e0b">335 €</div></div><div class="bar-label">Romorantin</div></div>
+      <div class="bar-group"><div class="bar color-vlr" data-height="22%" style="height:0%"><div class="bar-value" style="color:#f97316">198 €</div></div><div class="bar-label">Vendôme</div></div>
+    </div></div></div>
+    <div class="section"><div class="section-title">Panier moyen par boutique — Jour</div><div class="card"><div class="bar-chart">
+      <div class="bar-group"><div class="bar color-alr" data-height="58%" style="height:0%"><div class="bar-value" style="color:#3b82f6">6.87 €</div></div><div class="bar-label">Angers</div></div>
+      <div class="bar-group"><div class="bar color-tlr" data-height="100%" style="height:0%"><div class="bar-value" style="color:#8b5cf6">16.02 €</div></div><div class="bar-label">Amboise</div></div>
+      <div class="bar-group"><div class="bar color-clr" data-height="52%" style="height:0%"><div class="bar-value" style="color:#ec4899">8.34 €</div></div><div class="bar-label">Châteaudun</div></div>
+      <div class="bar-group"><div class="bar color-cholet" data-height="65%" style="height:0%"><div class="bar-value" style="color:#10b981">10.39 €</div></div><div class="bar-label">Cholet</div></div>
+      <div class="bar-group"><div class="bar color-rlr" data-height="42%" style="height:0%"><div class="bar-value" style="color:#f59e0b">6.80 €</div></div><div class="bar-label">Romorantin</div></div>
+      <div class="bar-group"><div class="bar color-vlr" data-height="40%" style="height:0%"><div class="bar-value" style="color:#f97316">6.45 €</div></div><div class="bar-label">Vendôme</div></div>
+    </div></div></div>
   </div>
-  <div class="section" id="boutiques">
-    <div class="section-title">Détail par boutique — Jour</div>
-    <div class="card">
-      <table class="data-table">
-        <thead><tr>
-            <th>Boutique</th><th class="num">Marge</th><th class="num">Panier Moy.</th>
-            <th class="num">Mob</th><th class="num">Box</th><th class="num">Assu</th>
-            <th class="num">Cyber</th><th class="num">Alba</th><th class="num">Access</th>
-        </tr></thead>
-        <tbody>
-          <tr><td><strong>Angers</strong></td><td class="num">195 €</td><td class="num">6.87 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">45 €</td></tr>
-          <tr><td><strong>Amboise</strong></td><td class="num">389 €</td><td class="num" style="color:#10b981;font-weight:700">16.02 €</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">82 €</td></tr>
-          <tr><td><strong>Châteaudun</strong></td><td class="num">148 €</td><td class="num">8.34 €</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">28 €</td></tr>
-          <tr><td><strong>Cholet</strong></td><td class="num">582 €</td><td class="num">10.39 €</td><td class="num">3</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">115 €</td></tr>
-          <tr><td><strong>Romorantin</strong></td><td class="num">335 €</td><td class="num">6.80 €</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">67 €</td></tr>
-          <tr><td><strong>Vendôme</strong></td><td class="num">198 €</td><td class="num">6.45 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38 €</td></tr>
-          <tr class="row-total"><td><strong>TOTAL GROUPE</strong></td><td class="num">1 847 €</td><td class="num">9.36 €</td><td class="num">9</td><td class="num">1</td><td class="num">4</td><td class="num">5</td><td class="num">2</td><td class="num">375 €</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="section" id="vendeurs">
-    <div class="section-title">Classement vendeurs — Jour</div>
-    <div class="card">
-      <table class="data-table">
-        <thead><tr>
-            <th style="width:40px">#</th><th>Vendeur</th><th class="num">Marge</th>
-            <th class="num">Mobiles</th><th class="num">Cyber</th><th class="num">Assurances</th>
-            <th class="num">Alba</th><th class="num">Accessoires</th>
-        </tr></thead>
-        <tbody>
-          <tr><td><span class="rank rank-1">1</span></td><td><span class="vendeur-name">LUCAS</span><span class="badge-boutique">CHOLET</span></td><td class="num" style="color:#10b981;font-weight:800">312 €</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">65 €</td></tr>
-          <tr><td><span class="rank rank-2">2</span></td><td><span class="vendeur-name">HASSENE</span><span class="badge-boutique">TLR</span></td><td class="num" style="color:#10b981;font-weight:800">278 €</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">52 €</td></tr>
-          <tr><td><span class="rank rank-3">3</span></td><td><span class="vendeur-name">WILL</span><span class="badge-boutique">RLR</span></td><td class="num" style="color:#10b981;font-weight:800">245 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">42 €</td></tr>
-          <tr><td><span class="rank rank-other">4</span></td><td><span class="vendeur-name">ANAIS</span><span class="badge-boutique">CHOLET</span></td><td class="num">198 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">35 €</td></tr>
-          <tr><td><span class="rank rank-other">5</span></td><td><span class="vendeur-name">AXEL</span><span class="badge-boutique">ALR</span></td><td class="num">195 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">45 €</td></tr>
-          <tr><td><span class="rank rank-other">6</span></td><td><span class="vendeur-name">RACHEL</span><span class="badge-boutique">CLR</span></td><td class="num">148 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">28 €</td></tr>
-          <tr><td><span class="rank rank-other">7</span></td><td><span class="vendeur-name">JULIE TLR</span><span class="badge-boutique">TLR</span></td><td class="num">111 €</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">30 €</td></tr>
-          <tr><td><span class="rank rank-other">8</span></td><td><span class="vendeur-name">EMILIE</span><span class="badge-boutique">RLR</span></td><td class="num">90 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">25 €</td></tr>
-          <tr><td><span class="rank rank-other">9</span></td><td><span class="vendeur-name">EMMY</span><span class="badge-boutique">CHOLET</span></td><td class="num">72 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">15 €</td></tr>
-          <tr><td><span class="rank rank-other">10</span></td><td><span class="vendeur-name">MEHDY</span><span class="badge-boutique">VLR</span></td><td class="num">198 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38 €</td></tr>
-          <tr><td><span class="rank rank-other">11</span></td><td><span class="vendeur-name">PAULINE</span><span class="badge-boutique">ALR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
-          <tr><td><span class="rank rank-other">12</span></td><td><span class="vendeur-name">ILIAN</span><span class="badge-boutique">CLR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
-          <tr><td><span class="rank rank-other">13</span></td><td><span class="vendeur-name">NATHAN</span><span class="badge-boutique">RLR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
-          <tr class="row-total"><td></td><td><strong>TOTAL</strong></td><td class="num">1 847 €</td><td class="num">9</td><td class="num">5</td><td class="num">4</td><td class="num">2</td><td class="num">375 €</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="section" id="boutiques"><div class="section-title">Détail par boutique — Jour</div><div class="card"><table class="data-table">
+    <thead><tr><th>Boutique</th><th class="num">Marge</th><th class="num">Panier Moy.</th><th class="num">Mob</th><th class="num">Box</th><th class="num">Assu</th><th class="num">Cyber</th><th class="num">Alba</th><th class="num">Access</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Angers</strong></td><td class="num">195 €</td><td class="num">6.87 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">45 €</td></tr>
+      <tr><td><strong>Amboise</strong></td><td class="num">389 €</td><td class="num" style="color:#10b981;font-weight:700">16.02 €</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">82 €</td></tr>
+      <tr><td><strong>Châteaudun</strong></td><td class="num">148 €</td><td class="num">8.34 €</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">28 €</td></tr>
+      <tr><td><strong>Cholet</strong></td><td class="num">582 €</td><td class="num">10.39 €</td><td class="num">3</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">115 €</td></tr>
+      <tr><td><strong>Romorantin</strong></td><td class="num">335 €</td><td class="num">6.80 €</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">67 €</td></tr>
+      <tr><td><strong>Vendôme</strong></td><td class="num">198 €</td><td class="num">6.45 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38 €</td></tr>
+      <tr class="row-total"><td><strong>TOTAL GROUPE</strong></td><td class="num">1 847 €</td><td class="num">9.36 €</td><td class="num">9</td><td class="num">1</td><td class="num">4</td><td class="num">5</td><td class="num">2</td><td class="num">375 €</td></tr>
+    </tbody></table></div></div>
+  <div class="section" id="vendeurs"><div class="section-title">Classement vendeurs — Jour</div><div class="card"><table class="data-table">
+    <thead><tr><th style="width:40px">#</th><th>Vendeur</th><th class="num">Marge</th><th class="num">Mobiles</th><th class="num">Cyber</th><th class="num">Assurances</th><th class="num">Alba</th><th class="num">Accessoires</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rank rank-1">1</span></td><td><span class="vendeur-name">LUCAS</span><span class="badge-boutique">CHOLET</span></td><td class="num" style="color:#10b981;font-weight:800">312 €</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">65 €</td></tr>
+      <tr><td><span class="rank rank-2">2</span></td><td><span class="vendeur-name">HASSENE</span><span class="badge-boutique">TLR</span></td><td class="num" style="color:#10b981;font-weight:800">278 €</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">52 €</td></tr>
+      <tr><td><span class="rank rank-3">3</span></td><td><span class="vendeur-name">WILL</span><span class="badge-boutique">RLR</span></td><td class="num" style="color:#10b981;font-weight:800">245 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">42 €</td></tr>
+      <tr><td><span class="rank rank-other">4</span></td><td><span class="vendeur-name">ANAIS</span><span class="badge-boutique">CHOLET</span></td><td class="num">198 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">35 €</td></tr>
+      <tr><td><span class="rank rank-other">5</span></td><td><span class="vendeur-name">AXEL</span><span class="badge-boutique">ALR</span></td><td class="num">195 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">45 €</td></tr>
+      <tr><td><span class="rank rank-other">6</span></td><td><span class="vendeur-name">RACHEL</span><span class="badge-boutique">CLR</span></td><td class="num">148 €</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">28 €</td></tr>
+      <tr><td><span class="rank rank-other">7</span></td><td><span class="vendeur-name">JULIE TLR</span><span class="badge-boutique">TLR</span></td><td class="num">111 €</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">30 €</td></tr>
+      <tr><td><span class="rank rank-other">8</span></td><td><span class="vendeur-name">EMILIE</span><span class="badge-boutique">RLR</span></td><td class="num">90 €</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">25 €</td></tr>
+      <tr><td><span class="rank rank-other">9</span></td><td><span class="vendeur-name">EMMY</span><span class="badge-boutique">CHOLET</span></td><td class="num">72 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">15 €</td></tr>
+      <tr><td><span class="rank rank-other">10</span></td><td><span class="vendeur-name">MEHDY</span><span class="badge-boutique">VLR</span></td><td class="num">198 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38 €</td></tr>
+      <tr><td><span class="rank rank-other">11</span></td><td><span class="vendeur-name">PAULINE</span><span class="badge-boutique">ALR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
+      <tr><td><span class="rank rank-other">12</span></td><td><span class="vendeur-name">ILIAN</span><span class="badge-boutique">CLR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
+      <tr><td><span class="rank rank-other">13</span></td><td><span class="vendeur-name">NATHAN</span><span class="badge-boutique">RLR</span></td><td class="num">0 €</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0 €</td></tr>
+      <tr class="row-total"><td></td><td><strong>TOTAL</strong></td><td class="num">1 847 €</td><td class="num">9</td><td class="num">5</td><td class="num">4</td><td class="num">2</td><td class="num">375 €</td></tr>
+    </tbody></table></div></div>
 </div>
-<div style="text-align:center;padding:16px 32px 32px;font-size:11px;color:#8e99a8">
+<div class="footer" style="text-align:center;padding:16px 32px 32px;font-size:11px;color:#8e99a8">
   3GWIN • Données du 06/04/2026 • Groupe Garcia • <span style="color:#ff9500">Données de démonstration</span>
 </div>
+<script>
+(function() {
+  var spMargeEl = document.getElementById('sp-marge');
+  var spMobEl = document.getElementById('sp-mob');
+  var spBtqEl = document.getElementById('sp-btq');
+  var spTarget = 1847, spMobTarget = 9, spBtqTarget = 6;
+  var spStart = performance.now();
+  function formatEuro(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' \u20ac'; }
+  function spAnim(now) {
+    var elapsed = now - spStart;
+    var p = Math.min(elapsed / 1400, 1);
+    var ease = 1 - Math.pow(1 - p, 3);
+    spMargeEl.textContent = formatEuro(Math.round(spTarget * ease));
+    spMobEl.textContent = Math.round(spMobTarget * ease);
+    spBtqEl.textContent = Math.round(spBtqTarget * ease);
+    if (p < 1) requestAnimationFrame(spAnim);
+  }
+  setTimeout(function() { spStart = performance.now(); requestAnimationFrame(spAnim); }, 1200);
+  setTimeout(function() {
+    var splash = document.getElementById('splash');
+    splash.classList.add('hide');
+    document.body.classList.add('loaded');
+    setTimeout(function() {
+      var bars = document.querySelectorAll('.bar[data-height]');
+      bars.forEach(function(bar) { bar.style.height = bar.getAttribute('data-height'); });
+    }, 400);
+    setTimeout(function() { splash.style.display = 'none'; }, 600);
+  }, 2800);
+})();
+</script>
 </body>
 </html>
