@@ -141,6 +141,9 @@
 </div>
 
 <script>
+  // ═══════════════════════════════════════════════════════════════
+  //  CONFIG — Sheet Principal Groupe Garcia
+  // ═══════════════════════════════════════════════════════════════
   const SHEET_ID    = "1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY";
   const SHEET_NAME  = "Données_Commissions";
 
@@ -236,3 +239,114 @@
       const code = v.bou || "?";
       if (!bouMap[code]) {
         bouMap[code] = { code: code, nom: BOUTIQUES[code] || code,
+                         marge:0, mob:0, cyber:0, assu:0, alba:0, access:0, box:0 };
+      }
+      bouMap[code].marge  += v.marge;
+      bouMap[code].mob    += v.mob;
+      bouMap[code].cyber  += v.cyber;
+      bouMap[code].assu   += v.assu;
+      bouMap[code].alba   += v.alba;
+      bouMap[code].access += v.access;
+      bouMap[code].box    += v.box;
+    });
+
+    const boutiques = Object.values(bouMap).filter(b => BOUTIQUES[b.code]);
+
+    const t = { marge:0, mob:0, cyber:0, assu:0, alba:0, access:0, box:0 };
+    boutiques.forEach(b => {
+      t.marge  += b.marge;
+      t.mob    += b.mob;
+      t.cyber  += b.cyber;
+      t.assu   += b.assu;
+      t.alba   += b.alba;
+      t.access += b.access;
+      t.box    += b.box;
+    });
+    t.tx_assu = t.mob > 0 ? (t.assu / t.mob) * 100 : 0;
+    t.nb_bou  = boutiques.length;
+
+    return { totaux: t, boutiques: boutiques, vendeurs: vendeurs };
+  }
+
+  function afficher(data) {
+    const t = data.totaux;
+    const boutiques = data.boutiques.sort((a,b) => b.marge - a.marge);
+    const vendeurs  = data.vendeurs.sort((a,b) => b.marge - a.marge);
+
+    let html = '';
+
+    html += '<div class="kpi-grid">';
+    html += kpi('big', 'Marge totale',  fmt(t.marge) + ' €',   t.nb_bou + ' boutiques');
+    html += kpi('',    'Mobiles',       fmt(t.mob),            'vendus');
+    html += kpi('',    'Box',           fmt(t.box),            'raccordements');
+    html += kpi('',    'SFR Cyber',     fmt(t.cyber),          'sécurité');
+    html += kpi('',    'Tx assurance',  fmt(t.tx_assu) + ' %', t.assu + ' / ' + t.mob);
+    html += '</div>';
+
+    html += '<div class="section">';
+    html += '<div class="section-title">Boutiques — Classement</div>';
+    html += '<div class="bou-list">';
+    boutiques.forEach(b => {
+      html += '<div class="bou">';
+      html += '<div class="bou-name">' + esc(b.nom) + '</div>';
+      html += '<div class="bou-marge">' + fmt(b.marge) + ' €</div>';
+      html += '<div class="bou-detail">';
+      html += '<span>Mob <strong>' + b.mob + '</strong></span>';
+      html += '<span>Box <strong>' + b.box + '</strong></span>';
+      html += '<span>Assu <strong>' + b.assu + '</strong></span>';
+      html += '<span>Cyber <strong>' + b.cyber + '</strong></span>';
+      html += '<span>Alba <strong>' + b.alba + '</strong></span>';
+      html += '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+
+    if (vendeurs.length) {
+      html += '<div class="section">';
+      html += '<div class="section-title">Classement vendeurs</div>';
+      html += '<div class="vend-list">';
+      vendeurs.forEach((v, i) => {
+        const rankClass = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
+        html += '<div class="vend ' + rankClass + '">';
+        html += '<div class="vend-rank">' + (i+1) + '</div>';
+        html += '<div class="vend-info">';
+        html += '<div class="vend-name">' + esc(v.nom) + '</div>';
+        html += '<div class="vend-meta">' + esc(v.bou) + ' • ' + v.mob + ' mob • ' + v.cyber + ' cyber • ' + v.assu + ' assu</div>';
+        html += '</div>';
+        html += '<div class="vend-marge">' + fmt(v.marge) + ' €</div>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    }
+
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function kpi(cls, label, val, sub) {
+    return '<div class="kpi ' + cls + '">'
+      + '<div class="kpi-label">' + label + '</div>'
+      + '<div class="kpi-value">' + val + '</div>'
+      + (sub ? '<div class="kpi-sub">' + sub + '</div>' : '')
+      + '</div>';
+  }
+
+  async function charger() {
+    const content = document.getElementById('content');
+    content.innerHTML = '<div class="loading">Connexion à 3GWIN</div>';
+    document.getElementById('date-jour').textContent = dateFr();
+
+    try {
+      const gviz = await lireSheet();
+      const data = parser(gviz);
+      afficher(data);
+      document.getElementById('ts').textContent = fmtH();
+    } catch (err) {
+      content.innerHTML = '<div class="error">⚠️ Impossible de charger les données<br><small>' + esc(err.message) + '</small><br><br>Vérifier que :<br>• Le Google Sheet est bien publié sur le web<br>• L\'onglet "' + SHEET_NAME + '" existe<br>• Le script 3gwin_auto.py a tourné aujourd\'hui</div>';
+    }
+  }
+
+  charger();
+  setInterval(charger, 5 * 60 * 1000);
+</script>
+</body>
+</html>
