@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groupe Garcia — Dashboard Jour</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{--bg:#F0F2F5;--card:#FFF;--hdr:#0F172A;--txt:#0F1419;--sub:#64748B;--mut:#94A3B8;--brd:#E2E8F0;--blue:#2563EB;--purple:#7C3AED;--green:#059669;--orange:#D97706;--red:#DC2626;--cyan:#0891B2;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased}
+.hdr{background:var(--hdr);color:#fff;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
+.hdr-left{display:flex;align-items:center;gap:16px}
+.logo{font-size:16px;font-weight:800;letter-spacing:1px}.logo span{font-weight:400;opacity:.5;font-size:13px;margin-left:8px}
+.hdr-info{font-size:11px;color:#94A3B8}
+.nav{background:#fff;border-bottom:1px solid var(--brd);display:flex;overflow-x:auto;padding:0 16px;position:sticky;top:41px;z-index:99}
+.nav button{background:none;border:none;border-bottom:2px solid transparent;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:600;color:var(--sub);cursor:pointer;white-space:nowrap;transition:all .15s}
+.nav button:hover{color:var(--txt)}.nav button.active{color:var(--blue);border-bottom-color:var(--blue)}
+.mn{max-width:1200px;margin:0 auto;padding:16px}
+.section{display:none}.section.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.cd{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:16px;position:relative;overflow:hidden}
+.cd.kpi{padding:14px 16px}
+.cd h3{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px}
+.cd .val{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.cd .sub{font-size:11px;color:var(--sub);margin-top:2px}
+.cd .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;margin-top:4px}
+.tag.green{background:#ECFDF5;color:var(--green)}.tag.red{background:#FEF2F2;color:var(--red)}.tag.orange{background:#FFFBEB;color:var(--orange)}
+.stitle{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--sub);margin:16px 0 10px;display:flex;align-items:center;gap:8px}
+.stitle::before{content:'';width:12px;height:2px;background:var(--blue);border-radius:2px}
+.cd canvas{max-height:220px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{text-align:left;padding:8px 10px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--brd);white-space:nowrap}
+tbody td{padding:8px 10px;border-bottom:1px solid #F1F5F9;white-space:nowrap}
+tbody tr:hover{background:#F8FAFC}
+tbody tr:last-child td{border-bottom:none}
+.rk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:700;color:#fff}
+.rk.g{background:linear-gradient(135deg,#FFD700,#FFA500)}.rk.s{background:linear-gradient(135deg,#C0C0C0,#A0A0A0)}.rk.b{background:linear-gradient(135deg,#CD7F32,#A0522D)}.rk.n{background:#E2E8F0;color:var(--sub)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.bh{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px}
+.bh .icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff}
+.bh .info h2{font-size:18px;font-weight:800}.bh .info p{font-size:12px;color:var(--sub)}
+#splash{position:fixed;inset:0;z-index:9999;background:#0F172A;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s,visibility .6s}
+#splash.hide{opacity:0;visibility:hidden}
+.sp-logo{opacity:0;transform:translateY(20px);animation:spU .8s ease .2s forwards}
+.sp-logo-text{font-size:28px;font-weight:800;color:#fff;letter-spacing:2px;text-align:center}
+.sp-logo-sub{font-size:14px;color:#64748B;font-weight:500;margin-top:6px;text-align:center}
+.sp-line{width:0;height:2px;background:linear-gradient(90deg,#2563EB,#7C3AED);margin-top:24px;border-radius:2px;animation:spL 1.2s ease .6s forwards}
+.sp-kpis{display:flex;gap:32px;margin-top:28px;opacity:0;transform:translateY(12px);animation:spU .6s ease 1.2s forwards}
+.sp-kpi{text-align:center}.sp-kpi-val{font-size:22px;font-weight:800;color:#fff}.sp-kpi-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+@keyframes spU{to{opacity:1;transform:translateY(0)}}
+@keyframes spL{to{width:180px}}
+.hdr,.nav,.mn{opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.hdr.show,.nav.show,.mn.show{opacity:1;transform:translateY(0)}
+.ftr{text-align:center;font-size:11px;color:var(--sub);margin-top:20px;padding:12px;border-top:1px solid var(--brd)}
+@media print{.hdr,.nav{position:static}.mn{padding:8px}#splash{display:none}}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="sp-logo">
+    <div class="sp-logo-text">GROUPE GARCIA</div>
+    <div class="sp-logo-sub">Dashboard Jour — 7 Avril 2026</div>
+  </div>
+  <div class="sp-line"></div>
+  <div class="sp-kpis">
+    <div class="sp-kpi"><div class="sp-kpi-val">6</div><div class="sp-kpi-label">Boutiques</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">4 146 €</div><div class="sp-kpi-label">Marge Jour</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">18</div><div class="sp-kpi-label">Mobiles</div></div>
+  </div>
+</div>
+
+<div class="hdr" id="hdr">
+  <div class="hdr-left">
+    <div class="logo">GROUPE GARCIA <span>Dashboard Jour</span></div>
+    <div class="hdr-info">Mardi 7 Avril 2026 — Données 3GWIN temps réel (màj 18:18)</div>
+  </div>
+</div>
+
+<div class="nav" id="nav"></div>
+<div class="mn" id="mn"></div>
+<div class="ftr">Données 3GWIN JOUR du 07/04/2026 — Scrapé à 18:18 — Groupe Garcia © 2026</div>
+
+<script>
+Chart.register(ChartDataLabels);
+
+// ═══════════════════════════════════════
+//  DONNÉES JOUR — 07/04/2026
+//  Scrapées le 07/04/2026 à 18:18
+// ═══════════════════════════════════════
+
+const BOUTIQUES = {
+  ALR:{nom:"Angers",color:"#2563EB"},
+  TLR:{nom:"Amboise",color:"#7C3AED"},
+  CLR:{nom:"Châteaudun",color:"#0891B2"},
+  CHOLET:{nom:"Cholet",color:"#DC2626"},
+  RLR:{nom:"Romorantin",color:"#059669"},
+  VLR:{nom:"Vendôme",color:"#D97706"}
+};
+
+const MAGS = [
+  {code:"VLR",nom:"Vendôme",color:"#D97706",marge:901.36,mob:4,box:1,assu:2,cyber:0,g3a:4,access:220.02,abo:0},
+  {code:"ALR",nom:"Angers",color:"#2563EB",marge:221.81,mob:1,box:1,assu:0,cyber:0,g3a:1,access:94.31,abo:0},
+  {code:"TLR",nom:"Amboise",color:"#7C3AED",marge:433.8,mob:2,box:0,assu:1,cyber:2,g3a:2,access:127.3,abo:0},
+  {code:"CLR",nom:"Châteaudun",color:"#0891B2",marge:895.49,mob:3,box:2,assu:3,cyber:5,g3a:3,access:180.99,abo:0},
+  {code:"RLR",nom:"Romorantin",color:"#059669",marge:882.53,mob:4,box:1,assu:3,cyber:2,g3a:2,access:146.69,abo:0},
+  {code:"CHOLET",nom:"Cholet",color:"#DC2626",marge:810.99,mob:4,box:0,assu:1,cyber:5,g3a:3,access:244.99,abo:0},
+];
+
+const VENDEURS = [
+  {nom:"AXEL",bou:"ALR",marge:51.5,mob:0,g3a:0,cyber:0,assu:0,access:0.0,box:1},
+  {nom:"PAULINE",bou:"ALR",marge:170.31,mob:1,g3a:1,cyber:0,assu:0,access:94.31,box:0},
+  {nom:"ANAIS",bou:"CHOLET",marge:371.06,mob:2,g3a:1,cyber:2,assu:0,access:78.56,box:0},
+  {nom:"LUCAS",bou:"CHOLET",marge:439.93,mob:2,g3a:2,cyber:3,assu:1,access:166.43,box:0},
+  {nom:"ILIAN",bou:"CLR",marge:449.76,mob:1,g3a:1,cyber:2,assu:1,access:71.26,box:2},
+  {nom:"LOUANE",bou:"CLR",marge:231.75,mob:1,g3a:1,cyber:1,assu:1,access:75.75,box:0},
+  {nom:"RACHEL",bou:"CLR",marge:213.98,mob:1,g3a:1,cyber:2,assu:1,access:33.98,box:0},
+  {nom:"EMILIE",bou:"RLR",marge:442.91,mob:2,g3a:2,cyber:1,assu:2,access:121.41,box:0},
+  {nom:"WILL",bou:"RLR",marge:439.62,mob:2,g3a:0,cyber:1,assu:1,access:25.28,box:1},
+  {nom:"HASSENE",bou:"TLR",marge:408.8,mob:2,g3a:2,cyber:1,assu:1,access:127.3,box:0},
+  {nom:"JULIE TLR",bou:"TLR",marge:25.0,mob:0,g3a:0,cyber:1,assu:0,access:0.0,box:0},
+  {nom:"HAVAL",bou:"VLR",marge:244.18,mob:1,g3a:1,cyber:0,assu:1,access:74.51,box:0},
+  {nom:"MEHDY",bou:"VLR",marge:657.18,mob:3,g3a:3,cyber:0,assu:1,access:145.51,box:1},
+];
+
+// ═══════════════════════════════════════
+//  COMPUTED
+// ═══════════════════════════════════════
+const T = {marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0};
+MAGS.forEach(b=>{T.marge+=b.marge;T.mob+=b.mob;T.box+=b.box;T.assu+=b.assu;T.cyber+=b.cyber;T.g3a+=b.g3a;T.access+=b.access});
+T.txAssu=T.mob>0?(T.assu/T.mob*100):0;
+T.txG3a=T.mob>0?(T.g3a/T.mob*100):0;
+T.txAccess=T.mob>0?T.access/T.mob:0;
+
+const BOU_ORDER=["ALR","TLR","CLR","CHOLET","RLR","VLR"];
+let CT="synthese",CHS=[];
+
+function fmt(n){return new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(Math.round(n||0))}
+function fmtD(n,d){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}).format(n||0)}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c])}
+function rkCls(i){return i<3?['g','s','b'][i]:'n'}
+
+// ═══════════════════════════════════════
+//  NAV
+// ═══════════════════════════════════════
+function buildNav(){
+  const nav=document.getElementById('nav');
+  const tabs=[{id:'synthese',label:'Synthèse'}];
+  BOU_ORDER.forEach(c=>{if(BOUTIQUES[c])tabs.push({id:c.toLowerCase(),label:BOUTIQUES[c].nom})});
+  tabs.push({id:'vendeurs',label:'Collaborateurs'});
+  nav.innerHTML=tabs.map(t=>`<button${t.id===CT?' class="active"':''} onclick="showTab('${t.id}')">${t.label}</button>`).join('');
+}
+
+function showTab(id){
+  CT=id;
+  document.querySelectorAll('.nav button').forEach(b=>{
+    const label=b.textContent;
+    const match=(id==='synthese'&&label==='Synthèse')||(id==='vendeurs'&&label==='Collaborateurs')||(BOUTIQUES[id.toUpperCase()]&&BOUTIQUES[id.toUpperCase()].nom===label);
+    b.classList.toggle('active',match);
+  });
+  render();
+}
+
+// ═══════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════
+function render(){
+  CHS.forEach(c=>c.destroy());CHS=[];
+  const mn=document.getElementById('mn');
+  if(CT==='synthese')renderSynthese(mn);
+  else if(CT==='vendeurs')renderVendeurs(mn);
+  else renderBoutique(mn,CT.toUpperCase());
+}
+
+function renderSynthese(el){
+  const bSort=[...MAGS].sort((a,b)=>b.marge-a.marge);
+  el.innerHTML=`
+  <div class="g4" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • 07/04/2026</div></div>
+    <div class="cd kpi"><h3>MOBILES DU JOUR</h3><div class="val">${T.mob}</div><div class="sub">vendus aujourd'hui</div></div>
+    <div class="cd kpi"><h3>BOX DU JOUR</h3><div class="val">${T.box}</div><div class="sub">raccordements</div></div>
+    <div class="cd kpi"><h3>SFR CYBER</h3><div class="val">${T.cyber}</div><div class="sub">sécurité</div></div>
+  </div>
+  <div class="g3" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${fmtD(T.txAssu,1)}%</div><div class="sub">${T.assu} / ${T.mob} mob</div>
+      <div class="tag ${T.txAssu>=50?'green':T.txAssu>=30?'orange':'red'}">${T.txAssu>=50?'✓ Objectif':'À améliorer'}</div></div>
+    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${fmtD(T.txG3a,1)}%</div><div class="sub">${T.g3a} / ${T.mob} mob</div>
+      <div class="tag ${T.txG3a>=50?'green':T.txG3a>=30?'orange':'red'}">${T.txG3a>=50?'✓ Objectif':'À améliorer'}</div></div>
+    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${fmtD(T.txAccess,1)} €</div><div class="sub">CA: ${fmt(T.access)} €</div></div>
+  </div>
+  <div class="stitle">MARGE DU JOUR PAR BOUTIQUE</div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
+    <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
+  </div>
+  <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU 07/04</div>
+  <div class="cd" style="margin-bottom:12px">
+    <table>
+      <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>BOX</th><th>CYBER</th><th>ASSU</th><th>G3A</th><th>ACCESS</th></tr></thead>
+      <tbody id="tblBou"></tbody>
+    </table>
+  </div>
+  <div class="stitle">CLASSEMENT DES VENDEURS — JOURNÉE DU 07/04</div>
+  <div class="cd">
+    <table>
+      <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
+      <tbody id="tblVend"></tbody>
+    </table>
+  </div>`;
+
+  // Table boutiques
+  const tbody=document.getElementById('tblBou');
+  bSort.forEach((b,i)=>{
+    tbody.innerHTML+=`<tr>
+      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+      <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
+      <td><strong>${fmt(b.marge)} €</strong></td>
+      <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
+    </tr>`;
+  });
+  tbody.innerHTML+=`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
+    <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td></tr>`;
+
+  // Table vendeurs
+  const vtbody=document.getElementById('tblVend');
+  const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
+  vSort.forEach((v,i)=>{
+    const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
+    vtbody.innerHTML+=`<tr>
+      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+      <td><strong>${esc(v.nom)}</strong></td>
+      <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
+      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+    </tr>`;
+  });
+
+  // Charts
+  const labels=MAGS.map(b=>b.nom),colors=MAGS.map(b=>b.color);
+  CHS.push(makeBar('cMarge',labels,MAGS.map(b=>b.marge),colors,'€'));
+
+  CHS.push(new Chart(document.getElementById('cMob'),{
+    type:'bar',data:{labels,datasets:[
+      {label:'Mob',data:MAGS.map(b=>b.mob),backgroundColor:'#2563EBCC',borderRadius:3},
+      {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
+  }));
+}
+
+function renderBoutique(el,code){
+  const mag=MAGS.find(b=>b.code===code);
+  if(!mag){el.innerHTML='';return}
+  const vendeurs=[...VENDEURS.filter(v=>v.bou===code)].sort((a,b)=>b.marge-a.marge);
+  const txA=mag.mob>0?(mag.assu/mag.mob*100):0,txG=mag.mob>0?(mag.g3a/mag.mob*100):0,txAcc=mag.mob>0?mag.access/mag.mob:0;
+
+  el.innerHTML=`
+  <div class="bh">
+    <div class="icon" style="background:${mag.color}">${mag.nom.charAt(0)}</div>
+    <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du 07/04/2026</p></div>
+  </div>
+  <div class="g4" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>MARGE JOUR</h3><div class="val">${fmt(mag.marge)} €</div></div>
+    <div class="cd kpi"><h3>MOBILES</h3><div class="val">${mag.mob}</div><div class="sub">${mag.box} box</div></div>
+    <div class="cd kpi"><h3>CYBER</h3><div class="val">${mag.cyber}</div></div>
+    <div class="cd kpi"><h3>G3A</h3><div class="val">${mag.g3a}</div><div class="sub">${mag.assu} assu</div></div>
+  </div>
+  ${vendeurs.length?`
+  <div class="g3" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${fmtD(txA,1)}%</div>
+      <div class="tag ${txA>=50?'green':txA>=30?'orange':'red'}">${txA>=50?'✓':'⚠'}</div></div>
+    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${fmtD(txG,1)}%</div>
+      <div class="tag ${txG>=50?'green':txG>=30?'orange':'red'}">${txG>=50?'✓':'⚠'}</div></div>
+    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${fmtD(txAcc,1)} €</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
+    <div class="cd"><h3>ITEMS PAR VENDEUR</h3><canvas id="cBPerf"></canvas></div>
+  </div>
+  <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
+  <div class="cd">
+    <table>
+      <thead><tr><th>#</th><th>VENDEUR</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
+      <tbody id="tblBV"></tbody>
+    </table>
+  </div>`:'<div class="cd" style="text-align:center;padding:40px;color:var(--sub)">Aucune activité aujourd\'hui</div>'}`;
+
+  if(!vendeurs.length)return;
+  const tbody=document.getElementById('tblBV');
+  vendeurs.forEach((v,i)=>{
+    tbody.innerHTML+=`<tr>
+      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+      <td><strong>${esc(v.nom)}</strong></td>
+      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+    </tr>`;
+  });
+
+  const vLabels=vendeurs.map(v=>v.nom);
+  const palette=['#2563EB','#7C3AED','#0891B2','#DC2626','#059669','#D97706'];
+  const vColors=vendeurs.map((_,i)=>palette[i%palette.length]);
+
+  CHS.push(new Chart(document.getElementById('cBMarge'),{
+    type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
+  }));
+
+  CHS.push(new Chart(document.getElementById('cBPerf'),{
+    type:'bar',data:{labels:vLabels,datasets:[
+      {label:'Mob',data:vendeurs.map(v=>v.mob),backgroundColor:'#2563EBCC',borderRadius:3},
+      {label:'Cyber',data:vendeurs.map(v=>v.cyber),backgroundColor:'#7C3AEDCC',borderRadius:3},
+      {label:'Assu',data:vendeurs.map(v=>v.assu),backgroundColor:'#059669CC',borderRadius:3},
+      {label:'G3A',data:vendeurs.map(v=>v.g3a),backgroundColor:'#D97706CC',borderRadius:3}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
+  }));
+}
+
+function renderVendeurs(el){
+  const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
+  el.innerHTML=`
+  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU 07/04</div>
+  <div class="cd">
+    <table>
+      <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
+      <tbody id="tblV"></tbody>
+    </table>
+  </div>`;
+  const tbody=document.getElementById('tblV');
+  vSort.forEach((v,i)=>{
+    const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
+    tbody.innerHTML+=`<tr>
+      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+      <td><strong>${esc(v.nom)}</strong></td>
+      <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
+      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+    </tr>`;
+  });
+}
+
+// ═══════════════════════════════════════
+//  CHART HELPER
+// ═══════════════════════════════════════
+function makeBar(id,labels,data,colors,suffix){
+  return new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+(suffix?' '+suffix:'')}},
+      scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+buildNav();
+render();
+setTimeout(()=>{
+  document.getElementById('splash').classList.add('hide');
+  document.getElementById('hdr').classList.add('show');
+  document.getElementById('nav').classList.add('show');
+  document.getElementById('mn').classList.add('show');
+},1500);
+</script>
+</body>
+</html>
