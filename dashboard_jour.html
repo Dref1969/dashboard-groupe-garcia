@@ -2,352 +2,237 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Groupe Garcia — Résultats du Jour</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>GROUPE GARCIA — Dashboard Jour</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #e8ecf1; color: #1a2332; min-height: 100vh; }
-.splash { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s ease; }
-.splash.hide { opacity: 0; visibility: hidden; }
-.sp-logo { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 1px; opacity: 0; transform: translateY(20px); animation: spU 0.8s ease 0.2s forwards; }
-.sp-logo span { font-weight: 400; font-size: 16px; opacity: .6; margin-left: 10px; }
-.sp-badge { display: inline-block; background: #ff9500; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 10px; border-radius: 10px; letter-spacing: 1.5px; margin-left: 10px; vertical-align: middle; }
-.sp-line { width: 0; height: 2px; margin-top: 20px; border-radius: 2px; background: linear-gradient(90deg, #ff9500, #ec4899); animation: spL 1.2s ease 0.6s forwards; }
-.sp-kpis { margin-top: 28px; display: flex; gap: 40px; opacity: 0; transform: translateY(12px); animation: spU 0.6s ease 1.2s forwards; }
-.sp-kpi { text-align: center; }
-.sp-kpi-val { font-size: 36px; font-weight: 800; color: #ff9500; font-variant-numeric: tabular-nums; }
-.sp-kpi-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-.sp-status { margin-top: 32px; display: flex; align-items: center; gap: 8px; opacity: 0; animation: spU 0.5s ease 1.8s forwards; }
-.sp-status-text { font-size: 12px; color: rgba(255,255,255,.4); font-weight: 500; }
-.sp-dot { width: 5px; height: 5px; border-radius: 50%; background: #ff9500; animation: spP 0.8s ease infinite; }
-.sp-dot:nth-child(2) { animation-delay: 0.15s; } .sp-dot:nth-child(3) { animation-delay: 0.3s; }
-@keyframes spU { to { opacity: 1; transform: translateY(0); } }
-@keyframes spL { to { width: 180px; } }
-@keyframes spP { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-.header, .tabs, .container, .footer { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
-body.loaded .header { opacity: 1; transform: none; transition-delay: 0.05s; }
-body.loaded .tabs { opacity: 1; transform: none; transition-delay: 0.15s; }
-body.loaded .container { opacity: 1; transform: none; transition-delay: 0.25s; }
-body.loaded .footer { opacity: 1; transform: none; transition-delay: 0.35s; }
-.kpi-card { opacity: 0; transform: translateY(16px); transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.2s ease; }
-body.loaded .kpi-card { opacity: 1; transform: none; }
-.kpi-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px) !important; }
-.bar { transition: height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-.bar-value { opacity: 0; transition: opacity 0.4s ease 0.8s; }
-body.loaded .bar-value { opacity: 1; }
-.section { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-body.loaded .section { opacity: 1; transform: none; }
-.header { background: linear-gradient(135deg, #1a2332 0%, #2d3a4a 100%); color: #fff; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.15); }
-.header-left { display: flex; align-items: center; gap: 16px; }
-.header h1 { font-size: 20px; font-weight: 800; letter-spacing: .5px; }
-.header .subtitle { font-size: 13px; color: rgba(255,255,255,.6); font-weight: 500; }
-.badge-live { display: inline-block; background: #ff9500; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; margin-left: 8px; }
-.header-right { display: flex; gap: 10px; }
-.btn { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2); padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .15s; }
-.btn:hover { background: rgba(255,255,255,.2); }
-.btn-accent { background: #ff9500; border-color: #ff9500; }
-.btn-accent:hover { background: #e68600; }
-.tabs { background: #fff; display: flex; gap: 0; padding: 0 32px; border-bottom: 1px solid #dde1e7; overflow-x: auto; }
-.tab { padding: 14px 20px; font-size: 13px; font-weight: 600; color: #6b7a8d; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; text-decoration: none; transition: all .2s; }
-.tab:hover { color: #1a2332; } .tab.active { color: #1a2332; border-bottom-color: #ff9500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-.kpi-card { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
-.kpi-label { font-size: 11px; font-weight: 700; color: #8e99a8; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
-.kpi-value { font-size: 32px; font-weight: 800; letter-spacing: -.5px; line-height: 1.1; }
-.kpi-sub { font-size: 12px; color: #8e99a8; margin-top: 4px; }
-.section { margin-bottom: 24px; }
-.section-title { font-size: 14px; font-weight: 700; color: #1a2332; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; padding-left: 12px; border-left: 4px solid #1a2332; }
-.card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
-.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.data-table th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; color: #8e99a8; text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid #e8ecf1; }
-.data-table th.num { text-align: right; }
-.data-table td { padding: 12px; border-bottom: 1px solid #f0f2f5; font-variant-numeric: tabular-nums; }
-.data-table td.num { text-align: right; font-weight: 600; }
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: #f8f9fb; }
-.data-table tr.row-total td { font-weight: 800; background: #f0f7f0; border-top: 2px solid #34c759; border-bottom: none; }
-.rank { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; }
-.rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
-.rank-2 { background: linear-gradient(135deg, #C0C0C0, #999); color: #000; }
-.rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); }
-.rank-other { background: #e5e5ea; color: #8e8e93; }
-.badge-boutique { display: inline-block; background: #e8ecf1; border-radius: 6px; padding: 2px 8px; font-size: 10px; font-weight: 700; color: #6b7a8d; margin-left: 8px; }
-.vendeur-name { font-weight: 700; }
-.bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 180px; padding: 0 8px; margin-top: 16px; }
-.bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
-.bar { width: 100%; max-width: 60px; border-radius: 6px 6px 0 0; position: relative; }
-.bar-value { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; white-space: nowrap; }
-.bar-label { margin-top: 8px; font-size: 11px; font-weight: 600; color: #6b7a8d; text-align: center; }
-.color-alr { background: #3b82f6; } .color-tlr { background: #8b5cf6; }
-.color-clr { background: #ec4899; } .color-cholet { background: #10b981; }
-.color-rlr { background: #f59e0b; } .color-vlr { background: #f97316; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-@media (max-width: 768px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .header { padding: 12px 16px; } .container { padding: 16px; } .tabs { padding: 0 16px; } .kpi-value { font-size: 24px; } }
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #141414;
+    --bg-card-2: #1a1a1a;
+    --gold: #d4af37;
+    --gold-light: #f0d680;
+    --gold-dark: #8b6914;
+    --text: #f5f5f5;
+    --text-dim: #999;
+    --border: #2a2a2a;
+    --green: #4ade80;
+    --red: #ef4444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 16px 14px 60px; }
+  .header {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 18px 16px; margin-bottom: 16px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    border: 1px solid var(--gold-dark);
+    border-radius: 14px;
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .h-title { font-size: 13px; letter-spacing: 2px; color: var(--gold); font-weight: 600; }
+  .h-main { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .h-date { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .h-date .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .refresh-btn {
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold-dark);
+    color: var(--gold); padding: 6px 12px; border-radius: 8px; font-size: 14px;
+    cursor: pointer; font-weight: 700;
+  }
+  .refresh-btn:active { transform: scale(0.95); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .kpi {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 12px; position: relative; overflow: hidden;
+  }
+  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; }
+  .kpi-value { font-size: 22px; font-weight: 800; color: var(--gold-light); letter-spacing: -0.5px; }
+  .kpi-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .kpi.big { grid-column: span 2; padding: 18px 16px; }
+  .kpi.big .kpi-value { font-size: 32px; }
+  .section { margin-bottom: 18px; }
+  .section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--gold); font-weight: 700; padding: 0 4px 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before { content: ""; width: 16px; height: 1px; background: var(--gold-dark); }
+  .bou-list { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .bou {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; display: grid; grid-template-columns: 1fr auto; gap: 4px;
+  }
+  .bou-name { font-size: 14px; font-weight: 700; }
+  .bou-marge { font-size: 18px; font-weight: 800; color: var(--gold-light); text-align: right; }
+  .bou-detail {
+    grid-column: 1 / -1; font-size: 11px; color: var(--text-dim);
+    display: flex; gap: 12px; flex-wrap: wrap; padding-top: 4px;
+    border-top: 1px dashed var(--border); margin-top: 4px;
+  }
+  .bou-detail span strong { color: var(--text); }
+  .vend-list { display: flex; flex-direction: column; gap: 6px; }
+  .vend {
+    display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: center;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .vend-rank {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--bg-card-2);
+    color: var(--text-dim); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .vend.r1 .vend-rank { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #000; }
+  .vend.r2 .vend-rank { background: #c0c0c0; color: #000; }
+  .vend.r3 .vend-rank { background: #cd7f32; color: #fff; }
+  .vend-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .vend-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vend-meta { font-size: 10px; color: var(--text-dim); }
+  .vend-marge { font-size: 16px; font-weight: 800; color: var(--gold-light); }
+  .loading { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
+  .loading::after { content: " •••"; display: inline-block; animation: dots 1.4s infinite; color: var(--gold); }
+  @keyframes dots { 0%,20% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+  .error {
+    background: rgba(239, 68, 68, 0.1); border: 1px solid var(--red);
+    color: var(--red); padding: 14px; border-radius: 10px; font-size: 13px;
+    margin: 20px 0;
+  }
+  .footer {
+    text-align: center; font-size: 10px; color: var(--text-dim);
+    margin-top: 24px; padding: 12px; border-top: 1px solid var(--border);
+  }
+  .footer .live { color: var(--green); font-weight: 700; }
+  @media (min-width: 600px) {
+    .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+    .kpi.big { grid-column: span 2; }
+    .bou-list { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
-<div class="splash" id="splash">
-  <div class="sp-logo">GROUPE GARCIA <span>Dashboard Jour</span> <span class="sp-badge">JOUR</span></div>
-  <div class="sp-line"></div>
-  <div class="sp-kpis">
-    <div class="sp-kpi"><div class="sp-kpi-val" id="sp-marge">0 €</div><div class="sp-kpi-label">Marge du jour</div></div>
-    <div class="sp-kpi"><div class="sp-kpi-val" id="sp-mob">0</div><div class="sp-kpi-label">Mobiles</div></div>
-    <div class="sp-kpi"><div class="sp-kpi-val" id="sp-btq">0</div><div class="sp-kpi-label">Boutiques</div></div>
+<div class="wrap">
+  <div class="header">
+    <button class="refresh-btn" onclick="charger()" title="Actualiser">↻</button>
+    <div class="h-title">GROUPE GARCIA</div>
+    <div class="h-main">Dashboard Jour</div>
+    <div class="h-date">
+      <span class="dot"></span>
+      <span id="date-jour">Chargement...</span>
+    </div>
   </div>
-  <div class="sp-status">
-    <span class="sp-status-text">Chargement des données</span>
-    <span class="sp-dot"></span><span class="sp-dot"></span><span class="sp-dot"></span>
+  <div id="content">
+    <div class="loading">Connexion à 3GWIN</div>
   </div>
-</div>
-<div class="header">
-  <div class="header-left"><div>
-    <h1>GROUPE GARCIA <span style="font-weight:400;font-size:15px;opacity:.7">Dashboard Jour</span></h1>
-    <div class="subtitle" id="hdr-date">Chargement... <span class="badge-live">JOUR</span></div>
-  </div></div>
-  <div class="header-right"><button class="btn btn-accent" onclick="location.reload()">Actualiser</button></div>
-</div>
-<div class="tabs"><a class="tab active" href="#">Synthèse Jour</a></div>
-<div class="container">
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-label">Marge du jour</div><div class="kpi-value" style="color:#10b981" id="k-marge">—</div><div class="kpi-sub" id="k-btq">— boutiques</div></div>
-    <div class="kpi-card"><div class="kpi-label">Mobiles vendus</div><div class="kpi-value" style="color:#1a2332" id="k-mob">—</div><div class="kpi-sub" id="k-hw2s">dont — H/W2S</div></div>
-    <div class="kpi-card"><div class="kpi-label">SFR Cyber</div><div class="kpi-value" style="color:#8b5cf6" id="k-cyber">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Box du jour</div><div class="kpi-value" style="color:#10b981" id="k-box">—</div></div>
+  <div class="footer">
+    <span class="live">● LIVE</span> &nbsp;•&nbsp; Données 3GWIN &nbsp;•&nbsp;
+    Dernière MAJ : <span id="ts">-</span>
   </div>
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-label">Taux assurance</div><div class="kpi-value" style="color:#ec4899" id="k-assu">—</div><div class="kpi-sub" id="k-assu-sub">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Taux Alba</div><div class="kpi-value" style="color:#f59e0b" id="k-alba">—</div><div class="kpi-sub" id="k-alba-sub">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Panier moyen</div><div class="kpi-value" style="color:#3b82f6" id="k-panier">—</div><div class="kpi-sub">marge / mob</div></div>
-    <div class="kpi-card"><div class="kpi-label">Accessoires</div><div class="kpi-value" style="color:#f97316" id="k-access">—</div></div>
-  </div>
-  <div class="grid-2">
-    <div class="section"><div class="section-title">Marge par boutique — Jour</div><div class="card"><div class="bar-chart" id="chart-marge"></div></div></div>
-    <div class="section"><div class="section-title">Mobiles par boutique — Jour</div><div class="card"><div class="bar-chart" id="chart-mob"></div></div></div>
-  </div>
-  <div class="section" id="boutiques"><div class="section-title">Détail par boutique — Jour</div><div class="card"><table class="data-table">
-    <thead><tr><th>Boutique</th><th class="num">Marge</th><th class="num">Mob</th><th class="num">Box</th><th class="num">Assu</th><th class="num">Cyber</th><th class="num">Alba</th><th class="num">Access</th></tr></thead>
-    <tbody id="tbody-boutiques"></tbody>
-  </table></div></div>
-  <div class="section" id="vendeurs"><div class="section-title">Classement vendeurs — Jour</div><div class="card"><table class="data-table">
-    <thead><tr><th style="width:40px">#</th><th>Vendeur</th><th class="num">Marge</th><th class="num">Mob</th><th class="num">Cyber</th><th class="num">Assu</th><th class="num">Alba</th><th class="num">Access</th></tr></thead>
-    <tbody id="tbody-vendeurs"></tbody>
-  </table></div></div>
-</div>
-<div class="footer" style="text-align:center;padding:16px 32px 32px;font-size:11px;color:#8e99a8">
-  3GWIN • Groupe Garcia • <span id="footer-date">—</span> • <span style="color:#10b981" id="footer-status">Connexion en cours...</span>
 </div>
 
 <script>
-// ── CONFIG ──
-var SHEET_ID = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
-var SHEET_NAME = 'Données_Jour';
+  const SHEET_ID    = "1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY";
+  const SHEET_NAME  = "Données_Commissions";
 
-var BOUTIQUES_CONFIG = {
-  'TLR': { label: 'Amboise', color: '#8b5cf6', cssClass: 'color-tlr' },
-  'ALR': { label: 'Angers', color: '#3b82f6', cssClass: 'color-alr' },
-  'CLR': { label: 'Châteaudun', color: '#ec4899', cssClass: 'color-clr' },
-  'CHOLET': { label: 'Cholet', color: '#10b981', cssClass: 'color-cholet' },
-  'RLR': { label: 'Romorantin', color: '#f59e0b', cssClass: 'color-rlr' },
-  'VLR': { label: 'Vendôme', color: '#f97316', cssClass: 'color-vlr' }
-};
+  const BOUTIQUES = {
+    "ALR":    "SFR Angers",
+    "TLR":    "SFR Amboise",
+    "CLR":    "SFR Châteaudun",
+    "CHOLET": "SFR Cholet",
+    "RLR":    "SFR Romorantin",
+    "VLR":    "SFR Vendôme"
+  };
 
-function fmt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f') + '\u202f€'; }
-function fmtN(n) { return Math.round(n * 10) / 10; }
-
-function chargerDonnees() {
-  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
-    '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(SHEET_NAME) + '&t=' + Date.now();
-
-  var script = document.createElement('script');
-  script.src = url.replace('out:json', 'out:json&tqx=responseHandler:handleGviz');
-  document.head.appendChild(script);
-
-  // Fallback fetch
-  fetch(url)
-    .then(function(r) { return r.text(); })
-    .then(function(text) {
-      var json = text.replace(/^[^{]+/, '').replace(/[^}]+$/, '');
-      var data = JSON.parse(json);
-      traiterDonnees(data);
-    })
-    .catch(function(e) {
-      console.error('Erreur chargement:', e);
-      afficherErreur();
-    });
-}
-
-function traiterDonnees(data) {
-  if (!data || !data.table || !data.table.rows) { afficherErreur(); return; }
-
-  var rows = data.table.rows;
-  var vendeurs = [];
-  var mags = [];
-  var dateJour = '';
-  var mode = null; // 'vendeurs' ou 'mags'
-
-  rows.forEach(function(row) {
-    if (!row.c || !row.c[0] || !row.c[0].v) return;
-    var col0 = row.c[0].v.toString().trim();
-
-    if (col0.indexOf('VENDEURS DU JOUR') === 0) {
-      mode = 'vendeurs';
-      dateJour = col0.replace('VENDEURS DU JOUR — ', '');
-      return;
-    }
-    if (col0.indexOf('BOUTIQUES DU JOUR') === 0) { mode = 'mags'; return; }
-    if (col0 === 'Boutique' || col0 === 'Boutique') return;
-
-    if (mode === 'vendeurs' && row.c.length >= 8) {
-      var marge = parseFloat((row.c[3] && row.c[3].v) || 0);
-      if (row.c[1] && row.c[1].v && marge > 0) {
-        vendeurs.push({
-          code: col0, nom: row.c[1].v, role: row.c[2] && row.c[2].v,
-          marge: marge, mob: parseInt(row.c[4] && row.c[4].v || 0),
-          g3a: parseInt(row.c[5] && row.c[5].v || 0),
-          cyber: parseInt(row.c[6] && row.c[6].v || 0),
-          assu: parseInt(row.c[7] && row.c[7].v || 0),
-          access: parseFloat(row.c[9] && row.c[9].v || 0)
-        });
-      }
-    }
-
-    if (mode === 'mags' && row.c.length >= 6) {
-      var margeM = parseFloat((row.c[2] && row.c[2].v) || 0);
-      if (col0 && margeM > 0) {
-        mags.push({
-          boutique: col0, code: row.c[1] && row.c[1].v,
-          marge: margeM, mob: parseInt(row.c[3] && row.c[3].v || 0),
-          box: parseInt(row.c[4] && row.c[4].v || 0),
-          assu: parseInt(row.c[5] && row.c[5].v || 0),
-          cyber: parseInt(row.c[6] && row.c[6].v || 0),
-          alba: parseInt(row.c[7] && row.c[7].v || 0),
-          access: parseFloat(row.c[9] && row.c[9].v || 0)
-        });
-      }
-    }
-  });
-
-  afficherDashboard(vendeurs, mags, dateJour);
-}
-
-function afficherDashboard(vendeurs, mags, dateJour) {
-  // Totaux
-  var totalMarge = mags.reduce(function(s, m) { return s + m.marge; }, 0);
-  var totalMob = mags.reduce(function(s, m) { return s + m.mob; }, 0);
-  var totalBox = mags.reduce(function(s, m) { return s + m.box; }, 0);
-  var totalCyber = mags.reduce(function(s, m) { return s + m.cyber; }, 0);
-  var totalAssu = mags.reduce(function(s, m) { return s + m.assu; }, 0);
-  var totalAlba = mags.reduce(function(s, m) { return s + m.alba; }, 0);
-  var totalAccess = mags.reduce(function(s, m) { return s + m.access; }, 0);
-  var totalMobV = vendeurs.reduce(function(s, v) { return s + v.mob; }, 0);
-
-  // KPIs
-  document.getElementById('k-marge').textContent = fmt(totalMarge);
-  document.getElementById('k-btq').textContent = mags.length + ' boutiques';
-  document.getElementById('k-mob').textContent = totalMob;
-  document.getElementById('k-hw2s').textContent = 'dont ' + totalMobV + ' H/W2S';
-  document.getElementById('k-cyber').textContent = totalCyber;
-  document.getElementById('k-box').textContent = totalBox;
-  document.getElementById('k-access').textContent = fmt(totalAccess);
-  var txAssu = totalMob > 0 ? Math.round(totalAssu / totalMob * 100) : 0;
-  var txAlba = totalMob > 0 ? Math.round(totalAlba / totalMob * 100) : 0;
-  document.getElementById('k-assu').textContent = txAssu + ' %';
-  document.getElementById('k-assu-sub').textContent = totalAssu + ' / ' + totalMob + ' mobiles';
-  document.getElementById('k-alba').textContent = txAlba + ' %';
-  document.getElementById('k-alba-sub').textContent = totalAlba + ' / ' + totalMob + ' mobiles';
-  var panier = totalMob > 0 ? Math.round(totalMarge / totalMob * 100) / 100 : 0;
-  document.getElementById('k-panier').textContent = panier.toFixed(2) + ' €';
-
-  // Date header
-  if (dateJour) {
-    document.getElementById('hdr-date').innerHTML = dateJour + ' <span class="badge-live">JOUR</span>';
-    document.getElementById('footer-date').textContent = 'Données du ' + dateJour;
+  function fmt(n)  { return new Intl.NumberFormat('fr-FR', {maximumFractionDigits: 0}).format(Math.round(n || 0)); }
+  function fmtH() {
+    const d = new Date();
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
   }
-  document.getElementById('footer-status').textContent = 'Données en temps réel';
-  document.getElementById('footer-status').style.color = '#10b981';
+  function dateFr() {
+    const j = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+    const m = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    const d = new Date();
+    return j[d.getDay()] + " " + d.getDate() + " " + m[d.getMonth()] + " " + d.getFullYear();
+  }
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function num(v) {
+    if (v === null || v === undefined || v === "") return 0;
+    if (typeof v === "number") return v;
+    const s = String(v).replace(/[^\d,.-]/g, "").replace(",", ".");
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  }
 
-  // Graphique marge
-  var maxMarge = Math.max.apply(null, mags.map(function(m) { return m.marge; }));
-  var chartMarge = document.getElementById('chart-marge');
-  chartMarge.innerHTML = '';
-  mags.forEach(function(m) {
-    var cfg = BOUTIQUES_CONFIG[m.code] || { label: m.boutique, color: '#888', cssClass: '' };
-    var pct = maxMarge > 0 ? Math.round(m.marge / maxMarge * 100) : 0;
-    var g = document.createElement('div'); g.className = 'bar-group';
-    g.innerHTML = '<div class="bar ' + cfg.cssClass + '" data-height="' + pct + '%" style="height:0%"><div class="bar-value" style="color:' + cfg.color + '">' + fmt(m.marge) + '</div></div><div class="bar-label">' + cfg.label + '</div>';
-    chartMarge.appendChild(g);
-  });
+  async function lireSheet() {
+    const url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID
+              + "/gviz/tq?tqx=out:json&sheet=" + encodeURIComponent(SHEET_NAME)
+              + "&_=" + Date.now();
+    const r = await fetch(url);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const txt = await r.text();
+    const m = txt.match(/setResponse\(([\s\S]*)\);?\s*$/);
+    if (!m) throw new Error("Format de réponse inattendu");
+    return JSON.parse(m[1]);
+  }
 
-  // Graphique mobiles
-  var maxMob = Math.max.apply(null, mags.map(function(m) { return m.mob; }));
-  var chartMob = document.getElementById('chart-mob');
-  chartMob.innerHTML = '';
-  mags.forEach(function(m) {
-    var cfg = BOUTIQUES_CONFIG[m.code] || { label: m.boutique, color: '#888', cssClass: '' };
-    var pct = maxMob > 0 ? Math.round(m.mob / maxMob * 100) : 0;
-    var g = document.createElement('div'); g.className = 'bar-group';
-    g.innerHTML = '<div class="bar ' + cfg.cssClass + '" data-height="' + pct + '%" style="height:0%"><div class="bar-value" style="color:' + cfg.color + '">' + m.mob + '</div></div><div class="bar-label">' + cfg.label + '</div>';
-    chartMob.appendChild(g);
-  });
+  function parser(gviz) {
+    const cols = gviz.table.cols.map(c => (c.label || c.id || "").toLowerCase().trim());
+    const rows = gviz.table.rows;
 
-  // Tableau boutiques
-  var tbodyB = document.getElementById('tbody-boutiques');
-  tbodyB.innerHTML = '';
-  mags.forEach(function(m) {
-    var cfg = BOUTIQUES_CONFIG[m.code] || { label: m.boutique };
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td><strong>' + cfg.label + '</strong></td><td class="num">' + fmt(m.marge) + '</td><td class="num">' + m.mob + '</td><td class="num">' + m.box + '</td><td class="num">' + m.assu + '</td><td class="num">' + m.cyber + '</td><td class="num">' + m.alba + '</td><td class="num">' + fmt(m.access) + '</td>';
-    tbodyB.appendChild(tr);
-  });
-  var trTot = document.createElement('tr'); trTot.className = 'row-total';
-  trTot.innerHTML = '<td><strong>TOTAL GROUPE</strong></td><td class="num">' + fmt(totalMarge) + '</td><td class="num">' + totalMob + '</td><td class="num">' + totalBox + '</td><td class="num">' + totalAssu + '</td><td class="num">' + totalCyber + '</td><td class="num">' + totalAlba + '</td><td class="num">' + fmt(totalAccess) + '</td>';
-  tbodyB.appendChild(trTot);
+    function find(...mots) {
+      for (const mot of mots) {
+        const i = cols.findIndex(c => c.indexOf(mot) !== -1);
+        if (i !== -1) return i;
+      }
+      return -1;
+    }
+    const ix = {
+      vendeur: find("vendeur","nom","prenom"),
+      bou:     find("boutique","mag","code"),
+      marge:   find("marge"),
+      mob:     find("mob","mobile"),
+      cyber:   find("cyber"),
+      assu:    find("assu","assurance"),
+      alba:    find("alba","tracker","g3a"),
+      access:  find("access","accessoire"),
+      box:     find("box","thd","raccord")
+    };
 
-  // Tableau vendeurs (trié par marge)
-  var vTri = vendeurs.slice().sort(function(a, b) { return b.marge - a.marge; });
-  var tbodyV = document.getElementById('tbody-vendeurs');
-  tbodyV.innerHTML = '';
-  vTri.forEach(function(v, i) {
-    var rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-    var margeStyle = i < 3 ? 'style="color:#10b981;font-weight:800"' : '';
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td><span class="rank ' + rankClass + '">' + (i+1) + '</span></td><td><span class="vendeur-name">' + v.nom + '</span><span class="badge-boutique">' + v.code + '</span></td><td class="num" ' + margeStyle + '>' + fmt(v.marge) + '</td><td class="num">' + v.mob + '</td><td class="num">' + v.cyber + '</td><td class="num">' + v.assu + '</td><td class="num">' + v.g3a + '</td><td class="num">' + fmt(v.access) + '</td>';
-    tbodyV.appendChild(tr);
-  });
-  var vTotalMarge = vTri.reduce(function(s, v) { return s + v.marge; }, 0);
-  var trVTot = document.createElement('tr'); trVTot.className = 'row-total';
-  trVTot.innerHTML = '<td></td><td><strong>TOTAL</strong></td><td class="num">' + fmt(vTotalMarge) + '</td><td class="num">' + totalMobV + '</td><td class="num">' + vendeurs.reduce(function(s,v){return s+v.cyber;},0) + '</td><td class="num">' + vendeurs.reduce(function(s,v){return s+v.assu;},0) + '</td><td class="num">' + vendeurs.reduce(function(s,v){return s+v.g3a;},0) + '</td><td class="num">' + fmt(vendeurs.reduce(function(s,v){return s+v.access;},0)) + '</td>';
-  tbodyV.appendChild(trVTot);
+    const vendeurs = [];
+    const bouMap = {};
 
-  // Splash update
-  document.getElementById('sp-marge').textContent = fmt(totalMarge);
-  document.getElementById('sp-mob').textContent = totalMob;
-  document.getElementById('sp-btq').textContent = mags.length;
+    rows.forEach(row => {
+      if (!row || !row.c) return;
+      const cell = i => (i >= 0 && row.c[i] && row.c[i].v !== null && row.c[i].v !== undefined) ? row.c[i].v : "";
 
-  // Afficher
-  setTimeout(function() {
-    document.getElementById('splash').classList.add('hide');
-    document.body.classList.add('loaded');
-    setTimeout(function() {
-      document.querySelectorAll('.bar[data-height]').forEach(function(bar) {
-        bar.style.height = bar.getAttribute('data-height');
-      });
-      document.getElementById('splash').style.display = 'none';
-    }, 400);
-  }, 2000);
-}
+      const nom = String(cell(ix.vendeur) || "").trim();
+      if (!nom || nom.toUpperCase() === "TOTAL") return;
 
-function afficherErreur() {
-  document.getElementById('footer-status').textContent = 'Données indisponibles — réessayez plus tard';
-  document.getElementById('footer-status').style.color = '#ff3b30';
-  document.getElementById('splash').classList.add('hide');
-  document.body.classList.add('loaded');
-  setTimeout(function() { document.getElementById('splash').style.display = 'none'; }, 600);
-}
+      const v = {
+        nom:    nom,
+        bou:    String(cell(ix.bou) || "").trim().toUpperCase(),
+        marge:  num(cell(ix.marge)),
+        mob:    num(cell(ix.mob)),
+        cyber:  num(cell(ix.cyber)),
+        assu:   num(cell(ix.assu)),
+        alba:   num(cell(ix.alba)),
+        access: num(cell(ix.access)),
+        box:    num(cell(ix.box))
+      };
+      vendeurs.push(v);
 
-// Lancement
-chargerDonnees();
-</script>
-</body>
-</html>
+      const code = v.bou || "?";
+      if (!bouMap[code]) {
+        bouMap[code] = { code: code, nom: BOUTIQUES[code] || code,
