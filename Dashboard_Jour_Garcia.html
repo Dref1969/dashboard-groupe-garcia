@@ -80,13 +80,13 @@ tbody tr:last-child td{border-bottom:none}
 <div class="hdr" id="hdr">
   <div class="hdr-left">
     <div class="logo">GROUPE GARCIA <span>Dashboard Jour</span></div>
-    <div class="hdr-info">Mardi 7 Avril 2026 — Données 3GWIN temps réel (màj 18:18)</div>
+    <div class="hdr-info">Mardi 7 Avril 2026 — Données 3GWIN + DILAX + Goodays (màj 18:18)</div>
   </div>
 </div>
 
 <div class="nav" id="nav"></div>
 <div class="mn" id="mn"></div>
-<div class="ftr">Données 3GWIN JOUR du 07/04/2026 — Scrapé à 18:18 — Groupe Garcia © 2026</div>
+<div class="ftr">Données 3GWIN + DILAX + Goodays — 08/04/2026 — Scrapé à 18:18 — Groupe Garcia © 2026</div>
 
 <script>
 Chart.register(ChartDataLabels);
@@ -129,6 +129,11 @@ const VENDEURS = [
   {nom:"HAVAL",bou:"VLR",marge:244.18,mob:1,g3a:1,cyber:0,assu:1,access:74.51,box:0},
   {nom:"MEHDY",bou:"VLR",marge:657.18,mob:3,g3a:3,cyber:0,assu:1,access:145.51,box:1},
 ];
+
+const DILAX=[{code:"TLR",nom:"Amboise",visiteurs:180,margeDilax:2758.12,pm:15.32},{code:"CLR",nom:"Châteaudun",visiteurs:175,margeDilax:1798.54,pm:10.28},{code:"RLR",nom:"Romorantin",visiteurs:220,margeDilax:1977.61,pm:8.99},{code:"VLR",nom:"Vendôme",visiteurs:221,margeDilax:1902.66,pm:8.61},{code:"ALR",nom:"Angers",visiteurs:115,margeDilax:1063.98,pm:9.25},{code:"CHOLET",nom:"Cholet",visiteurs:393,margeDilax:4057.47,pm:10.32}];
+const DILAX_TOTAL={visiteurs:1304,marge:13558.38,pm:10.40};
+const GOODAYS=[{code:"CHOLET",nom:"Cholet",note:4.77,participations:44,avisGoogle:31},{code:"ALR",nom:"Angers",note:4.67,participations:21,avisGoogle:31},{code:"CLR",nom:"Châteaudun",note:4.42,participations:33,avisGoogle:39},{code:"RLR",nom:"Romorantin",note:4.25,participations:28,avisGoogle:29},{code:"VLR",nom:"Vendôme",note:4.14,participations:21,avisGoogle:30},{code:"TLR",nom:"Amboise",note:4.05,participations:19,avisGoogle:28}];
+const GOODAYS_TOTAL={note:4.38,avisGoogle:188};
 
 // ═══════════════════════════════════════
 //  COMPUTED
@@ -200,6 +205,26 @@ function renderSynthese(el){
     <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
     <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
   </div>
+  <div class="stitle">FLUX VISITEURS — DILAX (1er - 8 Avril 2026)</div>
+  <div class="g3" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>VISITEURS</h3><div class="val">${fmt(DILAX_TOTAL.visiteurs)}</div><div class="sub">6 boutiques • 1-8 avril</div></div>
+    <div class="cd kpi"><h3>MARGE CUMULÉE</h3><div class="val">${fmt(DILAX_TOTAL.marge)} €</div><div class="sub">depuis le 1er avril</div></div>
+    <div class="cd kpi"><h3>PANIER MOYEN</h3><div class="val">${fmtD(DILAX_TOTAL.pm,2)} €</div><div class="sub">marge / visiteur</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="cd"><h3>VISITEURS PAR BOUTIQUE</h3><canvas id="cDilaxVis"></canvas></div>
+    <div class="cd"><h3>PANIER MOYEN PAR BOUTIQUE</h3><canvas id="cDilaxPM"></canvas></div>
+  </div>
+  <div class="stitle">SATISFACTION CLIENT — GOODAYS (30 derniers jours)</div>
+  <div class="g3" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>NOTE MOYENNE</h3><div class="val">${fmtD(GOODAYS_TOTAL.note,2)}<span style="font-size:14px;color:var(--sub)"> /5</span></div><div class="sub">6 boutiques</div></div>
+    <div class="cd kpi"><h3>AVIS GOOGLE</h3><div class="val">${GOODAYS_TOTAL.avisGoogle}</div><div class="sub">total 30 jours</div></div>
+    <div class="cd kpi"><h3>PARTICIPATIONS</h3><div class="val">${GOODAYS.reduce((a,g)=>a+g.participations,0)}</div><div class="sub">questionnaires</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="cd"><h3>NOTE PAR BOUTIQUE</h3><canvas id="cGoodaysNote"></canvas></div>
+    <div class="cd"><h3>AVIS GOOGLE PAR BOUTIQUE</h3><canvas id="cGoodaysAvis"></canvas></div>
+  </div>
   <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU 07/04</div>
   <div class="cd" style="margin-bottom:12px">
     <table>
@@ -251,6 +276,14 @@ function renderSynthese(el){
       {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
     ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
   }));
+  // DILAX Charts
+  const dilaxLabels=DILAX.map(d=>d.nom),dilaxColors=DILAX.map(d=>(BOUTIQUES[d.code]||{color:"#999"}).color);
+  CHS.push(makeBar("cDilaxVis",dilaxLabels,DILAX.map(d=>d.visiteurs),dilaxColors,""));
+  CHS.push(makeBar("cDilaxPM",dilaxLabels,DILAX.map(d=>d.pm),dilaxColors,"€"));
+  // GOODAYS Charts
+  const goodaysLabels=GOODAYS.map(g=>g.nom),goodaysColors=GOODAYS.map(g=>(BOUTIQUES[g.code]||{color:"#999"}).color);
+  CHS.push(new Chart(document.getElementById("cGoodaysNote"),{type:"bar",data:{labels:goodaysLabels,datasets:[{data:GOODAYS.map(g=>g.note),backgroundColor:goodaysColors.map(c=>c+"CC"),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{anchor:"end",align:"end",font:{weight:700,size:11,family:"Plus Jakarta Sans"},color:"#0F1419",formatter:v=>fmtD(v,2)+"/5"}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{min:3,max:5,grid:{color:"#F1F5F9"}}}}}));
+  CHS.push(new Chart(document.getElementById("cGoodaysAvis"),{type:"bar",data:{labels:goodaysLabels,datasets:[{label:"Avis Google",data:GOODAYS.map(g=>g.avisGoogle),backgroundColor:"#2563EBCC",borderRadius:3},{label:"Participations",data:GOODAYS.map(g=>g.participations),backgroundColor:"#7C3AEDCC",borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{usePointStyle:true,padding:8,font:{size:10,family:"Plus Jakarta Sans"}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:"#F1F5F9"}}}}}));
 }
 
 function renderBoutique(el,code){
@@ -282,7 +315,11 @@ function renderBoutique(el,code){
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
     <div class="cd"><h3>ITEMS PAR VENDEUR</h3><canvas id="cBPerf"></canvas></div>
   </div>
-  <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
+  <div class="stitle" style="margin-top:16px">FLUX VISITEURS — DILAX</div>
+    <div class="cd" style="margin-bottom:12px">${(()=>{const d=DILAX.find(x=>x.code===code);return d?'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px"><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">VISITEURS</h3><div style="font-size:24px;font-weight:800">'+fmt(d.visiteurs)+'</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">MARGE</h3><div style="font-size:24px;font-weight:800">'+fmt(d.margeDilax)+' €</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">PM</h3><div style="font-size:24px;font-weight:800">'+fmtD(d.pm,2)+' €</div></div></div>':'<div style="text-align:center;padding:16px;color:var(--sub)">Aucune donnée</div>'})()}</div>
+    <div class="stitle">SATISFACTION — GOODAYS</div>
+    <div class="cd" style="margin-bottom:12px">${(()=>{const g=GOODAYS.find(x=>x.code===code);return g?'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px"><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">NOTE</h3><div style="font-size:24px;font-weight:800">'+fmtD(g.note,2)+'/5</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">PARTICIPATIONS</h3><div style="font-size:24px;font-weight:800">'+g.participations+'</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">AVIS GOOGLE</h3><div style="font-size:24px;font-weight:800">'+g.avisGoogle+'</div></div></div>':'<div style="text-align:center;padding:16px;color:var(--sub)">Aucune donnée</div>'})()}</div>
+    <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
