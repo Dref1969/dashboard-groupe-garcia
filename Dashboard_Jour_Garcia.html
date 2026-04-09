@@ -10,8 +10,8 @@
 <style>
 :root{--bg:#F0F2F5;--card:#FFF;--hdr:#0F172A;--txt:#0F1419;--sub:#64748B;--mut:#94A3B8;--brd:#E2E8F0;--blue:#2563EB;--purple:#7C3AED;--green:#059669;--orange:#D97706;--red:#DC2626;--cyan:#0891B2;--r:10px}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased}
-.hdr{background:var(--hdr);color:#fff;position:sticky;top:0;z-index:h100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
+body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hdr{background:var(--hdr);color:#fff;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
 .hdr-left{display:flex;align-items:center;gap:16px}
 .logo{font-size:16px;font-weight:800;letter-spacing:1px}.logo span{font-weight:400;opacity:.5;font-size:13px;margin-left:8px}
 .hdr-info{font-size:11px;color:#94A3B8}
@@ -86,6 +86,25 @@ tbody tr:last-child td{border-bottom:none}
 .ch-participant .name{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
 .ch-participant .result{font-size:12px;font-weight:700}
 
+/* Tab fade transition */
+.mn{transition:opacity .25s ease}
+.mn.fading{opacity:0;pointer-events:none}
+/* Loading spinner */
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:var(--sub)}
+.loader .spin{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Error banner */
+.err-banner{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;animation:fadeIn .3s ease}
+.err-banner .retry-btn{background:#DC2626;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto;font-family:inherit}
+.err-banner .retry-btn:hover{background:#B91C1C}
+/* Stagger animation for KPI cards */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.cd{animation:fadeIn .3s ease both}
+.g4 .cd:nth-child(1){animation-delay:0s}.g4 .cd:nth-child(2){animation-delay:.05s}.g4 .cd:nth-child(3){animation-delay:.1s}.g4 .cd:nth-child(4){animation-delay:.15s}
+.g3 .cd:nth-child(1){animation-delay:0s}.g3 .cd:nth-child(2){animation-delay:.05s}.g3 .cd:nth-child(3){animation-delay:.1s}
+/* Smooth splash progress */
+.sp-progress{width:180px;height:3px;background:#1E293B;border-radius:2px;margin-top:16px;overflow:hidden}
+.sp-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#2563EB,#7C3AED);border-radius:2px;transition:width .4s ease}
 @media print{.hdr,.nav{position:static}.mn{padding:8px}#splash{display:none}}
 </style>
 </head>
@@ -99,9 +118,11 @@ tbody tr:last-child td{border-bottom:none}
   <div class="sp-line"></div>
   <div class="sp-kpis">
     <div class="sp-kpi"><div class="sp-kpi-val">6</div><div class="sp-kpi-label">Boutiques</div></div>
-    <div class="sp-kpi"><div class="sp-kpi-val">0 €</div><div class="sp-kpi-label">Marge Jour</div></div>
-    <div class="sp-kpi"><div class="sp-kpi-val">0</div><div class="sp-kpi-label">Mobiles</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">—</div><div class="sp-kpi-label">Marge Jour</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">—</div><div class="sp-kpi-label">Mobiles</div></div>
   </div>
+  <div class="sp-progress"><div class="sp-progress-bar" id="spBar"></div></div>
+  <div style="font-size:10px;color:#475569;margin-top:10px;opacity:0;animation:spU .4s ease 1.4s forwards" id="spStatus">Connexion Google Sheets...</div>
 </div>
 
 <div class="hdr" id="hdr">
@@ -109,6 +130,9 @@ tbody tr:last-child td{border-bottom:none}
     <div class="logo">GROUPE GARCIA <span>Dashboard Jour</span></div>
     <div class="hdr-info">Chargement...</div>
   </div>
+  <button id="refreshBtn" onclick="manualRefresh()" title="Rafraîchir les données" style="background:none;border:1px solid rgba(255,255,255,.2);color:#94A3B8;border-radius:8px;padding:6px 12px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s">
+    <span id="refreshIcon" style="display:inline-block;transition:transform .3s">↻</span> Actualiser
+  </button>
 </div>
 
 <div class="nav" id="nav"></div>
@@ -137,12 +161,39 @@ const BOUTIQUES = {
 
 let MAGS = [];
 let VENDEURS = [];
-const CHALLENGE_HIST = [];
+let CHALLENGE_HIST = [];
 let DATA_DATE = "";
 let DATA_HEURE = "";
+let LAST_ERROR = null;
 
 // ═══════════════════════════════════════
-//  FETCH GOOGLE SHEETS (gviz/tq CSV)
+//  SPLASH PROGRESS
+// ═══════════════════════════════════════
+function splashProgress(pct, msg){
+  const bar=document.getElementById('spBar');
+  const status=document.getElementById('spStatus');
+  if(bar) bar.style.width=pct+'%';
+  if(status) status.textContent=msg||'';
+}
+
+// ═══════════════════════════════════════
+//  FETCH WITH RETRY (exponential backoff)
+// ═══════════════════════════════════════
+async function fetchRetry(url, retries=3, delay=1000){
+  for(let i=0;i<=retries;i++){
+    try{
+      const r=await fetch(url);
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return await r.text();
+    }catch(e){
+      if(i===retries) throw e;
+      await new Promise(ok=>setTimeout(ok,delay*(i+1)));
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+//  PARSE CSV (robuste)
 // ═══════════════════════════════════════
 function parseCSV(text){
   const lines=text.split('\n').filter(l=>l.trim());
@@ -163,20 +214,24 @@ function parseCSV(text){
   });
 }
 
+function initEmptyMags(){
+  MAGS=[];
+  Object.keys(BOUTIQUES).forEach(code=>{
+    MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0});
+  });
+}
+
 async function fetchJourData(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(TAB_NAME)}`;
-  const r=await fetch(url);
-  if(!r.ok) throw new Error("Erreur chargement données: "+r.status);
-  const rows=parseCSV(await r.text());
+  const text=await fetchRetry(url);
+  const rows=parseCSV(text);
 
-  // Parse META row for date/heure
   const meta=rows.find(r=>r.Type==="META");
   if(meta){
     DATA_DATE=meta.Date||"";
     DATA_HEURE=meta.Heure||"";
   }
 
-  // Parse MAG rows
   MAGS=rows.filter(r=>r.Type==="MAG").map(r=>({
     code:r.Code||"",
     nom:r.Nom||"",
@@ -191,17 +246,9 @@ async function fetchJourData(){
     abo:parseInt(r.Abo)||0
   }));
 
-  // Si aucun MAG récupéré, mettre des valeurs par défaut
-  if(MAGS.length===0){
-    Object.keys(BOUTIQUES).forEach(code=>{
-      MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0});
-    });
-  }
-
-  // Trier MAGS par marge décroissante
+  if(MAGS.length===0) initEmptyMags();
   MAGS.sort((a,b)=>b.marge-a.marge);
 
-  // Parse VENDEUR rows
   VENDEURS=rows.filter(r=>r.Type==="VENDEUR").map(r=>({
     nom:r.Code||"",
     bou:r.Nom||"",
@@ -214,9 +261,24 @@ async function fetchJourData(){
     access:parseFloat(r.Access)||0,
     abo:parseInt(r.Abo)||0
   }));
-
-  // Trier VENDEURS par marge décroissante
   VENDEURS.sort((a,b)=>b.marge-a.marge);
+}
+
+async function fetchChallengeHist(){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Historique_Challenges')}`;
+  const text=await fetchRetry(url);
+  const rows=parseCSV(text);
+  CHALLENGE_HIST=rows.map(r=>({
+    date:r.Date||"",
+    top3:(r.Top3||"").split(",").filter(s=>s.trim()),
+    top3_gagnes:(r.Top3_Gagnes||"").split(",").filter(s=>s.trim()),
+    amboise_marge:parseFloat((r.Amboise_Marge||"0").replace(",","."))||0,
+    amboise_won:(r.Amboise_Won||"").toUpperCase()==="OUI",
+    louane_marge:parseFloat((r.Louane_Marge||"0").replace(",","."))||0,
+    louane_won:(r.Louane_Won||"").toUpperCase()==="OUI",
+    groupe_marge:parseFloat((r.Groupe_Marge||"0").replace(",","."))||0,
+    groupe_won:(r.Groupe_Won||"").toUpperCase()==="OUI"
+  })).filter(r=>r.date);
 }
 
 // ═══════════════════════════════════════
@@ -252,20 +314,23 @@ function buildNav(){
 }
 
 function showTab(id){
+  if(id===CT) return;
   CT=id;
   document.querySelectorAll('.nav button').forEach(b=>{
     const label=b.textContent;
     const match=(id==='synthese'&&label==='Synthèse')||(id==='vendeurs'&&label==='Collaborateurs')||(id==='challenges'&&label==='Challenges')||(BOUTIQUES[id.toUpperCase()]&&BOUTIQUES[id.toUpperCase()].nom===label);
     b.classList.toggle('active',match);
   });
-  render();
+  const mn=document.getElementById('mn');
+  mn.classList.add('fading');
+  setTimeout(()=>{render();mn.classList.remove('fading');},150);
 }
 
 // ═══════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════
 function render(){
-  CHS.forEach(c=>c.destroy());CHS=[];
+  CHS.forEach(c=>{try{c.destroy()}catch(e){}});CHS=[];
   const mn=document.getElementById('mn');
   if(CT==='synthese')renderSynthese(mn);
   else if(CT==='vendeurs')renderVendeurs(mn);
@@ -273,9 +338,98 @@ function render(){
   else renderBoutique(mn,CT.toUpperCase());
 }
 
+function safeChart(id,cfg){
+  const el=document.getElementById(id);
+  if(!el) return null;
+  try{const c=new Chart(el,cfg);CHS.push(c);return c;}catch(e){console.warn('Chart error:',e);return null;}
+}
+
+function errBanner(){
+  if(!LAST_ERROR) return '';
+  const msg=LAST_ERROR.includes('fetch')?'Connexion impossible à Google Sheets — vérifiez votre connexion internet':esc(LAST_ERROR);
+  return `<div class="err-banner">⚠ ${msg} <button class="retry-btn" onclick="manualRefresh()">Réessayer</button></div>`;
+}
+
+let IS_REFRESHING=false;
+
+async function manualRefresh(){
+  if(IS_REFRESHING) return;
+  IS_REFRESHING=true;
+  LAST_ERROR=null;
+
+  // Animation bouton
+  const btn=document.getElementById('refreshBtn');
+  const icon=document.getElementById('refreshIcon');
+  if(btn){btn.style.color='#fff';btn.style.borderColor='rgba(255,255,255,.5)';}
+  if(icon) icon.style.animation='spin .8s linear infinite';
+
+  // Indicateur discret dans le header
+  const hdrInfo=document.querySelector('.hdr-info');
+  const prevText=hdrInfo?hdrInfo.textContent:'';
+  if(hdrInfo) hdrInfo.textContent='Actualisation en cours...';
+
+  try{
+    await fetchJourData();
+    await fetchChallengeHist();
+    computeTotals();
+    updateDates();
+    render();
+    LAST_ERROR=null;
+  }catch(e){
+    LAST_ERROR=e.message;
+    if(hdrInfo) hdrInfo.textContent=prevText;
+    render();
+  }finally{
+    IS_REFRESHING=false;
+    if(btn){btn.style.color='#94A3B8';btn.style.borderColor='rgba(255,255,255,.2)';}
+    if(icon) icon.style.animation='none';
+  }
+}
+
+// Refresh silencieux (sans animation lourde)
+async function silentRefresh(){
+  if(IS_REFRESHING) return;
+  IS_REFRESHING=true;
+  try{
+    await fetchJourData();
+    await fetchChallengeHist();
+    computeTotals();
+    updateDates();
+    render();
+    LAST_ERROR=null;
+  }catch(e){
+    console.warn("Refresh échoué:",e.message);
+  }finally{
+    IS_REFRESHING=false;
+  }
+}
+
 function renderSynthese(el){
   const bSort=[...MAGS].sort((a,b)=>b.marge-a.marge);
-  el.innerHTML=`
+  const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
+
+  // Build boutique rows as array
+  const bouRows=bSort.map((b,i)=>`<tr>
+    <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+    <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
+    <td><strong>${fmt(b.marge)} €</strong></td>
+    <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
+  </tr>`);
+  bouRows.push(`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
+    <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td></tr>`);
+
+  // Build vendeur rows as array
+  const vendRows=vSort.map((v,i)=>{
+    const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
+    return `<tr>
+      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+      <td><strong>${esc(v.nom)}</strong></td>
+      <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
+      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+    </tr>`;
+  });
+
+  el.innerHTML=`${errBanner()}
   <div class="g4" style="margin-bottom:12px">
     <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • ${DATA_DATE||"--/--/----"}</div></div>
     <div class="cd kpi"><h3>MOBILES DU JOUR</h3><div class="val">${T.mob}</div><div class="sub">vendus aujourd'hui</div></div>
@@ -298,50 +452,27 @@ function renderSynthese(el){
   <div class="cd" style="margin-bottom:12px">
     <table>
       <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>BOX</th><th>CYBER</th><th>ASSU</th><th>G3A</th><th>ACCESS</th></tr></thead>
-      <tbody id="tblBou"></tbody>
+      <tbody>${bouRows.join('')}</tbody>
     </table>
   </div>
   <div class="stitle">CLASSEMENT DES VENDEURS — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
-      <tbody id="tblVend"></tbody>
+      <tbody>${vendRows.join('')}</tbody>
     </table>
   </div>`;
 
-  const tbody=document.getElementById('tblBou');
-  bSort.forEach((b,i)=>{
-    tbody.innerHTML+=`<tr>
-      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
-      <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
-      <td><strong>${fmt(b.marge)} €</strong></td>
-      <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
-    </tr>`;
-  });
-  tbody.innerHTML+=`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
-    <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td></tr>`;
-
-  const vtbody=document.getElementById('tblVend');
-  const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
-  vSort.forEach((v,i)=>{
-    const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
-    vtbody.innerHTML+=`<tr>
-      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
-      <td><strong>${esc(v.nom)}</strong></td>
-      <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
-      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
-    </tr>`;
-  });
-
   const labels=MAGS.map(b=>b.nom),colors=MAGS.map(b=>b.color);
-  CHS.push(makeBar('cMarge',labels,MAGS.map(b=>b.marge),colors,'€'));
-
-  CHS.push(new Chart(document.getElementById('cMob'),{
-    type:'bar',data:{labels,datasets:[
+  requestAnimationFrame(()=>{
+    safeChart('cMarge',{type:'bar',data:{labels,datasets:[{data:MAGS.map(b=>b.marge),backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+' €'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
+    });
+    safeChart('cMob',{type:'bar',data:{labels,datasets:[
       {label:'Mob',data:MAGS.map(b=>b.mob),backgroundColor:'#2563EBCC',borderRadius:3},
       {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
-  }));
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}});
+  });
 }
 
 function renderBoutique(el,code){
@@ -350,7 +481,13 @@ function renderBoutique(el,code){
   const vendeurs=[...VENDEURS.filter(v=>v.bou===code)].sort((a,b)=>b.marge-a.marge);
   const txA=mag.mob>0?(mag.assu/mag.mob*100):0,txG=mag.mob>0?(mag.g3a/mag.mob*100):0,txAcc=mag.mob>0?mag.access/mag.mob:0;
 
-  el.innerHTML=`
+  const vRows=vendeurs.map((v,i)=>`<tr>
+    <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+    <td><strong>${esc(v.nom)}</strong></td>
+    <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+  </tr>`);
+
+  el.innerHTML=`${errBanner()}
   <div class="bh">
     <div class="icon" style="background:${mag.color}">${mag.nom.charAt(0)}</div>
     <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du ${DATA_DATE||"--/--/----"}</p></div>
@@ -377,59 +514,51 @@ function renderBoutique(el,code){
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
-      <tbody id="tblBV"></tbody>
+      <tbody>${vRows.join('')}</tbody>
     </table>
   </div>`:'<div class="cd" style="text-align:center;padding:40px;color:var(--sub)">Aucune activité aujourd\'hui</div>'}`;
 
   if(!vendeurs.length)return;
-  const tbody=document.getElementById('tblBV');
-  vendeurs.forEach((v,i)=>{
-    tbody.innerHTML+=`<tr>
-      <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
-      <td><strong>${esc(v.nom)}</strong></td>
-      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
-    </tr>`;
-  });
 
   const vLabels=vendeurs.map(v=>v.nom);
   const palette=['#2563EB','#7C3AED','#0891B2','#DC2626','#059669','#D97706'];
   const vColors=vendeurs.map((_,i)=>palette[i%palette.length]);
 
-  CHS.push(new Chart(document.getElementById('cBMarge'),{
-    type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
-  }));
-
-  CHS.push(new Chart(document.getElementById('cBPerf'),{
-    type:'bar',data:{labels:vLabels,datasets:[
-      {label:'Mob',data:vendeurs.map(v=>v.mob),backgroundColor:'#2563EBCC',borderRadius:3},
-      {label:'Cyber',data:vendeurs.map(v=>v.cyber),backgroundColor:'#7C3AEDCC',borderRadius:3},
-      {label:'Assu',data:vendeurs.map(v=>v.assu),backgroundColor:'#059669CC',borderRadius:3},
-      {label:'G3A',data:vendeurs.map(v=>v.g3a),backgroundColor:'#D97706CC',borderRadius:3}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
-  }));
+  requestAnimationFrame(()=>{
+    safeChart('cBMarge',{
+      type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
+    });
+    safeChart('cBPerf',{
+      type:'bar',data:{labels:vLabels,datasets:[
+        {label:'Mob',data:vendeurs.map(v=>v.mob),backgroundColor:'#2563EBCC',borderRadius:3},
+        {label:'Cyber',data:vendeurs.map(v=>v.cyber),backgroundColor:'#7C3AEDCC',borderRadius:3},
+        {label:'Assu',data:vendeurs.map(v=>v.assu),backgroundColor:'#059669CC',borderRadius:3},
+        {label:'G3A',data:vendeurs.map(v=>v.g3a),backgroundColor:'#D97706CC',borderRadius:3}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
+    });
+  });
 }
 
 function renderVendeurs(el){
   const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
-  el.innerHTML=`
-  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
-  <div class="cd">
-    <table>
-      <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
-      <tbody id="tblV"></tbody>
-    </table>
-  </div>`;
-  const tbody=document.getElementById('tblV');
-  vSort.forEach((v,i)=>{
+  const rows=vSort.map((v,i)=>{
     const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
-    tbody.innerHTML+=`<tr>
+    return `<tr>
       <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
       <td><strong>${esc(v.nom)}</strong></td>
       <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
       <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
     </tr>`;
   });
+  el.innerHTML=`${errBanner()}
+  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
+  <div class="cd">
+    <table>
+      <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  </div>`;
 }
 
 // ═══════════════════════════════════════
@@ -664,21 +793,6 @@ function renderChallenges(el){
 }
 
 // ═══════════════════════════════════════
-//  CHART HELPER
-// ═══════════════════════════════════════
-function makeBar(id,labels,data,colors,suffix){
-  return new Chart(document.getElementById(id),{
-    type:'bar',
-    data:{labels,datasets:[{data,backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
-    options:{
-      responsive:true,maintainAspectRatio:false,indexAxis:'y',
-      plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+(suffix?' '+suffix:'')}},
-      scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}
-    }
-  });
-}
-
-// ═══════════════════════════════════════
 //  INIT — Charge les données puis rend le dashboard
 // ═══════════════════════════════════════
 const JOURS_FR=["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
@@ -692,49 +806,88 @@ function updateDates(){
   const parts=dateStr.split('/');
   const jour=parseInt(parts[0]);const mois=parseInt(parts[1])-1;const annee=parts[2]||now.getFullYear();
   const moisNom=MOIS_FR[mois]||"";
-  // Splash
   const splashSub=document.querySelector('.sp-logo-sub');
   if(splashSub) splashSub.textContent=`Dashboard Jour — ${jour} ${moisNom} ${annee}`;
-  // Splash KPIs
   const spKpis=document.querySelector('.sp-kpis');
   if(spKpis) spKpis.innerHTML=`
     <div class="sp-kpi"><div class="sp-kpi-val">6</div><div class="sp-kpi-label">Boutiques</div></div>
     <div class="sp-kpi"><div class="sp-kpi-val">${fmt(T.marge)} €</div><div class="sp-kpi-label">Marge Jour</div></div>
     <div class="sp-kpi"><div class="sp-kpi-val">${T.mob}</div><div class="sp-kpi-label">Mobiles</div></div>`;
-  // Header
   const hdrInfo=document.querySelector('.hdr-info');
   if(hdrInfo) hdrInfo.textContent=`${jourSemaine} ${jour} ${moisNom} ${annee} — Données 3GWIN temps réel (màj ${heureStr})`;
-  // Footer
   const ftr=document.querySelector('.ftr');
   if(ftr) ftr.textContent=`Données 3GWIN JOUR du ${dateStr} — Scrapé à ${heureStr} — Groupe Garcia © ${annee}`;
 }
 
+function hideSplash(){
+  const splash=document.getElementById('splash');
+  splash.classList.add('hide');
+  document.getElementById('hdr').classList.add('show');
+  document.getElementById('nav').classList.add('show');
+  document.getElementById('mn').classList.add('show');
+  setTimeout(()=>{splash.style.display='none'},700);
+}
+
 async function init(){
+  const t0=Date.now();
+
+  // Phase 1 : fetch données jour
+  splashProgress(20,'Chargement des données boutiques...');
   try {
     await fetchJourData();
+    LAST_ERROR=null;
+    splashProgress(60,'Données boutiques OK');
   } catch(e) {
-    console.warn("Erreur chargement Google Sheets:",e.message,"— Données vides par défaut");
-    // En cas d'erreur, on garde les tableaux vides mais on continue
-    if(MAGS.length===0){
-      Object.keys(BOUTIQUES).forEach(code=>{
-        MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0});
-      });
-    }
+    console.warn("Erreur Google Sheets:",e.message);
+    LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
+    if(MAGS.length===0) initEmptyMags();
+    splashProgress(60,'Données indisponibles — mode hors ligne');
   }
+
+  // Phase 2 : fetch challenges (en parallèle du rendu si possible)
+  splashProgress(70,'Chargement des challenges...');
+  try {
+    await fetchChallengeHist();
+    splashProgress(90,'Challenges OK');
+  } catch(e) {
+    console.warn("Erreur historique challenges:",e.message);
+    splashProgress(90,'Challenges indisponibles');
+  }
+
+  // Phase 3 : calcul + rendu
+  splashProgress(95,'Rendu du dashboard...');
   computeTotals();
   updateDates();
   buildNav();
   render();
-  setTimeout(()=>{
-    document.getElementById('splash').classList.add('hide');
-    document.getElementById('hdr').classList.add('show');
-    document.getElementById('nav').classList.add('show');
-    document.getElementById('mn').classList.add('show');
-  },1500);
-  // Auto-refresh toutes les 5 minutes
-  setInterval(async()=>{
-    try{await fetchJourData();computeTotals();updateDates();render();}catch(e){console.warn("Auto-refresh échoué:",e.message);}
-  },300000);
+  splashProgress(100,'Prêt !');
+
+  // Splash minimum 1.2s pour l'animation, puis transition fluide
+  const elapsed=Date.now()-t0;
+  const minSplash=1200;
+  setTimeout(hideSplash, Math.max(0,minSplash-elapsed));
+
+  // ── REFRESH INTELLIGENT ──
+  // 1. Quand l'utilisateur revient sur l'onglet (visibility API)
+  let LAST_REFRESH=Date.now();
+  const MIN_REFRESH_GAP=30000; // 30s minimum entre 2 refreshs
+
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible' && Date.now()-LAST_REFRESH>MIN_REFRESH_GAP){
+      LAST_REFRESH=Date.now();
+      silentRefresh();
+    }
+  });
+
+  // 2. Quand la fenêtre reprend le focus (alt-tab, clic depuis barre des tâches)
+  window.addEventListener('focus',()=>{
+    if(Date.now()-LAST_REFRESH>MIN_REFRESH_GAP){
+      LAST_REFRESH=Date.now();
+      silentRefresh();
+    }
+  });
+
+  // 3. Pas de timer fixe — les données sont fraîches à chaque consultation
 }
 init();
 </script>
