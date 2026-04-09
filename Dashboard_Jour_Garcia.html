@@ -59,6 +59,33 @@ tbody tr:last-child td{border-bottom:none}
 .hdr,.nav,.mn{opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
 .hdr.show,.nav.show,.mn.show{opacity:1;transform:translateY(0)}
 .ftr{text-align:center;font-size:11px;color:var(--sub);margin-top:20px;padding:12px;border-top:1px solid var(--brd)}
+/* Challenge cards */
+.ch-card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.ch-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.ch-card .ch-accent{position:absolute;top:0;left:0;right:0;height:3px}
+.ch-card .ch-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ch-card .ch-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.ch-card .ch-title{font-size:13px;font-weight:800;letter-spacing:.3px}
+.ch-card .ch-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px}
+.ch-badge.won{background:#ECFDF5;color:var(--green)}.ch-badge.lost{background:#FEF2F2;color:var(--red)}.ch-badge.pending{background:#EFF6FF;color:var(--blue)}
+.ch-card .ch-desc{font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:14px}
+.ch-card .ch-target{display:flex;align-items:baseline;gap:6px;margin-bottom:6px}
+.ch-card .ch-target .cur{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.ch-card .ch-target .sep{font-size:12px;color:var(--sub);font-weight:500}
+.ch-card .ch-target .obj{font-size:14px;font-weight:700;color:var(--sub)}
+.ch-bar-wrap{height:8px;background:#F1F5F9;border-radius:4px;overflow:hidden;margin-bottom:4px}
+.ch-bar{height:100%;border-radius:4px;transition:width .6s ease}
+.ch-card .ch-pct{font-size:10px;font-weight:700;text-align:right}
+.ch-card .ch-rules{margin-top:14px;padding-top:12px;border-top:1px solid #F1F5F9}
+.ch-card .ch-rules p{font-size:10px;color:var(--sub);line-height:1.6}
+.ch-card .ch-period{font-size:10px;color:var(--mut);margin-top:8px;display:flex;align-items:center;gap:4px}
+.ch-reward{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--green);background:#ECFDF5;padding:3px 10px;border-radius:8px;margin-bottom:10px}
+.ch-participants{margin-top:12px}
+.ch-participant{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F1F5F9}
+.ch-participant:last-child{border-bottom:none}
+.ch-participant .name{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.ch-participant .result{font-size:12px;font-weight:700}
+
 @media print{.hdr,.nav{position:static}.mn{padding:8px}#splash{display:none}}
 </style>
 </head>
@@ -67,33 +94,33 @@ tbody tr:last-child td{border-bottom:none}
 <div id="splash">
   <div class="sp-logo">
     <div class="sp-logo-text">GROUPE GARCIA</div>
-    <div class="sp-logo-sub">Dashboard Jour — 7 Avril 2026</div>
+    <div class="sp-logo-sub">Dashboard Jour — 9 Avril 2026</div>
   </div>
   <div class="sp-line"></div>
   <div class="sp-kpis">
     <div class="sp-kpi"><div class="sp-kpi-val">6</div><div class="sp-kpi-label">Boutiques</div></div>
-    <div class="sp-kpi"><div class="sp-kpi-val">4 146 €</div><div class="sp-kpi-label">Marge Jour</div></div>
-    <div class="sp-kpi"><div class="sp-kpi-val">18</div><div class="sp-kpi-label">Mobiles</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">0 €</div><div class="sp-kpi-label">Marge Jour</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">0</div><div class="sp-kpi-label">Mobiles</div></div>
   </div>
 </div>
 
 <div class="hdr" id="hdr">
   <div class="hdr-left">
     <div class="logo">GROUPE GARCIA <span>Dashboard Jour</span></div>
-    <div class="hdr-info">Mardi 7 Avril 2026 — Données 3GWIN + DILAX + Goodays (màj 18:18)</div>
+    <div class="hdr-info">Mercredi 9 Avril 2026 — Données 3GWIN temps réel (màj 06:16)</div>
   </div>
 </div>
 
 <div class="nav" id="nav"></div>
 <div class="mn" id="mn"></div>
-<div class="ftr">Données 3GWIN + DILAX + Goodays — 08/04/2026 — Scrapé à 18:18 — Groupe Garcia © 2026</div>
+<div class="ftr">Données 3GWIN JOUR du 09/04/2026 — Scrapé à 06:16 — Groupe Garcia © 2026</div>
 
 <script>
 Chart.register(ChartDataLabels);
 
 // ═══════════════════════════════════════
-//  DONNÉES JOUR — 07/04/2026
-//  Scrapées le 07/04/2026 à 18:18
+//  DONNÉES JOUR — 09/04/2026
+//  Scrapées le 09/04/2026 à 06:16
 // ═══════════════════════════════════════
 
 const BOUTIQUES = {
@@ -106,34 +133,40 @@ const BOUTIQUES = {
 };
 
 const MAGS = [
-  {code:"VLR",nom:"Vendôme",color:"#D97706",marge:901.36,mob:4,box:1,assu:2,cyber:0,g3a:4,access:220.02,abo:0},
-  {code:"ALR",nom:"Angers",color:"#2563EB",marge:221.81,mob:1,box:1,assu:0,cyber:0,g3a:1,access:94.31,abo:0},
-  {code:"TLR",nom:"Amboise",color:"#7C3AED",marge:433.8,mob:2,box:0,assu:1,cyber:2,g3a:2,access:127.3,abo:0},
-  {code:"CLR",nom:"Châteaudun",color:"#0891B2",marge:895.49,mob:3,box:2,assu:3,cyber:5,g3a:3,access:180.99,abo:0},
-  {code:"RLR",nom:"Romorantin",color:"#059669",marge:882.53,mob:4,box:1,assu:3,cyber:2,g3a:2,access:146.69,abo:0},
-  {code:"CHOLET",nom:"Cholet",color:"#DC2626",marge:810.99,mob:4,box:0,assu:1,cyber:5,g3a:3,access:244.99,abo:0},
+  {code:"ALR",nom:"Angers",color:"#2563EB",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
+  {code:"TLR",nom:"Amboise",color:"#7C3AED",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
+  {code:"CLR",nom:"Châteaudun",color:"#0891B2",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
+  {code:"CHOLET",nom:"Cholet",color:"#DC2626",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
+  {code:"RLR",nom:"Romorantin",color:"#059669",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
+  {code:"VLR",nom:"Vendôme",color:"#D97706",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
 ];
 
 const VENDEURS = [
-  {nom:"AXEL",bou:"ALR",marge:51.5,mob:0,g3a:0,cyber:0,assu:0,access:0.0,box:1},
-  {nom:"PAULINE",bou:"ALR",marge:170.31,mob:1,g3a:1,cyber:0,assu:0,access:94.31,box:0},
-  {nom:"ANAIS",bou:"CHOLET",marge:371.06,mob:2,g3a:1,cyber:2,assu:0,access:78.56,box:0},
-  {nom:"LUCAS",bou:"CHOLET",marge:439.93,mob:2,g3a:2,cyber:3,assu:1,access:166.43,box:0},
-  {nom:"ILIAN",bou:"CLR",marge:449.76,mob:1,g3a:1,cyber:2,assu:1,access:71.26,box:2},
-  {nom:"LOUANE",bou:"CLR",marge:231.75,mob:1,g3a:1,cyber:1,assu:1,access:75.75,box:0},
-  {nom:"RACHEL",bou:"CLR",marge:213.98,mob:1,g3a:1,cyber:2,assu:1,access:33.98,box:0},
-  {nom:"EMILIE",bou:"RLR",marge:442.91,mob:2,g3a:2,cyber:1,assu:2,access:121.41,box:0},
-  {nom:"WILL",bou:"RLR",marge:439.62,mob:2,g3a:0,cyber:1,assu:1,access:25.28,box:1},
-  {nom:"HASSENE",bou:"TLR",marge:408.8,mob:2,g3a:2,cyber:1,assu:1,access:127.3,box:0},
-  {nom:"JULIE TLR",bou:"TLR",marge:25.0,mob:0,g3a:0,cyber:1,assu:0,access:0.0,box:0},
-  {nom:"HAVAL",bou:"VLR",marge:244.18,mob:1,g3a:1,cyber:0,assu:1,access:74.51,box:0},
-  {nom:"MEHDY",bou:"VLR",marge:657.18,mob:3,g3a:3,cyber:0,assu:1,access:145.51,box:1},
+  {nom:"AXEL",bou:"ALR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"PAULINE",bou:"ALR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"HASSENE",bou:"TLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"VICTOR",bou:"TLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"JULIE TLR",bou:"TLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"ILIAN",bou:"CLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"LOUANE",bou:"CLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"RACHEL",bou:"CLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"ANAIS",bou:"CHOLET",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"LUCAS",bou:"CHOLET",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"EMILIE",bou:"RLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"WILL",bou:"RLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"MEHDY",bou:"VLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
+  {nom:"HAVAL",bou:"VLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
 ];
 
-const DILAX=[{code:"TLR",nom:"Amboise",visiteurs:180,margeDilax:2758.12,pm:15.32},{code:"CLR",nom:"Châteaudun",visiteurs:175,margeDilax:1798.54,pm:10.28},{code:"RLR",nom:"Romorantin",visiteurs:220,margeDilax:1977.61,pm:8.99},{code:"VLR",nom:"Vendôme",visiteurs:221,margeDilax:1902.66,pm:8.61},{code:"ALR",nom:"Angers",visiteurs:115,margeDilax:1063.98,pm:9.25},{code:"CHOLET",nom:"Cholet",visiteurs:393,margeDilax:4057.47,pm:10.32}];
-const DILAX_TOTAL={visiteurs:1304,marge:13558.38,pm:10.40};
-const GOODAYS=[{code:"CHOLET",nom:"Cholet",note:4.77,participations:44,avisGoogle:31},{code:"ALR",nom:"Angers",note:4.67,participations:21,avisGoogle:31},{code:"CLR",nom:"Châteaudun",note:4.42,participations:33,avisGoogle:39},{code:"RLR",nom:"Romorantin",note:4.25,participations:28,avisGoogle:29},{code:"VLR",nom:"Vendôme",note:4.14,participations:21,avisGoogle:30},{code:"TLR",nom:"Amboise",note:4.05,participations:19,avisGoogle:28}];
-const GOODAYS_TOTAL={note:4.38,avisGoogle:188};
+// ═══════════════════════════════════════
+//  HISTORIQUE CHALLENGES (09/04 → 30/04/2026)
+//  Chaque entrée = résultat d'une journée
+//  MAJ : ajouter une ligne par jour scrapé
+// ═══════════════════════════════════════
+const CHALLENGE_HIST = [
+  // { date:"09/04", top3:["NOM1","NOM2","NOM3"], top3_gagnes:["NOM1"], amboise_marge:XXX, amboise_won:true/false, louane_marge:XXX, louane_won:true/false, groupe_marge:XXXX, groupe_won:true/false }
+  // Entrées ajoutées en fin de journée lors de chaque MAJ
+];
 
 // ═══════════════════════════════════════
 //  COMPUTED
@@ -160,6 +193,7 @@ function buildNav(){
   const tabs=[{id:'synthese',label:'Synthèse'}];
   BOU_ORDER.forEach(c=>{if(BOUTIQUES[c])tabs.push({id:c.toLowerCase(),label:BOUTIQUES[c].nom})});
   tabs.push({id:'vendeurs',label:'Collaborateurs'});
+  tabs.push({id:'challenges',label:'Challenges'});
   nav.innerHTML=tabs.map(t=>`<button${t.id===CT?' class="active"':''} onclick="showTab('${t.id}')">${t.label}</button>`).join('');
 }
 
@@ -167,7 +201,7 @@ function showTab(id){
   CT=id;
   document.querySelectorAll('.nav button').forEach(b=>{
     const label=b.textContent;
-    const match=(id==='synthese'&&label==='Synthèse')||(id==='vendeurs'&&label==='Collaborateurs')||(BOUTIQUES[id.toUpperCase()]&&BOUTIQUES[id.toUpperCase()].nom===label);
+    const match=(id==='synthese'&&label==='Synthèse')||(id==='vendeurs'&&label==='Collaborateurs')||(id==='challenges'&&label==='Challenges')||(BOUTIQUES[id.toUpperCase()]&&BOUTIQUES[id.toUpperCase()].nom===label);
     b.classList.toggle('active',match);
   });
   render();
@@ -181,6 +215,7 @@ function render(){
   const mn=document.getElementById('mn');
   if(CT==='synthese')renderSynthese(mn);
   else if(CT==='vendeurs')renderVendeurs(mn);
+  else if(CT==='challenges')renderChallenges(mn);
   else renderBoutique(mn,CT.toUpperCase());
 }
 
@@ -188,7 +223,7 @@ function renderSynthese(el){
   const bSort=[...MAGS].sort((a,b)=>b.marge-a.marge);
   el.innerHTML=`
   <div class="g4" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • 07/04/2026</div></div>
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • 09/04/2026</div></div>
     <div class="cd kpi"><h3>MOBILES DU JOUR</h3><div class="val">${T.mob}</div><div class="sub">vendus aujourd'hui</div></div>
     <div class="cd kpi"><h3>BOX DU JOUR</h3><div class="val">${T.box}</div><div class="sub">raccordements</div></div>
     <div class="cd kpi"><h3>SFR CYBER</h3><div class="val">${T.cyber}</div><div class="sub">sécurité</div></div>
@@ -205,34 +240,14 @@ function renderSynthese(el){
     <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
     <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
   </div>
-  <div class="stitle">FLUX VISITEURS — DILAX (1er - 8 Avril 2026)</div>
-  <div class="g3" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>VISITEURS</h3><div class="val">${fmt(DILAX_TOTAL.visiteurs)}</div><div class="sub">6 boutiques • 1-8 avril</div></div>
-    <div class="cd kpi"><h3>MARGE CUMULÉE</h3><div class="val">${fmt(DILAX_TOTAL.marge)} €</div><div class="sub">depuis le 1er avril</div></div>
-    <div class="cd kpi"><h3>PANIER MOYEN</h3><div class="val">${fmtD(DILAX_TOTAL.pm,2)} €</div><div class="sub">marge / visiteur</div></div>
-  </div>
-  <div class="g2" style="margin-bottom:12px">
-    <div class="cd"><h3>VISITEURS PAR BOUTIQUE</h3><canvas id="cDilaxVis"></canvas></div>
-    <div class="cd"><h3>PANIER MOYEN PAR BOUTIQUE</h3><canvas id="cDilaxPM"></canvas></div>
-  </div>
-  <div class="stitle">SATISFACTION CLIENT — GOODAYS (30 derniers jours)</div>
-  <div class="g3" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>NOTE MOYENNE</h3><div class="val">${fmtD(GOODAYS_TOTAL.note,2)}<span style="font-size:14px;color:var(--sub)"> /5</span></div><div class="sub">6 boutiques</div></div>
-    <div class="cd kpi"><h3>AVIS GOOGLE</h3><div class="val">${GOODAYS_TOTAL.avisGoogle}</div><div class="sub">total 30 jours</div></div>
-    <div class="cd kpi"><h3>PARTICIPATIONS</h3><div class="val">${GOODAYS.reduce((a,g)=>a+g.participations,0)}</div><div class="sub">questionnaires</div></div>
-  </div>
-  <div class="g2" style="margin-bottom:12px">
-    <div class="cd"><h3>NOTE PAR BOUTIQUE</h3><canvas id="cGoodaysNote"></canvas></div>
-    <div class="cd"><h3>AVIS GOOGLE PAR BOUTIQUE</h3><canvas id="cGoodaysAvis"></canvas></div>
-  </div>
-  <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU 07/04</div>
+  <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU 09/04</div>
   <div class="cd" style="margin-bottom:12px">
     <table>
       <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>BOX</th><th>CYBER</th><th>ASSU</th><th>G3A</th><th>ACCESS</th></tr></thead>
       <tbody id="tblBou"></tbody>
     </table>
   </div>
-  <div class="stitle">CLASSEMENT DES VENDEURS — JOURNÉE DU 07/04</div>
+  <div class="stitle">CLASSEMENT DES VENDEURS — JOURNÉE DU 09/04</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
@@ -240,7 +255,6 @@ function renderSynthese(el){
     </table>
   </div>`;
 
-  // Table boutiques
   const tbody=document.getElementById('tblBou');
   bSort.forEach((b,i)=>{
     tbody.innerHTML+=`<tr>
@@ -253,7 +267,6 @@ function renderSynthese(el){
   tbody.innerHTML+=`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
     <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td></tr>`;
 
-  // Table vendeurs
   const vtbody=document.getElementById('tblVend');
   const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
   vSort.forEach((v,i)=>{
@@ -266,7 +279,6 @@ function renderSynthese(el){
     </tr>`;
   });
 
-  // Charts
   const labels=MAGS.map(b=>b.nom),colors=MAGS.map(b=>b.color);
   CHS.push(makeBar('cMarge',labels,MAGS.map(b=>b.marge),colors,'€'));
 
@@ -276,14 +288,6 @@ function renderSynthese(el){
       {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
     ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
   }));
-  // DILAX Charts
-  const dilaxLabels=DILAX.map(d=>d.nom),dilaxColors=DILAX.map(d=>(BOUTIQUES[d.code]||{color:"#999"}).color);
-  CHS.push(makeBar("cDilaxVis",dilaxLabels,DILAX.map(d=>d.visiteurs),dilaxColors,""));
-  CHS.push(makeBar("cDilaxPM",dilaxLabels,DILAX.map(d=>d.pm),dilaxColors,"€"));
-  // GOODAYS Charts
-  const goodaysLabels=GOODAYS.map(g=>g.nom),goodaysColors=GOODAYS.map(g=>(BOUTIQUES[g.code]||{color:"#999"}).color);
-  CHS.push(new Chart(document.getElementById("cGoodaysNote"),{type:"bar",data:{labels:goodaysLabels,datasets:[{data:GOODAYS.map(g=>g.note),backgroundColor:goodaysColors.map(c=>c+"CC"),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{anchor:"end",align:"end",font:{weight:700,size:11,family:"Plus Jakarta Sans"},color:"#0F1419",formatter:v=>fmtD(v,2)+"/5"}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{min:3,max:5,grid:{color:"#F1F5F9"}}}}}));
-  CHS.push(new Chart(document.getElementById("cGoodaysAvis"),{type:"bar",data:{labels:goodaysLabels,datasets:[{label:"Avis Google",data:GOODAYS.map(g=>g.avisGoogle),backgroundColor:"#2563EBCC",borderRadius:3},{label:"Participations",data:GOODAYS.map(g=>g.participations),backgroundColor:"#7C3AEDCC",borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{usePointStyle:true,padding:8,font:{size:10,family:"Plus Jakarta Sans"}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:"#F1F5F9"}}}}}));
 }
 
 function renderBoutique(el,code){
@@ -295,7 +299,7 @@ function renderBoutique(el,code){
   el.innerHTML=`
   <div class="bh">
     <div class="icon" style="background:${mag.color}">${mag.nom.charAt(0)}</div>
-    <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du 07/04/2026</p></div>
+    <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du 09/04/2026</p></div>
   </div>
   <div class="g4" style="margin-bottom:12px">
     <div class="cd kpi"><h3>MARGE JOUR</h3><div class="val">${fmt(mag.marge)} €</div></div>
@@ -315,11 +319,7 @@ function renderBoutique(el,code){
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
     <div class="cd"><h3>ITEMS PAR VENDEUR</h3><canvas id="cBPerf"></canvas></div>
   </div>
-  <div class="stitle" style="margin-top:16px">FLUX VISITEURS — DILAX</div>
-    <div class="cd" style="margin-bottom:12px">${(()=>{const d=DILAX.find(x=>x.code===code);return d?'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px"><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">VISITEURS</h3><div style="font-size:24px;font-weight:800">'+fmt(d.visiteurs)+'</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">MARGE</h3><div style="font-size:24px;font-weight:800">'+fmt(d.margeDilax)+' €</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">PM</h3><div style="font-size:24px;font-weight:800">'+fmtD(d.pm,2)+' €</div></div></div>':'<div style="text-align:center;padding:16px;color:var(--sub)">Aucune donnée</div>'})()}</div>
-    <div class="stitle">SATISFACTION — GOODAYS</div>
-    <div class="cd" style="margin-bottom:12px">${(()=>{const g=GOODAYS.find(x=>x.code===code);return g?'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px"><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">NOTE</h3><div style="font-size:24px;font-weight:800">'+fmtD(g.note,2)+'/5</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">PARTICIPATIONS</h3><div style="font-size:24px;font-weight:800">'+g.participations+'</div></div><div><h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:700;margin-bottom:4px">AVIS GOOGLE</h3><div style="font-size:24px;font-weight:800">'+g.avisGoogle+'</div></div></div>':'<div style="text-align:center;padding:16px;color:var(--sub)">Aucune donnée</div>'})()}</div>
-    <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
+  <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
@@ -359,7 +359,7 @@ function renderBoutique(el,code){
 function renderVendeurs(el){
   const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
   el.innerHTML=`
-  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU 07/04</div>
+  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU 09/04</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
@@ -376,6 +376,238 @@ function renderVendeurs(el){
       <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
     </tr>`;
   });
+}
+
+// ═══════════════════════════════════════
+//  CHALLENGES
+// ═══════════════════════════════════════
+function renderChallenges(el){
+  // ── Exclusions : managers et CDV ne jouent PAS le challenge vendeur ──
+  const EXCLUS_VENDEUR=["HASSENE","LOUANE","ROMAIN GP"];
+  const vSort=[...VENDEURS].filter(v=>!EXCLUS_VENDEUR.includes(v.nom)).sort((a,b)=>b.marge-a.marge);
+  const top3=vSort.slice(0,3);
+  const margeGroupe=T.marge;
+  const margeTLR=(MAGS.find(m=>m.code==='TLR')||{marge:0}).marge;
+  const louane=VENDEURS.find(v=>v.nom==='LOUANE')||{marge:0};
+  const margeLouane=louane.marge||0;
+
+  const ch2aWon=margeTLR>=700;
+  const ch2aPct=Math.min(100,margeTLR/700*100);
+  const ch2bWon=margeLouane>=1000;
+  const ch2bPct=Math.min(100,margeLouane/1000*100);
+  const ch3Won=margeGroupe>=4000;
+  const ch3Pct=Math.min(100,margeGroupe/4000*100);
+
+  // ── Cumuls depuis CHALLENGE_HIST ──
+  const vendeurWins={};
+  let amboiseWins=0, louaneWins=0, romainWins=0;
+  CHALLENGE_HIST.forEach(d=>{
+    (d.top3_gagnes||[]).forEach(nom=>{vendeurWins[nom]=(vendeurWins[nom]||0)+1});
+    if(d.amboise_won) amboiseWins++;
+    if(d.louane_won) louaneWins++;
+    if(d.groupe_won) romainWins++;
+  });
+  const nbJours=CHALLENGE_HIST.length;
+  const totalPrimeVendeurs=Object.values(vendeurWins).reduce((a,b)=>a+b,0)*20;
+  const totalPrimeAmboise=amboiseWins*20;
+  const totalPrimeLouane=louaneWins*20;
+  const totalPrimeRomain=romainWins*20;
+  const totalPrimeGlobal=totalPrimeVendeurs+totalPrimeAmboise+totalPrimeLouane+totalPrimeRomain;
+
+  // Tri vendeurs par gains décroissants
+  const vendeurCumulArr=Object.entries(vendeurWins).sort((a,b)=>b[1]-a[1]);
+
+  el.innerHTML=`
+  <div class="stitle">CHALLENGES EN COURS — DU 09/04 AU 30/04/2026</div>
+
+  <div class="g4" style="margin-bottom:16px">
+    <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le 08/04</div></div>
+    <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 4 000 €</div></div>
+    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val">20 €</div><div class="sub">par challenge gagné</div></div>
+  </div>
+
+  <!-- ══════ CUMUL DES PRIMES À DATE ══════ -->
+  <div class="stitle">CUMUL DES PRIMES À DATE</div>
+  <div class="cd" style="margin-bottom:16px">
+    <table>
+      <thead><tr><th>COLLABORATEUR / CHALLENGE</th><th>TYPE</th><th>JOURS GAGNÉS</th><th>PRIME CUMULÉE</th></tr></thead>
+      <tbody>
+        ${vendeurCumulArr.map((e,i)=>{
+          const v=VENDEURS.find(v=>v.nom===e[0]);
+          const bInfo=v?BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'}:{nom:'',color:'#999'};
+          return `<tr>
+            <td><span class="rk ${rkCls(i)}">${i+1}</span> <strong>${esc(e[0])}</strong> <span class="dot" style="background:${bInfo.color}"></span><span style="font-size:10px;color:var(--sub)">${bInfo.nom}</span></td>
+            <td>Vendeur</td>
+            <td><strong>${e[1]}</strong> / ${nbJours} jours</td>
+            <td><strong style="color:var(--green)">${fmt(e[1]*20)} €</strong></td>
+          </tr>`;
+        }).join('')}
+        <tr>
+          <td><strong>Hassene — Manager Amboise</strong> <span class="dot" style="background:#7C3AED"></span><span style="font-size:10px;color:var(--sub)">TLR</span></td>
+          <td>Manager</td>
+          <td><strong>${amboiseWins}</strong> / ${nbJours} jours</td>
+          <td><strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Louane — Manageuse Cholet</strong> <span class="dot" style="background:#DC2626"></span><span style="font-size:10px;color:var(--sub)">Cholet</span></td>
+          <td>Manageuse</td>
+          <td><strong>${louaneWins}</strong> / ${nbJours} jours</td>
+          <td><strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Romain</strong></td>
+          <td>Chef des Ventes</td>
+          <td><strong>${romainWins}</strong> / ${nbJours} jours</td>
+          <td><strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></td>
+        </tr>
+        <tr style="font-weight:700;background:#F8FAFC">
+          <td colspan="2">TOTAL PRIMES VERSÉES</td>
+          <td></td>
+          <td style="color:var(--green);font-size:14px">${fmt(totalPrimeGlobal)} €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════ HISTORIQUE JOUR PAR JOUR ══════ -->
+  <div class="stitle">HISTORIQUE JOUR PAR JOUR</div>
+  <div class="cd" style="margin-bottom:16px;overflow-x:auto">
+    <table>
+      <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>HASSENE (AMBOISE)</th><th>LOUANE (CHOLET)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
+      <tbody>
+        ${[...CHALLENGE_HIST].reverse().map(d=>{
+          const primeJour=((d.top3_gagnes||[]).length*20)+(d.amboise_won?20:0)+(d.louane_won?20:0)+(d.groupe_won?20:0);
+          return `<tr>
+            <td><strong>${d.date}</strong></td>
+            <td>${(d.top3||[]).map(n=>{
+              const won=(d.top3_gagnes||[]).includes(n);
+              return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:1px 2px;${won?'background:#ECFDF5;color:var(--green)':'background:#FEF2F2;color:var(--red)'}">${esc(n)} ${won?'✓':'✗'}</span>`;
+            }).join('')}</td>
+            <td><span class="ch-badge ${d.amboise_won?'won':'lost'}">${d.amboise_won?fmt(d.amboise_marge)+' € ✓':'✗ '+fmt(d.amboise_marge)+' €'}</span></td>
+            <td><span class="ch-badge ${d.louane_won?'won':'lost'}">${d.louane_won?fmt(d.louane_marge)+' € ✓':'✗ '+fmt(d.louane_marge)+' €'}</span></td>
+            <td><span class="ch-badge ${d.groupe_won?'won':'lost'}">${d.groupe_won?fmt(d.groupe_marge)+' € ✓':'✗ '+fmt(d.groupe_marge)+' €'}</span></td>
+            <td><strong style="color:${primeJour>0?'var(--green)':'var(--sub)'}">${primeJour>0?'+'+fmt(primeJour)+' €':'0 €'}</strong></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════ CHALLENGES DU JOUR ══════ -->
+  <div class="stitle">STATUT DU JOUR — TEMPS RÉEL</div>
+
+  <!-- CHALLENGE 1 : VENDEUR -->
+  <div class="ch-card" style="margin-bottom:16px">
+    <div class="ch-accent" style="background:linear-gradient(90deg,var(--blue),var(--purple))"></div>
+    <div class="ch-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="ch-icon" style="background:linear-gradient(135deg,var(--blue),var(--purple))">V</div>
+        <div>
+          <div class="ch-title">Challenge Vendeur — Top 3 + 400 € min</div>
+          <div class="ch-period">20 € / jour</div>
+        </div>
+      </div>
+    </div>
+    <div class="ch-participants">
+      ${top3.map((v,i)=>{
+        const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
+        const won=v.marge>=400;
+        const cumul=vendeurWins[v.nom]||0;
+        return `<div class="ch-participant">
+          <div class="name"><span class="rk ${rkCls(i)}">${i+1}</span> ${esc(v.nom)} <span class="dot" style="background:${bInfo.color}"></span><span style="font-size:10px;color:var(--sub);font-weight:400">${bInfo.nom}</span></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="result" style="color:${won?'var(--green)':'var(--txt)'}">${fmt(v.marge)} €</div>
+            <span class="ch-badge ${won?'won':'lost'}">${won?'GAGNÉ':'< 400 €'}</span>
+            ${cumul>0?`<span style="font-size:10px;color:var(--green);font-weight:700">cumul: ${cumul*20} €</span>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${vSort.length>3?`<div style="margin-top:8px;font-size:10px;color:var(--mut)">4e : ${esc(vSort[3].nom)} — ${fmt(vSort[3].marge)} € | 5e : ${esc(vSort[4]?.nom||'-')} — ${fmt(vSort[4]?.marge||0)} €</div>`:''}
+  </div>
+
+  <!-- CHALLENGE 2 : MANAGER -->
+  <div class="g2" style="margin-bottom:16px">
+    <div class="ch-card">
+      <div class="ch-accent" style="background:var(--purple)"></div>
+      <div class="ch-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="ch-icon" style="background:var(--purple)">A</div>
+          <div>
+            <div class="ch-title">Hassene — Manager Amboise — 700 €</div>
+            <div class="ch-period">20 € / jour | cumul: <strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></div>
+          </div>
+        </div>
+        <span class="ch-badge ${ch2aWon?'won':'pending'}">${ch2aWon?'GAGNÉ':'En cours'}</span>
+      </div>
+      <div class="ch-target">
+        <div class="cur" style="color:${ch2aWon?'var(--green)':'var(--txt)'}">${fmt(margeTLR)} €</div>
+        <div class="sep">/</div>
+        <div class="obj">700 €</div>
+      </div>
+      <div class="ch-bar-wrap">
+        <div class="ch-bar" style="width:${ch2aPct}%;background:${ch2aWon?'var(--green)':ch2aPct>=70?'var(--orange)':'linear-gradient(90deg,var(--blue),var(--purple))'}"></div>
+      </div>
+      <div class="ch-pct" style="color:${ch2aWon?'var(--green)':'var(--blue)'}">${fmtD(ch2aPct,0)}%</div>
+    </div>
+
+    <div class="ch-card">
+      <div class="ch-accent" style="background:var(--red)"></div>
+      <div class="ch-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="ch-icon" style="background:var(--red)">L</div>
+          <div>
+            <div class="ch-title">Louane — Manageuse Cholet — 1 000 €</div>
+            <div class="ch-period">20 € / jour | cumul: <strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></div>
+          </div>
+        </div>
+        <span class="ch-badge ${ch2bWon?'won':'pending'}">${ch2bWon?'GAGNÉ':'En cours'}</span>
+      </div>
+      <div class="ch-target">
+        <div class="cur" style="color:${ch2bWon?'var(--green)':'var(--txt)'}">${fmt(margeLouane)} €</div>
+        <div class="sep">/</div>
+        <div class="obj">1 000 €</div>
+      </div>
+      <div class="ch-bar-wrap">
+        <div class="ch-bar" style="width:${ch2bPct}%;background:${ch2bWon?'var(--green)':ch2bPct>=70?'var(--orange)':'var(--red)'}"></div>
+      </div>
+      <div class="ch-pct" style="color:${ch2bWon?'var(--green)':'var(--red)'}">${fmtD(ch2bPct,0)}%</div>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 3 : CDV -->
+  <div class="ch-card" style="margin-bottom:16px">
+    <div class="ch-accent" style="background:linear-gradient(90deg,var(--green),var(--cyan))"></div>
+    <div class="ch-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="ch-icon" style="background:linear-gradient(135deg,var(--green),var(--cyan))">R</div>
+        <div>
+          <div class="ch-title">Romain CDV — 4 000 € groupe</div>
+          <div class="ch-period">20 € / jour | cumul: <strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></div>
+        </div>
+      </div>
+      <span class="ch-badge ${ch3Won?'won':'pending'}">${ch3Won?'GAGNÉ':'En cours'}</span>
+    </div>
+    <div class="ch-target">
+      <div class="cur" style="color:${ch3Won?'var(--green)':'var(--txt)'}">${fmt(margeGroupe)} €</div>
+      <div class="sep">/</div>
+      <div class="obj">4 000 €</div>
+    </div>
+    <div class="ch-bar-wrap">
+      <div class="ch-bar" style="width:${ch3Pct}%;background:${ch3Won?'var(--green)':ch3Pct>=70?'var(--orange)':'linear-gradient(90deg,var(--green),var(--cyan))'}"></div>
+    </div>
+    <div class="ch-pct" style="color:${ch3Won?'var(--green)':'var(--cyan)'}">${fmtD(ch3Pct,0)}%</div>
+    <div class="ch-participants" style="margin-top:10px">
+      ${[...MAGS].sort((a,b)=>b.marge-a.marge).map(m=>`
+        <div class="ch-participant">
+          <div class="name"><span class="dot" style="background:${m.color}"></span>${m.nom}</div>
+          <div class="result">${fmt(m.marge)} €</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+  `;
 }
 
 // ═══════════════════════════════════════
