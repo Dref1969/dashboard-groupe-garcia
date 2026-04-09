@@ -11,7 +11,7 @@
 :root{--bg:#F0F2F5;--card:#FFF;--hdr:#0F172A;--txt:#0F1419;--sub:#64748B;--mut:#94A3B8;--brd:#E2E8F0;--blue:#2563EB;--purple:#7C3AED;--green:#059669;--orange:#D97706;--red:#DC2626;--cyan:#0891B2;--r:10px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased}
-.hdr{background:var(--hdr);color:#fff;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
+.hdr{background:var(--hdr);color:#fff;position:sticky;top:0;z-index:h100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
 .hdr-left{display:flex;align-items:center;gap:16px}
 .logo{font-size:16px;font-weight:800;letter-spacing:1px}.logo span{font-weight:400;opacity:.5;font-size:13px;margin-left:8px}
 .hdr-info{font-size:11px;color:#94A3B8}
@@ -442,13 +442,12 @@ function renderChallenges(el){
   const top3=vSort.slice(0,3);
   const margeGroupe=T.marge;
   const margeTLR=(MAGS.find(m=>m.code==='TLR')||{marge:0}).marge;
-  const louane=VENDEURS.find(v=>v.nom==='LOUANE')||{marge:0};
-  const margeLouane=louane.marge||0;
+  const margeCholet=(MAGS.find(m=>m.code==='CHOLET')||{marge:0}).marge;
 
   const ch2aWon=margeTLR>=700;
   const ch2aPct=Math.min(100,margeTLR/700*100);
-  const ch2bWon=margeLouane>=1000;
-  const ch2bPct=Math.min(100,margeLouane/1000*100);
+  const ch2bWon=margeCholet>=1000;
+  const ch2bPct=Math.min(100,margeCholet/1000*100);
   const ch3Won=margeGroupe>=4000;
   const ch3Pct=Math.min(100,margeGroupe/4000*100);
 
@@ -619,7 +618,7 @@ function renderChallenges(el){
         <span class="ch-badge ${ch2bWon?'won':'pending'}">${ch2bWon?'GAGNÉ':'En cours'}</span>
       </div>
       <div class="ch-target">
-        <div class="cur" style="color:${ch2bWon?'var(--green)':'var(--txt)'}">${fmt(margeLouane)} €</div>
+        <div class="cur" style="color:${ch2bWon?'var(--green)':'var(--txt)'}">${fmt(margeCholet)} €</div>
         <div class="sep">/</div>
         <div class="obj">1 000 €</div>
       </div>
