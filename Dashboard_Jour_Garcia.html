@@ -94,7 +94,7 @@ tbody tr:last-child td{border-bottom:none}
 <div id="splash">
   <div class="sp-logo">
     <div class="sp-logo-text">GROUPE GARCIA</div>
-    <div class="sp-logo-sub">Dashboard Jour — 9 Avril 2026</div>
+    <div class="sp-logo-sub">Dashboard Jour</div>
   </div>
   <div class="sp-line"></div>
   <div class="sp-kpis">
@@ -107,21 +107,24 @@ tbody tr:last-child td{border-bottom:none}
 <div class="hdr" id="hdr">
   <div class="hdr-left">
     <div class="logo">GROUPE GARCIA <span>Dashboard Jour</span></div>
-    <div class="hdr-info">Mercredi 9 Avril 2026 — Données 3GWIN temps réel (màj 06:16)</div>
+    <div class="hdr-info">Chargement...</div>
   </div>
 </div>
 
 <div class="nav" id="nav"></div>
 <div class="mn" id="mn"></div>
-<div class="ftr">Données 3GWIN JOUR du 09/04/2026 — Scrapé à 06:16 — Groupe Garcia © 2026</div>
+<div class="ftr">Chargement des données...</div>
 
 <script>
 Chart.register(ChartDataLabels);
 
 // ═══════════════════════════════════════
-//  DONNÉES JOUR — 09/04/2026
-//  Scrapées le 09/04/2026 à 06:16
+//  DONNÉES JOUR — Chargées depuis Google Sheets
+//  Onglet Donnees_Jour du Sheet Principal
 // ═══════════════════════════════════════
+
+const SHEET_ID = "1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY";
+const TAB_NAME = "Donnees_Jour";
 
 const BOUTIQUES = {
   ALR:{nom:"Angers",color:"#2563EB"},
@@ -132,50 +135,101 @@ const BOUTIQUES = {
   VLR:{nom:"Vendôme",color:"#D97706"}
 };
 
-const MAGS = [
-  {code:"ALR",nom:"Angers",color:"#2563EB",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
-  {code:"TLR",nom:"Amboise",color:"#7C3AED",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
-  {code:"CLR",nom:"Châteaudun",color:"#0891B2",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
-  {code:"CHOLET",nom:"Cholet",color:"#DC2626",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
-  {code:"RLR",nom:"Romorantin",color:"#059669",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
-  {code:"VLR",nom:"Vendôme",color:"#D97706",marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0},
-];
-
-const VENDEURS = [
-  {nom:"AXEL",bou:"ALR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"PAULINE",bou:"ALR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"HASSENE",bou:"TLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"VICTOR",bou:"TLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"JULIE TLR",bou:"TLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"ILIAN",bou:"CLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"LOUANE",bou:"CLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"RACHEL",bou:"CLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"ANAIS",bou:"CHOLET",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"LUCAS",bou:"CHOLET",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"EMILIE",bou:"RLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"WILL",bou:"RLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"MEHDY",bou:"VLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-  {nom:"HAVAL",bou:"VLR",marge:0,mob:0,g3a:0,cyber:0,assu:0,access:0,box:0},
-];
+let MAGS = [];
+let VENDEURS = [];
+const CHALLENGE_HIST = [];
+let DATA_DATE = "";
+let DATA_HEURE = "";
 
 // ═══════════════════════════════════════
-//  HISTORIQUE CHALLENGES (09/04 → 30/04/2026)
-//  Chaque entrée = résultat d'une journée
-//  MAJ : ajouter une ligne par jour scrapé
+//  FETCH GOOGLE SHEETS (gviz/tq CSV)
 // ═══════════════════════════════════════
-const CHALLENGE_HIST = [
-  // { date:"09/04", top3:["NOM1","NOM2","NOM3"], top3_gagnes:["NOM1"], amboise_marge:XXX, amboise_won:true/false, louane_marge:XXX, louane_won:true/false, groupe_marge:XXXX, groupe_won:true/false }
-  // Entrées ajoutées en fin de journée lors de chaque MAJ
-];
+function parseCSV(text){
+  const lines=text.split('\n').filter(l=>l.trim());
+  if(lines.length<2) return [];
+  const hdr=lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim());
+  return lines.slice(1).map(line=>{
+    const vals=[];let cur='',inQ=false;
+    for(let i=0;i<line.length;i++){
+      const c=line[i];
+      if(c==='"'){inQ=!inQ}
+      else if(c===','&&!inQ){vals.push(cur.replace(/^"|"$/g,'').trim());cur=''}
+      else{cur+=c}
+    }
+    vals.push(cur.replace(/^"|"$/g,'').trim());
+    const obj={};
+    hdr.forEach((h,i)=>{obj[h]=vals[i]||''});
+    return obj;
+  });
+}
+
+async function fetchJourData(){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(TAB_NAME)}`;
+  const r=await fetch(url);
+  if(!r.ok) throw new Error("Erreur chargement données: "+r.status);
+  const rows=parseCSV(await r.text());
+
+  // Parse META row for date/heure
+  const meta=rows.find(r=>r.Type==="META");
+  if(meta){
+    DATA_DATE=meta.Date||"";
+    DATA_HEURE=meta.Heure||"";
+  }
+
+  // Parse MAG rows
+  MAGS=rows.filter(r=>r.Type==="MAG").map(r=>({
+    code:r.Code||"",
+    nom:r.Nom||"",
+    color:(BOUTIQUES[r.Code]||{}).color||"#888",
+    marge:parseFloat(r.Marge)||0,
+    mob:parseInt(r.Mob)||0,
+    box:parseInt(r.Box)||0,
+    cyber:parseInt(r.Cyber)||0,
+    assu:parseInt(r.Assu)||0,
+    g3a:parseInt(r.G3A)||0,
+    access:parseFloat(r.Access)||0,
+    abo:parseInt(r.Abo)||0
+  }));
+
+  // Si aucun MAG récupéré, mettre des valeurs par défaut
+  if(MAGS.length===0){
+    Object.keys(BOUTIQUES).forEach(code=>{
+      MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0});
+    });
+  }
+
+  // Trier MAGS par marge décroissante
+  MAGS.sort((a,b)=>b.marge-a.marge);
+
+  // Parse VENDEUR rows
+  VENDEURS=rows.filter(r=>r.Type==="VENDEUR").map(r=>({
+    nom:r.Code||"",
+    bou:r.Nom||"",
+    marge:parseFloat(r.Marge)||0,
+    mob:parseInt(r.Mob)||0,
+    box:parseInt(r.Box)||0,
+    cyber:parseInt(r.Cyber)||0,
+    assu:parseInt(r.Assu)||0,
+    g3a:parseInt(r.G3A)||0,
+    access:parseFloat(r.Access)||0,
+    abo:parseInt(r.Abo)||0
+  }));
+
+  // Trier VENDEURS par marge décroissante
+  VENDEURS.sort((a,b)=>b.marge-a.marge);
+}
 
 // ═══════════════════════════════════════
-//  COMPUTED
+//  COMPUTED (recalculé après chargement)
 // ═══════════════════════════════════════
 const T = {marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0};
-MAGS.forEach(b=>{T.marge+=b.marge;T.mob+=b.mob;T.box+=b.box;T.assu+=b.assu;T.cyber+=b.cyber;T.g3a+=b.g3a;T.access+=b.access});
-T.txAssu=T.mob>0?(T.assu/T.mob*100):0;
-T.txG3a=T.mob>0?(T.g3a/T.mob*100):0;
-T.txAccess=T.mob>0?T.access/T.mob:0;
+function computeTotals(){
+  T.marge=0;T.mob=0;T.box=0;T.assu=0;T.cyber=0;T.g3a=0;T.access=0;
+  MAGS.forEach(b=>{T.marge+=b.marge;T.mob+=b.mob;T.box+=b.box;T.assu+=b.assu;T.cyber+=b.cyber;T.g3a+=b.g3a;T.access+=b.access});
+  T.txAssu=T.mob>0?(T.assu/T.mob*100):0;
+  T.txG3a=T.mob>0?(T.g3a/T.mob*100):0;
+  T.txAccess=T.mob>0?T.access/T.mob:0;
+}
 
 const BOU_ORDER=["ALR","TLR","CLR","CHOLET","RLR","VLR"];
 let CT="synthese",CHS=[];
@@ -223,7 +277,7 @@ function renderSynthese(el){
   const bSort=[...MAGS].sort((a,b)=>b.marge-a.marge);
   el.innerHTML=`
   <div class="g4" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • 09/04/2026</div></div>
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • ${DATA_DATE||"--/--/----"}</div></div>
     <div class="cd kpi"><h3>MOBILES DU JOUR</h3><div class="val">${T.mob}</div><div class="sub">vendus aujourd'hui</div></div>
     <div class="cd kpi"><h3>BOX DU JOUR</h3><div class="val">${T.box}</div><div class="sub">raccordements</div></div>
     <div class="cd kpi"><h3>SFR CYBER</h3><div class="val">${T.cyber}</div><div class="sub">sécurité</div></div>
@@ -240,14 +294,14 @@ function renderSynthese(el){
     <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
     <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
   </div>
-  <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU 09/04</div>
+  <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd" style="margin-bottom:12px">
     <table>
       <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>BOX</th><th>CYBER</th><th>ASSU</th><th>G3A</th><th>ACCESS</th></tr></thead>
       <tbody id="tblBou"></tbody>
     </table>
   </div>
-  <div class="stitle">CLASSEMENT DES VENDEURS — JOURNÉE DU 09/04</div>
+  <div class="stitle">CLASSEMENT DES VENDEURS — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
@@ -299,7 +353,7 @@ function renderBoutique(el,code){
   el.innerHTML=`
   <div class="bh">
     <div class="icon" style="background:${mag.color}">${mag.nom.charAt(0)}</div>
-    <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du 09/04/2026</p></div>
+    <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du ${DATA_DATE||"--/--/----"}</p></div>
   </div>
   <div class="g4" style="margin-bottom:12px">
     <div class="cd kpi"><h3>MARGE JOUR</h3><div class="val">${fmt(mag.marge)} €</div></div>
@@ -359,7 +413,7 @@ function renderBoutique(el,code){
 function renderVendeurs(el){
   const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
   el.innerHTML=`
-  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU 09/04</div>
+  <div class="stitle">CLASSEMENT VENDEURS — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd">
     <table>
       <thead><tr><th>#</th><th>VENDEUR</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>G3A</th><th>CYBER</th><th>ASSU</th><th>ACCESS</th><th>BOX</th></tr></thead>
@@ -418,7 +472,7 @@ function renderChallenges(el){
   const vendeurCumulArr=Object.entries(vendeurWins).sort((a,b)=>b[1]-a[1]);
 
   el.innerHTML=`
-  <div class="stitle">CHALLENGES EN COURS — DU 09/04 AU 30/04/2026</div>
+  <div class="stitle">CHALLENGES EN COURS — AVRIL 2026</div>
 
   <div class="g4" style="margin-bottom:16px">
     <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le 08/04</div></div>
@@ -626,16 +680,64 @@ function makeBar(id,labels,data,colors,suffix){
 }
 
 // ═══════════════════════════════════════
-//  INIT
+//  INIT — Charge les données puis rend le dashboard
 // ═══════════════════════════════════════
-buildNav();
-render();
-setTimeout(()=>{
-  document.getElementById('splash').classList.add('hide');
-  document.getElementById('hdr').classList.add('show');
-  document.getElementById('nav').classList.add('show');
-  document.getElementById('mn').classList.add('show');
-},1500);
+const JOURS_FR=["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+const MOIS_FR=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+
+function updateDates(){
+  const now=new Date();
+  const jourSemaine=JOURS_FR[now.getDay()];
+  const dateStr=DATA_DATE||`${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+  const heureStr=DATA_HEURE||`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const parts=dateStr.split('/');
+  const jour=parseInt(parts[0]);const mois=parseInt(parts[1])-1;const annee=parts[2]||now.getFullYear();
+  const moisNom=MOIS_FR[mois]||"";
+  // Splash
+  const splashSub=document.querySelector('.sp-logo-sub');
+  if(splashSub) splashSub.textContent=`Dashboard Jour — ${jour} ${moisNom} ${annee}`;
+  // Splash KPIs
+  const spKpis=document.querySelector('.sp-kpis');
+  if(spKpis) spKpis.innerHTML=`
+    <div class="sp-kpi"><div class="sp-kpi-val">6</div><div class="sp-kpi-label">Boutiques</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">${fmt(T.marge)} €</div><div class="sp-kpi-label">Marge Jour</div></div>
+    <div class="sp-kpi"><div class="sp-kpi-val">${T.mob}</div><div class="sp-kpi-label">Mobiles</div></div>`;
+  // Header
+  const hdrInfo=document.querySelector('.hdr-info');
+  if(hdrInfo) hdrInfo.textContent=`${jourSemaine} ${jour} ${moisNom} ${annee} — Données 3GWIN temps réel (màj ${heureStr})`;
+  // Footer
+  const ftr=document.querySelector('.ftr');
+  if(ftr) ftr.textContent=`Données 3GWIN JOUR du ${dateStr} — Scrapé à ${heureStr} — Groupe Garcia © ${annee}`;
+}
+
+async function init(){
+  try {
+    await fetchJourData();
+  } catch(e) {
+    console.warn("Erreur chargement Google Sheets:",e.message,"— Données vides par défaut");
+    // En cas d'erreur, on garde les tableaux vides mais on continue
+    if(MAGS.length===0){
+      Object.keys(BOUTIQUES).forEach(code=>{
+        MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0});
+      });
+    }
+  }
+  computeTotals();
+  updateDates();
+  buildNav();
+  render();
+  setTimeout(()=>{
+    document.getElementById('splash').classList.add('hide');
+    document.getElementById('hdr').classList.add('show');
+    document.getElementById('nav').classList.add('show');
+    document.getElementById('mn').classList.add('show');
+  },1500);
+  // Auto-refresh toutes les 5 minutes
+  setInterval(async()=>{
+    try{await fetchJourData();computeTotals();updateDates();render();}catch(e){console.warn("Auto-refresh échoué:",e.message);}
+  },300000);
+}
+init();
 </script>
 </body>
 </html>
