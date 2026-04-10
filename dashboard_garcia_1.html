@@ -76,11 +76,39 @@ Chart.register(ChartDataLabels);
 function parseCSV(t){const ls=t.split("\n").filter(l=>l.trim());if(ls.length<2)return[];const pr=l=>{const r=[];let c="",q=0;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"'){if(q&&l[i+1]==='"'){c+='"';i++}else q=!q}else if(ch===','&&!q){r.push(c.trim());c=""}else c+=ch}r.push(c.trim());return r};const h=pr(ls[0]);return ls.slice(1).map(l=>{const v=pr(l),o={};h.forEach((k,i)=>o[k]=v[i]||"");return o})}
 function pNum(s){if(!s)return 0;return parseFloat(s.replace(",","."))||0}
 
+/* ═══ CACHE localStorage ═══ */
+const CACHE_PREFIX='garcia_mgr_';
+const CACHE_TTL=5*60*1000;
+function cacheGet(key){try{const raw=localStorage.getItem(CACHE_PREFIX+key);if(!raw)return null;const{data,ts}=JSON.parse(raw);return{data,ts,fresh:Date.now()-ts<CACHE_TTL}}catch(e){return null}}
+function cacheSet(key,data){try{localStorage.setItem(CACHE_PREFIX+key,JSON.stringify({data,ts:Date.now()}))}catch(e){}}
+
 /* ═══ FETCH GOOGLE SHEET ═══ */
 async function fetchTab(tab){const u=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;const r=await fetch(u);if(!r.ok)throw new Error(r.status);return parseCSV(await r.text())}
 
 async function loadReal(){
-  const[rows,items,cfg]=await Promise.all([fetchTab("Données_Commissions"),fetchTab("Items_Mois"),fetchTab("Config")]);
+  // TOUS les onglets en PARALLÈLE (6 appels simultanés au lieu de 6 séquentiels)
+  const results=await Promise.allSettled([
+    fetchTab("Données_Commissions"), // 0
+    fetchTab("Items_Mois"),          // 1
+    fetchTab("Config"),              // 2
+    fetchTab("Donnees_N1"),          // 3
+    fetchTab("Goodays"),             // 4
+    fetchTab("DILAX")                // 5
+  ]);
+
+  // Extraction des résultats (avec fallback si échec)
+  const rows=results[0].status==='fulfilled'?results[0].value:[];
+  const items=results[1].status==='fulfilled'?results[1].value:[];
+  const cfg=results[2].status==='fulfilled'?results[2].value:[];
+  const n1r=results[3].status==='fulfilled'?results[3].value:null;
+  const gr=results[4].status==='fulfilled'?results[4].value:null;
+  const dr=results[5].status==='fulfilled'?results[5].value:null;
+
+  if(results[0].status==='rejected') console.warn("Données_Commissions:",results[0].reason);
+  if(results[3].status==='rejected') console.log("N-1 fallback:",results[3].reason);
+  if(results[4].status==='rejected') console.log("Goodays fallback:",results[4].reason);
+  if(results[5].status==='rejected') console.log("DILAX fallback:",results[5].reason);
+
   // Parse items prioritaires
   ITEMS=items.map(r=>({
     nom:r["Nom de l'item"]||"",
@@ -99,21 +127,25 @@ async function loadReal(){
     const ta=ma>0?(as/ma)*100:0,tx=mb>0?ac/mb:0;
     return{nm:r["Vendeur"],bq:r["CodeBoutique"],role:r["Role"]||"Vendeur",mg,mb,g3,cy,as,ma,ac,jc,jt:jt||21,jw:jw||22,ta,tx};
   });
-  // N-1 depuis onglet Donnees_N1
+  // N-1 depuis onglet Donnees_N1 (déjà chargé en parallèle)
   let n1=vs.map(v=>({...v,mg:0,mb:0,cy:0}));
-  try{const n1r=await fetchTab("Donnees_N1");const n1Map={};n1r.forEach(r=>{n1Map[r["Boutique"]]={mg:pNum(r["Marge"]),mb:pNum(r["Mobiles"]),bx:pNum(r["Box"]),as:pNum(r["Assurance"]),cy:pNum(r["Cyber"])}});
-  n1=vs.map(v=>{const d=n1Map[v.bq]||{};return{...v,mg:d.mg||0,mb:d.mb||0,cy:d.cy||0,as:d.as||0,bx:d.bx||0}});}catch(e){console.log("N-1 fallback:",e)}
-  // Goodays depuis onglet Goodays
+  if(n1r){const n1Map={};n1r.forEach(r=>{n1Map[r["Boutique"]]={mg:pNum(r["Marge"]),mb:pNum(r["Mobiles"]),bx:pNum(r["Box"]),as:pNum(r["Assurance"]),cy:pNum(r["Cyber"])}});
+  n1=vs.map(v=>{const d=n1Map[v.bq]||{};return{...v,mg:d.mg||0,mb:d.mb||0,cy:d.cy||0,as:d.as||0,bx:d.bx||0}});}
+  // Goodays (déjà chargé en parallèle)
   let gd={},gl={};
-  try{const gr=await fetchTab("Goodays");gr.forEach(r=>{const b=r["Boutique"];const ns=pNum(r["NoteSat"]),ps=pNum(r["PartSat"]),ng=pNum(r["NoteGoogle"]),ag=pNum(r["AvisGoogle"]);
-  gd[b]={nt:ns,pt:ps};gl[b]={nt:ng,tt:ag,ms:ag}});}catch(e){console.log("Goodays fallback:",e);gd={ALR:{nt:0,pt:0},TLR:{nt:0,pt:0},CLR:{nt:0,pt:0},CHOLET:{nt:0,pt:0},RLR:{nt:0,pt:0},VLR:{nt:0,pt:0}};gl={ALR:{nt:0,tt:0,ms:0},TLR:{nt:0,tt:0,ms:0},CLR:{nt:0,tt:0,ms:0},CHOLET:{nt:0,tt:0,ms:0},RLR:{nt:0,tt:0,ms:0},VLR:{nt:0,tt:0,ms:0}};}
-  // Visites DILAX depuis onglet DILAX du Google Sheet
+  if(gr){gr.forEach(r=>{const b=r["Boutique"];const ns=pNum(r["NoteSat"]),ps=pNum(r["PartSat"]),ng=pNum(r["NoteGoogle"]),ag=pNum(r["AvisGoogle"]);
+  gd[b]={nt:ns,pt:ps};gl[b]={nt:ng,tt:ag,ms:ag}});}else{gd={ALR:{nt:0,pt:0},TLR:{nt:0,pt:0},CLR:{nt:0,pt:0},CHOLET:{nt:0,pt:0},RLR:{nt:0,pt:0},VLR:{nt:0,pt:0}};gl={ALR:{nt:0,tt:0,ms:0},TLR:{nt:0,tt:0,ms:0},CLR:{nt:0,tt:0,ms:0},CHOLET:{nt:0,tt:0,ms:0},RLR:{nt:0,tt:0,ms:0},VLR:{nt:0,tt:0,ms:0}};}
+  // DILAX (déjà chargé en parallèle)
   let vi={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
   let viN1={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
-  try{const dr=await fetchTab("DILAX");dr.forEach(r=>{const c=r["Code"];const v=pNum(r["Visiteurs"]);if(c&&vi.hasOwnProperty(c))vi[c]=v;});}catch(e){console.log("DILAX fallback:",e);}
-  // Visiteurs N-1 depuis onglet Donnees_N1
-  try{const n1r=await fetchTab("Donnees_N1");n1r.forEach(r=>{const b=r["Boutique"];const vn=pNum(r["VisiteursN1"]);if(b&&viN1.hasOwnProperty(b))viN1[b]=vn;});}catch(e){console.log("VisiteursN1 fallback:",e);}
-  return{vs,n1,gd,gl,vi,viN1,moisEnCours};
+  if(dr){dr.forEach(r=>{const c=r["Code"];const v=pNum(r["Visiteurs"]);if(c&&vi.hasOwnProperty(c))vi[c]=v;});}
+  // Visiteurs N-1 depuis le même onglet Donnees_N1 (réutilisé, pas de 2e fetch)
+  if(n1r){n1r.forEach(r=>{const b=r["Boutique"];const vn=pNum(r["VisiteursN1"]);if(b&&viN1.hasOwnProperty(b))viN1[b]=vn;});}
+
+  const result={vs,n1,gd,gl,vi,viN1,moisEnCours};
+  // Mise en cache
+  cacheSet('data',result);
+  return result;
 }
 
 /* ═══ BUILD ITEMS MAPPING ═══ */
@@ -257,17 +289,36 @@ ${(()=>{const fl=v.its.filter(i=>!i.ok);if(!fl.length)return`<div class="cd" sty
 
 /* ═══ INIT ═══ */
 async function init(){
+  const t0=Date.now();
+  let usedCache=false;
+
+  // ── Phase 0 : Affichage INSTANTANÉ depuis le cache ──
+  const cached=cacheGet('data');
+  if(cached && cached.data && cached.data.vs){
+    try{
+      D=cached.data;
+      ITEMS=D._items||[];
+      // Restaurer ITEMS si pas dans le cache (backward compat)
+      if(!ITEMS.length) ITEMS=[{nom:"Mobiles",obj:20,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Taux d'Assurance",obj:40,unite:"%"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
+      isDemo=false;
+      usedCache=true;
+    }catch(e){console.warn("Cache parse error:",e)}
+  }
+
+  // ── Phase 1 : Fetch réseau (parallélisé) ──
   try{
     D=await loadReal();
     isDemo=false;
   }catch(e){
-    console.log("Fallback demo:",e);
-    // Fallback: données démo minimales
-    ITEMS=[{nom:"Mobiles",obj:20,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Taux d'Assurance",obj:40,unite:"%"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
-    const vs=[{nm:"AXEL",bq:"ALR",role:"Vendeur",mg:5420,mb:14,g3:3,cy:10,as:7,ma:14,ac:380,jc:14,jt:21,jw:22,ta:50,tx:27},{nm:"WILL",bq:"RLR",role:"Vendeur",mg:7200,mb:18,g3:5,cy:14,as:10,ma:18,ac:520,jc:14,jt:21,jw:22,ta:55.6,tx:28.9}];
-    const n1=vs.map(v=>({...v,mg:Math.round(v.mg*.9),mb:Math.round(v.mb*.85),cy:Math.round(v.cy*.8)}));
-    D={vs,n1,gd:{ALR:{nt:4.72,pt:28},RLR:{nt:4.91,pt:31}},gl:{ALR:{nt:4.6,tt:847,ms:12},RLR:{nt:4.5,tt:538,ms:9}},vi:{ALR:320,RLR:245},viN1:{ALR:295,RLR:230}};
-    isDemo=true;
+    console.log("Fallback:",e);
+    if(!usedCache){
+      // Fallback: données démo minimales
+      ITEMS=[{nom:"Mobiles",obj:20,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Taux d'Assurance",obj:40,unite:"%"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
+      const vs=[{nm:"AXEL",bq:"ALR",role:"Vendeur",mg:5420,mb:14,g3:3,cy:10,as:7,ma:14,ac:380,jc:14,jt:21,jw:22,ta:50,tx:27},{nm:"WILL",bq:"RLR",role:"Vendeur",mg:7200,mb:18,g3:5,cy:14,as:10,ma:18,ac:520,jc:14,jt:21,jw:22,ta:55.6,tx:28.9}];
+      const n1=vs.map(v=>({...v,mg:Math.round(v.mg*.9),mb:Math.round(v.mb*.85),cy:Math.round(v.cy*.8)}));
+      D={vs,n1,gd:{ALR:{nt:4.72,pt:28},RLR:{nt:4.91,pt:31}},gl:{ALR:{nt:4.6,tt:847,ms:12},RLR:{nt:4.5,tt:538,ms:9}},vi:{ALR:320,RLR:245},viN1:{ALR:295,RLR:230}};
+      isDemo=true;
+    }
   }
 
   const C=eD(D);
@@ -276,7 +327,7 @@ async function init(){
   document.getElementById("spV").textContent=C.rk.length;
   const spTarget=C.mG;let spCur=0;const spEl=document.getElementById("spM");const spStart=performance.now();
   function spAnim(now){const el=now-spStart;const p=Math.min(el/1400,1);const e=1-Math.pow(1-p,3);spCur=Math.round(spTarget*e);spEl.textContent=$E(spCur);if(p<1)requestAnimationFrame(spAnim)}
-  setTimeout(()=>requestAnimationFrame(spAnim),1200);
+  if(usedCache){requestAnimationFrame(spAnim)}else{setTimeout(()=>requestAnimationFrame(spAnim),1200)}
 
   // Header info
   const moisLabel=D.moisEnCours||new Date().toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
@@ -286,12 +337,14 @@ async function init(){
 
   bT();
 
-  // Reveal
+  // Reveal — splash raccourci si cache utilisé
+  const elapsed=Date.now()-t0;
+  const splashDelay=usedCache?Math.max(0,400-elapsed):Math.max(0,3200-elapsed);
   setTimeout(()=>{
     document.getElementById("splash").classList.add("hide");
     document.body.classList.add("loaded");
     R();
-  },3200);
+  },splashDelay);
 }
 
 init();

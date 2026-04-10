@@ -305,6 +305,12 @@ function commNette(commBr, itemsAtteints, totalItems) {
   return { nette: Math.round(commBr * pctRetenu / 100), malus: 100 - pctRetenu, ratés, pctRetenu };
 }
 
+/* ═══ CACHE localStorage (stale-while-revalidate) ═══ */
+const CACHE_PREFIX='garcia_vendeur_';
+const CACHE_TTL=5*60*1000;
+function cacheGet(key){try{const raw=localStorage.getItem(CACHE_PREFIX+key);if(!raw)return null;const{data,ts}=JSON.parse(raw);return{data,ts,fresh:Date.now()-ts<CACHE_TTL}}catch(e){return null}}
+function cacheSet(key,data){try{localStorage.setItem(CACHE_PREFIX+key,JSON.stringify({data,ts:Date.now()}))}catch(e){}}
+
 let _jc = 0;
 function fetchSheet(sheet) {
   return new Promise((res, rej) => {
@@ -414,6 +420,20 @@ function showScreen(id) {
 
 function loadData(auth) {
   const isManager = MANAGERS.includes(auth.nomSheet);
+  const cacheKey = 'dash_' + auth.nomSheet;
+
+  // ── Affichage INSTANTANÉ depuis le cache ──
+  const cached = cacheGet(cacheKey);
+  let usedCache = false;
+  if (cached && cached.data) {
+    try {
+      const { donnees, items, config, dilax } = cached.data;
+      renderDash(auth, donnees, items, config, dilax || []);
+      usedCache = true;
+    } catch(e) { console.warn("Cache render error:", e); }
+  }
+
+  // ── Fetch réseau en parallèle (rafraîchit en arrière-plan si cache utilisé) ──
   const fetches = [
     fetchSheet('Données_Commissions'),
     fetchSheet('Items_Mois'),
@@ -428,17 +448,23 @@ function loadData(auth) {
       const items = parseRows(results[1]);
       const config = parseRows(results[2]);
       const dilax = isManager ? parseDilaxRows(results[3]) : [];
+      // Mise en cache
+      cacheSet(cacheKey, { donnees, items, config, dilax });
       renderDash(auth, donnees, items, config, dilax);
     })
     .catch(e => {
-      showScreen('dash');
-      document.getElementById('dash-body').innerHTML = `
-        <div class="err-wrap">
-          <div class="err-icon">⚠️</div>
-          <div class="err-title">Erreur de connexion</div>
-          <div class="err-msg">${e.message}<br><br>Vérifiez que la feuille Google est publiée sur le web.</div>
-          <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
-        </div>`;
+      if (!usedCache) {
+        showScreen('dash');
+        document.getElementById('dash-body').innerHTML = `
+          <div class="err-wrap">
+            <div class="err-icon">\u26A0\uFE0F</div>
+            <div class="err-title">Erreur de connexion</div>
+            <div class="err-msg">${e.message}<br><br>Vérifiez que la feuille Google est publiée sur le web.</div>
+            <button class="btn-main" style="width:auto;padding:12px 24px" onclick="doLogout()">Retour</button>
+          </div>`;
+      } else {
+        console.warn("Refresh réseau échoué (données du cache affichées):", e.message);
+      }
     });
 }
 
