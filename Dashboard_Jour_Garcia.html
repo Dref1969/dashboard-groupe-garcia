@@ -177,6 +177,24 @@ function splashProgress(pct, msg){
 }
 
 // ═══════════════════════════════════════
+//  CACHE localStorage (stale-while-revalidate)
+// ═══════════════════════════════════════
+const CACHE_PREFIX='garcia_jour_';
+const CACHE_TTL=5*60*1000; // 5 min : données considérées "fraîches"
+
+function cacheGet(key){
+  try{
+    const raw=localStorage.getItem(CACHE_PREFIX+key);
+    if(!raw) return null;
+    const {data,ts}=JSON.parse(raw);
+    return {data,ts,fresh:Date.now()-ts<CACHE_TTL};
+  }catch(e){return null}
+}
+function cacheSet(key,data){
+  try{localStorage.setItem(CACHE_PREFIX+key,JSON.stringify({data,ts:Date.now()}))}catch(e){}
+}
+
+// ═══════════════════════════════════════
 //  FETCH WITH RETRY (exponential backoff)
 // ═══════════════════════════════════════
 async function fetchRetry(url, retries=3, delay=1000){
@@ -225,6 +243,9 @@ async function fetchJourData(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(TAB_NAME)}`;
   const text=await fetchRetry(url);
   const rows=parseCSV(text);
+
+  // Mise en cache des données brutes parsées
+  cacheSet('jour',rows);
 
   const meta=rows.find(r=>r.Type==="META");
   if(meta){
@@ -279,6 +300,9 @@ async function fetchChallengeHist(){
     groupe_marge:parseFloat((r.Groupe_Marge||"0").replace(",","."))||0,
     groupe_won:(r.Groupe_Won||"").toUpperCase()==="OUI"
   })).filter(r=>r.date);
+
+  // Mise en cache des challenges parsés
+  cacheSet('challenges',CHALLENGE_HIST);
 }
 
 // ═══════════════════════════════════════
@@ -369,8 +393,8 @@ async function manualRefresh(){
   if(hdrInfo) hdrInfo.textContent='Actualisation en cours...';
 
   try{
-    await fetchJourData();
-    await fetchChallengeHist();
+    // Fetch en PARALLÈLE
+    await Promise.all([fetchJourData(), fetchChallengeHist()]);
     computeTotals();
     updateDates();
     render();
@@ -391,8 +415,8 @@ async function silentRefresh(){
   if(IS_REFRESHING) return;
   IS_REFRESHING=true;
   try{
-    await fetchJourData();
-    await fetchChallengeHist();
+    // Fetch en PARALLÈLE
+    await Promise.all([fetchJourData(), fetchChallengeHist()]);
     computeTotals();
     updateDates();
     render();
@@ -831,30 +855,71 @@ function hideSplash(){
 async function init(){
   const t0=Date.now();
 
-  // Phase 1 : fetch données jour
-  splashProgress(20,'Chargement des données boutiques...');
-  try {
-    await fetchJourData();
-    LAST_ERROR=null;
-    splashProgress(60,'Données boutiques OK');
-  } catch(e) {
-    console.warn("Erreur Google Sheets:",e.message);
-    LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
-    if(MAGS.length===0) initEmptyMags();
-    splashProgress(60,'Données indisponibles — mode hors ligne');
+  // ── Phase 0 : Affichage INSTANTANÉ depuis le cache ──
+  const cachedJour=cacheGet('jour');
+  const cachedChall=cacheGet('challenges');
+  let usedCache=false;
+
+  if(cachedJour && cachedJour.data){
+    splashProgress(50,'Données en cache — affichage instantané...');
+    try{
+      const rows=cachedJour.data;
+      const meta=rows.find(r=>r.Type==="META");
+      if(meta){DATA_DATE=meta.Date||"";DATA_HEURE=meta.Heure||"";}
+      MAGS=rows.filter(r=>r.Type==="MAG").map(r=>({
+        code:r.Code||"",nom:r.Nom||"",color:(BOUTIQUES[r.Code]||{}).color||"#888",
+        marge:parseFloat(r.Marge)||0,mob:parseInt(r.Mob)||0,box:parseInt(r.Box)||0,
+        cyber:parseInt(r.Cyber)||0,assu:parseInt(r.Assu)||0,g3a:parseInt(r.G3A)||0,
+        access:parseFloat(r.Access)||0,abo:parseInt(r.Abo)||0
+      }));
+      if(MAGS.length===0) initEmptyMags();
+      MAGS.sort((a,b)=>b.marge-a.marge);
+      VENDEURS=rows.filter(r=>r.Type==="VENDEUR").map(r=>({
+        nom:r.Code||"",bou:r.Nom||"",marge:parseFloat(r.Marge)||0,mob:parseInt(r.Mob)||0,
+        box:parseInt(r.Box)||0,cyber:parseInt(r.Cyber)||0,assu:parseInt(r.Assu)||0,
+        g3a:parseInt(r.G3A)||0,access:parseFloat(r.Access)||0,abo:parseInt(r.Abo)||0
+      }));
+      VENDEURS.sort((a,b)=>b.marge-a.marge);
+      if(cachedChall && cachedChall.data){
+        CHALLENGE_HIST=cachedChall.data;
+      }
+      computeTotals();updateDates();buildNav();render();
+      usedCache=true;
+      splashProgress(70,'Rafraîchissement en arrière-plan...');
+    }catch(e){console.warn("Cache parse error:",e)}
   }
 
-  // Phase 2 : fetch challenges (en parallèle du rendu si possible)
-  splashProgress(70,'Chargement des challenges...');
-  try {
-    await fetchChallengeHist();
-    splashProgress(90,'Challenges OK');
-  } catch(e) {
-    console.warn("Erreur historique challenges:",e.message);
-    splashProgress(90,'Challenges indisponibles');
+  // ── Phase 1 : Fetch PARALLÈLE des deux onglets ──
+  if(!usedCache) splashProgress(20,'Chargement des données...');
+  try{
+    const [jourResult, challResult] = await Promise.allSettled([
+      fetchJourData(),
+      fetchChallengeHist()
+    ]);
+
+    if(jourResult.status==='fulfilled'){
+      LAST_ERROR=null;
+      if(!usedCache) splashProgress(80,'Données boutiques OK');
+    } else {
+      console.warn("Erreur Google Sheets:",jourResult.reason?.message);
+      if(!usedCache){
+        LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
+        if(MAGS.length===0) initEmptyMags();
+      }
+    }
+
+    if(challResult.status==='rejected'){
+      console.warn("Erreur historique challenges:",challResult.reason?.message);
+    }
+  }catch(e){
+    console.warn("Erreur globale fetch:",e.message);
+    if(!usedCache){
+      LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
+      if(MAGS.length===0) initEmptyMags();
+    }
   }
 
-  // Phase 3 : calcul + rendu
+  // ── Phase 2 : calcul + rendu (final) ──
   splashProgress(95,'Rendu du dashboard...');
   computeTotals();
   updateDates();
@@ -862,13 +927,12 @@ async function init(){
   render();
   splashProgress(100,'Prêt !');
 
-  // Splash minimum 1.2s pour l'animation, puis transition fluide
+  // Splash raccourci si on avait le cache
   const elapsed=Date.now()-t0;
-  const minSplash=1200;
+  const minSplash=usedCache?400:1200;
   setTimeout(hideSplash, Math.max(0,minSplash-elapsed));
 
   // ── REFRESH INTELLIGENT ──
-  // 1. Quand l'utilisateur revient sur l'onglet (visibility API)
   let LAST_REFRESH=Date.now();
   const MIN_REFRESH_GAP=30000; // 30s minimum entre 2 refreshs
 
@@ -879,15 +943,12 @@ async function init(){
     }
   });
 
-  // 2. Quand la fenêtre reprend le focus (alt-tab, clic depuis barre des tâches)
   window.addEventListener('focus',()=>{
     if(Date.now()-LAST_REFRESH>MIN_REFRESH_GAP){
       LAST_REFRESH=Date.now();
       silentRefresh();
     }
   });
-
-  // 3. Pas de timer fixe — les données sont fraîches à chaque consultation
 }
 init();
 </script>
