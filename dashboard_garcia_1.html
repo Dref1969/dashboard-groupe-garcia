@@ -51,7 +51,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th{padding:8px 6px;font
 </head>
 <body>
 <div id="splash"><div class="sp-logo"><div class="sp-logo-text">GROUPE GARCIA</div><div class="sp-logo-sub">Dashboard Manager</div></div><div class="sp-line"></div><div class="sp-kpis"><div class="sp-kpi"><div class="sp-kpi-val" id="spM">—</div><div class="sp-kpi-label">Marge groupe</div></div><div class="sp-kpi"><div class="sp-kpi-val" id="spB">—</div><div class="sp-kpi-label">Boutiques</div></div><div class="sp-kpi"><div class="sp-kpi-val" id="spV">—</div><div class="sp-kpi-label">Vendeurs</div></div></div><div class="sp-status"><span>Chargement des données</span><span class="sp-dots"><span class="sp-dot"></span><span class="sp-dot"></span><span class="sp-dot"></span></span></div></div>
-<header class="hdr"><div class="hdr-left"><div class="logo">GROUPE GARCIA<span>Dashboard Manager</span></div><div class="hdr-info" id="hi"></div></div><div class="hdr-btns"><button class="hb" id="bn" onclick="tN()">Comparer N-1</button><button class="hb" onclick="location.reload()">Actualiser</button></div></header>
+<header class="hdr"><div class="hdr-left"><div class="logo">GROUPE GARCIA<span>Dashboard Manager</span></div><div class="hdr-info" id="hi"></div></div><div class="hdr-btns"><button class="hb" onclick="location.reload()">Actualiser</button></div></header>
 <nav class="nav" id="nv"></nav>
 <main class="mn" id="mc"></main>
 <script>
@@ -69,7 +69,7 @@ function pC(a){return a>=4?"p1":a>=3?"p2":"p3"}
 function eH(v){if(v==null)return"";return`<span class="ev ${v>=0?"eu":"ed"}">${v>=0?"+":""}${(v*100).toFixed(1)}%</span>`}
 function bH(v,c){return`<div class="bar"><div class="barf" style="width:${Math.min(100,(v||0)*100)}%;background:${c}"></div></div>`}
 
-let D=null,ITEMS=[],N1=0,CT="synthese",SV=null,charts=[],isDemo=false,lastMAJ="";
+let D=null,ITEMS=[],CT="synthese",SV=null,charts=[],isDemo=false,lastMAJ="";
 Chart.register(ChartDataLabels);
 
 /* ═══ CSV PARSER ═══ */
@@ -193,8 +193,9 @@ function eD(d){
     const vvN1=viN1[b.c]||0,pmN1=vvN1>0?mn/vvN1:0;
     const mobN=bv.reduce((s,v)=>s+v.mb,0),mobN1=bv[0]?.v1?.mb||0;
     const cyN=bv.reduce((s,v)=>s+v.cy,0),cyN1=bv[0]?.v1?.cy||0;
+    const g3N=bv.reduce((s,v)=>s+v.g3,0),acN=bv.reduce((s,v)=>s+v.ac,0);
     const ia=RI.map(it=>{const tr=bv.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=bv.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);if(it.k==="g3a"){const tg3=bv.reduce((s,v)=>s+v.g3,0),tmb=bv.reduce((s,v)=>s+v.mb,0);return{...it,tr:tmb>0?Math.round(tg3/tmb*10000)/100:0,to:it.ob}}return it.pc||it.cu?{...it,tr:tr/Math.max(1,bv.length),to:it.ob}:{...it,tr,to}});
-    pb[b.c]={...b,bv,mg,pj,vv,pm,mn,vvN1,pmN1,mobN,mobN1,cyN,cyN1,ia,g:gd[b.c],gl:gl[b.c],ev:mn>0?(mg-mn)/mn:0};
+    pb[b.c]={...b,bv,mg,pj,vv,pm,mn,vvN1,pmN1,mobN,mobN1,cyN,cyN1,g3N,acN,ia,g:gd[b.c],gl:gl[b.c],ev:mn>0?(mg-mn)/mn:0};
   });
   const mG=rk.reduce((s,v)=>s+v.mg,0),pG=rk.reduce((s,v)=>s+v.pj,0),mN=Object.values(pb).reduce((s,b)=>s+b.mn,0);
   const vG=Object.values(vi).reduce((s,v)=>s+v,0),vGN1=Object.values(viN1).reduce((s,v)=>s+v,0);
@@ -204,7 +205,8 @@ function eD(d){
   const iG=RI.map(it=>{const t=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);if(it.k==="g3a"){const tg3=rk.reduce((s,v)=>s+v.g3,0),tmb=rk.reduce((s,v)=>s+v.mb,0);return{...it,tr:tmb>0?Math.round(tg3/tmb*10000)/100:0,to:it.ob}}return it.pc||it.cu?{...it,tr:t/Math.max(1,rk.length),to:it.ob}:{...it,tr:t,to}});
   const mobGN=rk.reduce((s,v)=>s+v.mb,0),mobGN1=Object.values(pb).reduce((s,b)=>s+b.mobN1,0);
   const cyGN=rk.reduce((s,v)=>s+v.cy,0),cyGN1=Object.values(pb).reduce((s,b)=>s+b.cyN1,0);
-  return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,RI};
+  const g3GN=rk.reduce((s,v)=>s+v.g3,0),acGN=rk.reduce((s,v)=>s+v.ac,0);
+  return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,g3GN,acGN,RI};
 }
 
 /* ═══ NAV ═══ */
@@ -212,7 +214,6 @@ function bT(){const tabs=[{id:"synthese",l:"Synthèse"}];B.forEach(b=>{if(D&&eD(
 function sT(id){CT=id;SV=null;bT();R()}
 function sV(nm){SV=nm;R()}
 function bV(){SV=null;R()}
-function tN(){N1=!N1;document.getElementById("bn").className="hb"+(N1?" on":"");R()}
 function dC(){charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[]}
 function fV(i){return i.pc?$D(i.r,1)+"%":i.cu?$D(i.r,1)+"€":i.r}
 function fO(i){return i.pc?i.o+"%":i.cu?i.o+"€":Math.round(i.o)}
@@ -227,32 +228,36 @@ function R(){if(!D)return;dC();const C=eD(D),m=document.getElementById("mc");
 function co(o){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10,family:"Plus Jakarta Sans"},boxWidth:10,padding:10}},datalabels:{display:true,anchor:"end",align:"end",font:{size:9,weight:"600",family:"Plus Jakarta Sans"},color:function(ctx){return ctx.datasetIndex===0?"#0F172A":"#94A3B8"},formatter:function(v,ctx){if(v===0||v===null)return"";if(o.dlF)return o.dlF(v);if(o.yT&&o.yT.callback){return o.yT.callback(v)}return v}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10},...(o.yT||{})},grid:{color:"#F1F5F9"}},x:{ticks:{font:{size:10}},grid:{display:false}}}}}
 
 /* ═══ SYNTHESE ═══ */
-function rS(C){const eG=C.mN>0?(C.mG-C.mN)/C.mN:0,mj=C.mG/Math.max(1,C.rk.length)/Math.max(1,C.jc);const evF=C.vGN1>0?(C.vG-C.vGN1)/C.vGN1:0;
-return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</div><div class="kpi-val" style="color:var(--blue)">${$E(C.mG)}</div>${N1?`<div class="kpi-sub">N-1 : ${$E(C.mN)} ${eH(eG)}</div>`:""}</div>
+function rS(C){const objM=70000,pObj=Math.min(100,C.mG/objM*100);
+return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</div><div class="kpi-val" style="color:var(--blue)">${$E(C.mG)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Projection fin de mois</div><div class="kpi-val" style="color:var(--purple)">${$E(C.pG)}</div></div>
-<div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(C.pmG)} €</div>${N1?`<div class="kpi-sub">N-1 : ${$D(C.pmGN1)} € ${eH(C.pmGN1>0?(C.pmG-C.pmGN1)/C.pmGN1:0)}</div>`:""}</div>
-<div class="cd kpi"><div class="kpi-label">Marge / jour moyenne</div><div class="kpi-val" style="color:var(--green)">${$E(mj)}</div></div></div>
-<div class="g3"><div class="cd kpi"><div class="kpi-label">Flux visiteurs</div><div class="kpi-val">${$(C.vG)}</div>${N1?`<div class="kpi-sub">N-1 : ${$(C.vGN1)} ${eH(evF)}</div>`:""}</div>
+<div class="cd kpi"><div class="kpi-label">Objectif mensuel</div><div class="kpi-val" style="color:${pObj>=100?"var(--green)":"var(--orange)"}">${$D(pObj,0)} %</div><div class="kpi-sub">${$E(C.mG)} / 70 000 €</div>${bH(pObj/100,pObj>=100?"var(--green)":"var(--orange)")}</div>
+<div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(C.pmG)} €</div><div class="kpi-sub">${$(C.vG)} visiteurs</div></div></div>
+<div class="g3"><div class="cd kpi"><div class="kpi-label">Flux visiteurs</div><div class="kpi-val">${$(C.vG)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(C.gM)}">${$D(C.gM)}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div></div>
 <div class="cd kpi"><div class="kpi-label">Avis Google (total)</div><div class="kpi-val">${$(C.gT)}</div><div class="kpi-sub">+${C.gMo} ce mois</div></div></div>
 <div class="cd"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="kpi-label" style="margin:0">Avancement du mois</span><span style="font-size:12px;font-weight:700">J${C.jc} / ${C.jt}</span></div>${bH(C.jc/C.jt,"var(--blue)")}</div>
-<div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge par boutique — N vs N-1</div><div class="chart-wrap"><canvas id="chM"></canvas></div></div>
-<div class="cd"><div class="kpi-label" style="margin-bottom:8px">Panier moyen par boutique — N vs N-1</div><div class="chart-wrap"><canvas id="chP"></canvas></div></div></div>
+<div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge par boutique</div><div class="chart-wrap"><canvas id="chM"></canvas></div></div>
+<div class="cd"><div class="kpi-label" style="margin-bottom:8px">G3A par boutique</div><div class="chart-wrap"><canvas id="chG3"></canvas></div></div></div>
+<div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Répartition marge groupe</div><div class="chart-wrap"><canvas id="chPie"></canvas></div></div>
+<div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge accessoires par boutique</div><div class="chart-wrap"><canvas id="chAcc"></canvas></div></div></div>
 <div class="sec">Items prioritaires — Groupe</div>
-<div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Mobiles par boutique — N vs N-1</div><div class="chart-wrap"><canvas id="chMo"></canvas></div></div>
-<div class="cd"><div class="kpi-label" style="margin-bottom:8px">SFR Cyber par boutique — N vs N-1</div><div class="chart-wrap"><canvas id="chCy"></canvas></div></div></div>
-<div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires vs N-1</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé N</th><th class="tc">Objectif</th><th class="tc">Projection</th><th class="tc">N-1</th><th class="tc">Évolution</th></tr></thead><tbody>
-${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const jc=C.jc||1,jt=C.jt||21;const jr=Math.max(0,jt-jc);const proj=it.pc||it.cu?it.tr:Math.round(it.tr+(it.tr/Math.max(1,jc))*jr);const projV=it.pc?$D(proj,1)+"%":it.cu?$D(proj,1)+"€":$(proj);const projOk=it.pc||it.cu?proj>=it.to:proj>=it.to;let n1V="—",ev=null;if(it.k==="mob"){n1V=$(C.mobGN1);ev=C.mobGN1>0?(C.mobGN-C.mobGN1)/C.mobGN1:0}else if(it.k==="cyber"){n1V=$(C.cyGN1);ev=C.cyGN1>0?(C.cyGN-C.cyGN1)/C.cyGN1:0}return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${p>=1?"var(--green)":"var(--red)"}">${val}</td><td class="tc">${obj}</td><td class="tc" style="font-weight:700;color:${projOk?"var(--green)":"var(--red)"}">${projV}</td><td class="tc">${n1V}</td><td class="tc">${ev!=null?eH(ev):"—"}</td></tr>`}).join("")}</tbody></table></div></div>`}
+<div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé</th><th class="tc">Objectif</th><th class="tc">Projection</th><th class="tc">Progression</th></tr></thead><tbody>
+${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const jc=C.jc||1,jt=C.jt||21;const jr=Math.max(0,jt-jc);const proj=it.pc||it.cu?it.tr:Math.round(it.tr+(it.tr/Math.max(1,jc))*jr);const projV=it.pc?$D(proj,1)+"%":it.cu?$D(proj,1)+"€":$(proj);const projOk=it.pc||it.cu?proj>=it.to:proj>=it.to;return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${p>=1?"var(--green)":"var(--red)"}">${val}</td><td class="tc">${obj}</td><td class="tc" style="font-weight:700;color:${projOk?"var(--green)":"var(--red)"}">${projV}</td><td class="tc" style="width:120px">${bH(Math.min(1,p),p>=1?"var(--green)":"var(--orange)")}<span style="font-size:10px;color:var(--sub)">${$D(p*100,0)}%</span></td></tr>`}).join("")}</tbody></table></div></div>`}
 
-function drawS(C){const lb=B.filter(b=>C.pb[b.c]).map(b=>b.n);const chO={borderRadius:4,barPercentage:.55};
-const c1=new Chart(document.getElementById("chM"),{type:"bar",data:{labels:lb,datasets:[{label:"N",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].mg),backgroundColor:B.filter(b=>C.pb[b.c]).map(b=>b.cl),...chO},{label:"N-1",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].mn),backgroundColor:"#CBD5E1",...chO}]},options:co({yT:{callback:v=>(v/1000).toFixed(0)+"k"},dlF:v=>v.toFixed(2)+"€"})});charts.push(c1);
-const c2=new Chart(document.getElementById("chP"),{type:"bar",data:{labels:lb,datasets:[{label:"N",data:B.filter(b=>C.pb[b.c]).map(b=>Math.round(C.pb[b.c].pm*100)/100),backgroundColor:"#0891B2",...chO},{label:"N-1",data:B.filter(b=>C.pb[b.c]).map(b=>Math.round(C.pb[b.c].pmN1*100)/100),backgroundColor:"#CBD5E1",...chO}]},options:co({yT:{callback:v=>v+"€"},dlF:v=>v.toFixed(2)+"€"})});charts.push(c2);
-const c3=new Chart(document.getElementById("chMo"),{type:"bar",data:{labels:lb,datasets:[{label:"N",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].mobN),backgroundColor:"#2563EB",...chO},{label:"N-1",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].mobN1),backgroundColor:"#CBD5E1",...chO}]},options:co({})});charts.push(c3);
-const c4=new Chart(document.getElementById("chCy"),{type:"bar",data:{labels:lb,datasets:[{label:"N",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].cyN),backgroundColor:"#7C3AED",...chO},{label:"N-1",data:B.filter(b=>C.pb[b.c]).map(b=>C.pb[b.c].cyN1),backgroundColor:"#CBD5E1",...chO}]},options:co({})});charts.push(c4)}
+function drawS(C){const bf=B.filter(b=>C.pb[b.c]),lb=bf.map(b=>b.n),cls=bf.map(b=>b.cl);const chO={borderRadius:4,barPercentage:.6};
+/* Marge par boutique */
+const c1=new Chart(document.getElementById("chM"),{type:"bar",data:{labels:lb,datasets:[{label:"Marge",data:bf.map(b=>C.pb[b.c].mg),backgroundColor:cls,...chO}]},options:co({yT:{callback:v=>(v/1000).toFixed(0)+"k"},dlF:v=>$(v)+"€"})});charts.push(c1);
+/* G3A par boutique */
+const c2=new Chart(document.getElementById("chG3"),{type:"bar",data:{labels:lb,datasets:[{label:"G3A",data:bf.map(b=>C.pb[b.c].g3N),backgroundColor:"#059669",...chO}]},options:co({})});charts.push(c2);
+/* Camembert répartition marge */
+const c3=new Chart(document.getElementById("chPie"),{type:"doughnut",data:{labels:lb,datasets:[{data:bf.map(b=>C.pb[b.c].mg),backgroundColor:cls,borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:11,family:"Plus Jakarta Sans"},padding:12}},datalabels:{font:{size:11,weight:"700",family:"Plus Jakarta Sans"},color:"#fff",formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((s,x)=>s+x,0);return t>0?(v/t*100).toFixed(1)+"%":""}}}}});charts.push(c3);
+/* Marge accessoires par boutique */
+const c4=new Chart(document.getElementById("chAcc"),{type:"bar",data:{labels:lb,datasets:[{label:"Accessoires",data:bf.map(b=>C.pb[b.c].acN),backgroundColor:"#D97706",...chO}]},options:co({yT:{callback:v=>v+"€"},dlF:v=>$(v)+"€"})});charts.push(c4)}
 
 /* ═══ BOUTIQUE ═══ */
 function rB(code,C){const d=C.pb[code];if(!d)return"<div class='cd'>Aucune donnée pour cette boutique</div>";return`
-<div class="bh" style="background:${d.cl}"><h2>SFR ${d.n}</h2><div class="bh-stats"><div class="bh-stat"><span>Marge</span><div>${$E(d.mg)}</div></div><div class="bh-stat"><span>Projection</span><div>${$E(d.pj)}</div></div><div class="bh-stat"><span>Panier</span><div>${$D(d.pm)} €</div></div><div class="bh-stat"><span>Flux</span><div>${$(d.vv)}</div></div></div>${N1?`<div style="margin-top:6px">${eH(d.ev)}</div>`:""}</div>
+<div class="bh" style="background:${d.cl}"><h2>SFR ${d.n}</h2><div class="bh-stats"><div class="bh-stat"><span>Marge</span><div>${$E(d.mg)}</div></div><div class="bh-stat"><span>Projection</span><div>${$E(d.pj)}</div></div><div class="bh-stat"><span>Panier</span><div>${$D(d.pm)} €</div></div><div class="bh-stat"><span>Flux</span><div>${$(d.vv)}</div></div></div></div>
 <div class="g2"><div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(d.g?.nt)}">${d.g?.nt?.toFixed(2)||"—"}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div><div class="kpi-sub">${d.g?.pt||0} participations</div></div><div class="cd kpi"><div class="kpi-label">Avis Google</div><div class="kpi-val">${$(d.gl?.tt)}</div><div class="kpi-sub">Note ${d.gl?.nt?.toFixed(1)} · +${d.gl?.ms} ce mois</div></div></div>
 <div class="sec">Items prioritaires</div><div class="g5">${d.ia.map(it=>{const p=it.to>0?it.tr/it.to:0,ok=p>=1,cl=ok?"var(--green)":p>.7?"var(--orange)":"var(--red)";return`<div class="cd kpi kpi-sm" style="text-align:center"><div class="kpi-label">${it.l}</div><div class="kpi-val" style="color:${cl}">${it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr)}</div>${bH(Math.min(p,1),cl)}</div>`}).join("")}</div>
 <div class="sec">Classement vendeurs</div><div class="cd"><div class="tw"><table><thead><tr><th class="tl">#</th><th class="tl">Vendeur</th><th class="tc">M/J</th><th class="tc">Marge</th><th class="tc">Projection</th>${C.RI.map(it=>`<th class="tc">${it.l.length>12?it.l.slice(0,10)+"…":it.l}</th>`).join("")}<th class="tc">Items</th><th class="tc">Commission</th></tr></thead><tbody>
