@@ -210,7 +210,7 @@ function eD(d){
 }
 
 /* ═══ NAV ═══ */
-function bT(){const tabs=[{id:"synthese",l:"Synthèse"}];B.forEach(b=>{if(D&&eD(D).pb[b.c])tabs.push({id:b.c,l:b.n})});tabs.push({id:"goodays",l:"Satisfaction"},{id:"suivi",l:"Collaborateurs"});document.getElementById("nv").innerHTML=tabs.map(t=>`<button class="tb${t.id===CT?" on":""}" onclick="sT('${t.id}')">${t.l}</button>`).join("")}
+function bT(){const tabs=[{id:"synthese",l:"Synthèse"}];B.forEach(b=>{if(D&&eD(D).pb[b.c])tabs.push({id:b.c,l:b.n})});tabs.push({id:"suivi",l:"Collaborateurs"});document.getElementById("nv").innerHTML=tabs.map(t=>`<button class="tb${t.id===CT?" on":""}" onclick="sT('${t.id}')">${t.l}</button>`).join("")}
 function sT(id){CT=id;SV=null;bT();R()}
 function sV(nm){SV=nm;R()}
 function bV(){SV=null;R()}
@@ -221,7 +221,7 @@ function fR(i){const r=Math.abs(i.rf);return i.pc?$D(r,1)+" pts":i.cu?$D(r,1)+"�
 
 function R(){if(!D)return;dC();const C=eD(D),m=document.getElementById("mc");
   if(SV){const v=C.rk.find(x=>x.nm===SV);if(v){m.innerHTML=rV(v,C);return}}
-  m.innerHTML=CT==="synthese"?rS(C):CT==="goodays"?rG(C):CT==="suivi"?rU(C):rB(CT,C);
+  m.innerHTML=CT==="synthese"?rS(C):CT==="suivi"?rU(C):rB(CT,C);
   if(CT==="synthese")setTimeout(()=>drawS(C),60);
 }
 
@@ -259,10 +259,20 @@ const acD=bf.map(b=>C.pb[b.c].acN);
 const c4=new Chart(document.getElementById("chAcc"),{type:"bar",data:{labels:lb,datasets:[{label:"Accessoires",data:acD,backgroundColor:"#D97706",...chO}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{display:true,anchor:"end",align:"end",font:{size:10,weight:"700",family:"Plus Jakarta Sans"},color:"#0F172A",formatter:v=>$(v)+"€"}},scales:{y:{beginAtZero:true,suggestedMax:Math.max(...acD)*1.25,ticks:{font:{size:10},callback:v=>v+"€"},grid:{color:"#F1F5F9"}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});charts.push(c4)}
 
 /* ═══ BOUTIQUE ═══ */
-function rB(code,C){const d=C.pb[code];if(!d)return"<div class='cd'>Aucune donnée pour cette boutique</div>";return`
-<div class="bh" style="background:${d.cl}"><h2>SFR ${d.n}</h2><div class="bh-stats"><div class="bh-stat"><span>Marge</span><div>${$E(d.mg)}</div></div><div class="bh-stat"><span>Projection</span><div>${$E(d.pj)}</div></div><div class="bh-stat"><span>Panier</span><div>${$D(d.pm)} €</div></div><div class="bh-stat"><span>Flux</span><div>${$(d.vv)}</div></div></div></div>
-<div class="g2"><div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(d.g?.nt)}">${d.g?.nt?.toFixed(2)||"—"}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div><div class="kpi-sub">${d.g?.pt||0} participations</div></div><div class="cd kpi"><div class="kpi-label">Avis Google</div><div class="kpi-val">${$(d.gl?.tt)}</div><div class="kpi-sub">Note ${d.gl?.nt?.toFixed(1)} · +${d.gl?.ms} ce mois</div></div></div>
-<div class="sec">Items prioritaires</div><div class="g5">${d.ia.map(it=>{const p=it.to>0?it.tr/it.to:0,ok=p>=1,cl=ok?"var(--green)":p>.7?"var(--orange)":"var(--red)";return`<div class="cd kpi kpi-sm" style="text-align:center"><div class="kpi-label">${it.l}</div><div class="kpi-val" style="color:${cl}">${it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr)}</div>${bH(Math.min(p,1),cl)}</div>`}).join("")}</div>
+function rB(code,C){const d=C.pb[code];if(!d)return"<div class='cd'>Aucune donnée pour cette boutique</div>";
+const objM=70000/6,pObj=Math.min(100,d.mg/objM*100);
+return`
+<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge ${d.n}</div><div class="kpi-val" style="color:var(--blue)">${$E(d.mg)}</div></div>
+<div class="cd kpi"><div class="kpi-label">Projection fin de mois</div><div class="kpi-val" style="color:var(--purple)">${$E(d.pj)}</div></div>
+<div class="cd kpi"><div class="kpi-label">Objectif boutique</div><div class="kpi-val" style="color:${pObj>=100?"var(--green)":"var(--orange)"}">${$D(pObj,0)} %</div><div class="kpi-sub">${$E(d.mg)} / ${$E(objM)}</div>${bH(pObj/100,pObj>=100?"var(--green)":"var(--orange)")}</div>
+<div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(d.pm)} €</div><div class="kpi-sub">${$(d.vv)} visiteurs</div></div></div>
+<div class="g3"><div class="cd kpi"><div class="kpi-label">Flux visiteurs</div><div class="kpi-val">${$(d.vv)}</div></div>
+<div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(d.g?.nt)}">${d.g?.nt?.toFixed(2)||"—"}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div><div class="kpi-sub">${d.g?.pt||0} participations</div></div>
+<div class="cd kpi"><div class="kpi-label">Avis Google</div><div class="kpi-val">${$(d.gl?.tt)}</div><div class="kpi-sub">Note ${d.gl?.nt?.toFixed(1)||"—"} · +${d.gl?.ms||0} ce mois</div></div></div>
+<div class="cd"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="kpi-label" style="margin:0">Avancement du mois</span><span style="font-size:12px;font-weight:700">J${C.jc} / ${C.jt}</span></div>${bH(C.jc/C.jt,"var(--blue)")}</div>
+<div class="sec">Items prioritaires</div>
+<div class="cd"><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé</th><th class="tc">Objectif</th><th class="tc">Progression</th></tr></thead><tbody>
+${d.ia.map(it=>{const p=it.to>0?it.tr/it.to:0;return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${p>=1?"var(--green)":"var(--red)"}">${it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr)}</td><td class="tc">${it.pc?it.to+"%":it.cu?it.to+"€":$(it.to)}</td><td class="tc" style="width:120px">${bH(Math.min(1,p),p>=1?"var(--green)":"var(--orange)")}<span style="font-size:10px;color:var(--sub)">${$D(p*100,0)}%</span></td></tr>`}).join("")}</tbody></table></div></div>
 <div class="sec">Classement vendeurs</div><div class="cd"><div class="tw"><table><thead><tr><th class="tl">#</th><th class="tl">Vendeur</th><th class="tc">M/J</th><th class="tc">Marge</th><th class="tc">Projection</th>${C.RI.map(it=>`<th class="tc">${it.l.length>12?it.l.slice(0,10)+"…":it.l}</th>`).join("")}<th class="tc">Items</th><th class="tc">Commission</th></tr></thead><tbody>
 ${d.bv.sort((a,b)=>b.mj-a.mj).map(v=>`<tr onclick="sV('${v.nm}')"><td class="tl"><span class="rg ${rC(v.rk)}">${v.rk}</span></td><td class="tl" style="font-weight:700">${v.nm}<div style="font-size:10px;color:var(--mut);font-weight:400">${v.jw}j</div></td><td class="tc" style="font-weight:700;color:var(--green)">${$(v.mj)} €</td><td class="tc">${$E(v.mg)}</td><td class="tc">${$E(v.pj)}</td>${v.its.map(i=>`<td class="tc" style="color:${i.ok?"var(--green)":"var(--red)"};font-weight:600">${fV(i)}<div style="font-size:9px;color:var(--mut);font-weight:400">/${fO(i)}</div></td>`).join("")}<td class="tc"><span class="pl ${pC(v.ia)}">${v.ia}/5</span></td><td class="tc" style="font-weight:700">${$E(v.cf)}</td></tr>`).join("")}</tbody></table></div></div>
 ${(()=>{const al=d.bv.filter(v=>v.ia<3).sort((a,b)=>a.ia-b.ia);if(!al.length)return'';return`<div class="sec">Plans d'action</div>${al.map(v=>`<div class="cd ${v.ia===0?"ac":"aw"}"><div style="font-weight:700;margin-bottom:5px">${v.nm} — ${v.ia}/5 items · ${$E(v.mj)}/jour</div>${v.its.filter(i=>!i.ok).map(i=>`<div style="font-size:12px;color:#475569;line-height:1.7"><span style="color:var(--red);font-weight:600">${i.l}</span> : ${fV(i)} / ${fO(i)} — reste ${fR(i)}</div>`).join("")}</div>`).join("")}`})()}`}
@@ -287,7 +297,7 @@ function rV(v,C){const b=B.find(x=>x.c===v.bq);const bd=C.pb[v.bq];const ve=Math
 <button class="bk" onclick="bV()">← Retour</button>
 <div class="vh" style="background:${b?.cl||"#2563EB"}"><div class="vh-top"><div><div class="vh-role">${b?.n||v.bq} · ${v.role}</div><div class="vh-name">${v.nm}</div></div><div class="vh-rg">#${v.rk}</div></div><div class="vh-stats"><div class="vh-stat"><span>Jours</span><div>${v.jc} / ${v.jw}</div></div><div class="vh-stat"><span>Rang</span><div>${v.rk} / ${C.rk.length}</div></div><div class="vh-stat"><span>Items</span><div>${v.ia} / 5</div></div></div></div>
 <div class="g4"><div class="cd kpi"><div class="kpi-label">Marge / jour</div><div class="kpi-val" style="color:var(--green)">${$E(v.mj)}</div></div>
-<div class="cd kpi"><div class="kpi-label">Marge réalisée</div><div class="kpi-val" style="color:var(--blue)">${$E(v.mg)}</div>${N1&&v.v1?`<div class="kpi-sub">N-1 : ${$E(v.v1.mg)} ${eH((v.mg-v.v1.mg)/Math.max(1,v.v1.mg))}</div>`:""}</div>
+<div class="cd kpi"><div class="kpi-label">Marge réalisée</div><div class="kpi-val" style="color:var(--blue)">${$E(v.mg)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Projection</div><div class="kpi-val" style="color:var(--purple)">${$E(v.pj)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(pm)} €</div><div class="kpi-sub">~${$(ve)} visites</div></div></div>
 <div class="cd cc"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"><div><div class="kpi-label">Commission projetée</div><div class="cc-amt">${$E(v.cf)}</div><div class="cc-det">Base ${$E(v.cb)} x ${(v.co*100).toFixed(0)}% prérequis ${v.pg?`${v.pg>0?"+":""}${v.pg} € Goodays`:""}</div></div><div style="text-align:center"><div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.3px">Prérequis</div><div style="font-size:22px;font-weight:800;color:${v.ia>=4?"var(--green)":v.ia>=3?"var(--orange)":"var(--red)"}">${v.ia}/5</div></div></div></div>
