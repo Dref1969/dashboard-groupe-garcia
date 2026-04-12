@@ -608,12 +608,9 @@ function getDefaultEntries() {
 function loadData() {
   try {
     const d = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (d && Array.isArray(d.entries) && d.entries.length > 0) return d;
+    if (d && Array.isArray(d.entries)) return d;
   } catch(e) {}
-  // Pre-load with Rosa's grades from Ecole Directe
-  const defaultData = { entries: getDefaultEntries() };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
-  return defaultData;
+  return { entries: [] };
 }
 
 function saveData(data) {
