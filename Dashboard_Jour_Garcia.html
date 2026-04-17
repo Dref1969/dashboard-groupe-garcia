@@ -510,7 +510,7 @@ function renderSynthese(el){
   <div class="stitle">MARGE DU JOUR PAR BOUTIQUE</div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
-    <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
+    <div class="cd"><h3>MARGE MOYENNE PAR MOBILE VENDU — PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
   </div>
   <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd" style="margin-bottom:12px">
@@ -532,10 +532,17 @@ function renderSynthese(el){
     safeChart('cMarge',{type:'bar',data:{labels,datasets:[{data:MAGS.map(b=>b.marge),backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+' €'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
     });
+    // Calcul marge moyenne par mobile vendu par boutique (Hors W2S, depuis Factures_Jour)
+    const avgByBoutique=MAGS.map(b=>{
+      const bouNomUp=b.nom.toUpperCase();
+      const vendeursBou=FACTURES_SUMMARY.filter(f=>f.boutique.toUpperCase()===bouNomUp);
+      let totMarge=0,totMob=0;
+      vendeursBou.forEach(f=>{totMarge+=(f.margeFactMobile||0);totMob+=(f.nbMobiles||0);});
+      return totMob>0?totMarge/totMob:0;
+    });
     safeChart('cMob',{type:'bar',data:{labels,datasets:[
-      {label:'Mob',data:MAGS.map(b=>b.mob),backgroundColor:'#2563EBCC',borderRadius:3},
-      {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}});
+      {label:'€ / mobile',data:avgByBoutique,backgroundColor:colors.map(c=>c+'CC'),borderRadius:3}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{color:'#0F1419',font:{weight:700,size:11,family:'Plus Jakarta Sans'},anchor:'end',align:'end',formatter:v=>v>0?fmt(v)+' €':'—'}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},title:{display:true,text:'€ par mobile vendu (Hors W2S)',font:{size:10}}}}}});
   });
 }
 
