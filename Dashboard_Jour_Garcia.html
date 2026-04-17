@@ -585,26 +585,20 @@ function renderBoutique(el,code){
     if(mobilesBoutique.length===0) return '';
     const rows=mobilesBoutique.map(m=>`<tr>
       <td><strong>${esc(m.vendeur)}</strong></td>
-      <td>${esc(m.modele.substring(0,50))}</td>
-      <td style="text-align:right"><span class="dot" style="background:#64748B"></span>${fmt(m.margeMobileSeul)} €</td>
-      <td style="text-align:right"><strong>${fmt(m.margeFactureTotale)} €</strong></td>
-      <td style="text-align:right">${fmt(m.margeAllouee)} €</td>
+      <td>${esc(m.modele.substring(0,55))}</td>
+      <td style="text-align:right"><strong>${fmt(m.margeAllouee)} €</strong></td>
     </tr>`).join('');
     return `<div class="stitle">MOBILES VENDUS — ${mag.nom.toUpperCase()}</div>
     <div class="cd" style="margin-bottom:12px">
       <table>
         <thead><tr>
           <th>VENDEUR</th><th>MODÈLE</th>
-          <th style="text-align:right">MARGE MOBILE</th>
-          <th style="text-align:right">MARGE FACTURE</th>
-          <th style="text-align:right">PAR MOBILE</th>
+          <th style="text-align:right">MARGE PAR MOBILE</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
       <div style="font-size:10px;color:var(--sub);margin-top:8px">
-        <strong>Marge mobile</strong> = marge du téléphone seul |
-        <strong>Marge facture</strong> = marge totale de la facture (mobile + accessoires + ALBA + services) |
-        <strong>Par mobile</strong> = marge facture allouée si plusieurs mobiles sur même facture
+        Marge facture complète (mobile + accessoires + ALBA + services) divisée par le nombre de mobiles sur la facture.
       </div>
     </div>`;
   })()}
