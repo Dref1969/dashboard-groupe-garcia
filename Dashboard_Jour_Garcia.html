@@ -563,8 +563,8 @@ function renderBoutique(el,code){
       type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
     });
-    // MARGE MOYENNE PAR MOBILE VENDU = (Marge Assu + Marge Access + Marge Services) / mob
-    const vAvgData=vendeurs.map(v=>v.mob>0?((v.margeAssu||0)+(v.access||0)+(v.margeServices||0))/v.mob:0);
+    // MARGE MOYENNE PAR MOBILE VENDU = (Marge Assu + Marge Access + Marge Services + G3A*50€) / mob
+    const vAvgData=vendeurs.map(v=>v.mob>0?((v.margeAssu||0)+(v.access||0)+(v.margeServices||0)+((v.g3a||0)*50))/v.mob:0);
     safeChart('cBPerf',{
       type:'bar',data:{labels:vLabels,datasets:[
         {label:'€ / mobile',data:vAvgData,backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
