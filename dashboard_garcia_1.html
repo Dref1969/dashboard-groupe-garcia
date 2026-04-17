@@ -275,9 +275,9 @@ const c2=new Chart(document.getElementById("chG3"),{type:"bar",data:{labels:lb,d
 /* Camembert répartition marge */
 const c3=new Chart(document.getElementById("chPie"),{type:"doughnut",data:{labels:lb,datasets:[{data:bf.map(b=>C.pb[b.c].mg),backgroundColor:cls,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:11,family:"Plus Jakarta Sans"},padding:12}},datalabels:{font:{size:11,weight:"700",family:"Plus Jakarta Sans"},color:"#fff",formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((s,x)=>s+x,0);return t>0?(v/t*100).toFixed(1)+"%":""}}}}});charts.push(c3);
 /* Marge generee par les ventes de mobiles par boutique (Hors W2S)
-   = somme MargeFactMobile des vendeurs de la boutique
-   = nb mobiles x marge moyenne/mobile (ex Chateaudun : 10 x 181 = 1808) */
-const tmD=bf.map(b=>Math.round(C.pb[b.c].fmMarge||0));
+   = nb mobiles 3GWIN Hors W2S x marge moyenne par mobile (Factures_Mois)
+   Ex Chateaudun : 12 mobiles (Vendeurs_Mois) x 181 €/mob (Factures_Mois) = 2172 € */
+const tmD=bf.map(b=>{const mob=C.pb[b.c].mobN||0,mp=C.pb[b.c].mpMob||0;return Math.round(mob*mp);});
 const tmMax=Math.max(1,...tmD);
 const c4=new Chart(document.getElementById("chAcc"),{type:"bar",data:{labels:lb,datasets:[{label:"Marge mobile €",data:tmD,backgroundColor:cls,...chO}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20}},plugins:{legend:{display:false},datalabels:{display:true,anchor:"end",align:"end",offset:2,clamp:true,font:{size:10,weight:"700",family:"Plus Jakarta Sans"},color:"#0F172A",formatter:v=>v>0?$(v)+"€":"—"}},scales:{y:{beginAtZero:true,suggestedMax:Math.ceil(tmMax*1.25/100)*100,ticks:{font:{size:10},callback:v=>v+"€"},grid:{color:"#F1F5F9"}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});charts.push(c4)}
 
