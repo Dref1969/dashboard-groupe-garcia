@@ -289,6 +289,42 @@ async function fetchJourData(){
   VENDEURS.sort((a,b)=>b.marge-a.marge);
 }
 
+// Store des factures detaillees (vraie marge par vendeur + modeles vendus)
+let FACTURES_SUMMARY=[]; // per vendeur
+let FACTURES_MOBILES=[]; // detail mobile par mobile
+
+async function fetchFacturesJour(){
+  try{
+    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Factures_Jour')}`;
+    const text=await fetchRetry(url);
+    const rows=parseCSV(text);
+    FACTURES_SUMMARY=rows.filter(r=>r.Type==="SUMMARY").map(r=>({
+      vendeur:r.Vendeur||"",
+      boutique:r.Boutique||"",
+      nbFactures:parseInt(r.NbFactures)||0,
+      nbFactMobile:parseInt(r.NbFactMobile)||0,
+      nbMobiles:parseInt(r.NbMobiles)||0,
+      margeTotale:parseFloat((r.MargeTotale||"0").replace(",","."))||0,
+      margeFactMobile:parseFloat((r.MargeFactMobile||"0").replace(",","."))||0,
+      margeParMobile:parseFloat((r.MargeParMobile||"0").replace(",","."))||0,
+      margeParFacture:parseFloat((r.MargeParFacture||"0").replace(",","."))||0
+    }));
+    FACTURES_MOBILES=rows.filter(r=>r.Type==="MOBILE").map(r=>({
+      vendeur:r.Vendeur||"",
+      boutique:r.Boutique||"",
+      numFac:r.NumFac||"",
+      modele:r.Modele||"",
+      margeMobileSeul:parseFloat((r.MargeMobileSeul||"0").replace(",","."))||0,
+      margeFactureTotale:parseFloat((r.MargeFactureTotale||"0").replace(",","."))||0,
+      margeAllouee:parseFloat((r.MargeAllouee||"0").replace(",","."))||0
+    }));
+    cacheSet('factures',{summary:FACTURES_SUMMARY,mobiles:FACTURES_MOBILES});
+  }catch(e){
+    FACTURES_SUMMARY=[];
+    FACTURES_MOBILES=[];
+  }
+}
+
 async function fetchChallengeHist(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Historique_Challenges')}`;
   const text=await fetchRetry(url);
@@ -398,7 +434,7 @@ async function manualRefresh(){
 
   try{
     // Fetch en PARALLÈLE
-    await Promise.all([fetchJourData(), fetchChallengeHist()]);
+    await Promise.all([fetchJourData(), fetchChallengeHist(), fetchFacturesJour()]);
     computeTotals();
     updateDates();
     render();
@@ -420,7 +456,7 @@ async function silentRefresh(){
   IS_REFRESHING=true;
   try{
     // Fetch en PARALLÈLE
-    await Promise.all([fetchJourData(), fetchChallengeHist()]);
+    await Promise.all([fetchJourData(), fetchChallengeHist(), fetchFacturesJour()]);
     computeTotals();
     updateDates();
     render();
@@ -544,6 +580,34 @@ function renderBoutique(el,code){
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
     <div class="cd"><h3>MARGE MOYENNE PAR MOBILE VENDU</h3><canvas id="cBPerf"></canvas></div>
   </div>
+  ${(()=>{
+    const mobilesBoutique=FACTURES_MOBILES.filter(f=>f.boutique.toUpperCase()===mag.nom.toUpperCase());
+    if(mobilesBoutique.length===0) return '';
+    const rows=mobilesBoutique.map(m=>`<tr>
+      <td><strong>${esc(m.vendeur)}</strong></td>
+      <td>${esc(m.modele.substring(0,50))}</td>
+      <td style="text-align:right"><span class="dot" style="background:#64748B"></span>${fmt(m.margeMobileSeul)} €</td>
+      <td style="text-align:right"><strong>${fmt(m.margeFactureTotale)} €</strong></td>
+      <td style="text-align:right">${fmt(m.margeAllouee)} €</td>
+    </tr>`).join('');
+    return `<div class="stitle">MOBILES VENDUS — ${mag.nom.toUpperCase()}</div>
+    <div class="cd" style="margin-bottom:12px">
+      <table>
+        <thead><tr>
+          <th>VENDEUR</th><th>MODÈLE</th>
+          <th style="text-align:right">MARGE MOBILE</th>
+          <th style="text-align:right">MARGE FACTURE</th>
+          <th style="text-align:right">PAR MOBILE</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="font-size:10px;color:var(--sub);margin-top:8px">
+        <strong>Marge mobile</strong> = marge du téléphone seul |
+        <strong>Marge facture</strong> = marge totale de la facture (mobile + accessoires + ALBA + services) |
+        <strong>Par mobile</strong> = marge facture allouée si plusieurs mobiles sur même facture
+      </div>
+    </div>`;
+  })()}
   <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
   <div class="cd">
     <table>
@@ -563,8 +627,14 @@ function renderBoutique(el,code){
       type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
     });
-    // MARGE MOYENNE PAR MOBILE VENDU = (Marge Assu + Marge Access + Marge Services + G3A*50€) / mob
-    const vAvgData=vendeurs.map(v=>v.mob>0?((v.margeAssu||0)+(v.access||0)+(v.margeServices||0)+((v.g3a||0)*50))/v.mob:0);
+    // MARGE MOYENNE PAR MOBILE VENDU — utilise les vraies donnees Factures_Jour si disponibles
+    // Fallback sur approximation (Marge Assu + Access + Services + G3A*50€) / mob
+    const vAvgData=vendeurs.map(v=>{
+      const fact=FACTURES_SUMMARY.find(f=>f.vendeur===v.nom);
+      if(fact && fact.nbMobiles>0) return fact.margeParMobile;
+      if(v.mob>0) return ((v.margeAssu||0)+(v.access||0)+(v.margeServices||0)+((v.g3a||0)*50))/v.mob;
+      return 0;
+    });
     safeChart('cBPerf',{
       type:'bar',data:{labels:vLabels,datasets:[
         {label:'€ / mobile',data:vAvgData,backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
@@ -901,9 +971,10 @@ async function init(){
   // ── Phase 1 : Fetch PARALLÈLE des deux onglets ──
   if(!usedCache) splashProgress(20,'Chargement des données...');
   try{
-    const [jourResult, challResult] = await Promise.allSettled([
+    const [jourResult, challResult, facturesResult] = await Promise.allSettled([
       fetchJourData(),
-      fetchChallengeHist()
+      fetchChallengeHist(),
+      fetchFacturesJour()
     ]);
 
     if(jourResult.status==='fulfilled'){
