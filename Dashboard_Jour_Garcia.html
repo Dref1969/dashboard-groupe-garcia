@@ -461,11 +461,11 @@ function renderSynthese(el){
     <div class="cd kpi"><h3>SFR CYBER</h3><div class="val">${T.cyber}</div><div class="sub">sécurité</div></div>
   </div>
   <div class="g3" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${fmtD(T.txAssu,1)}%</div><div class="sub">${T.assu} / ${T.mob} mob</div>
-      <div class="tag ${T.txAssu>=50?'green':T.txAssu>=30?'orange':'red'}">${T.txAssu>=50?'✓ Objectif':'À améliorer'}</div></div>
-    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${fmtD(T.txG3a,1)}%</div><div class="sub">${T.g3a} / ${T.mob} mob</div>
-      <div class="tag ${T.txG3a>=50?'green':T.txG3a>=30?'orange':'red'}">${T.txG3a>=50?'✓ Objectif':'À améliorer'}</div></div>
-    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${fmtD(T.txAccess,1)} €</div><div class="sub">CA: ${fmt(T.access)} €</div></div>
+    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${T.mob>0?fmtD(T.txAssu,1)+'%':'—'}</div><div class="sub">${T.assu} / ${T.mob} mob</div>
+      ${T.mob>0?`<div class="tag ${T.txAssu>=50?'green':T.txAssu>=30?'orange':'red'}">${T.txAssu>=50?'✓ Objectif':'À améliorer'}</div>`:''}</div>
+    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${T.mob>0?fmtD(T.txG3a,1)+'%':'—'}</div><div class="sub">${T.g3a} / ${T.mob} mob</div>
+      ${T.mob>0?`<div class="tag ${T.txG3a>=50?'green':T.txG3a>=30?'orange':'red'}">${T.txG3a>=50?'✓ Objectif':'À améliorer'}</div>`:''}</div>
+    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${T.mob>0?fmtD(T.txAccess,1)+' €':'—'}</div><div class="sub">CA: ${fmt(T.access)} €</div></div>
   </div>
   <div class="stitle">MARGE DU JOUR PAR BOUTIQUE</div>
   <div class="g2" style="margin-bottom:12px">
@@ -524,11 +524,14 @@ function renderBoutique(el,code){
   </div>
   ${vendeurs.length?`
   <div class="g3" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${fmtD(txA,1)}%</div>
-      <div class="tag ${txA>=50?'green':txA>=30?'orange':'red'}">${txA>=50?'✓':'⚠'}</div></div>
-    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${fmtD(txG,1)}%</div>
-      <div class="tag ${txG>=50?'green':txG>=30?'orange':'red'}">${txG>=50?'✓':'⚠'}</div></div>
-    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${fmtD(txAcc,1)} €</div></div>
+    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${mag.mob>0?fmtD(txA,1)+'%':'—'}</div>
+      <div class="sub">${mag.assu} assu / ${mag.mob} mob</div>
+      ${mag.mob>0?`<div class="tag ${txA>=50?'green':txA>=30?'orange':'red'}">${txA>=50?'✓':'⚠'}</div>`:''}</div>
+    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${mag.mob>0?fmtD(txG,1)+'%':'—'}</div>
+      <div class="sub">${mag.g3a} g3a / ${mag.mob} mob</div>
+      ${mag.mob>0?`<div class="tag ${txG>=50?'green':txG>=30?'orange':'red'}">${txG>=50?'✓':'⚠'}</div>`:''}</div>
+    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${mag.mob>0?fmtD(txAcc,1)+' €':'—'}</div>
+      <div class="sub">CA: ${fmt(mag.access)} €</div></div>
   </div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
