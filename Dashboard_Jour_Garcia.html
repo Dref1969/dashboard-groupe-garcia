@@ -264,6 +264,8 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:parseFloat(r.Access)||0,
+    margeAssu:parseFloat(r.MargeAssu)||0,
+    margeServices:parseFloat(r.MargeServices)||0,
     abo:parseInt(r.Abo)||0
   }));
 
@@ -280,6 +282,8 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:parseFloat(r.Access)||0,
+    margeAssu:parseFloat(r.MargeAssu)||0,
+    margeServices:parseFloat(r.MargeServices)||0,
     abo:parseInt(r.Abo)||0
   }));
   VENDEURS.sort((a,b)=>b.marge-a.marge);
@@ -538,7 +542,7 @@ function renderBoutique(el,code){
   </div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
-    <div class="cd"><h3>ITEMS PAR VENDEUR</h3><canvas id="cBPerf"></canvas></div>
+    <div class="cd"><h3>MARGE MOYENNE PAR MOBILE VENDU</h3><canvas id="cBPerf"></canvas></div>
   </div>
   <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
   <div class="cd">
@@ -559,13 +563,12 @@ function renderBoutique(el,code){
       type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
     });
+    // MARGE MOYENNE PAR MOBILE VENDU = (Marge Assu + Marge Access + Marge Services) / mob
+    const vAvgData=vendeurs.map(v=>v.mob>0?((v.margeAssu||0)+(v.access||0)+(v.margeServices||0))/v.mob:0);
     safeChart('cBPerf',{
       type:'bar',data:{labels:vLabels,datasets:[
-        {label:'Mob',data:vendeurs.map(v=>v.mob),backgroundColor:'#2563EBCC',borderRadius:3},
-        {label:'Cyber',data:vendeurs.map(v=>v.cyber),backgroundColor:'#7C3AEDCC',borderRadius:3},
-        {label:'Assu',data:vendeurs.map(v=>v.assu),backgroundColor:'#059669CC',borderRadius:3},
-        {label:'G3A',data:vendeurs.map(v=>v.g3a),backgroundColor:'#D97706CC',borderRadius:3}
-      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
+        {label:'€ / mobile',data:vAvgData,backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{color:'#0F1419',font:{weight:700,size:10},anchor:'end',align:'end',formatter:v=>v>0?v.toFixed(0)+' €':''}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},title:{display:true,text:'€ par mobile vendu',font:{size:10}}}}}
     });
   });
 }
