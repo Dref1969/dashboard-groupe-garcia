@@ -540,9 +540,12 @@ function renderSynthese(el){
       vendeursBou.forEach(f=>{totMarge+=(f.margeFactMobile||0);totMob+=(f.nbMobiles||0);});
       return totMob>0?totMarge/totMob:0;
     });
+    // Echelle Y avec 25% de padding en haut pour afficher les datalabels
+    const maxAvg=Math.max(0, ...avgByBoutique);
+    const yMaxAvg=maxAvg>0?Math.ceil(maxAvg*1.25/10)*10:100;
     safeChart('cMob',{type:'bar',data:{labels,datasets:[
       {label:'€ / mobile',data:avgByBoutique,backgroundColor:colors.map(c=>c+'CC'),borderRadius:3}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{color:'#0F1419',font:{weight:700,size:11,family:'Plus Jakarta Sans'},anchor:'end',align:'end',formatter:v=>v>0?fmt(v)+' €':'—'}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},title:{display:true,text:'€ par mobile vendu (Hors W2S)',font:{size:10}}}}}});
+    ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20}},plugins:{legend:{display:false},datalabels:{color:'#0F1419',font:{weight:700,size:11,family:'Plus Jakarta Sans'},anchor:'end',align:'end',offset:2,clamp:true,formatter:v=>v>0?fmt(v)+' €':'—'}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,max:yMaxAvg,grid:{color:'#F1F5F9'},title:{display:true,text:'€ par mobile vendu (Hors W2S)',font:{size:10}}}}}});
   });
 }
 
