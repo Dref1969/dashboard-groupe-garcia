@@ -272,7 +272,7 @@ function eD(d){
     mobCount[m.modele].qte++;
     mobCount[m.modele].marge+=m.margeAllouee||0;
   });
-  const topMob=Object.values(mobCount).sort((a,b)=>b.qte-a.qte||b.marge-a.marge).slice(0,5);
+  const topMob=Object.values(mobCount).sort((a,b)=>b.qte-a.qte||b.marge-a.marge).slice(0,10);
 
   return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,g3GN,acGN,RI,topMob};
 }
@@ -309,7 +309,7 @@ return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</
 <div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge moyenne par mobile vendu par boutique</div><div class="chart-wrap"><canvas id="chG3"></canvas></div></div></div>
 <div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Répartition marge groupe</div><div class="chart-wrap"><canvas id="chPie"></canvas></div></div>
 <div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge générée par les ventes de mobiles (Hors W2S)</div><div class="chart-wrap"><canvas id="chAcc"></canvas></div></div></div>
-<div class="sec">Top 5 mobiles les plus vendus — ${(D&&D.moisEnCours)||"mois en cours"}</div>
+<div class="sec">Top 10 mobiles les plus vendus — ${(D&&D.moisEnCours)||"mois en cours"}</div>
 <div class="cd"><div class="tw"><table><thead><tr><th class="tl" style="width:40px">#</th><th class="tl">Modèle</th><th class="tc">Quantité</th><th class="tc">Marge totale</th><th class="tc">Marge moyenne</th></tr></thead><tbody>
 ${(C.topMob||[]).map((m,i)=>{const mp=m.qte>0?m.marge/m.qte:0;const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}`;return`<tr><td class="tl" style="font-weight:700">${medal}</td><td class="tl" style="font-weight:600">${m.modele}</td><td class="tc" style="font-weight:700">${$(m.qte)}</td><td class="tc" style="font-weight:700;color:var(--green)">${$E(m.marge)}</td><td class="tc" style="color:var(--sub)">${$D(mp,0)}€</td></tr>`}).join("")||'<tr><td class="tc" colspan="5" style="color:var(--sub)">Aucun mobile vendu</td></tr>'}
 </tbody></table></div></div>
