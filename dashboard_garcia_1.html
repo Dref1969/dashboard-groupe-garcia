@@ -180,7 +180,21 @@ async function loadReal(){
     });
   }
 
-  const result={vs,n1,gd,gl,vi,viN1,moisEnCours,fmBou,magDet};
+  // Parse Factures_Mois MOBILE rows : top modeles vendus du mois
+  const fmMobiles=[];
+  if(fm){
+    fm.filter(r=>r.Type==="MOBILE").forEach(r=>{
+      // Nettoyage du nom du modele (trim + supprime *** GARANTIE CONSTRUCTEUR ...)
+      let modele=(r.Modele||"").replace(/\s*\*\*\*\s*GARANTIE.*$/i,"").replace(/\s+/g," ").trim().toUpperCase();
+      if(!modele)return;
+      fmMobiles.push({
+        modele,
+        margeAllouee:parseFloat((r.MargeAllouee||"0").replace(",","."))||0
+      });
+    });
+  }
+
+  const result={vs,n1,gd,gl,vi,viN1,moisEnCours,fmBou,magDet,fmMobiles};
   // Mise en cache
   cacheSet('data',result);
   return result;
@@ -251,7 +265,16 @@ function eD(d){
   const mobGN=rk.reduce((s,v)=>s+v.mb,0),mobGN1=Object.values(pb).reduce((s,b)=>s+b.mobN1,0);
   const cyGN=rk.reduce((s,v)=>s+v.cy,0),cyGN1=Object.values(pb).reduce((s,b)=>s+b.cyN1,0);
   const g3GN=rk.reduce((s,v)=>s+v.g3,0),acGN=rk.reduce((s,v)=>s+v.ac,0);
-  return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,g3GN,acGN,RI};
+  // Top 5 mobiles les plus vendus du mois (Factures_Mois MOBILE rows)
+  const mobCount={};
+  (d.fmMobiles||[]).forEach(m=>{
+    if(!mobCount[m.modele])mobCount[m.modele]={modele:m.modele,qte:0,marge:0};
+    mobCount[m.modele].qte++;
+    mobCount[m.modele].marge+=m.margeAllouee||0;
+  });
+  const topMob=Object.values(mobCount).sort((a,b)=>b.qte-a.qte||b.marge-a.marge).slice(0,5);
+
+  return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,g3GN,acGN,RI,topMob};
 }
 
 /* ═══ NAV ═══ */
@@ -286,6 +309,10 @@ return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</
 <div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge moyenne par mobile vendu par boutique</div><div class="chart-wrap"><canvas id="chG3"></canvas></div></div></div>
 <div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Répartition marge groupe</div><div class="chart-wrap"><canvas id="chPie"></canvas></div></div>
 <div class="cd"><div class="kpi-label" style="margin-bottom:8px">Marge générée par les ventes de mobiles (Hors W2S)</div><div class="chart-wrap"><canvas id="chAcc"></canvas></div></div></div>
+<div class="sec">Top 5 mobiles les plus vendus — ${(D&&D.moisEnCours)||"mois en cours"}</div>
+<div class="cd"><div class="tw"><table><thead><tr><th class="tl" style="width:40px">#</th><th class="tl">Modèle</th><th class="tc">Quantité</th><th class="tc">Marge totale</th><th class="tc">Marge moyenne</th></tr></thead><tbody>
+${(C.topMob||[]).map((m,i)=>{const mp=m.qte>0?m.marge/m.qte:0;const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}`;return`<tr><td class="tl" style="font-weight:700">${medal}</td><td class="tl" style="font-weight:600">${m.modele}</td><td class="tc" style="font-weight:700">${$(m.qte)}</td><td class="tc" style="font-weight:700;color:var(--green)">${$E(m.marge)}</td><td class="tc" style="color:var(--sub)">${$D(mp,0)}€</td></tr>`}).join("")||'<tr><td class="tc" colspan="5" style="color:var(--sub)">Aucun mobile vendu</td></tr>'}
+</tbody></table></div></div>
 <div class="sec">Items prioritaires — Groupe</div>
 <div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé</th><th class="tc">Objectif</th><th class="tc">Projection</th><th class="tc">Progression</th></tr></thead><tbody>
 ${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const jc=C.jc||1,jt=C.jt||21;const jr=Math.max(0,jt-jc);const proj=it.pc||it.cu?it.tr:Math.round(it.tr+(it.tr/Math.max(1,jc))*jr);const projV=it.pc?$D(proj,1)+"%":it.cu?$D(proj,1)+"€":$(proj);const projOk=it.pc||it.cu?proj>=it.to:proj>=it.to;return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${p>=1?"var(--green)":"var(--red)"}">${val}</td><td class="tc">${obj}</td><td class="tc" style="font-weight:700;color:${projOk?"var(--green)":"var(--red)"}">${projV}</td><td class="tc" style="width:120px">${bH(Math.min(1,p),p>=1?"var(--green)":"var(--orange)")}<span style="font-size:10px;color:var(--sub)">${$D(p*100,0)}%</span></td></tr>`}).join("")}</tbody></table></div></div>`}
