@@ -238,12 +238,17 @@ async function loadReal(){
       const code=r.Code||"";
       if(!code)return;
       magDet[code]={
-        margeMobile3G: parseFloat((r.MargeMobile||"0").replace(",","."))||0,
+        margeMobile3G: parseFloat((r.MargeMobilePack||r.MargeMobile||"0").replace(",","."))||0,
         mpMobile3G:    parseFloat((r.MargeParMobile||"0").replace(",","."))||0,
         margeAssu:     parseFloat((r.MargeAssu||"0").replace(",","."))||0,
         margeG3A50:    parseFloat((r.MargeG3A_50||"0").replace(",","."))||0,
         margeAccess:   parseFloat((r.MargeAccess||"0").replace(",","."))||0,
         margeServices: parseFloat((r.MargeServices||"0").replace(",","."))||0,
+        margeBox:      parseFloat((r.MargeBox||"0").replace(",","."))||0,
+        margeAbo:      parseFloat((r.MargeAbo||"0").replace(",","."))||0,
+        margeCyber15:  parseFloat((r.MargeCyber15||"0").replace(",","."))||0,
+        margeMobileLigne: parseFloat((r.MargeMobileLigne||"0").replace(",","."))||0,
+        boxMig:        parseInt(r.BoxMig)||0,
         mobHW2S:       parseInt(r.MobHorsW2S)||0
       };
     });
@@ -369,7 +374,22 @@ function eD(d){
   });
   const topMob=Object.values(mobCount).sort((a,b)=>b.qte-a.qte||b.marge-a.marge).slice(0,10);
 
-  return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,g3GN,acGN,RI,topMob,topFactures:d.topFactures||[],fmVendeurs:d.fmVendeurs||[],fmMobiles:d.fmMobiles||[]};
+  // Agrégation marges par catégorie au niveau GROUPE (depuis magDet)
+  const margeBreak={mobile:0,assurance:0,abo:0,cyber:0,g3a:0,box:0,access:0,services:0,migration:0};
+  if(magDet){
+    Object.values(magDet).forEach(m=>{
+      margeBreak.mobile+=m.margeMobileLigne||0;
+      margeBreak.assurance+=m.margeAssu||0;
+      margeBreak.abo+=m.margeAbo||0;
+      margeBreak.cyber+=m.margeCyber15||0;
+      margeBreak.g3a+=m.margeG3A50||0;
+      margeBreak.box+=m.margeBox||0;
+      margeBreak.access+=m.margeAccess||0;
+      margeBreak.services+=m.margeServices||0;
+      margeBreak.migration+=(m.boxMig||0)*30;
+    });
+  }
+  return{rk,pb,mG,pG,mN,vG,vGN1,pmG,pmGN1,jc:rk[0]?.jc||1,jt:rk[0]?.jt||21,gM,gT,gMo,iG,gd,gl,vi,viN1,mobGN,mobGN1,cyGN,cyGN1,g3GN,acGN,RI,topMob,topFactures:d.topFactures||[],fmVendeurs:d.fmVendeurs||[],fmMobiles:d.fmMobiles||[],margeBreak};
 }
 
 /* ═══ NAV ═══ */
@@ -431,6 +451,8 @@ return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</
 <div class="cd top-chart"><div class="kpi-label" style="margin-bottom:8px">Marge moyenne par mobile vendu par boutique</div><div class="top-arrow" id="topArrowG3"><span class="lbl">TOP</span><span class="ar">▼</span></div><div class="chart-wrap"><canvas id="chG3"></canvas></div></div></div>
 <div class="g2"><div class="cd"><div class="kpi-label" style="margin-bottom:8px">Répartition marge groupe</div><div class="chart-wrap"><canvas id="chPie"></canvas></div></div>
 <div class="cd top-chart"><div class="kpi-label" style="margin-bottom:8px">Marge générée par les ventes de mobiles (Hors W2S)</div><div class="top-arrow" id="topArrowAcc"><span class="lbl">TOP</span><span class="ar">▼</span></div><div class="chart-wrap"><canvas id="chAcc"></canvas></div></div></div>
+<div class="sec">💰 Répartition de la marge — Groupe ${(D&&D.moisEnCours)||"mois en cours"}</div>
+${(()=>{const mb=C.margeBreak||{};const items=[{k:"mobile",l:"📱 Mobile (ligne)",c:"#2563EB"},{k:"assurance",l:"🛡️ Assurances",c:"#059669"},{k:"access",l:"🎧 Accessoires",c:"#D97706"},{k:"g3a",l:"⭐ G3A",c:"#7C3AED"},{k:"box",l:"📦 Box",c:"#DC2626"},{k:"abo",l:"📞 Abonnements",c:"#0891B2"},{k:"cyber",l:"🔒 Cyber",c:"#E11D48"},{k:"services",l:"🛠️ Services",c:"#F59E0B"},{k:"migration",l:"🔄 Migration",c:"#6366F1"}];const tot=items.reduce((s,it)=>s+(mb[it.k]||0),0);const sorted=items.map(it=>({...it,val:mb[it.k]||0,pct:tot>0?(mb[it.k]||0)/tot*100:0})).sort((a,b)=>b.val-a.val);return`<div class="cd"><div class="tw"><table><thead><tr><th class="tl" style="width:40px">#</th><th class="tl">Catégorie</th><th class="tc">Valeur</th><th class="tc">Pourcentage</th><th class="tl" style="width:30%">Répartition</th></tr></thead><tbody>${sorted.map((it,i)=>`<tr><td class="tl" style="font-weight:700">${i+1}</td><td class="tl" style="font-weight:600"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${it.c};margin-right:8px;vertical-align:middle"></span>${it.l}</td><td class="tc" style="font-weight:800;color:var(--txt)">${$E(Math.round(it.val))}</td><td class="tc" style="font-weight:700;color:${it.c}">${it.pct.toFixed(1)} %</td><td class="tl"><div style="background:#F1F5F9;border-radius:4px;height:14px;position:relative;overflow:hidden"><div style="background:${it.c};height:100%;width:${it.pct}%;border-radius:4px"></div></div></td></tr>`).join("")}<tr class="trt"><td class="tl" style="font-weight:800">—</td><td class="tl" style="font-weight:800">TOTAL GROUPE</td><td class="tc" style="font-weight:800;color:var(--blue)">${$E(Math.round(tot))}</td><td class="tc" style="font-weight:800">100 %</td><td class="tc" style="color:var(--sub);font-size:10px">Marge totale ${(D&&D.moisEnCours)||""}</td></tr></tbody></table></div><div style="font-size:10px;color:var(--sub);margin-top:8px">💡 Cyber estimé à 15€/vente · G3A à 50€/vente · Migration à 30€/box · Mobile (ligne) = marge résiduelle du téléphone après soustraction des autres composantes.</div></div>`})()}
 <div class="sec">🏆 Top 5 factures mobile les plus rentables — ${(D&&D.moisEnCours)||"mois en cours"}</div>
 <div class="cd"><div class="tw"><table><thead><tr><th class="tl" style="width:40px">#</th><th class="tl">Vendeur</th><th class="tl">Boutique</th><th class="tl">N° Facture</th><th class="tl">Modèle(s)</th><th class="tc">Marge mobile + assurance</th><th class="tc">Marge facture</th></tr></thead><tbody>
 ${(C.topFactures||[]).map((f,i)=>{const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`<span style="color:var(--sub);font-weight:700">${i+1}</span>`;const nbMob=f.modeles.length;const totalMob=f.margesMobile.reduce((s,v)=>s+v,0);const isBest=i===0;return`<tr><td class="tl" style="font-weight:700;font-size:16px">${medal}</td><td class="tl" style="font-weight:700">${f.vendeur}</td><td class="tl" style="color:var(--sub)">${f.boutique}</td><td class="tl" style="font-family:monospace;font-size:11px;color:var(--mut)">${f.numFac}</td><td class="tl"><div style="font-weight:600;font-size:12px">${f.modeles.map(m=>m.substring(0,40)).join("<br>")}</div>${nbMob>1?`<div style="font-size:10px;color:var(--orange);font-weight:700;margin-top:2px">📱 ${nbMob} mobiles sur la facture</div>`:""}</td><td class="tc" style="color:var(--sub);font-size:11px">${$E(totalMob)}</td><td class="tc${isBest?' best-marge':''}" style="font-weight:800;color:var(--green);font-size:14px">${isBest?'<span class="ta"><span class="lbl">TOP</span><span class="ar">▼</span></span>':""}${$E(f.margeFactureTotale)}</td></tr>`}).join("")||'<tr><td class="tc" colspan="7" style="color:var(--sub)">Aucune facture mobile ce mois</td></tr>'}
