@@ -67,6 +67,10 @@ const $E=n=>$(n)+" €";const $D=(n,d=2)=>(n||0).toFixed(d);
 function cC(m){if(m<2e3)return 0;let c=0;for(const b of BM)if(m>b.m)c+=(Math.min(m,b.x)-b.m)*b.p;return c}
 function gP(n){if(!n||n<=0)return 0;if(n>=4.9)return 100;if(n>=4.7)return 50;if(n>=4.5)return 25;if(n>=4.3)return-50;return-100}
 function cN(n){return n>=4.7?"#059669":n>=4.5?"#D97706":"#DC2626"}
+// Couleur basee sur % atteint d'un objectif : vert>=100%, orange 80-99%, rouge <80%
+function cObj(p){return p>=100?"var(--green)":p>=80?"var(--orange)":"var(--red)"}
+// Couleur basee sur progression (0-1) : vert>=1, orange 0.8-0.99, rouge <0.8
+function cProg(p){return p>=1?"var(--green)":p>=0.8?"var(--orange)":"var(--red)"}
 function rC(r){return r<=3?"r1":r<=8?"r2":"r3"}
 function pC(a){return a>=4?"p1":a>=3?"p2":"p3"}
 function eH(v){if(v==null)return"";return`<span class="ev ${v>=0?"eu":"ed"}">${v>=0?"+":""}${(v*100).toFixed(1)}%</span>`}
@@ -302,7 +306,7 @@ function co(o){return{responsive:true,maintainAspectRatio:false,plugins:{legend:
 function rS(C){const objM=OBJ_TOT,pObj=Math.min(100,C.mG/objM*100);
 return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</div><div class="kpi-val" style="color:var(--blue)">${$E(C.mG)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Projection fin de mois</div><div class="kpi-val" style="color:var(--purple)">${$E(C.pG)}</div></div>
-<div class="cd kpi" style="border:2px solid ${pObj>=100?"var(--green)":"var(--orange)"}"><div class="kpi-label" style="font-weight:700;color:var(--txt)">🎯 Objectif mensuel</div><div class="kpi-val" style="color:${pObj>=100?"var(--green)":"var(--orange)"};font-size:32px">${$D(pObj,0)} %</div><div class="kpi-sub" style="font-size:12px;font-weight:600">${$E(C.mG)} / <span style="color:var(--blue);font-weight:800">${$E(OBJ_TOT)}</span></div>${bH(pObj/100,pObj>=100?"var(--green)":"var(--orange)")}</div>
+<div class="cd kpi" style="border:2px solid ${cObj(pObj)}"><div class="kpi-label" style="font-weight:700;color:var(--txt)">🎯 Objectif mensuel</div><div class="kpi-val" style="color:${cObj(pObj)};font-size:32px">${$D(pObj,0)} %</div><div class="kpi-sub" style="font-size:12px;font-weight:600">${$E(C.mG)} / <span style="color:var(--blue);font-weight:800">${$E(OBJ_TOT)}</span></div>${bH(pObj/100,cObj(pObj))}</div>
 <div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(C.pmG)} €</div><div class="kpi-sub">${$(C.vG)} visiteurs</div></div></div>
 <div class="g3"><div class="cd kpi"><div class="kpi-label">Flux visiteurs</div><div class="kpi-val">${$(C.vG)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(C.gM)}">${$D(C.gM)}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div></div>
@@ -318,7 +322,7 @@ ${(C.topMob||[]).map((m,i)=>{const mp=m.qte>0?m.marge/m.qte:0;const medal=i===0?
 </tbody></table></div></div>
 <div class="sec">Items prioritaires — Groupe</div>
 <div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé</th><th class="tc">Objectif</th><th class="tc">Projection</th><th class="tc">Progression</th></tr></thead><tbody>
-${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const jc=C.jc||1,jt=C.jt||21;const jr=Math.max(0,jt-jc);const proj=it.pc||it.cu?it.tr:Math.round(it.tr+(it.tr/Math.max(1,jc))*jr);const projV=it.pc?$D(proj,1)+"%":it.cu?$D(proj,1)+"€":$(proj);const projOk=it.pc||it.cu?proj>=it.to:proj>=it.to;return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${p>=1?"var(--green)":"var(--red)"}">${val}</td><td class="tc">${obj}</td><td class="tc" style="font-weight:700;color:${projOk?"var(--green)":"var(--red)"}">${projV}</td><td class="tc" style="width:120px">${bH(Math.min(1,p),p>=1?"var(--green)":"var(--orange)")}<span style="font-size:10px;color:var(--sub)">${$D(p*100,0)}%</span></td></tr>`}).join("")}</tbody></table></div></div>`}
+${C.iG.map(it=>{const val=it.pc?$D(it.tr,1)+"%":it.cu?$D(it.tr,1)+"€":$(it.tr);const obj=it.pc?it.to+"%":it.cu?it.to+"€":$(it.to);const p=it.to>0?it.tr/it.to:0;const jc=C.jc||1,jt=C.jt||21;const jr=Math.max(0,jt-jc);const proj=it.pc||it.cu?it.tr:Math.round(it.tr+(it.tr/Math.max(1,jc))*jr);const projV=it.pc?$D(proj,1)+"%":it.cu?$D(proj,1)+"€":$(proj);const projOk=it.pc||it.cu?proj>=it.to:proj>=it.to;const pProj=it.to>0?proj/it.to:0;return`<tr><td class="tl" style="font-weight:700">${it.l}</td><td class="tc" style="font-weight:700;color:${cProg(p)}">${val}</td><td class="tc">${obj}</td><td class="tc" style="font-weight:700;color:${cProg(pProj)}">${projV}</td><td class="tc" style="width:120px">${bH(Math.min(1,p),cProg(p))}<span style="font-size:10px;color:var(--sub)">${$D(p*100,0)}%</span></td></tr>`}).join("")}</tbody></table></div></div>`}
 
 function drawS(C){const bf=B.filter(b=>C.pb[b.c]),lb=bf.map(b=>b.n),cls=bf.map(b=>b.cl);const chO={borderRadius:4,barPercentage:.6};
 /* Panier moyen par boutique */
@@ -344,7 +348,7 @@ const objM=OBJ_BOUT[code]||(OBJ_TOT/6),pObj=Math.min(100,d.mg/objM*100);
 return`
 <div class="g4"><div class="cd kpi"><div class="kpi-label">Marge ${d.n}</div><div class="kpi-val" style="color:var(--blue)">${$E(d.mg)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Projection fin de mois</div><div class="kpi-val" style="color:var(--purple)">${$E(d.pj)}</div></div>
-<div class="cd kpi" style="border:2px solid ${pObj>=100?"var(--green)":"var(--orange)"}"><div class="kpi-label" style="font-weight:700;color:var(--txt)">🎯 Objectif boutique</div><div class="kpi-val" style="color:${pObj>=100?"var(--green)":"var(--orange)"};font-size:32px">${$D(pObj,0)} %</div><div class="kpi-sub" style="font-size:12px;font-weight:600">${$E(d.mg)} / <span style="color:var(--blue);font-weight:800">${$E(objM)}</span></div>${bH(pObj/100,pObj>=100?"var(--green)":"var(--orange)")}</div>
+<div class="cd kpi" style="border:2px solid ${cObj(pObj)}"><div class="kpi-label" style="font-weight:700;color:var(--txt)">🎯 Objectif boutique</div><div class="kpi-val" style="color:${cObj(pObj)};font-size:32px">${$D(pObj,0)} %</div><div class="kpi-sub" style="font-size:12px;font-weight:600">${$E(d.mg)} / <span style="color:var(--blue);font-weight:800">${$E(objM)}</span></div>${bH(pObj/100,cObj(pObj))}</div>
 <div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(d.pm)} €</div><div class="kpi-sub">${$(d.vv)} visiteurs</div></div></div>
 <div class="g3"><div class="cd kpi"><div class="kpi-label">Flux visiteurs</div><div class="kpi-val">${$(d.vv)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(d.g?.nt)}">${d.g?.nt?.toFixed(2)||"—"}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div><div class="kpi-sub">${d.g?.pt||0} participations</div></div>
