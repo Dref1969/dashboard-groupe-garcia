@@ -45,6 +45,13 @@ table{width:100%;border-collapse:collapse;font-size:12px}th{padding:8px 6px;font
 .sp-status{margin-top:28px;opacity:0;animation:spU .5s ease 1.8s forwards}.sp-status span{font-size:11px;color:#64748B}.sp-dots{display:inline-flex;gap:4px;margin-left:6px;vertical-align:middle}.sp-dot{width:5px;height:5px;border-radius:50%;background:#3B82F6;opacity:.3;animation:spP .8s ease infinite}.sp-dot:nth-child(2){animation-delay:.15s}.sp-dot:nth-child(3){animation-delay:.3s}
 @keyframes spU{to{opacity:1;transform:translateY(0)}}@keyframes spL{to{width:180px}}@keyframes spP{0%,100%{opacity:.3}50%{opacity:1}}
 @keyframes topArrowBounce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,10px)}}
+@keyframes trendUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes trendDown{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+.trend{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle}
+.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--mut)}
+.trend .arw{display:inline-block;font-size:14px;line-height:1}
+.trend.up .arw{animation:trendUp 1.2s ease-in-out infinite}
+.trend.down .arw{animation:trendDown 1.2s ease-in-out infinite}
 .top-chart{position:relative;overflow:visible}
 .top-arrow{position:absolute;top:42px;font-size:13px;font-weight:900;color:var(--green);animation:topArrowBounce .8s ease-in-out infinite;z-index:10;pointer-events:none;text-align:center;line-height:1;white-space:nowrap;display:none;filter:drop-shadow(0 2px 4px rgba(5,150,105,.4))}
 .top-arrow .lbl{display:inline-block;background:var(--green);color:#fff;padding:3px 10px;border-radius:10px;font-size:10px;letter-spacing:1px;margin-bottom:2px}
@@ -72,6 +79,50 @@ const $E=n=>$(n)+" €";const $D=(n,d=2)=>(n||0).toFixed(d);
 function cC(m){if(m<2e3)return 0;let c=0;for(const b of BM)if(m>b.m)c+=(Math.min(m,b.x)-b.m)*b.p;return c}
 function gP(n){if(!n||n<=0)return 0;if(n>=4.9)return 100;if(n>=4.7)return 50;if(n>=4.5)return 25;if(n>=4.3)return-50;return-100}
 function cN(n){return n>=4.7?"#059669":n>=4.5?"#D97706":"#DC2626"}
+// Tendance vs dernière MAJ stockée en localStorage (par KPI).
+// Shift auto : quand la valeur change, l'ancienne devient référence.
+// Seuil d'affichage : 0,5% (pour projection/panier) — paramétrable
+function trendVsLast(cur,key,seuil){
+  if(cur===null||cur===undefined)return"";
+  const s=Math.max(0.1,seuil||0.5);
+  const k="garcia_last_"+key;
+  let st;try{st=JSON.parse(localStorage.getItem(k)||"{}")}catch(e){st={}}
+  if(st.curr===undefined){
+    try{localStorage.setItem(k,JSON.stringify({curr:cur,prev:null}))}catch(e){}
+    return"";
+  }
+  if(cur!==st.curr){
+    try{localStorage.setItem(k,JSON.stringify({curr:cur,prev:st.curr}))}catch(e){}
+    const d=st.curr!==0?(cur-st.curr)/st.curr*100:0;
+    if(Math.abs(d)<s)return`<span class="trend flat"><span class="arw">─</span>stable</span>`;
+    if(d>0)return`<span class="trend up"><span class="arw">↑</span>+${d.toFixed(1)}%</span>`;
+    return`<span class="trend down"><span class="arw">↓</span>${d.toFixed(1)}%</span>`;
+  }
+  if(st.prev===null||st.prev===undefined||st.prev===0)return"";
+  const d=(cur-st.prev)/st.prev*100;
+  if(Math.abs(d)<s)return`<span class="trend flat"><span class="arw">─</span>stable</span>`;
+  if(d>0)return`<span class="trend up"><span class="arw">↑</span>+${d.toFixed(1)}%</span>`;
+  return`<span class="trend down"><span class="arw">↓</span>${d.toFixed(1)}%</span>`;
+}
+// Tendance Top Sat : compare valeur absolue (±0,05 = stable)
+function trendGoodaysVsLast(cur){
+  if(cur===null||cur===undefined)return"";
+  const k="garcia_last_gM";
+  let st;try{st=JSON.parse(localStorage.getItem(k)||"{}")}catch(e){st={}}
+  if(st.curr===undefined){try{localStorage.setItem(k,JSON.stringify({curr:cur,prev:null}))}catch(e){}return""}
+  if(cur!==st.curr){
+    try{localStorage.setItem(k,JSON.stringify({curr:cur,prev:st.curr}))}catch(e){}
+    const d=cur-st.curr;
+    if(Math.abs(d)<0.05)return`<span class="trend flat"><span class="arw">─</span>stable</span>`;
+    if(d>0)return`<span class="trend up"><span class="arw">↑</span>+${d.toFixed(2)}</span>`;
+    return`<span class="trend down"><span class="arw">↓</span>${d.toFixed(2)}</span>`;
+  }
+  if(st.prev===null||st.prev===undefined)return"";
+  const d=cur-st.prev;
+  if(Math.abs(d)<0.05)return`<span class="trend flat"><span class="arw">─</span>stable</span>`;
+  if(d>0)return`<span class="trend up"><span class="arw">↑</span>+${d.toFixed(2)}</span>`;
+  return`<span class="trend down"><span class="arw">↓</span>${d.toFixed(2)}</span>`;
+}
 // Couleur basee sur % atteint d'un objectif : vert>=100%, orange 80-99%, rouge <80%
 function cObj(p){return p>=100?"var(--green)":p>=80?"var(--orange)":"var(--red)"}
 // Couleur basee sur progression (0-1) : vert>=1, orange 0.8-0.99, rouge <0.8
@@ -310,11 +361,11 @@ function co(o){return{responsive:true,maintainAspectRatio:false,plugins:{legend:
 /* ═══ SYNTHESE ═══ */
 function rS(C){const objM=OBJ_TOT,pObj=Math.min(100,C.mG/objM*100),pProj=objM>0?(C.pG/objM*100):0;
 return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</div><div class="kpi-val" style="color:var(--blue)">${$E(C.mG)}</div></div>
-<div class="cd kpi"><div class="kpi-label">Projection fin de mois</div><div class="kpi-val" style="color:var(--purple)">${$E(C.pG)}</div></div>
+<div class="cd kpi"><div class="kpi-label">Projection fin de mois</div><div class="kpi-val" style="color:var(--purple)">${$E(C.pG)}${trendVsLast(Math.round(C.pG),"pG",0.5)}</div></div>
 <div class="cd kpi" style="border:2px solid ${cObj(pProj)}"><div class="kpi-label" style="font-weight:700;color:var(--txt)">🎯 Objectif mensuel</div><div class="kpi-val" style="color:${cObj(pProj)};font-size:32px">${$D(pObj,0)} %</div><div class="kpi-sub" style="font-size:12px;font-weight:600">${$E(C.mG)} / <span style="color:var(--blue);font-weight:800">${$E(OBJ_TOT)}</span></div><div class="kpi-sub" style="font-size:11px;font-weight:700;color:${cObj(pProj)}">Projection : ${$D(pProj,0)} % (${$E(C.pG)})</div>${bH(pObj/100,cObj(pProj))}</div>
-<div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(C.pmG)} €</div><div class="kpi-sub">${$(C.vG)} visiteurs</div></div></div>
+<div class="cd kpi"><div class="kpi-label">Panier moyen</div><div class="kpi-val" style="color:var(--cyan)">${$D(C.pmG)} €${trendVsLast(Math.round((C.pmG||0)*100),"pmG",0.5)}</div><div class="kpi-sub">${$(C.vG)} visiteurs</div></div></div>
 <div class="g3"><div class="cd kpi"><div class="kpi-label">Flux visiteurs</div><div class="kpi-val">${$(C.vG)}</div></div>
-<div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(C.gM)}">${$D(C.gM)}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span></div></div>
+<div class="cd kpi"><div class="kpi-label">Satisfaction Goodays</div><div class="kpi-val" style="color:${cN(C.gM)}">${$D(C.gM)}<span style="font-size:14px;font-weight:500;color:var(--mut)"> / 5</span>${trendGoodaysVsLast(Math.round((C.gM||0)*100)/100)}</div></div>
 <div class="cd kpi"><div class="kpi-label">Avis Google (total)</div><div class="kpi-val">${$(C.gT)}</div><div class="kpi-sub">+${C.gMo} ce mois</div></div></div>
 <div class="cd"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="kpi-label" style="margin:0">Avancement du mois</span><span style="font-size:12px;font-weight:700">J${C.jc} / ${C.jt}</span></div>${bH(C.jc/C.jt,"var(--blue)")}</div>
 <div class="g2"><div class="cd top-chart"><div class="kpi-label" style="margin-bottom:8px">Panier moyen par boutique</div><div class="top-arrow" id="topArrowPM"><span class="lbl">TOP</span><span class="ar">▼</span></div><div class="chart-wrap"><canvas id="chPM"></canvas></div></div>
