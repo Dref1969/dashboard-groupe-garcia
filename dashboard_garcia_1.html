@@ -344,7 +344,7 @@ function eD(d){
   const pb={};
   B.forEach(b=>{
     const bv=rk.filter(v=>v.bq===b.c);if(!bv.length)return;
-    const mg=bv.reduce((s,v)=>s+v.mg,0),pj=bv.reduce((s,v)=>s+v.pj,0);
+    const mg=(magDet[b.c]&&typeof magDet[b.c].margeTot==='number')?magDet[b.c].margeTot:bv.reduce((s,v)=>s+v.mg,0),pj=bv.reduce((s,v)=>s+v.pj,0);
     const vv=vi[b.c]||0,pm=vv>0?mg/vv:0,mn=bv[0]?.v1?.mg||0;
     const vvN1=viN1[b.c]||0,pmN1=vvN1>0?mn/vvN1:0;
     const mobN=bv.reduce((s,v)=>s+v.mb,0),mobN1=bv[0]?.v1?.mb||0;
