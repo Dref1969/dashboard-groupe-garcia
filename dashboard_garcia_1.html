@@ -204,7 +204,7 @@ async function loadReal(){
     const as=pNum(r["Assurance"]),ma=pNum(r["MobAssu"]),ac=pNum(r["CAccessoires"]);
     const hw=pNum(r["MobHorsW2S"]),bx=pNum(r["Box"]);
     const jc=pNum(r["JourOuvre"]),jt=pNum(r["JoursOuvresTotal"]),jw=pNum(r["JoursTravailles"]);
-    const ta=ma>0?(as/ma)*100:0,tx=(hw+bx)>0?ac/(hw+bx):(mb>0?ac/mb:0);
+    const ta=ma>0?(as/ma)*100:0,tx=(mb+bx)>0?ac/(mb+bx):0;
     return{nm:r["Vendeur"],bq:r["CodeBoutique"],role:r["Role"]||"Vendeur",mg,mb,g3,cy,as,ma,ac,hw,bx,jc,jt:jt||21,jw:jw||22,ta,tx};
   });
   // Parse objectifs par vendeur (override des objectifs globaux Items_Mois)
