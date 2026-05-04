@@ -177,24 +177,6 @@ function splashProgress(pct, msg){
 }
 
 // ═══════════════════════════════════════
-//  CACHE localStorage (stale-while-revalidate)
-// ═══════════════════════════════════════
-const CACHE_PREFIX='garcia_jour_';
-const CACHE_TTL=5*60*1000; // 5 min : données considérées "fraîches"
-
-function cacheGet(key){
-  try{
-    const raw=localStorage.getItem(CACHE_PREFIX+key);
-    if(!raw) return null;
-    const {data,ts}=JSON.parse(raw);
-    return {data,ts,fresh:Date.now()-ts<CACHE_TTL};
-  }catch(e){return null}
-}
-function cacheSet(key,data){
-  try{localStorage.setItem(CACHE_PREFIX+key,JSON.stringify({data,ts:Date.now()}))}catch(e){}
-}
-
-// ═══════════════════════════════════════
 //  FETCH WITH RETRY (exponential backoff)
 // ═══════════════════════════════════════
 async function fetchRetry(url, retries=3, delay=1000){
@@ -244,9 +226,6 @@ async function fetchJourData(){
   const text=await fetchRetry(url);
   const rows=parseCSV(text);
 
-  // Mise en cache des données brutes parsées
-  cacheSet('jour',rows);
-
   const meta=rows.find(r=>r.Type==="META");
   if(meta){
     DATA_DATE=meta.Date||"";
@@ -264,8 +243,6 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:parseFloat(r.Access)||0,
-    margeAssu:parseFloat(r.MargeAssu)||0,
-    margeServices:parseFloat(r.MargeServices)||0,
     abo:parseInt(r.Abo)||0
   }));
 
@@ -282,47 +259,9 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:parseFloat(r.Access)||0,
-    margeAssu:parseFloat(r.MargeAssu)||0,
-    margeServices:parseFloat(r.MargeServices)||0,
     abo:parseInt(r.Abo)||0
   }));
   VENDEURS.sort((a,b)=>b.marge-a.marge);
-}
-
-// Store des factures detaillees (vraie marge par vendeur + modeles vendus)
-let FACTURES_SUMMARY=[]; // per vendeur
-let FACTURES_MOBILES=[]; // detail mobile par mobile
-
-async function fetchFacturesJour(){
-  try{
-    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Factures_Jour')}`;
-    const text=await fetchRetry(url);
-    const rows=parseCSV(text);
-    FACTURES_SUMMARY=rows.filter(r=>r.Type==="SUMMARY").map(r=>({
-      vendeur:r.Vendeur||"",
-      boutique:r.Boutique||"",
-      nbFactures:parseInt(r.NbFactures)||0,
-      nbFactMobile:parseInt(r.NbFactMobile)||0,
-      nbMobiles:parseInt(r.NbMobiles)||0,
-      margeTotale:parseFloat((r.MargeTotale||"0").replace(",","."))||0,
-      margeFactMobile:parseFloat((r.MargeFactMobile||"0").replace(",","."))||0,
-      margeParMobile:parseFloat((r.MargeParMobile||"0").replace(",","."))||0,
-      margeParFacture:parseFloat((r.MargeParFacture||"0").replace(",","."))||0
-    }));
-    FACTURES_MOBILES=rows.filter(r=>r.Type==="MOBILE").map(r=>({
-      vendeur:r.Vendeur||"",
-      boutique:r.Boutique||"",
-      numFac:r.NumFac||"",
-      modele:r.Modele||"",
-      margeMobileSeul:parseFloat((r.MargeMobileSeul||"0").replace(",","."))||0,
-      margeFactureTotale:parseFloat((r.MargeFactureTotale||"0").replace(",","."))||0,
-      margeAllouee:parseFloat((r.MargeAllouee||"0").replace(",","."))||0
-    }));
-    cacheSet('factures',{summary:FACTURES_SUMMARY,mobiles:FACTURES_MOBILES});
-  }catch(e){
-    FACTURES_SUMMARY=[];
-    FACTURES_MOBILES=[];
-  }
 }
 
 async function fetchChallengeHist(){
@@ -340,9 +279,6 @@ async function fetchChallengeHist(){
     groupe_marge:parseFloat((r.Groupe_Marge||"0").replace(",","."))||0,
     groupe_won:(r.Groupe_Won||"").toUpperCase()==="OUI"
   })).filter(r=>r.date);
-
-  // Mise en cache des challenges parsés
-  cacheSet('challenges',CHALLENGE_HIST);
 }
 
 // ═══════════════════════════════════════
@@ -433,8 +369,8 @@ async function manualRefresh(){
   if(hdrInfo) hdrInfo.textContent='Actualisation en cours...';
 
   try{
-    // Fetch en PARALLÈLE
-    await Promise.all([fetchJourData(), fetchChallengeHist(), fetchFacturesJour()]);
+    await fetchJourData();
+    await fetchChallengeHist();
     computeTotals();
     updateDates();
     render();
@@ -455,8 +391,8 @@ async function silentRefresh(){
   if(IS_REFRESHING) return;
   IS_REFRESHING=true;
   try{
-    // Fetch en PARALLÈLE
-    await Promise.all([fetchJourData(), fetchChallengeHist(), fetchFacturesJour()]);
+    await fetchJourData();
+    await fetchChallengeHist();
     computeTotals();
     updateDates();
     render();
@@ -510,7 +446,7 @@ function renderSynthese(el){
   <div class="stitle">MARGE DU JOUR PAR BOUTIQUE</div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
-    <div class="cd"><h3>MARGE MOYENNE PAR MOBILE VENDU — PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
+    <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
   </div>
   <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd" style="margin-bottom:12px">
@@ -532,20 +468,10 @@ function renderSynthese(el){
     safeChart('cMarge',{type:'bar',data:{labels,datasets:[{data:MAGS.map(b=>b.marge),backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+' €'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
     });
-    // Calcul marge moyenne par mobile vendu par boutique (Hors W2S, depuis Factures_Jour)
-    const avgByBoutique=MAGS.map(b=>{
-      const bouNomUp=b.nom.toUpperCase();
-      const vendeursBou=FACTURES_SUMMARY.filter(f=>f.boutique.toUpperCase()===bouNomUp);
-      let totMarge=0,totMob=0;
-      vendeursBou.forEach(f=>{totMarge+=(f.margeFactMobile||0);totMob+=(f.nbMobiles||0);});
-      return totMob>0?totMarge/totMob:0;
-    });
-    // Echelle Y avec 25% de padding en haut pour afficher les datalabels
-    const maxAvg=Math.max(0, ...avgByBoutique);
-    const yMaxAvg=maxAvg>0?Math.ceil(maxAvg*1.25/10)*10:100;
     safeChart('cMob',{type:'bar',data:{labels,datasets:[
-      {label:'€ / mobile',data:avgByBoutique,backgroundColor:colors.map(c=>c+'CC'),borderRadius:3}
-    ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20}},plugins:{legend:{display:false},datalabels:{color:'#0F1419',font:{weight:700,size:11,family:'Plus Jakarta Sans'},anchor:'end',align:'end',offset:2,clamp:true,formatter:v=>v>0?fmt(v)+' €':'—'}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,max:yMaxAvg,grid:{color:'#F1F5F9'},title:{display:true,text:'€ par mobile vendu (Hors W2S)',font:{size:10}}}}}});
+      {label:'Mob',data:MAGS.map(b=>b.mob),backgroundColor:'#2563EBCC',borderRadius:3},
+      {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}});
   });
 }
 
@@ -574,44 +500,19 @@ function renderBoutique(el,code){
   </div>
   ${vendeurs.length?`
   <div class="g3" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>TX ASSURANCE</h3>
-      <div class="val">${mag.mob>0?fmtD(txA,1)+'%':mag.assu+' assu'}</div>
+    <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${mag.mob>0?fmtD(txA,1)+'%':'—'}</div>
       <div class="sub">${mag.assu} assu / ${mag.mob} mob</div>
-      ${mag.mob>0?`<div class="tag ${txA>=50?'green':txA>=30?'orange':'red'}">${txA>=50?'✓':'⚠'}</div>`:'<div class="tag orange">Fidélisation</div>'}</div>
-    <div class="cd kpi"><h3>TX G3A</h3>
-      <div class="val">${mag.mob>0?fmtD(txG,1)+'%':mag.g3a+' g3a'}</div>
+      ${mag.mob>0?`<div class="tag ${txA>=50?'green':txA>=30?'orange':'red'}">${txA>=50?'✓':'⚠'}</div>`:''}</div>
+    <div class="cd kpi"><h3>TX G3A</h3><div class="val">${mag.mob>0?fmtD(txG,1)+'%':'—'}</div>
       <div class="sub">${mag.g3a} g3a / ${mag.mob} mob</div>
       ${mag.mob>0?`<div class="tag ${txG>=50?'green':txG>=30?'orange':'red'}">${txG>=50?'✓':'⚠'}</div>`:''}</div>
-    <div class="cd kpi"><h3>${mag.mob>0?'ACCESS / MOB':'ACCESS'}</h3>
-      <div class="val">${mag.mob>0?fmtD(txAcc,1)+' €':fmt(mag.access)+' €'}</div>
-      <div class="sub">${mag.mob>0?`CA: ${fmt(mag.access)} €`:`sans vente mobile`}</div></div>
+    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${mag.mob>0?fmtD(txAcc,1)+' €':'—'}</div>
+      <div class="sub">CA: ${fmt(mag.access)} €</div></div>
   </div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
-    <div class="cd"><h3>MARGE MOYENNE PAR MOBILE VENDU</h3><canvas id="cBPerf"></canvas></div>
+    <div class="cd"><h3>ITEMS PAR VENDEUR</h3><canvas id="cBPerf"></canvas></div>
   </div>
-  ${(()=>{
-    const mobilesBoutique=FACTURES_MOBILES.filter(f=>f.boutique.toUpperCase()===mag.nom.toUpperCase());
-    if(mobilesBoutique.length===0) return '';
-    const rows=mobilesBoutique.map(m=>`<tr>
-      <td><strong>${esc(m.vendeur)}</strong></td>
-      <td>${esc(m.modele.substring(0,55))}</td>
-      <td style="text-align:right"><strong>${fmt(m.margeAllouee)} €</strong></td>
-    </tr>`).join('');
-    return `<div class="stitle">MOBILES VENDUS — ${mag.nom.toUpperCase()}</div>
-    <div class="cd" style="margin-bottom:12px">
-      <table>
-        <thead><tr>
-          <th>VENDEUR</th><th>MODÈLE</th>
-          <th style="text-align:right">MARGE PAR MOBILE</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <div style="font-size:10px;color:var(--sub);margin-top:8px">
-        Marge facture complète (mobile + accessoires + ALBA + services) divisée par le nombre de mobiles sur la facture.
-      </div>
-    </div>`;
-  })()}
   <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
   <div class="cd">
     <table>
@@ -631,18 +532,13 @@ function renderBoutique(el,code){
       type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
     });
-    // MARGE MOYENNE PAR MOBILE VENDU — utilise les vraies donnees Factures_Jour si disponibles
-    // Fallback sur approximation (Marge Assu + Access + Services + G3A*50€) / mob
-    const vAvgData=vendeurs.map(v=>{
-      const fact=FACTURES_SUMMARY.find(f=>f.vendeur===v.nom);
-      if(fact && fact.nbMobiles>0) return fact.margeParMobile;
-      if(v.mob>0) return ((v.margeAssu||0)+(v.access||0)+(v.margeServices||0)+((v.g3a||0)*50))/v.mob;
-      return 0;
-    });
     safeChart('cBPerf',{
       type:'bar',data:{labels:vLabels,datasets:[
-        {label:'€ / mobile',data:vAvgData,backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
-      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{color:'#0F1419',font:{weight:700,size:10},anchor:'end',align:'end',formatter:v=>v>0?v.toFixed(0)+' €':''}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},title:{display:true,text:'€ par mobile vendu',font:{size:10}}}}}
+        {label:'Mob',data:vendeurs.map(v=>v.mob),backgroundColor:'#2563EBCC',borderRadius:3},
+        {label:'Cyber',data:vendeurs.map(v=>v.cyber),backgroundColor:'#7C3AEDCC',borderRadius:3},
+        {label:'Assu',data:vendeurs.map(v=>v.assu),backgroundColor:'#059669CC',borderRadius:3},
+        {label:'G3A',data:vendeurs.map(v=>v.g3a),backgroundColor:'#D97706CC',borderRadius:3}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
     });
   });
 }
@@ -674,9 +570,16 @@ function renderVendeurs(el){
 function renderChallenges(el){
   // ── Exclusions : managers et CDV ne jouent PAS le challenge vendeur ──
   const EXCLUS_VENDEUR=["HASSENE","LOUANE","ROMAIN GP"];
-  const vSort=[...VENDEURS].filter(v=>!EXCLUS_VENDEUR.includes(v.nom)).sort((a,b)=>b.marge-a.marge);
+  // Le lundi : RLR (Romorantin) et CLR (Châteaudun) restent contaminées par les chiffres du samedi
+  // dans 3GWIN (boutiques fermées le lundi mais reliquat non purgé). On les exclut du challenge.
+  const _isLundi=(new Date()).getDay()===1;
+  const BOU_EXCLUES_JOUR=_isLundi?["RLR","CLR"]:[];
+  const vSort=[...VENDEURS]
+    .filter(v=>!EXCLUS_VENDEUR.includes(v.nom))
+    .filter(v=>!BOU_EXCLUES_JOUR.includes(v.bou))
+    .sort((a,b)=>b.marge-a.marge);
   const top3=vSort.slice(0,3);
-  const margeGroupe=T.marge;
+  const margeGroupe=MAGS.filter(m=>!BOU_EXCLUES_JOUR.includes(m.code)).reduce((s,m)=>s+(m.marge||0),0);
   const margeTLR=(MAGS.find(m=>m.code==='TLR')||{marge:0}).marge;
   const margeCholet=(MAGS.find(m=>m.code==='CHOLET')||{marge:0}).marge;
 
@@ -687,16 +590,27 @@ function renderChallenges(el){
   const ch3Won=margeGroupe>=4000;
   const ch3Pct=Math.min(100,margeGroupe/4000*100);
 
-  // ── Cumuls depuis CHALLENGE_HIST ──
+  // ── Cumuls depuis CHALLENGE_HIST (filtrés sur le mois en cours, reset auto le 1er) ──
+  const _now=new Date();
+  const _moisC=_now.getMonth()+1;
+  const _anneeC=_now.getFullYear();
+  const MOIS_NOMS=['JANVIER','FÉVRIER','MARS','AVRIL','MAI','JUIN','JUILLET','AOÛT','SEPTEMBRE','OCTOBRE','NOVEMBRE','DÉCEMBRE'];
+  const moisLabel=MOIS_NOMS[_moisC-1]+' '+_anneeC;
+  const HIST_MOIS=CHALLENGE_HIST.filter(d=>{
+    const p=(d.date||"").split('/');
+    return p.length===3 && parseInt(p[1],10)===_moisC && parseInt(p[2],10)===_anneeC;
+  });
+  const premierJourLabel=HIST_MOIS.length?HIST_MOIS[0].date.slice(0,5):'01/'+String(_moisC).padStart(2,'0');
+
   const vendeurWins={};
   let amboiseWins=0, louaneWins=0, romainWins=0;
-  CHALLENGE_HIST.forEach(d=>{
+  HIST_MOIS.forEach(d=>{
     (d.top3_gagnes||[]).forEach(nom=>{vendeurWins[nom]=(vendeurWins[nom]||0)+1});
     if(d.amboise_won) amboiseWins++;
     if(d.louane_won) louaneWins++;
     if(d.groupe_won) romainWins++;
   });
-  const nbJours=CHALLENGE_HIST.length;
+  const nbJours=HIST_MOIS.length;
   const totalPrimeVendeurs=Object.values(vendeurWins).reduce((a,b)=>a+b,0)*20;
   const totalPrimeAmboise=amboiseWins*20;
   const totalPrimeLouane=louaneWins*20;
@@ -707,10 +621,10 @@ function renderChallenges(el){
   const vendeurCumulArr=Object.entries(vendeurWins).sort((a,b)=>b[1]-a[1]);
 
   el.innerHTML=`
-  <div class="stitle">CHALLENGES EN COURS — AVRIL 2026</div>
+  <div class="stitle">CHALLENGES EN COURS — ${moisLabel}</div>
 
   <div class="g4" style="margin-bottom:16px">
-    <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le 08/04</div></div>
+    <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le ${premierJourLabel}</div></div>
     <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
     <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 4 000 €</div></div>
     <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val">20 €</div><div class="sub">par challenge gagné</div></div>
@@ -765,7 +679,7 @@ function renderChallenges(el){
     <table>
       <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>HASSENE (AMBOISE)</th><th>LOUANE (CHOLET)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
       <tbody>
-        ${[...CHALLENGE_HIST].reverse().map(d=>{
+        ${[...HIST_MOIS].reverse().map(d=>{
           const primeJour=((d.top3_gagnes||[]).length*20)+(d.amboise_won?20:0)+(d.louane_won?20:0)+(d.groupe_won?20:0);
           return `<tr>
             <td><strong>${d.date}</strong></td>
@@ -938,72 +852,30 @@ function hideSplash(){
 async function init(){
   const t0=Date.now();
 
-  // ── Phase 0 : Affichage INSTANTANÉ depuis le cache ──
-  const cachedJour=cacheGet('jour');
-  const cachedChall=cacheGet('challenges');
-  let usedCache=false;
-
-  if(cachedJour && cachedJour.data){
-    splashProgress(50,'Données en cache — affichage instantané...');
-    try{
-      const rows=cachedJour.data;
-      const meta=rows.find(r=>r.Type==="META");
-      if(meta){DATA_DATE=meta.Date||"";DATA_HEURE=meta.Heure||"";}
-      MAGS=rows.filter(r=>r.Type==="MAG").map(r=>({
-        code:r.Code||"",nom:r.Nom||"",color:(BOUTIQUES[r.Code]||{}).color||"#888",
-        marge:parseFloat(r.Marge)||0,mob:parseInt(r.Mob)||0,box:parseInt(r.Box)||0,
-        cyber:parseInt(r.Cyber)||0,assu:parseInt(r.Assu)||0,g3a:parseInt(r.G3A)||0,
-        access:parseFloat(r.Access)||0,abo:parseInt(r.Abo)||0
-      }));
-      if(MAGS.length===0) initEmptyMags();
-      MAGS.sort((a,b)=>b.marge-a.marge);
-      VENDEURS=rows.filter(r=>r.Type==="VENDEUR").map(r=>({
-        nom:r.Code||"",bou:r.Nom||"",marge:parseFloat(r.Marge)||0,mob:parseInt(r.Mob)||0,
-        box:parseInt(r.Box)||0,cyber:parseInt(r.Cyber)||0,assu:parseInt(r.Assu)||0,
-        g3a:parseInt(r.G3A)||0,access:parseFloat(r.Access)||0,abo:parseInt(r.Abo)||0
-      }));
-      VENDEURS.sort((a,b)=>b.marge-a.marge);
-      if(cachedChall && cachedChall.data){
-        CHALLENGE_HIST=cachedChall.data;
-      }
-      computeTotals();updateDates();buildNav();render();
-      usedCache=true;
-      splashProgress(70,'Rafraîchissement en arrière-plan...');
-    }catch(e){console.warn("Cache parse error:",e)}
+  // Phase 1 : fetch données jour
+  splashProgress(20,'Chargement des données boutiques...');
+  try {
+    await fetchJourData();
+    LAST_ERROR=null;
+    splashProgress(60,'Données boutiques OK');
+  } catch(e) {
+    console.warn("Erreur Google Sheets:",e.message);
+    LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
+    if(MAGS.length===0) initEmptyMags();
+    splashProgress(60,'Données indisponibles — mode hors ligne');
   }
 
-  // ── Phase 1 : Fetch PARALLÈLE des deux onglets ──
-  if(!usedCache) splashProgress(20,'Chargement des données...');
-  try{
-    const [jourResult, challResult, facturesResult] = await Promise.allSettled([
-      fetchJourData(),
-      fetchChallengeHist(),
-      fetchFacturesJour()
-    ]);
-
-    if(jourResult.status==='fulfilled'){
-      LAST_ERROR=null;
-      if(!usedCache) splashProgress(80,'Données boutiques OK');
-    } else {
-      console.warn("Erreur Google Sheets:",jourResult.reason?.message);
-      if(!usedCache){
-        LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
-        if(MAGS.length===0) initEmptyMags();
-      }
-    }
-
-    if(challResult.status==='rejected'){
-      console.warn("Erreur historique challenges:",challResult.reason?.message);
-    }
-  }catch(e){
-    console.warn("Erreur globale fetch:",e.message);
-    if(!usedCache){
-      LAST_ERROR="Impossible de charger les données — vérifiez la connexion";
-      if(MAGS.length===0) initEmptyMags();
-    }
+  // Phase 2 : fetch challenges (en parallèle du rendu si possible)
+  splashProgress(70,'Chargement des challenges...');
+  try {
+    await fetchChallengeHist();
+    splashProgress(90,'Challenges OK');
+  } catch(e) {
+    console.warn("Erreur historique challenges:",e.message);
+    splashProgress(90,'Challenges indisponibles');
   }
 
-  // ── Phase 2 : calcul + rendu (final) ──
+  // Phase 3 : calcul + rendu
   splashProgress(95,'Rendu du dashboard...');
   computeTotals();
   updateDates();
@@ -1011,12 +883,13 @@ async function init(){
   render();
   splashProgress(100,'Prêt !');
 
-  // Splash raccourci si on avait le cache
+  // Splash minimum 1.2s pour l'animation, puis transition fluide
   const elapsed=Date.now()-t0;
-  const minSplash=usedCache?400:1200;
+  const minSplash=1200;
   setTimeout(hideSplash, Math.max(0,minSplash-elapsed));
 
   // ── REFRESH INTELLIGENT ──
+  // 1. Quand l'utilisateur revient sur l'onglet (visibility API)
   let LAST_REFRESH=Date.now();
   const MIN_REFRESH_GAP=30000; // 30s minimum entre 2 refreshs
 
@@ -1027,12 +900,15 @@ async function init(){
     }
   });
 
+  // 2. Quand la fenêtre reprend le focus (alt-tab, clic depuis barre des tâches)
   window.addEventListener('focus',()=>{
     if(Date.now()-LAST_REFRESH>MIN_REFRESH_GAP){
       LAST_REFRESH=Date.now();
       silentRefresh();
     }
   });
+
+  // 3. Pas de timer fixe — les données sont fraîches à chaque consultation
 }
 init();
 </script>
