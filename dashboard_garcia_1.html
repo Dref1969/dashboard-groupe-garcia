@@ -166,7 +166,8 @@ async function loadReal(){
     fetchTab("Goodays"),             // 4
     fetchTab("DILAX"),               // 5
     fetchTab("Factures_Mois"),       // 6 - marge facture mobile par boutique
-    fetchTab("Mags_Mois_Detail")     // 7 - agregats 3GWIN officiels par boutique
+    fetchTab("Mags_Mois_Detail"),    // 7 - agregats 3GWIN officiels par boutique
+    fetchTab("Objectifs_Indiv")      // 8 - objectifs payplan par vendeur
   ]);
 
   // Extraction des résultats (avec fallback si échec)
@@ -178,6 +179,7 @@ async function loadReal(){
   const dr=results[5].status==='fulfilled'?results[5].value:null;
   const fm=results[6].status==='fulfilled'?results[6].value:null;
   const md=results[7].status==='fulfilled'?results[7].value:null;
+  const ovr=results[8].status==='fulfilled'?results[8].value:null;
 
   if(results[0].status==='rejected') console.warn("Données_Commissions:",results[0].reason);
   if(results[3].status==='rejected') console.log("N-1 fallback:",results[3].reason);
@@ -200,10 +202,14 @@ async function loadReal(){
   const vs=rows.filter(r=>r["Vendeur"]).map(r=>{
     const mg=pNum(r["Marge"]),mb=pNum(r["Mobiles"]),g3=pNum(r["G3A"]),cy=pNum(r["Cyber"]);
     const as=pNum(r["Assurance"]),ma=pNum(r["MobAssu"]),ac=pNum(r["CAccessoires"]);
+    const hw=pNum(r["MobHorsW2S"]),bx=pNum(r["Box"]);
     const jc=pNum(r["JourOuvre"]),jt=pNum(r["JoursOuvresTotal"]),jw=pNum(r["JoursTravailles"]);
-    const ta=ma>0?(as/ma)*100:0,tx=mb>0?ac/mb:0;
-    return{nm:r["Vendeur"],bq:r["CodeBoutique"],role:r["Role"]||"Vendeur",mg,mb,g3,cy,as,ma,ac,jc,jt:jt||21,jw:jw||22,ta,tx};
+    const ta=ma>0?(as/ma)*100:0,tx=(hw+bx)>0?ac/(hw+bx):(mb>0?ac/mb:0);
+    return{nm:r["Vendeur"],bq:r["CodeBoutique"],role:r["Role"]||"Vendeur",mg,mb,g3,cy,as,ma,ac,hw,bx,jc,jt:jt||21,jw:jw||22,ta,tx};
   });
+  // Parse objectifs par vendeur (override des objectifs globaux Items_Mois)
+  const objMap={};
+  if(ovr){ovr.forEach(r=>{const n=(r["Vendeur"]||"").toUpperCase().trim();if(!n)return;objMap[n]={mob:pNum(r["ObjMobiles"]),g3a:pNum(r["ObjG3A"]),cyber:pNum(r["ObjCyber"]),txA:pNum(r["ObjAssu"]),txC:pNum(r["ObjAccess"])}});}
   // N-1 depuis onglet Donnees_N1 (déjà chargé en parallèle)
   let n1=vs.map(v=>({...v,mg:0,mb:0,cy:0}));
   if(n1r){const n1Map={};n1r.forEach(r=>{n1Map[r["Boutique"]]={mg:pNum(r["Marge"]),mb:pNum(r["Mobiles"]),bx:pNum(r["Box"]),as:pNum(r["Assurance"]),cy:pNum(r["Cyber"])}});
@@ -298,7 +304,7 @@ async function loadReal(){
   }
   const topFactures=Object.values(factureMap).sort((a,b)=>b.margeFactureTotale-a.margeFactureTotale).slice(0,5);
 
-  const result={vs,n1,gd,gl,vi,viN1,moisEnCours,fmBou,magDet,fmMobiles,topFactures,fmVendeurs};
+  const result={vs,n1,gd,gl,vi,viN1,moisEnCours,fmBou,magDet,fmMobiles,topFactures,fmVendeurs,objMap};
   // Mise en cache
   cacheSet('data',result);
   return result;
@@ -319,15 +325,17 @@ function getItemsRI(){
 
 /* ═══ ENRICH ═══ */
 function eD(d){
-  const{vs,n1,gd,gl,vi,viN1,fmBou,magDet}=d;
+  const{vs,n1,gd,gl,vi,viN1,fmBou,magDet,objMap}=d;
   const RI=getItemsRI();
   const en=vs.map(v=>{
     const jc=v.jc||1,mj=jc>0?v.mg/jc:0,jr=Math.max(0,v.jw-jc),pj=v.mg+mj*jr;
     const ratio=v.jw/(v.jt||21);
+    const ovObj=(objMap||{})[(v.nm||"").toUpperCase().trim()]||{};
     const its=RI.map(it=>{
       let o=it.ob;
-      // Proratiser les objectifs volumiques par jours travaillés
-      if(!it.pc&&!it.cu)o=Math.round(it.ob*ratio*100)/100;
+      // Override par-vendeur si Objectifs_Indiv renseigné, sinon proratisation
+      if(ovObj[it.k]>0)o=ovObj[it.k];
+      else if(!it.pc&&!it.cu)o=Math.round(it.ob*ratio*100)/100;
       let r;
       if(it.k==="txA")r=v.ta;
       else if(it.k==="txC")r=v.tx;
@@ -453,10 +461,8 @@ function mbHTML(mb){
   var tot=0;for(var x=0;x<items.length;x++)tot+=mbV[items[x].k];
   var sorted=items.slice().sort(function(a,b){return mbV[b.k]-mbV[a.k]});
   var h='<div class="sec">Répartition de la marge groupe</div>';
-  // Donut en pleine largeur, grand avec tirets horizontaux (droite/gauche)
-  h+='<div class="cd"><div class="kpi-label" style="margin-bottom:10px">Visualisation groupe</div><div id="chMargePieWrap" class="chart-wrap"><canvas id="chMargePie"></canvas></div></div>';
-  // Tableau synthetique groupe (dessous)
-  h+='<div class="cd" style="margin-top:8px"><div class="kpi-label" style="margin-bottom:10px">Répartition — groupe</div>';
+  // Tableau synthetique groupe
+  h+='<div class="cd"><div class="kpi-label" style="margin-bottom:10px">Répartition — groupe</div>';
   h+='<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="border-bottom:2px solid #E2E8F0"><th style="text-align:left;padding:8px 4px;font-weight:700;font-size:11px;color:#64748B;text-transform:uppercase">Catégorie</th><th style="text-align:right;padding:8px 4px;font-weight:700;font-size:11px;color:#64748B;text-transform:uppercase">Montant</th><th style="text-align:right;padding:8px 4px;font-weight:700;font-size:11px;color:#64748B;text-transform:uppercase">%</th><th style="width:35%;padding:8px 4px"></th></tr></thead><tbody>';
   for(var i=0;i<sorted.length;i++){
     var it=sorted[i],val=Math.round(mbV[it.k]),pct=tot>0?(mbV[it.k]/tot*100):0;
