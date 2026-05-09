@@ -418,6 +418,18 @@ function renderSynthese(el){
   bouRows.push(`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
     <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td></tr>`);
 
+  // Build marge / mobile vendu rows
+  const mmSort=[...MAGS].map(b=>({...b,mpm:b.mob>0?b.marge/b.mob:0})).sort((a,b)=>b.mpm-a.mpm);
+  const margeMobRows=mmSort.map((b,i)=>`<tr>
+    <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
+    <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
+    <td>${fmt(b.marge)} €</td>
+    <td>${b.mob}</td>
+    <td><strong>${b.mob>0?fmt(Math.round(b.mpm))+' €':'—'}</strong></td>
+  </tr>`);
+  margeMobRows.push(`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL</td>
+    <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.mob>0?fmt(Math.round(T.marge/T.mob))+' €':'—'}</td></tr>`);
+
   // Build vendeur rows as array
   const vendRows=vSort.map((v,i)=>{
     const bInfo=BOUTIQUES[v.bou]||{nom:v.bou,color:'#999'};
@@ -446,7 +458,12 @@ function renderSynthese(el){
   <div class="stitle">MARGE DU JOUR PAR BOUTIQUE</div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR BOUTIQUE</h3><canvas id="cMarge"></canvas></div>
-    <div class="cd"><h3>MOBILES & BOX PAR BOUTIQUE</h3><canvas id="cMob"></canvas></div>
+    <div class="cd"><h3>MARGE PAR MOBILE VENDU</h3>
+      <table style="margin-top:8px">
+        <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>€ / MOB</th></tr></thead>
+        <tbody>${margeMobRows.join('')}</tbody>
+      </table>
+    </div>
   </div>
   <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd" style="margin-bottom:12px">
@@ -468,10 +485,6 @@ function renderSynthese(el){
     safeChart('cMarge',{type:'bar',data:{labels,datasets:[{data:MAGS.map(b=>b.marge),backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+' €'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
     });
-    safeChart('cMob',{type:'bar',data:{labels,datasets:[
-      {label:'Mob',data:MAGS.map(b=>b.mob),backgroundColor:'#2563EBCC',borderRadius:3},
-      {label:'Box',data:MAGS.map(b=>b.box),backgroundColor:'#7C3AEDCC',borderRadius:3}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}});
   });
 }
 
