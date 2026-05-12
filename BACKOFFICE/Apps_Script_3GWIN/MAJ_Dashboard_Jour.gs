@@ -478,7 +478,12 @@ function ecrireChallenges_(ss, dateStr, ch) {
       var dsE = Utilities.formatDate(new Date(),'Europe/Paris','dd/MM/yyyy');
       var jourSpec = ((new Date()).getDay() === 1) || (FER_E.indexOf(dsE) >= 0);
 
-      if (newGroupe >= existingGroupe || jourSpec) {
+      // Bypass aussi quand l'utilisateur force manuellement (majDashboardJour_force) :
+      // c'est le seul cas legitime ou il veut imposer la valeur (ex: deduction boosters
+      // qui legitimement reduit la marge groupe en dessous du scrape stocke).
+      var forceMode = (typeof majDashboardJour !== 'undefined') && (majDashboardJour.__force === true);
+
+      if (newGroupe >= existingGroupe || jourSpec || forceMode) {
         sh.getRange(keepIdx + 2, 1, 1, row.length).setValues([row]);
       } else {
         Logger.log('Scrape ignore pour ' + dateStr + ' : nouveau groupe=' + newGroupe + ' < stocke=' + existingGroupe);
