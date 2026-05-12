@@ -19,22 +19,11 @@ var TAB_HIST_CHALLENGES = 'Historique_Challenges';
 var TAB_FACTURES_JOUR   = 'Factures_Jour';
 var EXCLUS_TOP3         = ['HASSENE', 'LOUANE', 'ROMAIN GP'];
 
-// Boosters MARGE Assurance injectes ponctuellement (retroactif Chubb, etc.)
-// A retirer UNIQUEMENT du calcul des challenges (top 3, Amboise, Cholet, Groupe).
-// L affichage du dashboard et les classements continuent d utiliser la marge totale.
-// Date de validite : injection du 12/05/2026 - vider apres la journee.
-// Format : { 'NOM_VENDEUR_3GWIN': montant_euros }
-var BOOSTERS_CHALLENGE = {
-  'ANAIS':     490,
-  'MEHDY':     40,
-  'CHLOE R':   90,
-  'EMMY':      150,
-  'LUCAS':     330,
-  'HASSENE':   840,
-  'ILIAN':     80,
-  'JULIE TLR': 240,
-  'NATHAN':    80
-};
+// Onglet du Sheet contenant les boosters MARGE a deduire du challenge du jour.
+// Structure : colonne A = Nom vendeur (tel qu apparait dans 3GWIN), colonne B = Montant en euros.
+// L onglet est lu a chaque MAJ. Vider les lignes apres la journee pour revenir au calcul normal.
+// L affichage du dashboard et les classements continuent d utiliser la marge totale brute.
+var TAB_BOOSTERS        = 'Boosters_Challenge';
 
 // URL 3GWIN des factures detaillees du jour (vraie marge + modele mobile par ligne)
 var URL_FACTURES_JOUR   = 'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dc669883ebefbb136e0d183374ea';
@@ -242,8 +231,9 @@ function majDashboardJour() {
     sh.getRange(2, 14, rows.length-1, 2).setNumberFormat('0.##');   // N..O : MargeBox, BoxMig
   }
 
-  // 4. Challenges
-  var chResult = calculerChallenges_(magsList, vendeursArray);
+  // 4. Challenges (avec lecture des boosters MARGE eventuels)
+  var boosters = lireBoosters_(ss);
+  var chResult = calculerChallenges_(magsList, vendeursArray, boosters);
   ecrireChallenges_(ss, dateStr, chResult);
 
   // 4bis. Factures detaillees (vraie marge par mobile + modele)
@@ -370,7 +360,9 @@ function parseValJour_(str) {
 
 // ---- CHALLENGES -------------------------------------------
 
-function calculerChallenges_(mags, vendeurs) {
+function calculerChallenges_(mags, vendeurs, boosters) {
+  boosters = boosters || {};
+
   // Boutiques exclues du jour :
   //  - Lundi : RLR + CLR fermees (chiffres samedi reliquat dans 3GWIN)
   //  - Jours feries : seul Cholet travaille (toutes les autres sont fermees)
@@ -385,13 +377,13 @@ function calculerChallenges_(mags, vendeurs) {
   var vendeursFiltres = vendeurs.filter(function(v){ return BOU_EXCLUES.indexOf(v.bou) < 0; });
 
   // Helper : marge effective d un vendeur (apres deduction du booster eventuel)
-  function eff(v){ return (v.marge || 0) - (BOOSTERS_CHALLENGE[v.nom] || 0); }
+  function eff(v){ return (v.marge || 0) - (boosters[v.nom] || 0); }
 
   // Helper : somme des boosters des vendeurs rattaches a une boutique donnee
   function boostBou(code){
     var total = 0;
     for (var i = 0; i < vendeursFiltres.length; i++) {
-      if (vendeursFiltres[i].bou === code) total += (BOOSTERS_CHALLENGE[vendeursFiltres[i].nom] || 0);
+      if (vendeursFiltres[i].bou === code) total += (boosters[vendeursFiltres[i].nom] || 0);
     }
     return total;
   }
@@ -767,6 +759,30 @@ function parseFacturesHtml_(html) {
 
 
 // ---- HELPERS ----------------------------------------------
+
+// Lit l onglet Boosters_Challenge. Auto-cree l onglet (avec headers) si absent.
+// Retourne un objet { 'NOM VENDEUR': montant_euros, ... }
+function lireBoosters_(ss) {
+  var sh = ss.getSheetByName(TAB_BOOSTERS);
+  if (!sh) {
+    sh = ss.insertSheet(TAB_BOOSTERS);
+    sh.getRange(1, 1, 1, 2).setValues([['Vendeur', 'Montant']]);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, 2).setFontWeight('bold').setBackground('#0EA5E9').setFontColor('#ffffff');
+    return {};
+  }
+  var lastRow = sh.getLastRow();
+  if (lastRow < 2) return {};
+  var data = sh.getRange(2, 1, lastRow - 1, 2).getValues();
+  var map = {};
+  for (var i = 0; i < data.length; i++) {
+    var nom = String(data[i][0] || '').trim().toUpperCase();
+    var raw = data[i][1];
+    var mt  = (typeof raw === 'number') ? raw : (parseFloat(String(raw || '0').replace(',', '.')) || 0);
+    if (nom && mt > 0) map[nom] = mt;
+  }
+  return map;
+}
 
 function emptyMag_(boutique) {
   return { code:boutique.code, nom:boutique.nom, marge:0, mob:0, box:0, margeBox:0, boxMig:0, cyber:0, assu:0, g3a:0, access:0, margeAssu:0, margeServices:0, abo:0 };
