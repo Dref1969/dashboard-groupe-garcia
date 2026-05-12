@@ -19,6 +19,23 @@ var TAB_HIST_CHALLENGES = 'Historique_Challenges';
 var TAB_FACTURES_JOUR   = 'Factures_Jour';
 var EXCLUS_TOP3         = ['HASSENE', 'LOUANE', 'ROMAIN GP'];
 
+// Boosters MARGE Assurance injectes ponctuellement (retroactif Chubb, etc.)
+// A retirer UNIQUEMENT du calcul des challenges (top 3, Amboise, Cholet, Groupe).
+// L affichage du dashboard et les classements continuent d utiliser la marge totale.
+// Date de validite : injection du 12/05/2026 - vider apres la journee.
+// Format : { 'NOM_VENDEUR_3GWIN': montant_euros }
+var BOOSTERS_CHALLENGE = {
+  'ANAIS':     490,
+  'MEHDY':     40,
+  'CHLOE R':   90,
+  'EMMY':      150,
+  'LUCAS':     330,
+  'HASSENE':   840,
+  'ILIAN':     80,
+  'JULIE TLR': 240,
+  'NATHAN':    80
+};
+
 // URL 3GWIN des factures detaillees du jour (vraie marge + modele mobile par ligne)
 var URL_FACTURES_JOUR   = 'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dc669883ebefbb136e0d183374ea';
 
@@ -367,32 +384,48 @@ function calculerChallenges_(mags, vendeurs) {
   var magsFiltres = mags.filter(function(m){ return BOU_EXCLUES.indexOf(m.code) < 0; });
   var vendeursFiltres = vendeurs.filter(function(v){ return BOU_EXCLUES.indexOf(v.bou) < 0; });
 
-  // Top 3 : vendeurs SAUF exclus, tries par marge desc
+  // Helper : marge effective d un vendeur (apres deduction du booster eventuel)
+  function eff(v){ return (v.marge || 0) - (BOOSTERS_CHALLENGE[v.nom] || 0); }
+
+  // Helper : somme des boosters des vendeurs rattaches a une boutique donnee
+  function boostBou(code){
+    var total = 0;
+    for (var i = 0; i < vendeursFiltres.length; i++) {
+      if (vendeursFiltres[i].bou === code) total += (BOOSTERS_CHALLENGE[vendeursFiltres[i].nom] || 0);
+    }
+    return total;
+  }
+
+  // Top 3 : vendeurs SAUF exclus, tries par marge effective desc
   var eligibles = vendeursFiltres.filter(function(v){ return EXCLUS_TOP3.indexOf(v.nom) < 0; });
-  eligibles.sort(function(a,b){ return b.marge - a.marge; });
+  eligibles.sort(function(a,b){ return eff(b) - eff(a); });
   var top3 = eligibles.slice(0, 3).map(function(v){ return v.nom; });
-  var top3_gagnes = eligibles.slice(0, 3).filter(function(v){ return v.marge >= 400; }).map(function(v){ return v.nom; });
+  var top3_gagnes = eligibles.slice(0, 3).filter(function(v){ return eff(v) >= 400; }).map(function(v){ return v.nom; });
 
-  // Hassene / Amboise (TLR exclu si ferie)
+  // Hassene / Amboise (TLR exclu si ferie) — marge TLR moins boosters TLR
   var tlr = magsFiltres.find(function(m){ return m.code === 'TLR'; }) || { marge:0 };
-  var amboise_won = tlr.marge >= 700;
+  var tlrEff = (tlr.marge || 0) - boostBou('TLR');
+  var amboise_won = tlrEff >= 700;
 
-  // Louane / Cholet (toujours actif - Cholet ouvert meme les feries)
+  // Louane / Cholet — marge CHOLET moins boosters CHOLET
   var cholet = magsFiltres.find(function(m){ return m.code === 'CHOLET'; }) || { marge:0 };
-  var louane_won = cholet.marge >= 1000;
+  var choletEff = (cholet.marge || 0) - boostBou('CHOLET');
+  var louane_won = choletEff >= 1000;
 
-  // Romain / Groupe (sans RLR ni CLR le lundi, ou Cholet uniquement les feries)
+  // Romain / Groupe — somme marge boutiques moins somme boosters de toutes les boutiques retenues
   var margeGroupe = magsFiltres.reduce(function(s,m){ return s + m.marge; }, 0);
-  var groupe_won = margeGroupe >= 4000;
+  var boostGroupe = magsFiltres.reduce(function(s,m){ return s + boostBou(m.code); }, 0);
+  var margeGroupeEff = margeGroupe - boostGroupe;
+  var groupe_won = margeGroupeEff >= 4000;
 
   return {
     top3: top3,
     top3_gagnes: top3_gagnes,
-    amboise_marge: round2_(tlr.marge),
+    amboise_marge: round2_(tlrEff),
     amboise_won: amboise_won,
-    louane_marge: round2_(cholet.marge),
+    louane_marge: round2_(choletEff),
     louane_won: louane_won,
-    groupe_marge: round2_(margeGroupe),
+    groupe_marge: round2_(margeGroupeEff),
     groupe_won: groupe_won
   };
 }
