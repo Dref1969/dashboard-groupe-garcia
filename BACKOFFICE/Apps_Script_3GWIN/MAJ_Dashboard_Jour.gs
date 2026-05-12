@@ -20,9 +20,12 @@ var TAB_FACTURES_JOUR   = 'Factures_Jour';
 var EXCLUS_TOP3         = ['HASSENE', 'LOUANE', 'ROMAIN GP'];
 
 // Onglet du Sheet contenant les boosters MARGE a deduire du challenge du jour.
-// Structure : colonne A = Nom vendeur (tel qu apparait dans 3GWIN), colonne B = Montant en euros.
-// L onglet est lu a chaque MAJ. Vider les lignes apres la journee pour revenir au calcul normal.
-// L affichage du dashboard et les classements continuent d utiliser la marge totale brute.
+// Structure : A = Nom vendeur (tel qu apparait dans 3GWIN), B = Montant en euros,
+//             C = Date validite (format dd/MM/yyyy)
+// Seules les lignes dont la Date validite == date du jour sont appliquees.
+// Les lignes avec date passee/future/vide sont IGNOREES (deviennent inoffensives
+// automatiquement le lendemain, pas besoin de vider l onglet).
+// L affichage du dashboard et les classements continuent d utiliser la marge brute.
 var TAB_BOOSTERS        = 'Boosters_Challenge';
 
 // URL 3GWIN des factures detaillees du jour (vraie marge + modele mobile par ligne)
@@ -766,25 +769,35 @@ function parseFacturesHtml_(html) {
 // ---- HELPERS ----------------------------------------------
 
 // Lit l onglet Boosters_Challenge. Auto-cree l onglet (avec headers) si absent.
+// Ne retourne QUE les boosters dont la Date validite (colonne C) == date du jour.
 // Retourne un objet { 'NOM VENDEUR': montant_euros, ... }
 function lireBoosters_(ss) {
+  var todayStr = Utilities.formatDate(new Date(), 'Europe/Paris', 'dd/MM/yyyy');
   var sh = ss.getSheetByName(TAB_BOOSTERS);
   if (!sh) {
     sh = ss.insertSheet(TAB_BOOSTERS);
-    sh.getRange(1, 1, 1, 2).setValues([['Vendeur', 'Montant']]);
+    sh.getRange(1, 1, 1, 3).setValues([['Vendeur', 'Montant', 'Date']]);
     sh.setFrozenRows(1);
-    sh.getRange(1, 1, 1, 2).setFontWeight('bold').setBackground('#0EA5E9').setFontColor('#ffffff');
+    sh.getRange(1, 1, 1, 3).setFontWeight('bold').setBackground('#0EA5E9').setFontColor('#ffffff');
+    sh.getRange('C:C').setNumberFormat('dd/MM/yyyy');
     return {};
   }
   var lastRow = sh.getLastRow();
   if (lastRow < 2) return {};
-  var data = sh.getRange(2, 1, lastRow - 1, 2).getValues();
+  var data = sh.getRange(2, 1, lastRow - 1, 3).getValues();
   var map = {};
   for (var i = 0; i < data.length; i++) {
     var nom = String(data[i][0] || '').trim().toUpperCase();
     var raw = data[i][1];
     var mt  = (typeof raw === 'number') ? raw : (parseFloat(String(raw || '0').replace(',', '.')) || 0);
-    if (nom && mt > 0) map[nom] = mt;
+    var rawDate = data[i][2];
+    var dateStr;
+    if (rawDate instanceof Date) {
+      dateStr = Utilities.formatDate(rawDate, 'Europe/Paris', 'dd/MM/yyyy');
+    } else {
+      dateStr = String(rawDate || '').trim();
+    }
+    if (nom && mt > 0 && dateStr === todayStr) map[nom] = mt;
   }
   return map;
 }
