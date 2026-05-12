@@ -250,6 +250,8 @@ async function fetchJourData(){
     marge:parseFloat(r.Marge)||0,
     mob:parseInt(r.Mob)||0,
     box:parseInt(r.Box)||0,
+    margeBox:parseFloat(r.MargeBox)||0,
+    boxMig:parseInt(r.BoxMig)||0,
     cyber:parseInt(r.Cyber)||0,
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
@@ -480,7 +482,13 @@ function renderSynthese(el){
     safeChart('cMarge',{type:'bar',data:{labels,datasets:[{data:MAGS.map(b=>b.marge),backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>fmt(v)+' €'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
     });
-    const mpmData=MAGS.map(b=>b.mob>0?Math.round(b.marge/b.mob):0);
+    // Marge mobile vendu = marge totale - marge box - cyber*25€ - migration*30€
+    // (exclut les composantes non-mobile pour mesurer la perf reelle de la vente mobile)
+    const mpmData=MAGS.map(b=>{
+      if(b.mob<=0)return 0;
+      const margeMobile=b.marge-(b.margeBox||0)-(b.cyber||0)*25-(b.boxMig||0)*30;
+      return Math.round(margeMobile/b.mob);
+    });
     const mpmMax=Math.max(...mpmData,0);
     const mpmYMax=mpmMax>0?Math.ceil(mpmMax*1.2/10)*10:10;
     safeChart('cMpm',{type:'bar',data:{labels,datasets:[{data:mpmData,backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
