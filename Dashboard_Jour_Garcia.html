@@ -536,7 +536,7 @@ function renderBoutique(el,code){
   </div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
-    <div class="cd"><h3>ITEMS PAR VENDEUR</h3><canvas id="cBPerf"></canvas></div>
+    <div class="cd"><h3>MARGE PAR MOBILE VENDU</h3><canvas id="cBPerf"></canvas></div>
   </div>
   <div class="stitle">VENDEURS — ${mag.nom.toUpperCase()}</div>
   <div class="cd">
@@ -559,11 +559,8 @@ function renderBoutique(el,code){
     });
     safeChart('cBPerf',{
       type:'bar',data:{labels:vLabels,datasets:[
-        {label:'Mob',data:vendeurs.map(v=>v.mob),backgroundColor:'#2563EBCC',borderRadius:3},
-        {label:'Cyber',data:vendeurs.map(v=>v.cyber),backgroundColor:'#7C3AEDCC',borderRadius:3},
-        {label:'Assu',data:vendeurs.map(v=>v.assu),backgroundColor:'#059669CC',borderRadius:3},
-        {label:'G3A',data:vendeurs.map(v=>v.g3a),backgroundColor:'#D97706CC',borderRadius:3}
-      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:8,font:{size:10,family:'Plus Jakarta Sans'}}},datalabels:{font:{weight:700,size:9}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'}}}}
+        {label:'Marge / mobile vendu',data:vendeurs.map(v=>v.mob>0?Math.round(v.marge/v.mob):0),backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'top',color:'#1E293B',font:{weight:700,size:10},formatter:v=>v>0?fmt(v)+' €':''}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},ticks:{callback:v=>fmt(v)+' €'}}}}
     });
   });
 }
