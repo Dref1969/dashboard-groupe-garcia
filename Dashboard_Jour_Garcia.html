@@ -11,7 +11,7 @@
 :root{--bg:#F0F2F5;--card:#FFF;--hdr:#0F172A;--txt:#0F1419;--sub:#64748B;--mut:#94A3B8;--brd:#E2E8F0;--blue:#2563EB;--purple:#7C3AED;--green:#059669;--orange:#D97706;--red:#DC2626;--cyan:#0891B2;--r:10px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-.hdr{background:var(--hdr);color:#fff;position:stihcky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
+.hdr{background:var(--hdr);color:#fff;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;flex-wrap:wrap}
 .hdr-left{display:flex;align-items:center;gap:16px}
 .logo{font-size:16px;font-weight:800;letter-spacing:1px}.logo span{font-weight:400;opacity:.5;font-size:13px;margin-left:8px}
 .hdr-info{font-size:11px;color:#94A3B8}
@@ -272,6 +272,8 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:parseFloat(r.Access)||0,
+    margeAssu:parseFloat(r.MargeAssu)||0,
+    margeServices:parseFloat(r.MargeServices)||0,
     abo:parseInt(r.Abo)||0
   }));
   VENDEURS.sort((a,b)=>b.marge-a.marge);
@@ -557,9 +559,10 @@ function renderBoutique(el,code){
       type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
     });
+    // Marge / mobile vendu = (marge accessoires + G3A*50€ + marge assurance + presta/services) / mobiles
     safeChart('cBPerf',{
       type:'bar',data:{labels:vLabels,datasets:[
-        {label:'Marge / mobile vendu',data:vendeurs.map(v=>v.mob>0?Math.round(v.marge/v.mob):0),backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
+        {label:'Marge / mobile vendu',data:vendeurs.map(v=>v.mob>0?Math.round((v.access+v.g3a*50+v.margeAssu+v.margeServices)/v.mob):0),backgroundColor:vColors.map(c=>c+'CC'),borderRadius:3}
       ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'top',color:'#1E293B',font:{weight:700,size:10},formatter:v=>v>0?fmt(v)+' €':''}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},ticks:{callback:v=>fmt(v)+' €'}}}}
     });
   });
@@ -632,19 +635,29 @@ function renderChallenges(el){
   });
   const premierJourLabel=HIST_MOIS.length?HIST_MOIS[0].date.slice(0,5):'01/'+String(_moisC).padStart(2,'0');
 
+  // ── BOOST ×2 du jeudi 28/05 au samedi 30/05/2026 inclus ──
+  const BOOST_DATES=['28/05/2026','29/05/2026','30/05/2026'];
+  const PRIME_JOUR_=(dateStr)=>BOOST_DATES.includes(dateStr)?40:20;
+  const _todayStr=String(_now.getDate()).padStart(2,'0')+'/'+String(_moisC).padStart(2,'0')+'/'+_anneeC;
+  const PRIME_AUJ=PRIME_JOUR_(_todayStr);
+  const BOOST_ACTIF=BOOST_DATES.includes(_todayStr);
+
   const vendeurWins={};
+  const vendeurPrimes={};
   let amboiseWins=0, louaneWins=0, romainWins=0;
+  let totalPrimeVendeurs=0, totalPrimeAmboise=0, totalPrimeLouane=0, totalPrimeRomain=0;
   HIST_MOIS.forEach(d=>{
-    (d.top3_gagnes||[]).forEach(nom=>{vendeurWins[nom]=(vendeurWins[nom]||0)+1});
-    if(d.amboise_won) amboiseWins++;
-    if(d.louane_won) louaneWins++;
-    if(d.groupe_won) romainWins++;
+    const p=PRIME_JOUR_(d.date);
+    (d.top3_gagnes||[]).forEach(nom=>{
+      vendeurWins[nom]=(vendeurWins[nom]||0)+1;
+      vendeurPrimes[nom]=(vendeurPrimes[nom]||0)+p;
+      totalPrimeVendeurs+=p;
+    });
+    if(d.amboise_won){ amboiseWins++; totalPrimeAmboise+=p; }
+    if(d.louane_won){ louaneWins++; totalPrimeLouane+=p; }
+    if(d.groupe_won){ romainWins++; totalPrimeRomain+=p; }
   });
   const nbJours=HIST_MOIS.length;
-  const totalPrimeVendeurs=Object.values(vendeurWins).reduce((a,b)=>a+b,0)*20;
-  const totalPrimeAmboise=amboiseWins*20;
-  const totalPrimeLouane=louaneWins*20;
-  const totalPrimeRomain=romainWins*20;
   const totalPrimeGlobal=totalPrimeVendeurs+totalPrimeAmboise+totalPrimeLouane+totalPrimeRomain;
 
   // Tri vendeurs par gains décroissants
@@ -657,7 +670,7 @@ function renderChallenges(el){
     <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le ${premierJourLabel}</div></div>
     <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
     <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 500 €</div></div>
-    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val">20 €</div><div class="sub">par challenge gagné</div></div>
+    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${BOOST_ACTIF?'color:var(--orange)':''}">${PRIME_AUJ} €</div><div class="sub">${BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 — 28-30/05</strong>':'par challenge gagné'}</div></div>
   </div>
 
   <!-- ══════ CUMUL DES PRIMES À DATE ══════ -->
@@ -673,7 +686,7 @@ function renderChallenges(el){
             <td><span class="rk ${rkCls(i)}">${i+1}</span> <strong>${esc(e[0])}</strong> <span class="dot" style="background:${bInfo.color}"></span><span style="font-size:10px;color:var(--sub)">${bInfo.nom}</span></td>
             <td>Vendeur</td>
             <td><strong>${e[1]}</strong> / ${nbJours} jours</td>
-            <td><strong style="color:var(--green)">${fmt(e[1]*20)} €</strong></td>
+            <td><strong style="color:var(--green)">${fmt(vendeurPrimes[e[0]]||0)} €</strong></td>
           </tr>`;
         }).join('')}
         <tr>
@@ -710,7 +723,7 @@ function renderChallenges(el){
       <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>HASSENE (AMBOISE)</th><th>LOUANE (CHOLET)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
       <tbody>
         ${[...HIST_MOIS].reverse().map(d=>{
-          const primeJour=((d.top3_gagnes||[]).length*20)+(d.amboise_won?20:0)+(d.louane_won?20:0)+(d.groupe_won?20:0);
+          const _p=PRIME_JOUR_(d.date); const primeJour=((d.top3_gagnes||[]).length*_p)+(d.amboise_won?_p:0)+(d.louane_won?_p:0)+(d.groupe_won?_p:0);
           return `<tr>
             <td><strong>${d.date}</strong></td>
             <td>${(d.top3||[]).map(n=>{
@@ -738,7 +751,7 @@ function renderChallenges(el){
         <div class="ch-icon" style="background:linear-gradient(135deg,var(--blue),var(--purple))">V</div>
         <div>
           <div class="ch-title">Challenge Vendeur — Top 3 + 400 € min</div>
-          <div class="ch-period">20 € / jour</div>
+          <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''}</div>
         </div>
       </div>
     </div>
@@ -752,7 +765,7 @@ function renderChallenges(el){
           <div style="display:flex;align-items:center;gap:8px">
             <div class="result" style="color:${won?'var(--green)':'var(--txt)'}">${fmt(v.marge)} €</div>
             <span class="ch-badge ${won?'won':'lost'}">${won?'GAGNÉ':'< 400 €'}</span>
-            ${cumul>0?`<span style="font-size:10px;color:var(--green);font-weight:700">cumul: ${cumul*20} €</span>`:''}
+            ${cumul>0?`<span style="font-size:10px;color:var(--green);font-weight:700">cumul: ${vendeurPrimes[v.nom]||0} €</span>`:''}
           </div>
         </div>`;
       }).join('')}
@@ -769,7 +782,7 @@ function renderChallenges(el){
           <div class="ch-icon" style="background:var(--purple)">A</div>
           <div>
             <div class="ch-title">Hassene — Manager Amboise — 700 €</div>
-            <div class="ch-period">20 € / jour | cumul: <strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></div>
+            <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></div>
           </div>
         </div>
         <span class="ch-badge ${ch2aWon?'won':'pending'}">${ch2aWon?'GAGNÉ':'En cours'}</span>
@@ -792,7 +805,7 @@ function renderChallenges(el){
           <div class="ch-icon" style="background:var(--red)">L</div>
           <div>
             <div class="ch-title">Louane — Manageuse Cholet — 1 000 €</div>
-            <div class="ch-period">20 € / jour | cumul: <strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></div>
+            <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></div>
           </div>
         </div>
         <span class="ch-badge ${ch2bWon?'won':'pending'}">${ch2bWon?'GAGNÉ':'En cours'}</span>
@@ -817,7 +830,7 @@ function renderChallenges(el){
         <div class="ch-icon" style="background:linear-gradient(135deg,var(--green),var(--cyan))">R</div>
         <div>
           <div class="ch-title">Romain CDV — 3 500 € groupe</div>
-          <div class="ch-period">20 € / jour | cumul: <strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></div>
+          <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></div>
         </div>
       </div>
       <span class="ch-badge ${ch3Won?'won':'pending'}">${ch3Won?'GAGNÉ':'En cours'}</span>
