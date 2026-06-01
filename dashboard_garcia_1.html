@@ -77,8 +77,8 @@ table{width:100%;border-collapse:collapse;font-size:12px}th{padding:8px 6px;font
 <script>
 const SID="1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY";
 const B=[{c:"ALR",n:"Angers",cl:"#2563EB"},{c:"TLR",n:"Amboise",cl:"#7C3AED"},{c:"CLR",n:"Châteaudun",cl:"#0891B2"},{c:"CHOLET",n:"Cholet",cl:"#DC2626"},{c:"RLR",n:"Romorantin",cl:"#059669"},{c:"VLR",n:"Vendôme",cl:"#D97706"}];
-// Objectifs mensuels par boutique (€). Total : 65 000 €
-const OBJ_BOUT={ALR:5000,TLR:13000,VLR:8000,CLR:8000,CHOLET:20000,RLR:11000};
+// Objectifs mensuels par boutique (€) — JUIN 2026. Total : 59 000 €
+const OBJ_BOUT={ALR:5000,TLR:10000,VLR:7000,CLR:9000,CHOLET:20000,RLR:8000};
 const OBJ_TOT=Object.values(OBJ_BOUT).reduce((s,v)=>s+v,0);
 const BM=[{m:2e3,x:3e3,p:.02},{m:3e3,x:4e3,p:.03},{m:4e3,x:5e3,p:.05},{m:5e3,x:6e3,p:.06},{m:6e3,x:7e3,p:.07},{m:7e3,x:8e3,p:.08},{m:8e3,x:9e3,p:.09},{m:9e3,x:1e9,p:.1}];
 
@@ -317,7 +317,7 @@ function getItemsRI(){
     if(it.nom.match(/mobiles/i))return{k:"mob",l:it.nom,ob:it.obj,field:"mb"};
     if(it.nom.match(/garantie|g3a|3.me/i))return{k:"g3a",l:it.nom,ob:it.obj,field:"g3",pc:it.unite==="%"?1:0};
     if(it.nom.match(/cyber/i))return{k:"cyber",l:it.nom,ob:it.obj,field:"cy"};
-    if(it.nom.match(/assurance/i))return{k:"txA",l:it.nom,ob:it.obj,pc:1};
+    if(it.nom.match(/assurance|assu/i))return{k:"txA",l:it.nom,ob:it.obj,field:"as"};
     if(it.nom.match(/accessoire/i))return{k:"txC",l:it.nom,ob:it.obj,cu:1};
     return{k:it.nom,l:it.nom,ob:it.obj};
   });
@@ -337,8 +337,7 @@ function eD(d){
       if(ovObj[it.k]>0)o=ovObj[it.k];
       else if(!it.pc&&!it.cu)o=Math.round(it.ob*ratio*100)/100;
       let r;
-      if(it.k==="txA")r=v.ta;
-      else if(it.k==="txC")r=v.tx;
+      if(it.k==="txC")r=v.tx;
       else if(it.k==="g3a")r=v.mb>0?Math.round(v.g3/v.mb*10000)/100:0;
       else if(it.field)r=v[it.field]||0;
       else r=0;
@@ -639,7 +638,7 @@ async function init(){
       D=cached.data;
       ITEMS=D._items||[];
       // Restaurer ITEMS si pas dans le cache (backward compat)
-      if(!ITEMS.length) ITEMS=[{nom:"Mobiles",obj:20,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Taux d'Assurance",obj:40,unite:"%"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
+      if(!ITEMS.length) ITEMS=[{nom:"Mobiles",obj:25,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Qté Assu",obj:15,unite:"unités"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
       isDemo=false;
       usedCache=true;
     }catch(e){console.warn("Cache parse error:",e)}
@@ -653,7 +652,7 @@ async function init(){
     console.log("Fallback:",e);
     if(!usedCache){
       // Fallback: données démo minimales
-      ITEMS=[{nom:"Mobiles",obj:20,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Taux d'Assurance",obj:40,unite:"%"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
+      ITEMS=[{nom:"Mobiles",obj:25,unite:"unités"},{nom:"Garantie 3ème Année",obj:50,unite:"%"},{nom:"SFR Cyber",obj:15,unite:"unités"},{nom:"Qté Assu",obj:15,unite:"unités"},{nom:"Taux d'Accessoire",obj:30,unite:"€/vente"}];
       const vs=[{nm:"AXEL",bq:"ALR",role:"Vendeur",mg:5420,mb:14,g3:3,cy:10,as:7,ma:14,ac:380,jc:14,jt:21,jw:22,ta:50,tx:27},{nm:"WILL",bq:"RLR",role:"Vendeur",mg:7200,mb:18,g3:5,cy:14,as:10,ma:18,ac:520,jc:14,jt:21,jw:22,ta:55.6,tx:28.9}];
       const n1=vs.map(v=>({...v,mg:Math.round(v.mg*.9),mb:Math.round(v.mb*.85),cy:Math.round(v.cy*.8)}));
       D={vs,n1,gd:{ALR:{nt:4.72,pt:28},RLR:{nt:4.91,pt:31}},gl:{ALR:{nt:4.6,tt:847,ms:12},RLR:{nt:4.5,tt:538,ms:9}},vi:{ALR:320,RLR:245},viN1:{ALR:295,RLR:230}};
