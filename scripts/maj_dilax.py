@@ -219,7 +219,7 @@ def main():
         log(f"  #{r['rang']} {r['boutique']:12s} v={r['visiteurs']:6d}  m={r['marge']:8.2f}  pm={r['pm']:6.2f}  tx={r['tx']:5.2f}%")
 
     log("POST vers Apps Script")
-    payload = json.dumps({"dilax": resultats}).encode("utf-8")
+    payload = json.dumps({"type": "dilax", "dilax": resultats}).encode("utf-8")
     req = urllib.request.Request(
         APPS_SCRIPT_URL, data=payload,
         headers={"Content-Type": "application/json"},
