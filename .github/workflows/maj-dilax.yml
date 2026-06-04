@@ -1,0 +1,46 @@
+name: MAJ DILAX
+
+on:
+  # Lundi-Samedi, toutes les 2h de 10h à 20h Paris (heure d'été UTC+2)
+  # En hiver les runs auront lieu 1h plus tôt (Paris). Compromis volontaire.
+  schedule:
+    - cron: '0 8,10,12,14,16,18 * * 1-6'
+  # Trigger manuel via l'onglet Actions GitHub
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright + deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Run MAJ DILAX
+        env:
+          DILAX_USER: ${{ secrets.DILAX_USER }}
+          DILAX_PASSWORD: ${{ secrets.DILAX_PASSWORD }}
+          APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
+        run: python scripts/maj_dilax.py
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: |
+            *.png
+            screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
