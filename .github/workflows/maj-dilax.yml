@@ -34,8 +34,8 @@ jobs:
           APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
         run: python scripts/maj_dilax.py
 
-      - name: Upload debug artifacts on failure
-        if: failure()
+      - name: Upload debug artifacts (always)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: debug

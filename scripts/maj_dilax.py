@@ -117,35 +117,103 @@ def scrape_dilax():
             page.wait_for_load_state("networkidle")
             time.sleep(3)
 
-            # === 3. Configurer (Site unique / Mois en cours / Mensuel / Entrées site) ===
-            # Ces options sont souvent persistées par DILAX — on saute la config détaillée
-            # et on s'assure juste qu'on est en mode "Site unique"
+            # === 3. Dump HTML page Rapport graphique pour analyse dropdown ===
+            page.screenshot(path="05_rapport_graphique.png")
+            with open("rapport_graphique.html", "w", encoding="utf-8") as f:
+                f.write(page.content()[:200000])
+            log("Dump HTML page Rapport graphique sauvé")
+
+            # Inventaire des éléments de sélection candidats
+            inventaire = page.evaluate("""
+                () => {
+                    const result = {
+                        selects: [],
+                        uiSelects: [],
+                        select2: [],
+                        ngModels: [],
+                        sidebar: []
+                    };
+                    document.querySelectorAll('select').forEach(s => {
+                        result.selects.push({
+                            name: s.name, id: s.id, ngModel: s.getAttribute('ng-model'),
+                            visible: s.offsetParent !== null,
+                            opts: Array.from(s.options).slice(0,3).map(o => o.text)
+                        });
+                    });
+                    document.querySelectorAll('.ui-select-container, [class*="ui-select"]').forEach(s => {
+                        result.uiSelects.push({
+                            class: s.className,
+                            visible: s.offsetParent !== null,
+                            text: s.innerText.substring(0, 80)
+                        });
+                    });
+                    document.querySelectorAll('.select2-container, [class*="select2"]').forEach(s => {
+                        result.select2.push({class: s.className, visible: s.offsetParent !== null});
+                    });
+                    document.querySelectorAll('[ng-model*="site" i], [ng-model*="Site"]').forEach(s => {
+                        result.ngModels.push({tag: s.tagName, ngModel: s.getAttribute('ng-model'), visible: s.offsetParent !== null});
+                    });
+                    // Cherche éléments cliquables contenant un nom de site DILAX
+                    const candidates = document.querySelectorAll('a, li, div[ng-click], button');
+                    let count = 0;
+                    candidates.forEach(el => {
+                        const t = (el.innerText || '').trim();
+                        if (t.includes('ANJOU') || t.includes('VENDOME') || t.includes('CHATEAUDUN')) {
+                            if (count < 10 && el.offsetParent !== null) {
+                                result.sidebar.push({
+                                    tag: el.tagName,
+                                    text: t.substring(0, 80),
+                                    ngClick: el.getAttribute('ng-click'),
+                                    class: el.className.substring(0, 60)
+                                });
+                                count++;
+                            }
+                        }
+                    });
+                    return result;
+                }
+            """)
+            log(f"Inventaire dropdowns: selects={len(inventaire['selects'])}, "
+                f"uiSelects={len(inventaire['uiSelects'])}, "
+                f"select2={len(inventaire['select2'])}, "
+                f"ngModels site={len(inventaire['ngModels'])}, "
+                f"clickables sites={len(inventaire['sidebar'])}")
+            for k, v in inventaire.items():
+                if v:
+                    log(f"  {k}: {json.dumps(v, ensure_ascii=False)[:500]}")
 
             # === 4. Boucle sur les 6 sites ===
             for dilax_name, nom, code in SITES:
                 log(f"Site {code} ({nom}) — {dilax_name}")
                 try:
-                    # Click sur le sélecteur de site (souvent un dropdown <select> ou un autocomplete)
-                    site_selector_candidates = [
-                        '[class*="site-select"]',
-                        '[class*="siteSelect"]',
-                        'select[name*="site"]',
-                        '[aria-label*="Site"]',
-                        'input[placeholder*="Site"]',
-                    ]
                     clicked = False
-                    for sel in site_selector_candidates:
-                        if page.locator(sel).first.is_visible():
-                            page.locator(sel).first.click()
-                            clicked = True
-                            break
+                    # Stratégie 1: <select> natif
+                    select_native = page.locator('select').filter(has_text=dilax_name)
+                    if select_native.count() > 0 and select_native.first.is_visible():
+                        select_native.first.select_option(label=dilax_name)
+                        clicked = True
+                        log(f"  selected via <select> native")
+                    # Stratégie 2: clickable direct contenant le nom du site
                     if not clicked:
-                        log(f"  WARN: sélecteur de site non trouvé pour {code}")
+                        for sel in [
+                            f'a:has-text("{dilax_name}")',
+                            f'li:has-text("{dilax_name}")',
+                            f'div[ng-click]:has-text("{dilax_name}")',
+                        ]:
+                            loc = page.locator(sel).first
+                            try:
+                                if loc.is_visible(timeout=2000):
+                                    loc.click(timeout=5000)
+                                    clicked = True
+                                    log(f"  clicked via {sel}")
+                                    break
+                            except Exception:
+                                continue
+                    if not clicked:
+                        log(f"  ✗ aucun sélecteur trouvé pour {code}")
+                        continue
 
-                    time.sleep(1)
-                    # Choisir le site dans la liste
-                    page.get_by_text(dilax_name, exact=False).first.click(timeout=10000)
-                    page.wait_for_load_state("networkidle")
+                    page.wait_for_load_state("networkidle", timeout=15000)
                     time.sleep(3)
 
                     # Extraire la somme via Highcharts
