@@ -183,34 +183,47 @@ def scrape_dilax():
                     log(f"  {k}: {json.dumps(v, ensure_ascii=False)[:500]}")
 
             # === 4. Boucle sur les 6 sites ===
-            for dilax_name, nom, code in SITES:
+            # DILAX utilise un widget custom .select-title avec ng-click="toggleSelect()"
+            # qui ouvre un panel de sélection des sites quand cliqué.
+            for idx, (dilax_name, nom, code) in enumerate(SITES):
                 log(f"Site {code} ({nom}) — {dilax_name}")
                 try:
-                    clicked = False
-                    # Stratégie 1: <select> natif
-                    select_native = page.locator('select').filter(has_text=dilax_name)
-                    if select_native.count() > 0 and select_native.first.is_visible():
-                        select_native.first.select_option(label=dilax_name)
-                        clicked = True
-                        log(f"  selected via <select> native")
-                    # Stratégie 2: clickable direct contenant le nom du site
-                    if not clicked:
-                        for sel in [
-                            f'a:has-text("{dilax_name}")',
-                            f'li:has-text("{dilax_name}")',
-                            f'div[ng-click]:has-text("{dilax_name}")',
-                        ]:
-                            loc = page.locator(sel).first
-                            try:
-                                if loc.is_visible(timeout=2000):
-                                    loc.click(timeout=5000)
-                                    clicked = True
-                                    log(f"  clicked via {sel}")
-                                    break
-                            except Exception:
-                                continue
-                    if not clicked:
-                        log(f"  ✗ aucun sélecteur trouvé pour {code}")
+                    # Étape 1: ouvrir le panel de sélection en cliquant sur .select-title
+                    select_title = page.locator('.select-title').first
+                    if select_title.is_visible(timeout=5000):
+                        select_title.click()
+                        time.sleep(2)
+                    else:
+                        log(f"  ✗ .select-title non trouvé")
+                        continue
+
+                    # Debug : dump HTML du panel ouvert pour le 1er site
+                    if idx == 0:
+                        with open("06_panel_ouvert.html", "w", encoding="utf-8") as f:
+                            f.write(page.content()[:200000])
+                        page.screenshot(path="06_panel_ouvert.png")
+                        log("  Dump panel ouvert sauvé")
+
+                    # Étape 2: cliquer sur le nom du site dans le panel ouvert
+                    site_item = page.get_by_text(dilax_name, exact=True)
+                    found = False
+                    for i in range(min(site_item.count(), 5)):
+                        item = site_item.nth(i)
+                        try:
+                            if item.is_visible(timeout=2000):
+                                item.click(timeout=5000)
+                                found = True
+                                log(f"  clicked '{dilax_name}' (occurrence #{i})")
+                                break
+                        except Exception:
+                            continue
+                    if not found:
+                        log(f"  ✗ site '{dilax_name}' non trouvé dans le panel")
+                        # Fermer le panel pour le prochain site
+                        try:
+                            page.keyboard.press("Escape")
+                        except Exception:
+                            pass
                         continue
 
                     page.wait_for_load_state("networkidle", timeout=15000)
@@ -315,9 +328,12 @@ def main():
         APPS_SCRIPT_URL, data=payload,
         headers={"Content-Type": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        body = resp.read().decode("utf-8")
-        log(f"  Réponse: {body}")
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            body = resp.read().decode("utf-8")
+            log(f"  Réponse: {body}")
+    except Exception as e:
+        log(f"  ✗ POST échoué : {e} (timeout étendu à 180s)")
 
     log("=== TERMINÉ ===")
 
