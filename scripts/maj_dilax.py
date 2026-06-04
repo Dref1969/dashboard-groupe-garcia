@@ -80,13 +80,26 @@ def scrape_dilax():
             log("Click login button")
             page.click('#loginButton')
 
-            page.wait_for_load_state("networkidle", timeout=30000)
-            time.sleep(3)
-            log(f"  URL après login: {page.url}")
-
-            if "login" in page.url.lower():
+            # Attendre que le form login disparaisse (vraie détection d'auth réussie)
+            try:
+                page.wait_for_selector('#username', state="hidden", timeout=20000)
+                log("  Form login disparu — auth OK")
+            except Exception as e:
                 page.screenshot(path="login_fail.png")
-                raise RuntimeError("Login DILAX échoué — vérifier secrets")
+                # Vérifier si message d'erreur visible
+                err_visible = page.locator('.alert-danger:visible').count() > 0
+                if err_visible:
+                    raise RuntimeError("Login DILAX refusé (Incorrect credentials)")
+                log(f"  WARN form toujours visible : {e} (peut-être lent à charger)")
+
+            # Attendre que le dashboard soit chargé (networkidle + menu visible)
+            try:
+                page.wait_for_load_state("networkidle", timeout=20000)
+            except Exception:
+                pass
+            time.sleep(5)
+            page.screenshot(path="04_after_login.png")
+            log(f"  URL après login: {page.url}")
 
             # === 2. Navigate Indicateurs clés > Rapport graphique ===
             log("Navigate vers Rapport graphique")
