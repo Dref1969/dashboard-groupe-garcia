@@ -49,25 +49,41 @@ def scrape_dilax():
         try:
             # === 1. Login ===
             log("Navigate vers DILAX login")
-            page.goto("https://sfr.dilax.com/sfr/login.html", wait_until="networkidle")
-            time.sleep(2)
+            # URL avec hash routing Angular
+            page.goto("https://sfr.dilax.com/sfr/login.html#/dashboard",
+                      wait_until="domcontentloaded")
+            time.sleep(5)
+            page.screenshot(path="01_after_load.png")
+            log(f"  URL chargée: {page.url}")
 
-            log("Login")
-            # Sélecteurs en fallback : essaie plusieurs noms d'attributs
-            for sel in ['input[type="email"]', 'input[name="username"]',
-                        'input[name="email"]', 'input[name="login"]']:
-                if page.locator(sel).count() > 0:
-                    page.fill(sel, DILAX_USER)
-                    break
-            for sel in ['input[type="password"]', 'input[name="password"]']:
-                if page.locator(sel).count() > 0:
-                    page.fill(sel, DILAX_PASSWORD)
-                    break
-            # Bouton submit
+            log("Attente input email visible")
+            # Attendre que l'input soit RÉELLEMENT visible (pas juste dans DOM)
+            try:
+                page.wait_for_selector('input[type="email"]:visible, input[name="email"]:visible',
+                                        timeout=20000, state="visible")
+            except Exception as e:
+                log(f"  Input email pas visible : {e}")
+                page.screenshot(path="02_input_not_visible.png")
+                # Dump HTML pour debug
+                html = page.content()
+                with open("page_dump.html", "w", encoding="utf-8") as f:
+                    f.write(html[:50000])
+                raise
+
+            log("Login - remplir email")
+            page.fill('input[name="email"]', DILAX_USER)
+            time.sleep(1)
+            log("Login - remplir password")
+            page.fill('input[name="password"], input[type="password"]', DILAX_PASSWORD)
+            time.sleep(1)
+            page.screenshot(path="03_filled.png")
+
+            log("Click submit")
             for sel in ['button[type="submit"]', 'input[type="submit"]',
-                        'button:has-text("Connexion")', 'button:has-text("Login")']:
-                if page.locator(sel).count() > 0:
-                    page.click(sel)
+                        'button:has-text("Connexion")', 'button:has-text("Login")',
+                        'button:has-text("Se connecter")']:
+                if page.locator(sel).first.is_visible():
+                    page.locator(sel).first.click()
                     break
 
             page.wait_for_load_state("networkidle", timeout=30000)

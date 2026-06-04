@@ -34,13 +34,14 @@ jobs:
           APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
         run: python scripts/maj_dilax.py
 
-      - name: Upload screenshots on failure
+      - name: Upload debug artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: debug-screenshots
+          name: debug
           path: |
             *.png
+            *.html
             screenshots/
           if-no-files-found: ignore
           retention-days: 7
