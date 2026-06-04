@@ -56,35 +56,29 @@ def scrape_dilax():
             page.screenshot(path="01_after_load.png")
             log(f"  URL chargée: {page.url}")
 
-            log("Attente input email visible")
-            # Attendre que l'input soit RÉELLEMENT visible (pas juste dans DOM)
+            log("Attente form login visible (id=username)")
+            # Le vrai form login utilise name='username' (PAS email — celui-ci est
+            # dans la modal Forgot Password cachée)
             try:
-                page.wait_for_selector('input[type="email"]:visible, input[name="email"]:visible',
-                                        timeout=20000, state="visible")
+                page.wait_for_selector('#username', timeout=20000, state="visible")
             except Exception as e:
-                log(f"  Input email pas visible : {e}")
+                log(f"  Form login pas visible : {e}")
                 page.screenshot(path="02_input_not_visible.png")
-                # Dump HTML pour debug
                 html = page.content()
                 with open("page_dump.html", "w", encoding="utf-8") as f:
                     f.write(html[:50000])
                 raise
 
-            log("Login - remplir email")
-            page.fill('input[name="email"]', DILAX_USER)
+            log("Login - remplir username")
+            page.fill('#username', DILAX_USER)
             time.sleep(1)
             log("Login - remplir password")
-            page.fill('input[name="password"], input[type="password"]', DILAX_PASSWORD)
+            page.fill('#password', DILAX_PASSWORD)
             time.sleep(1)
             page.screenshot(path="03_filled.png")
 
-            log("Click submit")
-            for sel in ['button[type="submit"]', 'input[type="submit"]',
-                        'button:has-text("Connexion")', 'button:has-text("Login")',
-                        'button:has-text("Se connecter")']:
-                if page.locator(sel).first.is_visible():
-                    page.locator(sel).first.click()
-                    break
+            log("Click login button")
+            page.click('#loginButton')
 
             page.wait_for_load_state("networkidle", timeout=30000)
             time.sleep(3)
