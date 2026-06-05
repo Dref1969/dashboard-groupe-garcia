@@ -173,7 +173,32 @@ def scrape_goodays():
                 data[code]["part"] = part
                 log(f"    {code} '{nom}' note={note} part={part}")
 
-            log("Découverte phase 2 OK — notes extraites. Reste GMB (avis Google).")
+            log("Phase 2 OK — notes extraites. Découverte GMB (avis Google).")
+
+            # === 3. Questionnaires > Google My Business (/pro/surveys) ===
+            log("Navigate vers Questionnaires (/pro/surveys)")
+            page.goto("https://app.goodays.co/pro/surveys",
+                      wait_until="domcontentloaded")
+            time.sleep(8)
+            dump(page, "06_surveys")
+            # Lister les questionnaires + liens pour trouver "Google My Business"
+            survey_links = page.evaluate("""
+                () => {
+                    const out = [];
+                    document.querySelectorAll('a[href], button, li, div[class*="survey"]').forEach(el => {
+                        const t = (el.innerText || '').trim();
+                        if (t && t.length < 60 && /google|my business|gmb|questionnaire/i.test(t)) {
+                            out.push({tag: el.tagName, text: t, href: el.getAttribute('href') || ''});
+                        }
+                    });
+                    return out.slice(0, 30);
+                }
+            """)
+            log(f"  Éléments GMB/questionnaire trouvés : {len(survey_links)}")
+            for s in survey_links:
+                log(f"    [{s['tag']}] '{s['text']}' -> {s['href']}")
+
+            log("Phase 3 découverte GMB terminée — analyser dump 06_surveys")
 
         finally:
             browser.close()
