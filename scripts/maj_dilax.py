@@ -123,50 +123,49 @@ def scrape_dilax():
                 f.write(page.content()[:200000])
             log("Dump HTML page Rapport graphique sauvé")
 
-            # 3a. Cliquer sur le champ "Période d'analyse" pour ouvrir le date picker
-            log("Configuration : Période = Mois en cours")
+            # 3a. Cliquer sur l'input #relevantDateRange pour ouvrir le date picker
+            log("Configuration : Période = Mois en cours (via #relevantDateRange)")
             try:
-                # Le champ période est un input avec une valeur du genre "Hier (DD/MM/YYYY)"
-                periode_input = page.locator('input').filter(has_text='').nth(0)
-                # Mieux : cibler par le label au-dessus
-                for sel in ['input[placeholder*="riode"]',
-                            'div:has(> label:has-text("Période d\'analyse")) input',
-                            'label:has-text("Période d\'analyse") + div input',
-                            # Fallback : input dont la valeur ressemble à une date
-                            'input[ng-model*="period"], input[ng-model*="Period"]']:
-                    if page.locator(sel).first.count() > 0:
-                        try:
-                            page.locator(sel).first.click(timeout=3000)
-                            log(f"  Période input cliqué via {sel}")
-                            break
-                        except Exception:
-                            continue
+                date_input = page.locator('#relevantDateRange')
+                date_input.click(timeout=5000, force=True)
+                log("  #relevantDateRange cliqué")
                 time.sleep(2)
                 page.screenshot(path="07_periode_picker.png")
-                # Chercher option "Mois en cours" / "Ce mois-ci" / "This month"
-                for sel in ['text=Mois en cours', 'text=Ce mois-ci', 'text=Ce mois',
-                            'text="This month"', 'a:has-text("mois")']:
-                    loc = page.locator(sel).first
-                    try:
-                        if loc.is_visible(timeout=2000):
-                            loc.click(timeout=3000)
-                            log(f"  Mois en cours sélectionné via {sel}")
-                            break
-                    except Exception:
-                        continue
-                time.sleep(2)
+
+                # Cliquer sur "Mois en cours" dans #predefinedRange
+                mois_option = page.locator('#predefinedRange li').filter(has_text='Mois en cours').first
+                if mois_option.is_visible(timeout=5000):
+                    mois_option.click(timeout=5000)
+                    log("  'Mois en cours' cliqué")
+                    time.sleep(3)
+                else:
+                    log("  ✗ option 'Mois en cours' non trouvée")
+                    # Fallback : essayer tous les li du picker
+                    for li in page.locator('.daterangepicker li').all():
+                        try:
+                            txt = li.inner_text(timeout=500)
+                            if 'mois en cours' in txt.lower():
+                                li.click(timeout=3000)
+                                log(f"  Fallback : cliqué '{txt}'")
+                                time.sleep(3)
+                                break
+                        except Exception:
+                            continue
             except Exception as e:
                 log(f"  WARN config période : {e}")
                 page.screenshot(path="07_periode_fail.png")
 
-            # 3b. Cliquer sur "Mensuel" comme fréquence
+            # 3b. Cliquer sur le bouton "Mensuel" (devient cliquable après changement période)
             log("Configuration : Fréquence = Mensuel")
             try:
-                mensuel = page.locator('button:has-text("Mensuel"), a:has-text("Mensuel"), [ng-click*="ensuel"]').first
+                # Le bouton a ng-click="changeAggregation(MONTHLY)" et le texte "Mensuel"
+                mensuel = page.locator('button[ng-click*="MONTHLY"]:not([disabled])').first
                 if mensuel.is_visible(timeout=3000):
                     mensuel.click(timeout=3000)
-                    log("  Mensuel cliqué")
-                    time.sleep(2)
+                    log("  Bouton Mensuel cliqué")
+                    time.sleep(3)
+                else:
+                    log("  ✗ bouton Mensuel toujours disabled")
             except Exception as e:
                 log(f"  WARN config Mensuel : {e}")
 
@@ -248,24 +247,38 @@ def scrape_dilax():
                         log(f"  ✗ .select-title non trouvé")
                         continue
 
-                    # Étape 1bis : déplier le groupe "LIAISON RADIO (6)" qui contient les 6 sites
+                    # Étape 1bis : vérifier si le groupe est déjà déplié en cherchant un site connu
+                    # Si "ROMORANTIN LIAISON RADIO" est visible, le groupe est déjà déplié
+                    sample_site = page.get_by_text("ROMORANTIN LIAISON RADIO", exact=True).first
+                    groupe_deplie = False
                     try:
-                        liaison_group = page.locator('text=/LIAISON RADIO \\(6\\)/').first
-                        if liaison_group.is_visible(timeout=3000):
-                            liaison_group.click()
-                            time.sleep(1)
-                            log("  Groupe 'LIAISON RADIO' déplié")
-                    except Exception as e:
-                        log(f"  WARN dépliage groupe : {e}")
+                        groupe_deplie = sample_site.is_visible(timeout=1500)
+                    except Exception:
+                        pass
 
-                    # Debug : dump HTML du panel déplié pour le 1er site
-                    if idx == 0:
-                        with open("06_panel_ouvert.html", "w", encoding="utf-8") as f:
+                    if not groupe_deplie:
+                        # Cliquer sur "LIAISON RADIO (6)" pour déplier
+                        for sel in ['text=/^LIAISON RADIO \\(\\d+\\)$/',
+                                    'text=/^LIAISON RADIO/']:
+                            try:
+                                liaison = page.locator(sel).first
+                                if liaison.is_visible(timeout=2000):
+                                    liaison.click(timeout=3000)
+                                    time.sleep(1)
+                                    log("  Groupe 'LIAISON RADIO' déplié")
+                                    break
+                            except Exception:
+                                continue
+
+                    # Debug : dump HTML du panel pour le 1er site + dernier site échoué
+                    if idx == 0 or (idx == 1 and visiteurs.get('ALR', 0) > 0):
+                        with open(f"06_panel_site{idx}.html", "w", encoding="utf-8") as f:
                             f.write(page.content()[:200000])
-                        page.screenshot(path="06_panel_ouvert.png")
-                        log("  Dump panel déplié sauvé")
+                        page.screenshot(path=f"06_panel_site{idx}.png")
+                        log(f"  Dump panel sauvé pour site {idx}")
 
                     # Étape 2: cliquer sur le nom du site dans le panel ouvert
+                    # Essayer exact d'abord, puis fallback contient
                     site_item = page.get_by_text(dilax_name, exact=True)
                     found = False
                     for i in range(min(site_item.count(), 5)):
