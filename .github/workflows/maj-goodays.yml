@@ -1,0 +1,45 @@
+name: MAJ Goodays
+
+on:
+  # 1x par jour, lun-sam à 6h UTC = 8h Paris (heure d'été)
+  schedule:
+    - cron: '0 6 * * 1-6'
+  # Trigger manuel via l'onglet Actions GitHub
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright + deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Run MAJ Goodays
+        env:
+          GOODAYS_USER: ${{ secrets.GOODAYS_USER }}
+          GOODAYS_PASSWORD: ${{ secrets.GOODAYS_PASSWORD }}
+          APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
+        run: python scripts/maj_goodays.py
+
+      - name: Upload debug artifacts (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-goodays
+          path: |
+            *.png
+            *.html
+          if-no-files-found: ignore
+          retention-days: 7
