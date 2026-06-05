@@ -58,96 +58,76 @@ def scrape_goodays():
         page.set_default_timeout(30000)
 
         try:
-            # === 1. Login ===
-            log("Navigate vers Critizr login")
-            page.goto("https://critizr.com/", wait_until="domcontentloaded")
+            # === 1. Login Goodays (app Django, 2 étapes : email → Suivant → password) ===
+            log("Navigate vers Goodays login")
+            page.goto("https://app.goodays.co/pro/login/", wait_until="domcontentloaded")
             time.sleep(4)
-            dump(page, "01_landing")
+            dump(page, "01_login_email")
             log(f"  URL: {page.url}")
 
-            # Chercher un lien/bouton "Connexion" / "Login" / "Se connecter"
-            for sel in ['a:has-text("Connexion")', 'a:has-text("Se connecter")',
-                        'a:has-text("Login")', 'a[href*="login"]',
-                        'a[href*="signin"]', 'button:has-text("Connexion")']:
-                try:
-                    loc = page.locator(sel).first
-                    if loc.is_visible(timeout=2000):
-                        loc.click(timeout=3000)
-                        log(f"  cliqué lien connexion via {sel}")
-                        time.sleep(3)
-                        break
-                except Exception:
-                    continue
+            # Étape 1 : email + bouton "Suivant"
+            log("Étape 1 : email")
+            page.fill('#id_email', GOODAYS_USER)
+            time.sleep(1)
+            page.click('button[type="submit"]')  # "Suivant"
+            page.wait_for_load_state("networkidle", timeout=20000)
+            time.sleep(3)
+            dump(page, "02_login_password")
+            log(f"  URL après Suivant: {page.url}")
 
-            dump(page, "02_login_page")
-            log(f"  URL après clic connexion: {page.url}")
-
-            # Remplir email + mot de passe (sélecteurs en fallback)
-            email_ok = False
-            for sel in ['input[type="email"]', 'input[name="email"]',
-                        'input[name="username"]', 'input[id*="email" i]',
-                        'input[placeholder*="mail" i]']:
-                try:
-                    loc = page.locator(sel).first
-                    if loc.is_visible(timeout=2000):
-                        loc.fill(GOODAYS_USER)
-                        log(f"  email rempli via {sel}")
-                        email_ok = True
-                        break
-                except Exception:
-                    continue
-
+            # Étape 2 : password (le champ apparaît après le 1er submit)
+            log("Étape 2 : password")
             pwd_ok = False
-            for sel in ['input[type="password"]', 'input[name="password"]',
-                        'input[id*="password" i]']:
+            for sel in ['#id_password', 'input[type="password"]',
+                        'input[name="password"]']:
                 try:
                     loc = page.locator(sel).first
-                    if loc.is_visible(timeout=2000):
+                    if loc.is_visible(timeout=5000):
                         loc.fill(GOODAYS_PASSWORD)
                         log(f"  password rempli via {sel}")
                         pwd_ok = True
                         break
                 except Exception:
                     continue
-
-            if not (email_ok and pwd_ok):
-                dump(page, "02b_form_introuvable")
-                raise RuntimeError(f"Form login introuvable (email={email_ok}, pwd={pwd_ok})")
+            if not pwd_ok:
+                dump(page, "02b_pwd_introuvable")
+                raise RuntimeError("Champ password introuvable à l'étape 2")
 
             time.sleep(1)
-            # Soumettre
-            for sel in ['button[type="submit"]', 'input[type="submit"]',
-                        'button:has-text("Connexion")', 'button:has-text("Se connecter")',
-                        'button:has-text("Login")']:
-                try:
-                    loc = page.locator(sel).first
-                    if loc.is_visible(timeout=2000):
-                        loc.click(timeout=3000)
-                        log(f"  submit via {sel}")
-                        break
-                except Exception:
-                    continue
-
+            page.click('button[type="submit"]')  # "Se connecter"
             page.wait_for_load_state("networkidle", timeout=30000)
             time.sleep(5)
             dump(page, "03_after_login")
             log(f"  URL après login: {page.url}")
 
-            if "login" in page.url.lower() or "signin" in page.url.lower():
-                # Vérifier message d'erreur
-                raise RuntimeError("Login Critizr échoué — vérifier secrets (URL contient login)")
+            if "/login" in page.url.lower():
+                raise RuntimeError("Login Goodays échoué — vérifier secrets (toujours sur /login)")
 
-            # === 2. Page Synthèse — Note Top Sat (30 derniers jours) ===
-            log("Navigate vers Synthèse")
-            # Le point d'entrée connu charge le dashboard
-            page.goto("https://critizr.com/pro/messages/active/12854986",
-                      wait_until="domcontentloaded")
-            time.sleep(5)
+            # === 2. Dashboard post-login + exploration menu ===
             dump(page, "04_dashboard")
+            # Lister les liens du menu latéral pour découvrir l'URL Synthèse
+            menu_links = page.evaluate("""
+                () => {
+                    const links = [];
+                    document.querySelectorAll('a[href]').forEach(a => {
+                        const t = (a.innerText || a.title || '').trim();
+                        const h = a.getAttribute('href');
+                        if (t && h && (t.length < 40)) {
+                            links.push({text: t, href: h});
+                        }
+                    });
+                    return links.slice(0, 60);
+                }
+            """)
+            log(f"  Liens menu trouvés : {len(menu_links)}")
+            for ml in menu_links:
+                log(f"    '{ml['text']}' -> {ml['href']}")
 
             # Cliquer sur "Synthèse" dans le menu latéral
+            log("Navigate vers Synthèse")
             for sel in ['a:has-text("Synthèse")', 'text=Synthèse',
-                        '[href*="synthes" i]', '[href*="summary" i]']:
+                        '[href*="synthes" i]', '[href*="summary" i]',
+                        'a:has-text("Statistiques")', 'a:has-text("Performance")']:
                 try:
                     loc = page.locator(sel).first
                     if loc.is_visible(timeout=3000):
@@ -156,12 +136,11 @@ def scrape_goodays():
                         break
                 except Exception:
                     continue
+            page.wait_for_load_state("networkidle", timeout=20000)
             time.sleep(5)
             dump(page, "05_synthese")
             log("  Page Synthèse chargée — voir dump pour structure")
 
-            # === 3. Questionnaires > GMB — avis Google (mois en cours) ===
-            # (à implémenter après découverte du DOM Synthèse)
             log("Découverte phase 1 terminée — analyser les dumps")
 
         finally:
