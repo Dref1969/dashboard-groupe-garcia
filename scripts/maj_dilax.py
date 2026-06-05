@@ -247,28 +247,30 @@ def scrape_dilax():
                         log(f"  ✗ .select-title non trouvé")
                         continue
 
-                    # Étape 1bis : vérifier si le groupe est déjà déplié en cherchant un site connu
-                    # Si "ROMORANTIN LIAISON RADIO" est visible, le groupe est déjà déplié
-                    sample_site = page.get_by_text("ROMORANTIN LIAISON RADIO", exact=True).first
-                    groupe_deplie = False
-                    try:
-                        groupe_deplie = sample_site.is_visible(timeout=1500)
-                    except Exception:
-                        pass
-
-                    if not groupe_deplie:
-                        # Cliquer sur "LIAISON RADIO (6)" pour déplier
-                        for sel in ['text=/^LIAISON RADIO \\(\\d+\\)$/',
-                                    'text=/^LIAISON RADIO/']:
-                            try:
-                                liaison = page.locator(sel).first
-                                if liaison.is_visible(timeout=2000):
-                                    liaison.click(timeout=3000)
-                                    time.sleep(1)
-                                    log("  Groupe 'LIAISON RADIO' déplié")
-                                    break
-                            except Exception:
-                                continue
+                    # Étape 1bis : déplier le groupe "LIAISON RADIO" via JS
+                    # Cherche le <span class="parent-item-body"> contenant "LIAISON RADIO"
+                    # avec un .fa-angle-right (fermé) et clique dessus
+                    expanded = page.evaluate("""
+                        () => {
+                            const spans = document.querySelectorAll('span.parent-item-body');
+                            for (const span of spans) {
+                                if (span.textContent.includes('LIAISON RADIO')) {
+                                    const icon_right = span.querySelector('.fa-angle-right');
+                                    const icon_down = span.querySelector('.fa-angle-down');
+                                    if (icon_right) {
+                                        span.click();
+                                        return 'clicked-toggle';
+                                    } else if (icon_down) {
+                                        return 'already-open';
+                                    }
+                                    return 'no-icon';
+                                }
+                            }
+                            return 'not-found';
+                        }
+                    """)
+                    log(f"  Toggle LIAISON RADIO : {expanded}")
+                    time.sleep(2)
 
                     # Debug : dump HTML du panel pour le 1er site + dernier site échoué
                     if idx == 0 or (idx == 1 and visiteurs.get('ALR', 0) > 0):
