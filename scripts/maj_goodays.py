@@ -103,45 +103,16 @@ def scrape_goodays():
             if "/login" in page.url.lower():
                 raise RuntimeError("Login Goodays échoué — vérifier secrets (toujours sur /login)")
 
-            # === 2. Dashboard post-login + exploration menu ===
-            dump(page, "04_dashboard")
-            # Lister les liens du menu latéral pour découvrir l'URL Synthèse
-            menu_links = page.evaluate("""
-                () => {
-                    const links = [];
-                    document.querySelectorAll('a[href]').forEach(a => {
-                        const t = (a.innerText || a.title || '').trim();
-                        const h = a.getAttribute('href');
-                        if (t && h && (t.length < 40)) {
-                            links.push({text: t, href: h});
-                        }
-                    });
-                    return links.slice(0, 60);
-                }
-            """)
-            log(f"  Liens menu trouvés : {len(menu_links)}")
-            for ml in menu_links:
-                log(f"    '{ml['text']}' -> {ml['href']}")
-
-            # Cliquer sur "Synthèse" dans le menu latéral
-            log("Navigate vers Synthèse")
-            for sel in ['a:has-text("Synthèse")', 'text=Synthèse',
-                        '[href*="synthes" i]', '[href*="summary" i]',
-                        'a:has-text("Statistiques")', 'a:has-text("Performance")']:
-                try:
-                    loc = page.locator(sel).first
-                    if loc.is_visible(timeout=3000):
-                        loc.click(timeout=3000)
-                        log(f"  cliqué Synthèse via {sel}")
-                        break
-                except Exception:
-                    continue
-            page.wait_for_load_state("networkidle", timeout=20000)
-            time.sleep(5)
+            # === 2. Page Synthèse (/pro/overview) — Note Top Sat (30 derniers jours) ===
+            # SPA : navigation directe + domcontentloaded (networkidle ne se déclenche jamais)
+            log("Navigate vers Synthèse (/pro/overview)")
+            page.goto("https://app.goodays.co/pro/overview",
+                      wait_until="domcontentloaded")
+            time.sleep(8)  # laisser la SPA charger les données
             dump(page, "05_synthese")
             log("  Page Synthèse chargée — voir dump pour structure")
 
-            log("Découverte phase 1 terminée — analyser les dumps")
+            log("Découverte phase 2 terminée — analyser dump Synthèse")
 
         finally:
             browser.close()
