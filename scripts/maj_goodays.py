@@ -173,32 +173,39 @@ def scrape_goodays():
                 data[code]["part"] = part
                 log(f"    {code} '{nom}' note={note} part={part}")
 
-            log("Phase 2 OK — notes extraites. Découverte GMB (avis Google).")
+            log("Phase 2 OK — notes extraites. GMB (avis Google).")
 
-            # === 3. Questionnaires > Google My Business (/pro/surveys) ===
-            log("Navigate vers Questionnaires (/pro/surveys)")
-            page.goto("https://app.goodays.co/pro/surveys",
+            # === 3. Google My Business (/pro/surveys/1187) — avis Google ===
+            log("Navigate vers GMB (/pro/surveys/1187)")
+            page.goto("https://app.goodays.co/pro/surveys/1187",
                       wait_until="domcontentloaded")
             time.sleep(8)
-            dump(page, "06_surveys")
-            # Lister les questionnaires + liens pour trouver "Google My Business"
-            survey_links = page.evaluate("""
+            dump(page, "07_gmb")
+            # Inventaire : chiffres + noms de boutiques visibles sur la page GMB
+            gmb_info = page.evaluate("""
                 () => {
-                    const out = [];
-                    document.querySelectorAll('a[href], button, li, div[class*="survey"]').forEach(el => {
-                        const t = (el.innerText || '').trim();
-                        if (t && t.length < 60 && /google|my business|gmb|questionnaire/i.test(t)) {
-                            out.push({tag: el.tagName, text: t, href: el.getAttribute('href') || ''});
-                        }
-                    });
-                    return out.slice(0, 30);
+                    const body = document.body.innerText;
+                    // Chercher tous les gros chiffres (participations)
+                    const tables = Array.from(document.querySelectorAll('table')).map(t => ({
+                        header: (t.querySelector('thead, tr') || {}).innerText || '',
+                        rows: Array.from(t.querySelectorAll('tbody tr, tr')).slice(0,10).map(tr =>
+                            Array.from(tr.querySelectorAll('td,th')).map(c => c.innerText.trim()).filter(x=>x)
+                        )
+                    }));
+                    // Période affichée
+                    const periode = Array.from(document.querySelectorAll('button, [class*="period"], [class*="date"]'))
+                        .map(e => e.innerText.trim()).filter(t => /jour|mois|semaine/i.test(t)).slice(0,5);
+                    return {periode: periode, tables: tables.slice(0,4), bodyLen: body.length};
                 }
             """)
-            log(f"  Éléments GMB/questionnaire trouvés : {len(survey_links)}")
-            for s in survey_links:
-                log(f"    [{s['tag']}] '{s['text']}' -> {s['href']}")
+            log(f"  Période GMB détectée : {gmb_info['periode']}")
+            log(f"  Tables GMB : {len(gmb_info['tables'])}")
+            for i, t in enumerate(gmb_info["tables"]):
+                log(f"    Table {i} header='{t['header'][:60]}' rows={len(t['rows'])}")
+                for row in t["rows"][:8]:
+                    log(f"      {row}")
 
-            log("Phase 3 découverte GMB terminée — analyser dump 06_surveys")
+            log("Phase 3 découverte GMB terminée — analyser dump 07_gmb")
 
         finally:
             browser.close()
