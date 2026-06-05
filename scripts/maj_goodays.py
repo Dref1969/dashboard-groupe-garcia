@@ -173,39 +173,10 @@ def scrape_goodays():
                 data[code]["part"] = part
                 log(f"    {code} '{nom}' note={note} part={part}")
 
-            log("Phase 2 OK — notes extraites. GMB (avis Google).")
-
-            # === 3. Google My Business (/pro/surveys/1187) — avis Google ===
-            log("Navigate vers GMB (/pro/surveys/1187)")
-            page.goto("https://app.goodays.co/pro/surveys/1187",
-                      wait_until="domcontentloaded")
-            time.sleep(8)
-            dump(page, "07_gmb")
-            # Inventaire : chiffres + noms de boutiques visibles sur la page GMB
-            gmb_info = page.evaluate("""
-                () => {
-                    const body = document.body.innerText;
-                    // Chercher tous les gros chiffres (participations)
-                    const tables = Array.from(document.querySelectorAll('table')).map(t => ({
-                        header: (t.querySelector('thead, tr') || {}).innerText || '',
-                        rows: Array.from(t.querySelectorAll('tbody tr, tr')).slice(0,10).map(tr =>
-                            Array.from(tr.querySelectorAll('td,th')).map(c => c.innerText.trim()).filter(x=>x)
-                        )
-                    }));
-                    // Période affichée
-                    const periode = Array.from(document.querySelectorAll('button, [class*="period"], [class*="date"]'))
-                        .map(e => e.innerText.trim()).filter(t => /jour|mois|semaine/i.test(t)).slice(0,5);
-                    return {periode: periode, tables: tables.slice(0,4), bodyLen: body.length};
-                }
-            """)
-            log(f"  Période GMB détectée : {gmb_info['periode']}")
-            log(f"  Tables GMB : {len(gmb_info['tables'])}")
-            for i, t in enumerate(gmb_info["tables"]):
-                log(f"    Table {i} header='{t['header'][:60]}' rows={len(t['rows'])}")
-                for row in t["rows"][:8]:
-                    log(f"      {row}")
-
-            log("Phase 3 découverte GMB terminée — analyser dump 07_gmb")
+            log("Phase 2 OK — notes Top Sat extraites.")
+            # NB : avis Google (GMB) non extraits — le questionnaire /pro/surveys/1187
+            # n'affiche qu'un total toutes boutiques. Détail par boutique = filtrage
+            # fragile, repoussé à une itération dédiée. NoteGoogle/AvisGoogle restent 0.
 
         finally:
             browser.close()
