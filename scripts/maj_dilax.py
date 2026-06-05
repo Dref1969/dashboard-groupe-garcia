@@ -376,7 +376,8 @@ def main():
         v = visiteurs.get(code, 0)
         m = round(marge.get(code, 0), 2)
         pm = round(m / v, 2) if v > 0 else 0
-        tx = round((mob.get(code, 0) / v) * 100, 2) if v > 0 else 0
+        # Ratio brut (pas *100) car la cellule du Sheet a un format % appliqué
+        tx = round(mob.get(code, 0) / v, 4) if v > 0 else 0
         resultats.append({
             "rang": 0,
             "boutique": NOMS[code],
