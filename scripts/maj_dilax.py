@@ -117,11 +117,62 @@ def scrape_dilax():
             page.wait_for_load_state("networkidle")
             time.sleep(3)
 
-            # === 3. Dump HTML page Rapport graphique pour analyse dropdown ===
+            # === 3. Configuration : Mois en cours + Fréquence Mensuel ===
             page.screenshot(path="05_rapport_graphique.png")
             with open("rapport_graphique.html", "w", encoding="utf-8") as f:
                 f.write(page.content()[:200000])
             log("Dump HTML page Rapport graphique sauvé")
+
+            # 3a. Cliquer sur le champ "Période d'analyse" pour ouvrir le date picker
+            log("Configuration : Période = Mois en cours")
+            try:
+                # Le champ période est un input avec une valeur du genre "Hier (DD/MM/YYYY)"
+                periode_input = page.locator('input').filter(has_text='').nth(0)
+                # Mieux : cibler par le label au-dessus
+                for sel in ['input[placeholder*="riode"]',
+                            'div:has(> label:has-text("Période d\'analyse")) input',
+                            'label:has-text("Période d\'analyse") + div input',
+                            # Fallback : input dont la valeur ressemble à une date
+                            'input[ng-model*="period"], input[ng-model*="Period"]']:
+                    if page.locator(sel).first.count() > 0:
+                        try:
+                            page.locator(sel).first.click(timeout=3000)
+                            log(f"  Période input cliqué via {sel}")
+                            break
+                        except Exception:
+                            continue
+                time.sleep(2)
+                page.screenshot(path="07_periode_picker.png")
+                # Chercher option "Mois en cours" / "Ce mois-ci" / "This month"
+                for sel in ['text=Mois en cours', 'text=Ce mois-ci', 'text=Ce mois',
+                            'text="This month"', 'a:has-text("mois")']:
+                    loc = page.locator(sel).first
+                    try:
+                        if loc.is_visible(timeout=2000):
+                            loc.click(timeout=3000)
+                            log(f"  Mois en cours sélectionné via {sel}")
+                            break
+                    except Exception:
+                        continue
+                time.sleep(2)
+            except Exception as e:
+                log(f"  WARN config période : {e}")
+                page.screenshot(path="07_periode_fail.png")
+
+            # 3b. Cliquer sur "Mensuel" comme fréquence
+            log("Configuration : Fréquence = Mensuel")
+            try:
+                mensuel = page.locator('button:has-text("Mensuel"), a:has-text("Mensuel"), [ng-click*="ensuel"]').first
+                if mensuel.is_visible(timeout=3000):
+                    mensuel.click(timeout=3000)
+                    log("  Mensuel cliqué")
+                    time.sleep(2)
+            except Exception as e:
+                log(f"  WARN config Mensuel : {e}")
+
+            page.screenshot(path="08_apres_config.png")
+            with open("08_apres_config.html", "w", encoding="utf-8") as f:
+                f.write(page.content()[:200000])
 
             # Inventaire des éléments de sélection candidats
             inventaire = page.evaluate("""
@@ -197,12 +248,22 @@ def scrape_dilax():
                         log(f"  ✗ .select-title non trouvé")
                         continue
 
-                    # Debug : dump HTML du panel ouvert pour le 1er site
+                    # Étape 1bis : déplier le groupe "LIAISON RADIO (6)" qui contient les 6 sites
+                    try:
+                        liaison_group = page.locator('text=/LIAISON RADIO \\(6\\)/').first
+                        if liaison_group.is_visible(timeout=3000):
+                            liaison_group.click()
+                            time.sleep(1)
+                            log("  Groupe 'LIAISON RADIO' déplié")
+                    except Exception as e:
+                        log(f"  WARN dépliage groupe : {e}")
+
+                    # Debug : dump HTML du panel déplié pour le 1er site
                     if idx == 0:
                         with open("06_panel_ouvert.html", "w", encoding="utf-8") as f:
                             f.write(page.content()[:200000])
                         page.screenshot(path="06_panel_ouvert.png")
-                        log("  Dump panel ouvert sauvé")
+                        log("  Dump panel déplié sauvé")
 
                     # Étape 2: cliquer sur le nom du site dans le panel ouvert
                     site_item = page.get_by_text(dilax_name, exact=True)
