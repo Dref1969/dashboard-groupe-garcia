@@ -19,15 +19,25 @@ GOODAYS_USER = os.environ["GOODAYS_USER"]
 GOODAYS_PASSWORD = os.environ["GOODAYS_PASSWORD"]
 APPS_SCRIPT_URL = os.environ["APPS_SCRIPT_URL"]
 
-# Boutiques : nom Critizr exact, nom court, code
+# Boutiques : mot-clé pour matcher le nom Goodays, nom court, code
+# (les noms Goodays sont sans accents : "Vendome", "Chateaudun")
 SHOPS = [
-    ("SFR Angers Besnardière", "Angers",     "ALR"),
-    ("SFR Amboise",            "Amboise",     "TLR"),
-    ("SFR Châteaudun",         "Chateaudun",  "CLR"),
-    ("SFR Cholet",             "Cholet",      "CHOLET"),
-    ("SFR Romorantin",         "Romorantin",  "RLR"),
-    ("SFR Vendôme",            "Vendome",     "VLR"),
+    ("besnardi",   "Angers",     "ALR"),     # SFR Angers Besnardière
+    ("amboise",    "Amboise",    "TLR"),     # SFR Amboise
+    ("chateaudun", "Chateaudun", "CLR"),     # SFR Chateaudun
+    ("cholet",     "Cholet",     "CHOLET"),  # SFR Cholet
+    ("romorantin", "Romorantin", "RLR"),     # SFR Romorantin
+    ("vendome",    "Vendome",    "VLR"),     # SFR Vendome
 ]
+
+
+def match_code(nom):
+    """Retourne le code boutique depuis un nom Goodays, ou None."""
+    n = nom.lower()
+    for kw, _, code in SHOPS:
+        if kw in n:
+            return code
+    return None
 
 OBJECTIF = 4.50
 
@@ -105,14 +115,65 @@ def scrape_goodays():
 
             # === 2. Page Synthèse (/pro/overview) — Note Top Sat (30 derniers jours) ===
             # SPA : navigation directe + domcontentloaded (networkidle ne se déclenche jamais)
+            # Période "30 derniers jours" est le défaut Goodays → pas besoin de configurer.
             log("Navigate vers Synthèse (/pro/overview)")
             page.goto("https://app.goodays.co/pro/overview",
                       wait_until="domcontentloaded")
             time.sleep(8)  # laisser la SPA charger les données
             dump(page, "05_synthese")
-            log("  Page Synthèse chargée — voir dump pour structure")
 
-            log("Découverte phase 2 terminée — analyser dump Synthèse")
+            # Extraire le bloc "Satisfaction client" : table avec header "Note satis."
+            # Chaque ligne : [rang, boutique, note, participations]
+            sat = page.evaluate("""
+                () => {
+                    const tables = Array.from(document.querySelectorAll('table'));
+                    for (const t of tables) {
+                        if (!/Note satis/i.test(t.innerText)) continue;
+                        const rows = [];
+                        t.querySelectorAll('tbody tr, tr').forEach(tr => {
+                            const cells = Array.from(tr.querySelectorAll('td'))
+                                .map(td => td.innerText.trim()).filter(x => x);
+                            if (cells.length >= 3) {
+                                // chercher le nom (contient "SFR"), la note (X,XX) et la part (entier)
+                                const nom = cells.find(c => /SFR/i.test(c)) || cells[1] || '';
+                                const nums = cells.filter(c => /^[0-9]/.test(c));
+                                rows.push({nom: nom, vals: nums});
+                            }
+                        });
+                        return rows;
+                    }
+                    return [];
+                }
+            """)
+            log(f"  Lignes satisfaction extraites : {len(sat)}")
+            for r in sat:
+                nom = r["nom"]
+                code = None
+                # match côté Python
+                code = next((c for kw, _, c in SHOPS if kw in nom.lower()), None)
+                if not code:
+                    log(f"    ? non matché : '{nom}' vals={r['vals']}")
+                    continue
+                # vals = [note, participations] (la note a une virgule)
+                note = 0.0
+                part = 0
+                for v in r["vals"]:
+                    vc = v.replace(",", ".")
+                    if "." in vc:  # c'est la note
+                        try:
+                            note = float(vc)
+                        except ValueError:
+                            pass
+                    else:  # entier = participations
+                        try:
+                            part = int(v)
+                        except ValueError:
+                            pass
+                data[code]["note"] = note
+                data[code]["part"] = part
+                log(f"    {code} '{nom}' note={note} part={part}")
+
+            log("Découverte phase 2 OK — notes extraites. Reste GMB (avis Google).")
 
         finally:
             browser.close()
