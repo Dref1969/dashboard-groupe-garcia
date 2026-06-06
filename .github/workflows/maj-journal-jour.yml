@@ -1,0 +1,42 @@
+name: MAJ Journal Ventes Jour
+
+on:
+  # Toutes les heures, lun-sam 10h-20h Paris (heure d'été UTC+2 → 8-18 UTC)
+  schedule:
+    - cron: '0 8,9,10,11,12,13,14,15,16,17,18 * * 1-6'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright + deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Run Journal scrape
+        env:
+          APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
+        run: python scripts/maj_journal_jour.py
+
+      - name: Upload debug artifacts (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-journal
+          path: |
+            *.png
+            *.html
+          if-no-files-found: ignore
+          retention-days: 7
