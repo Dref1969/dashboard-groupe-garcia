@@ -36,9 +36,103 @@ def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
+def _set_period(page, label):
+    """Change la période DILAX via #relevantDateRange → #predefinedRange li <label>."""
+    try:
+        page.locator('#relevantDateRange').click(timeout=5000, force=True)
+        time.sleep(2)
+        opt = page.locator('#predefinedRange li').filter(has_text=label).first
+        if opt.is_visible(timeout=5000):
+            opt.click(timeout=5000)
+            log(f"  Période '{label}' sélectionnée")
+            time.sleep(3)
+            return True
+        # fallback : parcourir tous les li du picker
+        for li in page.locator('.daterangepicker li').all():
+            try:
+                if label.lower() in li.inner_text(timeout=500).lower():
+                    li.click(timeout=3000)
+                    log(f"  Période '{label}' (fallback)")
+                    time.sleep(3)
+                    return True
+            except Exception:
+                continue
+    except Exception as e:
+        log(f"  WARN set_period '{label}': {e}")
+    return False
+
+
+def _scrape_sites(page):
+    """Boucle sur les 6 sites DILAX et retourne {code: visiteurs} pour la période courante."""
+    out = {c: 0 for _, _, c in SITES}
+    for idx, (dilax_name, nom, code) in enumerate(SITES):
+        log(f"  Site {code} ({nom})")
+        try:
+            select_title = page.locator('.select-title').first
+            if select_title.is_visible(timeout=5000):
+                select_title.click()
+                time.sleep(2)
+            else:
+                log(f"    ✗ .select-title non trouvé")
+                continue
+            # Déplier le groupe LIAISON RADIO si fermé
+            page.evaluate("""
+                () => {
+                    const spans = document.querySelectorAll('span.parent-item-body');
+                    for (const span of spans) {
+                        if (span.textContent.includes('LIAISON RADIO')) {
+                            if (span.querySelector('.fa-angle-right')) { span.click(); return 'opened'; }
+                            return 'already-open';
+                        }
+                    }
+                    return 'not-found';
+                }
+            """)
+            time.sleep(2)
+            site_item = page.get_by_text(dilax_name, exact=True)
+            found = False
+            for i in range(min(site_item.count(), 5)):
+                try:
+                    item = site_item.nth(i)
+                    if item.is_visible(timeout=2000):
+                        item.click(timeout=5000)
+                        found = True
+                        break
+                except Exception:
+                    continue
+            if not found:
+                log(f"    ✗ site '{dilax_name}' introuvable")
+                try:
+                    page.keyboard.press("Escape")
+                except Exception:
+                    pass
+                continue
+            page.wait_for_load_state("networkidle", timeout=15000)
+            time.sleep(3)
+            total = page.evaluate("""
+                () => {
+                    if (typeof Highcharts === 'undefined') return -1;
+                    const charts = Highcharts.charts.filter(c => c);
+                    if (!charts.length) return -2;
+                    const c = charts[0];
+                    if (!c.series || !c.series[0]) return -3;
+                    return c.series[0].data.reduce((s,p)=>s+(p.y||0),0);
+                }
+            """)
+            if isinstance(total, (int, float)) and total >= 0:
+                out[code] = int(total)
+                log(f"    ✓ {out[code]} visiteurs")
+            else:
+                log(f"    ✗ Highcharts retour {total}")
+        except Exception as e:
+            log(f"    ✗ Erreur {code}: {e}")
+    return out
+
+
 def scrape_dilax():
-    """Scrape visiteurs depuis sfr.dilax.com — retourne dict {code: visiteurs}."""
+    """Scrape visiteurs DILAX — retourne (visiteurs_mois, visiteurs_jour)."""
     visiteurs = {c: 0 for _, _, c in SITES}
+    visiteurs_jour = {c: 0 for _, _, c in SITES}
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
@@ -232,104 +326,23 @@ def scrape_dilax():
                 if v:
                     log(f"  {k}: {json.dumps(v, ensure_ascii=False)[:500]}")
 
-            # === 4. Boucle sur les 6 sites ===
-            # DILAX utilise un widget custom .select-title avec ng-click="toggleSelect()"
-            # qui ouvre un panel de sélection des sites quand cliqué.
-            for idx, (dilax_name, nom, code) in enumerate(SITES):
-                log(f"Site {code} ({nom}) — {dilax_name}")
-                try:
-                    # Étape 1: ouvrir le panel de sélection en cliquant sur .select-title
-                    select_title = page.locator('.select-title').first
-                    if select_title.is_visible(timeout=5000):
-                        select_title.click()
-                        time.sleep(2)
-                    else:
-                        log(f"  ✗ .select-title non trouvé")
-                        continue
+            # === 4. PASSE 1 — Mois en cours (6 sites) ===
+            log("=== Scrape MOIS EN COURS ===")
+            visiteurs = _scrape_sites(page)
+            log(f"Visiteurs mois : {visiteurs}")
 
-                    # Étape 1bis : déplier le groupe "LIAISON RADIO" via JS
-                    # Cherche le <span class="parent-item-body"> contenant "LIAISON RADIO"
-                    # avec un .fa-angle-right (fermé) et clique dessus
-                    expanded = page.evaluate("""
-                        () => {
-                            const spans = document.querySelectorAll('span.parent-item-body');
-                            for (const span of spans) {
-                                if (span.textContent.includes('LIAISON RADIO')) {
-                                    const icon_right = span.querySelector('.fa-angle-right');
-                                    const icon_down = span.querySelector('.fa-angle-down');
-                                    if (icon_right) {
-                                        span.click();
-                                        return 'clicked-toggle';
-                                    } else if (icon_down) {
-                                        return 'already-open';
-                                    }
-                                    return 'no-icon';
-                                }
-                            }
-                            return 'not-found';
-                        }
-                    """)
-                    log(f"  Toggle LIAISON RADIO : {expanded}")
-                    time.sleep(2)
-
-                    # Debug : dump HTML du panel pour le 1er site + dernier site échoué
-                    if idx == 0 or (idx == 1 and visiteurs.get('ALR', 0) > 0):
-                        with open(f"06_panel_site{idx}.html", "w", encoding="utf-8") as f:
-                            f.write(page.content()[:200000])
-                        page.screenshot(path=f"06_panel_site{idx}.png")
-                        log(f"  Dump panel sauvé pour site {idx}")
-
-                    # Étape 2: cliquer sur le nom du site dans le panel ouvert
-                    # Essayer exact d'abord, puis fallback contient
-                    site_item = page.get_by_text(dilax_name, exact=True)
-                    found = False
-                    for i in range(min(site_item.count(), 5)):
-                        item = site_item.nth(i)
-                        try:
-                            if item.is_visible(timeout=2000):
-                                item.click(timeout=5000)
-                                found = True
-                                log(f"  clicked '{dilax_name}' (occurrence #{i})")
-                                break
-                        except Exception:
-                            continue
-                    if not found:
-                        log(f"  ✗ site '{dilax_name}' non trouvé dans le panel")
-                        # Fermer le panel pour le prochain site
-                        try:
-                            page.keyboard.press("Escape")
-                        except Exception:
-                            pass
-                        continue
-
-                    page.wait_for_load_state("networkidle", timeout=15000)
-                    time.sleep(3)
-
-                    # Extraire la somme via Highcharts
-                    total = page.evaluate("""
-                        () => {
-                            if (typeof Highcharts === 'undefined') return -1;
-                            const charts = Highcharts.charts.filter(c => c);
-                            if (!charts.length) return -2;
-                            const c = charts[0];
-                            if (!c.series || !c.series[0]) return -3;
-                            return c.series[0].data.reduce(function(s, p) {
-                                return s + (p.y || 0);
-                            }, 0);
-                        }
-                    """)
-                    if isinstance(total, (int, float)) and total >= 0:
-                        visiteurs[code] = int(total)
-                        log(f"  ✓ {visiteurs[code]} visiteurs")
-                    else:
-                        log(f"  ✗ Highcharts code retour {total}")
-                except Exception as e:
-                    log(f"  ✗ Erreur site {code}: {e}")
-                    page.screenshot(path=f"error_{code}.png")
+            # === 5. PASSE 2 — Aujourd'hui (visiteurs du jour, 6 sites) ===
+            log("=== Scrape AUJOURD'HUI (jour) ===")
+            if _set_period(page, "Aujourd'hui"):
+                time.sleep(2)
+                visiteurs_jour = _scrape_sites(page)
+                log(f"Visiteurs jour : {visiteurs_jour}")
+            else:
+                log("  ✗ période Aujourd'hui non appliquée — jour à 0")
         finally:
             browser.close()
 
-    return visiteurs
+    return visiteurs, visiteurs_jour
 
 
 def read_sheet_data():
@@ -362,8 +375,9 @@ def read_sheet_data():
 def main():
     log("=== MAJ DILAX ===")
 
-    visiteurs = scrape_dilax()
-    log(f"Visiteurs scrapés : {visiteurs}")
+    visiteurs, visiteurs_jour = scrape_dilax()
+    log(f"Visiteurs mois : {visiteurs}")
+    log(f"Visiteurs jour : {visiteurs_jour}")
 
     marge, mob, cyber, assu = read_sheet_data()
     log(f"Marges Sheet : {marge}")
@@ -399,18 +413,34 @@ def main():
     for r in resultats:
         log(f"  #{r['rang']} {r['boutique']:12s} v={r['visiteurs']:6d}  m={r['marge']:8.2f}  pm={r['pm']:6.2f}  tx={r['tx']:5.2f}%")
 
-    log("POST vers Apps Script")
-    payload = json.dumps({"type": "dilax", "dilax": resultats}).encode("utf-8")
-    req = urllib.request.Request(
-        APPS_SCRIPT_URL, data=payload,
-        headers={"Content-Type": "application/json"},
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=180) as resp:
-            body = resp.read().decode("utf-8")
-            log(f"  Réponse: {body}")
-    except Exception as e:
-        log(f"  ✗ POST échoué : {e} (timeout étendu à 180s)")
+    # Payload jour : visiteurs du jour + panier moyen jour (marge jour 3GWIN / visiteurs jour)
+    # NB : la marge "jour" vient de l'onglet Donnees_Jour (3GWIN jour), lue par le dashboard.
+    # Ici on n'envoie que les visiteurs du jour ; le panier moyen est calculé côté dashboard.
+    resultats_jour = []
+    for code in ["ALR", "TLR", "CLR", "CHOLET", "RLR", "VLR"]:
+        resultats_jour.append({"code": code, "visiteurs": visiteurs_jour.get(code, 0)})
+
+    log("Résultats jour :")
+    for r in resultats_jour:
+        log(f"  {r['code']:7s} v_jour={r['visiteurs']}")
+
+    def _post(payload_dict, label):
+        payload = json.dumps(payload_dict).encode("utf-8")
+        req = urllib.request.Request(
+            APPS_SCRIPT_URL, data=payload,
+            headers={"Content-Type": "application/json"},
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=180) as resp:
+                log(f"  [{label}] Réponse: {resp.read().decode('utf-8')}")
+        except Exception as e:
+            log(f"  ✗ POST [{label}] échoué : {e}")
+
+    log("POST vers Apps Script (mois)")
+    _post({"type": "dilax", "dilax": resultats}, "mois")
+
+    log("POST vers Apps Script (jour)")
+    _post({"type": "dilax_jour", "dilax_jour": resultats_jour}, "jour")
 
     log("=== TERMINÉ ===")
 
