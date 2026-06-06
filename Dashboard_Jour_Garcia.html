@@ -368,6 +368,7 @@ function pmCardClsStatic(pm){const b=pmBand(pm);if(!b)return '';const s=b==='rp'
 function pmBarColor(pm,vj){if(!(vj>0))return '#CBD5E1';if(pm<10)return '#DC2626';if(pm<15)return '#D97706';return '#059669';}
 
 const BOU_ORDER=["ALR","TLR","CLR","CHOLET","RLR","VLR"];
+const PM_OBJ_JOUR=15;  // objectif panier moyen jour (€) — ligne de référence sur le benchmark
 let CT="synthese",CHS=[];
 
 function fmt(n){return new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(Math.round(n||0))}
@@ -536,7 +537,7 @@ function renderSynthese(el){
   </div>
   <div class="stitle">BENCHMARK FLUX DU JOUR — PANIER MOYEN PAR BOUTIQUE</div>
   ${T.visJour>0?`<div class="g2" style="margin-bottom:12px">
-    <div class="cd"><h3>PANIER MOYEN DU JOUR (€) <span style="font-weight:500;color:var(--mut)">· 🔴&lt;10 🟠10-15 🟢≥15</span></h3><canvas id="cPmJour"></canvas></div>
+    <div class="cd"><h3>PANIER MOYEN DU JOUR (€) <span style="font-weight:500;color:var(--mut)">· 🔴&lt;10 🟠10-15 🟢≥15 · ⊷ obj ${PM_OBJ_JOUR}€</span></h3><canvas id="cPmJour"></canvas></div>
     <div class="cd"><h3>VISITEURS DU JOUR</h3><canvas id="cVisJour"></canvas></div>
   </div>`:`<div class="cd" style="margin-bottom:12px"><div class="sub">Flux du jour pas encore disponible (boutiques fermées ou avant le 1er relevé DILAX de 10h). Les barres apparaîtront en journée.</div></div>`}
   <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
@@ -571,16 +572,24 @@ function renderSynthese(el){
     safeChart('cMpm',{type:'bar',data:{labels,datasets:[{data:mpmData,backgroundColor:colors.map(c=>c+'CC'),borderRadius:4,borderSkipped:false}]},
       options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20}},plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',clip:false,font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>v>0?fmt(v)+' €':'—'}},scales:{x:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}},y:{beginAtZero:true,suggestedMax:mpmYMax,grid:{color:'#F1F5F9'},ticks:{font:{size:10,family:'Plus Jakarta Sans'},callback:v=>fmt(v)+' €'}}}}
     });
-    // ── Benchmark flux du jour : panier moyen + visiteurs par boutique (triés PM↓) ──
+    // ── Benchmark flux du jour : panier moyen + visiteurs par boutique (triés PM↓, barres verticales) ──
     if(T.visJour>0){
       const bench=MAGS.map(b=>{const vj=VIS_JOUR[b.code]||0;return {nom:b.nom,color:b.color,vj,pm:vj>0?b.marge/vj:0};})
         .sort((a,b)=>b.pm-a.pm);
       const bl=bench.map(d=>d.nom);
-      safeChart('cPmJour',{type:'bar',data:{labels:bl,datasets:[{data:bench.map(d=>Math.round(d.pm*100)/100),backgroundColor:bench.map(d=>pmBarColor(d.pm,d.vj)),borderRadius:4,borderSkipped:false}]},
-        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',clip:false,font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>v>0?fmtD(v,2)+' €':'—'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
+      const pmVals=bench.map(d=>Math.round(d.pm*100)/100);
+      const pmMax=Math.max(...pmVals,PM_OBJ_JOUR,0);
+      const pmYMax=Math.ceil(pmMax*1.25/5)*5;
+      // Panier moyen — vertical, barres colorées par bande + ligne d'objectif pointillée
+      safeChart('cPmJour',{type:'bar',data:{labels:bl,datasets:[
+        {label:'Panier moyen',data:pmVals,backgroundColor:bench.map(d=>pmBarColor(d.pm,d.vj)),borderRadius:4,borderSkipped:false,order:2},
+        {type:'line',label:'Objectif '+PM_OBJ_JOUR+' €',data:bl.map(()=>PM_OBJ_JOUR),borderColor:'#475569',borderDash:[6,4],borderWidth:1.5,pointRadius:0,fill:false,order:1,datalabels:{display:false}}
+      ]},
+        options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20}},plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',clip:false,font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:(v,ctx)=>ctx.datasetIndex===0?(v>0?fmtD(v,2)+' €':'—'):''}},scales:{x:{grid:{display:false},ticks:{font:{size:10,weight:600,family:'Plus Jakarta Sans'}}},y:{beginAtZero:true,suggestedMax:pmYMax,grid:{color:'#F1F5F9'},ticks:{font:{size:10,family:'Plus Jakarta Sans'},callback:v=>fmt(v)+' €'}}}}
       });
+      // Visiteurs — vertical (même ordre boutiques)
       safeChart('cVisJour',{type:'bar',data:{labels:bl,datasets:[{data:bench.map(d=>d.vj),backgroundColor:bench.map(d=>d.color+'CC'),borderRadius:4,borderSkipped:false}]},
-        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',clip:false,font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>v>0?fmt(v):'—'}},scales:{x:{display:false,grid:{display:false}},y:{grid:{display:false},ticks:{font:{size:11,weight:600,family:'Plus Jakarta Sans'}}}}}
+        options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20}},plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',clip:false,font:{weight:700,size:11,family:'Plus Jakarta Sans'},color:'#0F1419',formatter:v=>v>0?fmt(v):'—'}},scales:{x:{grid:{display:false},ticks:{font:{size:10,weight:600,family:'Plus Jakarta Sans'}}},y:{beginAtZero:true,grid:{color:'#F1F5F9'},ticks:{font:{size:10,family:'Plus Jakarta Sans'}}}}}
       });
     }
   });
