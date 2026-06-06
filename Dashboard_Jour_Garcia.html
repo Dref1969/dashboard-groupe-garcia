@@ -32,6 +32,22 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 .cd .sub{font-size:11px;color:var(--sub);margin-top:2px}
 .cd .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;margin-top:4px}
 .tag.green{background:#ECFDF5;color:var(--green)}.tag.red{background:#FEF2F2;color:var(--red)}.tag.orange{background:#FFFBEB;color:var(--orange)}
+/* ── Panier moyen jour : code couleur 5 bandes + pulse doux ── */
+.pm-badge{display:inline-block;font-weight:800;padding:2px 10px;border-radius:12px;font-size:12px}
+.pm-r{background:#FEF2F2;color:var(--red)}
+.pm-rp{background:#FEE2E2;color:#B91C1C;animation:pmPulseR 2.2s ease-in-out infinite}
+.pm-o{background:#FFFBEB;color:var(--orange)}
+.pm-g{background:#ECFDF5;color:var(--green)}
+.pm-gp{background:#D1FAE5;color:#047857;animation:pmPulseG 2.2s ease-in-out infinite}
+/* États sur la carte KPI : valeur colorée + pulse de la carte pour les extrêmes */
+.cd.kpi.pm-card-r .val,.cd.kpi.pm-card-rp .val{color:var(--red)}
+.cd.kpi.pm-card-o .val{color:var(--orange)}
+.cd.kpi.pm-card-g .val,.cd.kpi.pm-card-gp .val{color:var(--green)}
+.cd.kpi.pm-card-rp{animation:pmPulseR 2.2s ease-in-out infinite}
+.cd.kpi.pm-card-gp{animation:pmPulseG 2.2s ease-in-out infinite}
+@keyframes pmPulseR{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}50%{box-shadow:0 0 14px 3px rgba(220,38,38,.42)}}
+@keyframes pmPulseG{0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,0)}50%{box-shadow:0 0 14px 3px rgba(5,150,105,.38)}}
+@media(prefers-reduced-motion:reduce){.pm-rp,.pm-gp,.cd.kpi.pm-card-rp,.cd.kpi.pm-card-gp{animation:none}}
 .stitle{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--sub);margin:16px 0 10px;display:flex;align-items:center;gap:8px}
 .stitle::before{content:'';width:12px;height:2px;background:var(--blue);border-radius:2px}
 .cd canvas{max-height:220px}
@@ -328,6 +344,25 @@ function computeTotals(){
 // Panier moyen du jour pour une boutique = marge jour / visiteurs DILAX du jour
 function pmJourBou(code){const v=VIS_JOUR[code]||0;const m=(MAGS.find(b=>b.code===code)||{}).marge||0;return v>0?m/v:0;}
 
+// Bande couleur panier moyen : <5 pulse rouge · <10 rouge · <15 orange · <20 vert · ≥20 pulse vert
+// (retourne null si pm<=0 → pas de données, affichage neutre sans pulse)
+function pmBand(pm){
+  if(!(pm>0)) return null;
+  if(pm<5)  return 'rp';
+  if(pm<10) return 'r';
+  if(pm<15) return 'o';
+  if(pm<20) return 'g';
+  return 'gp';
+}
+// Rendu d'un panier moyen en badge coloré (table). vj = visiteurs (pour afficher — si 0)
+function pmBadge(pm,vj){
+  if(!(vj>0)) return '—';
+  const b=pmBand(pm);
+  return `<span class="pm-badge pm-${b}">${fmtD(pm,2)} €</span>`;
+}
+// Classe à ajouter sur une carte KPI panier moyen (valeur colorée + pulse extrêmes)
+function pmCardCls(pm){const b=pmBand(pm);return b?' pm-card-'+b:'';}
+
 const BOU_ORDER=["ALR","TLR","CLR","CHOLET","RLR","VLR"];
 let CT="synthese",CHS=[];
 
@@ -454,11 +489,11 @@ function renderSynthese(el){
     <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
     <td><strong>${fmt(b.marge)} €</strong></td>
     <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
-    <td>${vj>0?fmt(vj):'—'}</td><td><strong>${vj>0?fmtD(pm,2)+' €':'—'}</strong></td>
+    <td>${vj>0?fmt(vj):'—'}</td><td>${pmBadge(pm,vj)}</td>
   </tr>`;});
   bouRows.push(`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
     <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td>
-    <td>${T.visJour>0?fmt(T.visJour):'—'}</td><td>${T.visJour>0?fmtD(T.pmJour,2)+' €':'—'}</td></tr>`);
+    <td>${T.visJour>0?fmt(T.visJour):'—'}</td><td>${pmBadge(T.pmJour,T.visJour)}</td></tr>`);
 
   // Build vendeur rows as array
   const vendRows=vSort.map((v,i)=>{
@@ -481,7 +516,7 @@ function renderSynthese(el){
   </div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd kpi"><h3>VISITEURS DU JOUR</h3><div class="val">${T.visJour>0?fmt(T.visJour):'—'}</div><div class="sub">flux DILAX • 6 boutiques</div></div>
-    <div class="cd kpi"><h3>PANIER MOYEN JOUR</h3><div class="val">${T.pmJour>0?fmtD(T.pmJour,2)+' €':'—'}</div><div class="sub">marge du jour / visiteur</div></div>
+    <div class="cd kpi${pmCardCls(T.pmJour)}"><h3>PANIER MOYEN JOUR</h3><div class="val">${T.pmJour>0?fmtD(T.pmJour,2)+' €':'—'}</div><div class="sub">marge du jour / visiteur</div></div>
   </div>
   <div class="g3" style="margin-bottom:12px">
     <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${T.mob>0?fmtD(T.txAssu,1)+'%':'—'}</div><div class="sub">${T.assu} / ${T.mob} mob</div>
@@ -558,7 +593,7 @@ function renderBoutique(el,code){
   </div>
   <div class="g2" style="margin-bottom:12px">
     <div class="cd kpi"><h3>VISITEURS DU JOUR</h3><div class="val">${(VIS_JOUR[code]||0)>0?fmt(VIS_JOUR[code]):'—'}</div><div class="sub">flux DILAX</div></div>
-    <div class="cd kpi"><h3>PANIER MOYEN JOUR</h3><div class="val">${pmJourBou(code)>0?fmtD(pmJourBou(code),2)+' €':'—'}</div><div class="sub">marge du jour / visiteur</div></div>
+    <div class="cd kpi${pmCardCls(pmJourBou(code))}"><h3>PANIER MOYEN JOUR</h3><div class="val">${pmJourBou(code)>0?fmtD(pmJourBou(code),2)+' €':'—'}</div><div class="sub">marge du jour / visiteur</div></div>
   </div>
   ${vendeurs.length?`
   <div class="g3" style="margin-bottom:12px">
