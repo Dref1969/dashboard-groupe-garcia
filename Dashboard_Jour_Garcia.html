@@ -282,12 +282,16 @@ async function fetchJourData(){
 
 async function fetchDilaxJour(){
   // Visiteurs DILAX du jour (onglet DILAX_Jour, alimenté toutes les 2h par GitHub Actions)
+  // Lecture par POSITION (col A=code, col B=visiteurs) car gviz nulle l'en-tête "Visiteurs"
+  // quand la colonne est 100% numérique → lecture par nom impossible.
   try{
     const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('DILAX_Jour')}`;
     const text=await fetchRetry(url,2,800);
-    const rows=parseCSV(text);
     VIS_JOUR={};
-    rows.forEach(r=>{const c=(r.Code||'').trim();const v=parseInt(r.Visiteurs)||0;if(c)VIS_JOUR[c]=v;});
+    text.split('\n').forEach(line=>{
+      const m=line.match(/^"?([A-Z]+)"?\s*,\s*"?(\d+)"?/);
+      if(m && BOUTIQUES[m[1]]) VIS_JOUR[m[1]]=parseInt(m[2])||0;
+    });
   }catch(e){VIS_JOUR={};}
 }
 
