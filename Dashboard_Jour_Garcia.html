@@ -173,6 +173,7 @@ const BOUTIQUES = {
 let MAGS = [];
 let VENDEURS = [];
 let CHALLENGE_HIST = [];
+let VIS_JOUR = {};   // {code: visiteurs DILAX du jour}
 let DATA_DATE = "";
 let DATA_HEURE = "";
 let LAST_ERROR = null;
@@ -279,6 +280,17 @@ async function fetchJourData(){
   VENDEURS.sort((a,b)=>b.marge-a.marge);
 }
 
+async function fetchDilaxJour(){
+  // Visiteurs DILAX du jour (onglet DILAX_Jour, alimenté toutes les 2h par GitHub Actions)
+  try{
+    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('DILAX_Jour')}`;
+    const text=await fetchRetry(url,2,800);
+    const rows=parseCSV(text);
+    VIS_JOUR={};
+    rows.forEach(r=>{const c=(r.Code||'').trim();const v=parseInt(r.Visiteurs)||0;if(c)VIS_JOUR[c]=v;});
+  }catch(e){VIS_JOUR={};}
+}
+
 async function fetchChallengeHist(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Historique_Challenges')}`;
   const text=await fetchRetry(url);
@@ -299,14 +311,18 @@ async function fetchChallengeHist(){
 // ═══════════════════════════════════════
 //  COMPUTED (recalculé après chargement)
 // ═══════════════════════════════════════
-const T = {marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0};
+const T = {marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,visJour:0};
 function computeTotals(){
-  T.marge=0;T.mob=0;T.box=0;T.assu=0;T.cyber=0;T.g3a=0;T.access=0;
-  MAGS.forEach(b=>{T.marge+=b.marge;T.mob+=b.mob;T.box+=b.box;T.assu+=b.assu;T.cyber+=b.cyber;T.g3a+=b.g3a;T.access+=b.access});
+  T.marge=0;T.mob=0;T.box=0;T.assu=0;T.cyber=0;T.g3a=0;T.access=0;T.visJour=0;
+  MAGS.forEach(b=>{T.marge+=b.marge;T.mob+=b.mob;T.box+=b.box;T.assu+=b.assu;T.cyber+=b.cyber;T.g3a+=b.g3a;T.access+=b.access;T.visJour+=(VIS_JOUR[b.code]||0)});
   T.txAssu=T.mob>0?(T.assu/T.mob*100):0;
   T.txG3a=T.mob>0?(T.g3a/T.mob*100):0;
   T.txAccess=T.mob>0?T.access/T.mob:0;
+  T.pmJour=T.visJour>0?(T.marge/T.visJour):0;  // panier moyen jour groupe = marge jour / visiteurs jour
 }
+
+// Panier moyen du jour pour une boutique = marge jour / visiteurs DILAX du jour
+function pmJourBou(code){const v=VIS_JOUR[code]||0;const m=(MAGS.find(b=>b.code===code)||{}).marge||0;return v>0?m/v:0;}
 
 const BOU_ORDER=["ALR","TLR","CLR","CHOLET","RLR","VLR"];
 let CT="synthese",CHS=[];
@@ -385,6 +401,7 @@ async function manualRefresh(){
 
   try{
     await fetchJourData();
+    await fetchDilaxJour();
     await fetchChallengeHist();
     computeTotals();
     updateDates();
@@ -407,6 +424,7 @@ async function silentRefresh(){
   IS_REFRESHING=true;
   try{
     await fetchJourData();
+    await fetchDilaxJour();
     await fetchChallengeHist();
     computeTotals();
     updateDates();
@@ -423,15 +441,20 @@ function renderSynthese(el){
   const bSort=[...MAGS].sort((a,b)=>b.marge-a.marge);
   const vSort=[...VENDEURS].sort((a,b)=>b.marge-a.marge);
 
-  // Build boutique rows as array
-  const bouRows=bSort.map((b,i)=>`<tr>
+  // Build boutique rows as array (+ Visiteurs jour + Panier Moyen jour)
+  const bouRows=bSort.map((b,i)=>{
+    const vj=VIS_JOUR[b.code]||0;
+    const pm=vj>0?(b.marge/vj):0;
+    return `<tr>
     <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
     <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
     <td><strong>${fmt(b.marge)} €</strong></td>
     <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
-  </tr>`);
+    <td>${vj>0?fmt(vj):'—'}</td><td><strong>${vj>0?fmtD(pm,2)+' €':'—'}</strong></td>
+  </tr>`;});
   bouRows.push(`<tr style="font-weight:700;background:#F8FAFC"><td></td><td>TOTAL JOUR</td>
-    <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td></tr>`);
+    <td>${fmt(T.marge)} €</td><td>${T.mob}</td><td>${T.box}</td><td>${T.cyber}</td><td>${T.assu}</td><td>${T.g3a}</td><td>${fmt(T.access)} €</td>
+    <td>${T.visJour>0?fmt(T.visJour):'—'}</td><td>${T.visJour>0?fmtD(T.pmJour,2)+' €':'—'}</td></tr>`);
 
   // Build vendeur rows as array
   const vendRows=vSort.map((v,i)=>{
@@ -452,6 +475,10 @@ function renderSynthese(el){
     <div class="cd kpi"><h3>BOX DU JOUR</h3><div class="val">${T.box}</div><div class="sub">raccordements</div></div>
     <div class="cd kpi"><h3>SFR CYBER</h3><div class="val">${T.cyber}</div><div class="sub">sécurité</div></div>
   </div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>VISITEURS DU JOUR</h3><div class="val">${T.visJour>0?fmt(T.visJour):'—'}</div><div class="sub">flux DILAX • 6 boutiques</div></div>
+    <div class="cd kpi"><h3>PANIER MOYEN JOUR</h3><div class="val">${T.pmJour>0?fmtD(T.pmJour,2)+' €':'—'}</div><div class="sub">marge du jour / visiteur</div></div>
+  </div>
   <div class="g3" style="margin-bottom:12px">
     <div class="cd kpi"><h3>TX ASSURANCE</h3><div class="val">${T.mob>0?fmtD(T.txAssu,1)+'%':'—'}</div><div class="sub">${T.assu} / ${T.mob} mob</div>
       ${T.mob>0?`<div class="tag ${T.txAssu>=50?'green':T.txAssu>=30?'orange':'red'}">${T.txAssu>=50?'✓ Objectif':'À améliorer'}</div>`:''}</div>
@@ -467,7 +494,7 @@ function renderSynthese(el){
   <div class="stitle">CLASSEMENT DES BOUTIQUES — JOURNÉE DU ${DATA_DATE?DATA_DATE.substring(0,5):"--/--"}</div>
   <div class="cd" style="margin-bottom:12px">
     <table>
-      <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>BOX</th><th>CYBER</th><th>ASSU</th><th>G3A</th><th>ACCESS</th></tr></thead>
+      <thead><tr><th>#</th><th>BOUTIQUE</th><th>MARGE</th><th>MOB</th><th>BOX</th><th>CYBER</th><th>ASSU</th><th>G3A</th><th>ACCESS</th><th>VISITEURS</th><th>PANIER MOY.</th></tr></thead>
       <tbody>${bouRows.join('')}</tbody>
     </table>
   </div>
@@ -524,6 +551,10 @@ function renderBoutique(el,code){
     <div class="cd kpi"><h3>MOBILES</h3><div class="val">${mag.mob}</div><div class="sub">${mag.box} box</div></div>
     <div class="cd kpi"><h3>CYBER</h3><div class="val">${mag.cyber}</div></div>
     <div class="cd kpi"><h3>G3A</h3><div class="val">${mag.g3a}</div><div class="sub">${mag.assu} assu</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="cd kpi"><h3>VISITEURS DU JOUR</h3><div class="val">${(VIS_JOUR[code]||0)>0?fmt(VIS_JOUR[code]):'—'}</div><div class="sub">flux DILAX</div></div>
+    <div class="cd kpi"><h3>PANIER MOYEN JOUR</h3><div class="val">${pmJourBou(code)>0?fmtD(pmJourBou(code),2)+' €':'—'}</div><div class="sub">marge du jour / visiteur</div></div>
   </div>
   ${vendeurs.length?`
   <div class="g3" style="margin-bottom:12px">
