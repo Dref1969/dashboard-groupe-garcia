@@ -37,26 +37,55 @@ def log(msg):
 
 
 def _set_period(page, label):
-    """Change la période DILAX via #relevantDateRange → #predefinedRange li <label>."""
+    """Change la période DILAX via #relevantDateRange → li <label> du picker.
+
+    Robuste : la correspondance est insensible aux apostrophes typographiques
+    (« Aujourd'hui » U+2019 vs « Aujourd'hui » U+0027), aux accents et à la casse.
+    C'était la cause du bug « visiteurs du jour = 0 » : l'ancien filtre
+    has_text='Aujourd\\'hui' (apostrophe droite) ne matchait pas le libellé DILAX
+    qui utilise l'apostrophe typographique → période non appliquée → jour à 0.
+    En cas d'échec, on logue les options réellement présentes pour diagnostic.
+    """
+    import re
+    import unicodedata
+
+    def _norm(s):
+        s = unicodedata.normalize('NFKD', s or '')
+        s = ''.join(c for c in s if not unicodedata.combining(c))
+        for apo in ('’', 'ʼ', '‘', '`', '´'):
+            s = s.replace(apo, "'")
+        return re.sub(r'\s+', ' ', s).strip().lower()
+
+    target = _norm(label)
     try:
         page.locator('#relevantDateRange').click(timeout=5000, force=True)
         time.sleep(2)
-        opt = page.locator('#predefinedRange li').filter(has_text=label).first
-        if opt.is_visible(timeout=5000):
-            opt.click(timeout=5000)
-            log(f"  Période '{label}' sélectionnée")
-            time.sleep(3)
-            return True
-        # fallback : parcourir tous les li du picker
-        for li in page.locator('.daterangepicker li').all():
+        seen = []
+        for sel in ('#predefinedRange li', '.daterangepicker li', 'ul.ranges li'):
+            lis = page.locator(sel)
             try:
-                if label.lower() in li.inner_text(timeout=500).lower():
-                    li.click(timeout=3000)
-                    log(f"  Période '{label}' (fallback)")
-                    time.sleep(3)
-                    return True
+                n = lis.count()
             except Exception:
-                continue
+                n = 0
+            for i in range(n):
+                li = lis.nth(i)
+                try:
+                    raw = li.inner_text(timeout=1000)
+                except Exception:
+                    continue
+                t = _norm(raw)
+                if not t:
+                    continue
+                seen.append(t)
+                if target == t or target in t or t in target:
+                    try:
+                        li.click(timeout=5000)
+                        log(f"  Période '{label}' sélectionnée (match '{raw.strip()}')")
+                        time.sleep(3)
+                        return True
+                    except Exception as e:
+                        log(f"  WARN clic période '{raw.strip()}': {e}")
+        log(f"  ✗ Période '{label}' introuvable. Options vues: {sorted(set(seen))}")
     except Exception as e:
         log(f"  WARN set_period '{label}': {e}")
     return False
