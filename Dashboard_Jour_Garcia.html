@@ -1048,6 +1048,14 @@ async function init(){
     splashProgress(90,'Challenges indisponibles');
   }
 
+  // Phase 2bis : visiteurs DILAX du jour (était oublié à l'init → KPI "Visiteurs du jour"
+  // restait "—" tant qu'on n'avait pas cliqué Actualiser / changé d'onglet)
+  try {
+    await fetchDilaxJour();
+  } catch(e) {
+    console.warn("Erreur DILAX jour:",e.message);
+  }
+
   // Phase 3 : calcul + rendu
   splashProgress(95,'Rendu du dashboard...');
   computeTotals();
