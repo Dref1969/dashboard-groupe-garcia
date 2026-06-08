@@ -249,6 +249,31 @@ function initEmptyMags(){
   });
 }
 
+// ═══════════════════════════════════════
+//  JOURS DE FERMETURE — anti "chiffres de la veille"
+//  Lundi & jours fériés = seule CHOLET ouverte ; dimanche & 1er mai = tout fermé.
+//  On neutralise (marge=0 + vendeurs retirés) les boutiques fermées AVANT tout calcul,
+//  pour que synthèse, boutiques, vendeurs ET challenges soient cohérents.
+// ═══════════════════════════════════════
+const FERIES_JOUR=["01/01/2026","06/04/2026","01/05/2026","08/05/2026","14/05/2026","25/05/2026","14/07/2026","15/08/2026","01/11/2026","11/11/2026","25/12/2026"];
+function boutiquesFermeesJour(dateStr){
+  const p=(dateStr||"").split("/");
+  const d=(p.length===3)?new Date(+p[2],+p[1]-1,+p[0]):new Date();
+  const jour=d.getDay(); // 0=dimanche, 1=lundi, 6=samedi
+  const ds=String(d.getDate()).padStart(2,'0')+"/"+String(d.getMonth()+1).padStart(2,'0')+"/"+d.getFullYear();
+  const isFerie=FERIES_JOUR.includes(ds);
+  const is1erMai=(d.getDate()===1 && d.getMonth()===4);
+  if(jour===0 || is1erMai) return ["ALR","TLR","CLR","CHOLET","RLR","VLR"]; // dimanche / 1er mai : tout fermé
+  if(jour===1 || isFerie) return ["ALR","TLR","CLR","RLR","VLR"];           // lundi / férié : seule Cholet ouverte
+  return [];
+}
+function neutraliserBoutiquesFermees(){
+  const fermees=boutiquesFermeesJour(DATA_DATE);
+  if(!fermees.length) return;
+  MAGS.forEach(m=>{ if(fermees.includes(m.code)){ m.marge=0;m.mob=0;m.box=0;m.margeBox=0;m.boxMig=0;m.cyber=0;m.assu=0;m.g3a=0;m.access=0;m.abo=0; } });
+  VENDEURS=VENDEURS.filter(v=>!fermees.includes(v.bou));
+}
+
 async function fetchJourData(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(TAB_NAME)}`;
   const text=await fetchRetry(url);
@@ -293,6 +318,11 @@ async function fetchJourData(){
     margeServices:parseFloat(r.MargeServices)||0,
     abo:parseInt(r.Abo)||0
   }));
+  VENDEURS.sort((a,b)=>b.marge-a.marge);
+
+  // Neutralisation des boutiques fermées (lundi/férié/dimanche) — basée sur la date des données
+  neutraliserBoutiquesFermees();
+  MAGS.sort((a,b)=>b.marge-a.marge);
   VENDEURS.sort((a,b)=>b.marge-a.marge);
 }
 
