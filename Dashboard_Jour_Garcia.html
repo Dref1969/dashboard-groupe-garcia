@@ -137,6 +137,89 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
 </head>
 <body>
 
+<!-- ═══ ÉCRAN DE CONNEXION + MODE ADMIN CONNEXIONS ═══ -->
+<style>
+#lj-login{position:fixed;inset:0;z-index:100000;background:linear-gradient(160deg,#0F0F1E,#1A1A2E);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,'Segoe UI',sans-serif;color:#fff;padding:20px}
+#lj-login .ljlogo{background:#E2001A;color:#fff;font-weight:800;font-size:30px;padding:6px 18px;border-radius:10px;letter-spacing:1px}
+#lj-login h2{margin:18px 0 2px;font-size:18px;font-weight:700}
+#lj-login .sub{font-size:13px;opacity:.55;margin-bottom:22px}
+#lj-card{background:#fff;color:#0F0F1E;border-radius:16px;padding:22px;width:100%;max-width:320px;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+#lj-card label{display:block;font-size:11px;font-weight:700;color:#666;text-transform:uppercase;margin:6px 0 4px}
+#lj-card input{width:100%;border:1px solid #E2E2EA;border-radius:10px;padding:12px;font-size:16px;box-sizing:border-box}
+#lj-card input.code{text-align:center;letter-spacing:10px;font-weight:700}
+#lj-card button{width:100%;background:#E2001A;color:#fff;border:none;border-radius:10px;padding:13px;font-size:16px;font-weight:700;margin-top:14px;cursor:pointer}
+#lj-err{display:none;color:#E2001A;font-size:13px;text-align:center;margin-top:10px;font-weight:600}
+#lj-adminbtn{display:none;position:fixed;right:16px;bottom:16px;z-index:99997;background:#0F0F1E;color:#fff;border:none;border-radius:24px;padding:10px 16px;font:600 13px/1 -apple-system,sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+#lj-admin-ov{position:fixed;inset:0;z-index:100001;background:rgba(15,15,30,.6);display:none;align-items:center;justify-content:center;padding:16px}
+#lj-admin-ov.on{display:flex}
+#lj-admin-card{background:#fff;border-radius:18px;max-width:460px;width:100%;max-height:85vh;overflow:auto;font-family:-apple-system,sans-serif;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+#lj-admin-card .ljh{background:#0F0F1E;color:#fff;padding:15px 20px;font-size:16px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+#lj-admin-card .ljh button{background:#E2001A;border:none;color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600}
+#lj-admin-card table{width:100%;border-collapse:collapse;font-size:13px}
+#lj-admin-card td,#lj-admin-card th{padding:9px 16px;border-bottom:1px solid #F2F2F7;text-align:left}
+#lj-admin-card th{font-size:10px;color:#666;text-transform:uppercase;background:#F7F7FA}
+#lj-admin-card .cx{font-weight:800;color:#0F0F1E}#lj-admin-card .never{color:#E2001A;font-weight:700}
+</style>
+<div id="lj-login">
+  <div class="ljlogo">SFR</div>
+  <h2>Dashboard Jour · Groupe Garcia</h2>
+  <div class="sub">Accès réservé</div>
+  <div id="lj-card">
+    <label>Prénom</label>
+    <input id="lj-prenom" type="text" autocomplete="off" autocapitalize="words" placeholder="Ton prénom">
+    <label>Code d'accès</label>
+    <input id="lj-code" class="code" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+    <button onclick="ljSubmit()">Accéder →</button>
+    <div id="lj-err">Prénom ou code incorrect</div>
+  </div>
+</div>
+<button id="lj-adminbtn" onclick="ljShowAdmin()">👁 Connexions (admin)</button>
+<div id="lj-admin-ov" onclick="if(event.target===this)this.classList.remove('on')">
+  <div id="lj-admin-card">
+    <div class="ljh"><span>👁 Connexions — Dashboard Jour</span><button onclick="document.getElementById('lj-admin-ov').classList.remove('on')">Fermer</button></div>
+    <div id="lj-admin-body" style="padding:14px 0">Chargement…</div>
+  </div>
+</div>
+<script>
+(function(){
+  var SHEET="1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY";
+  var LOG="https://script.google.com/macros/s/AKfycbwoBG5ehjdbOkKaP82-XxOHtann6yFVtX0fu7NJe34amykw2CTsHNc523ETjjT0xnsH/exec";
+  var AUTH={admin:{pin:"1564",isAdmin:true},anais:{pin:"1210",nomSheet:"ANAIS"},chloe:{pin:"1127",nomSheet:"CHLOE R"},emilie:{pin:"8403",nomSheet:"EMILIE"},emmy:{pin:"4651",nomSheet:"EMMY"},hassene:{pin:"0605",nomSheet:"HASSENE"},haval:{pin:"6262",nomSheet:"HAVAL"},julie:{pin:"2203",nomSheet:"JULIE TLR"},louane:{pin:"2910",nomSheet:"LOUANE"},lucas:{pin:"7520",nomSheet:"LUCAS"},mehdy:{pin:"1973",nomSheet:"MEHDY"},nathan:{pin:"1214",nomSheet:"NATHAN"}};
+  var NAMES={anais:"Anaïs",chloe:"Chloé",emilie:"Émilie",emmy:"Emmy",hassene:"Hassène",haval:"Haval",julie:"Julie",louane:"Louane",lucas:"Lucas",mehdy:"Mehdy",nathan:"Nathan"};
+  function norm(s){return (s||"").trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+  window.ljSubmit=function(){
+    var prenom=norm(document.getElementById('lj-prenom').value);
+    var code=document.getElementById('lj-code').value;
+    var a=AUTH[prenom];
+    if(a && a.pin===code){
+      document.getElementById('lj-login').style.display='none';
+      window.ljOK=true;
+      if(a.isAdmin){ document.getElementById('lj-adminbtn').style.display='block'; }
+      else { try{ fetch(LOG,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({vendeur:prenom+'_jour',nomSheet:a.nomSheet||''})}); }catch(e){} }
+    } else {
+      document.getElementById('lj-err').style.display='block';
+      document.getElementById('lj-code').value=''; document.getElementById('lj-code').focus();
+    }
+  };
+  document.addEventListener('keydown',function(e){ var lg=document.getElementById('lj-login'); if(e.key==='Enter' && lg && lg.style.display!=='none') window.ljSubmit(); });
+  function parseCSV(t){var L=t.split('\n').filter(x=>x.trim());return L.slice(1).map(function(line){var v=[],c='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch=='"')q=!q;else if(ch==','&&!q){v.push(c);c='';}else c+=ch;}v.push(c);return v.map(function(x){return x.replace(/^"|"$/g,'').trim();});});}
+  window.ljShowAdmin=async function(){
+    document.getElementById('lj-admin-ov').classList.add('on');
+    var body=document.getElementById('lj-admin-body'); body.textContent='Chargement…';
+    try{
+      var url='https://docs.google.com/spreadsheets/d/'+SHEET+'/gviz/tq?tqx=out:csv&sheet=Connexions&_='+Date.now();
+      var rows=parseCSV(await (await fetch(url)).text());
+      var agg={};
+      rows.forEach(function(r){ var v=(r[1]||'').toLowerCase(); var ts=r[0]||''; if(v.slice(-5)==='_jour'){ var p=v.slice(0,-5); if(!agg[p])agg[p]={n:0,last:''}; agg[p].n++; if(ts>agg[p].last)agg[p].last=ts; } });
+      var order=['anais','chloe','emilie','emmy','hassene','haval','julie','louane','lucas','mehdy','nathan'];
+      var rh=order.map(function(p){var d=agg[p]||{n:0,last:''};return '<tr><td>'+(NAMES[p]||p)+'</td><td class="'+(d.n?'cx':'never')+'">'+(d.n||'jamais')+'</td><td style="color:#666">'+(d.last? d.last.replace('T',' ').slice(5,16):'—')+'</td></tr>';}).join('');
+      var tot=Object.keys(agg).reduce(function(s,k){return s+agg[k].n;},0);
+      body.innerHTML='<table><tr><th>Vendeur</th><th>Connexions</th><th>Dernière</th></tr>'+rh+'</table><div style="padding:10px 16px;font-size:11px;color:#999">Total : '+tot+' connexion(s) au Dashboard Jour</div>';
+    }catch(e){ body.textContent='Erreur de chargement des connexions.'; }
+  };
+})();
+</script>
+
 <div id="splash">
   <div class="sp-logo">
     <div class="sp-logo-text">GROUPE GARCIA</div>
