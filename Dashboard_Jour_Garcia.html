@@ -186,6 +186,7 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
   var LOG="https://script.google.com/macros/s/AKfycbwoBG5ehjdbOkKaP82-XxOHtann6yFVtX0fu7NJe34amykw2CTsHNc523ETjjT0xnsH/exec";
   var AUTH={admin:{pin:"1564",isAdmin:true},anais:{pin:"1210",nomSheet:"ANAIS"},chloe:{pin:"1127",nomSheet:"CHLOE R"},emilie:{pin:"8403",nomSheet:"EMILIE"},emmy:{pin:"4651",nomSheet:"EMMY"},hassene:{pin:"0605",nomSheet:"HASSENE"},haval:{pin:"6262",nomSheet:"HAVAL"},julie:{pin:"2203",nomSheet:"JULIE TLR"},louane:{pin:"2910",nomSheet:"LOUANE"},lucas:{pin:"7520",nomSheet:"LUCAS"},mehdy:{pin:"1973",nomSheet:"MEHDY"},nathan:{pin:"1214",nomSheet:"NATHAN"}};
   var NAMES={anais:"Anaïs",chloe:"Chloé",emilie:"Émilie",emmy:"Emmy",hassene:"Hassène",haval:"Haval",julie:"Julie",louane:"Louane",lucas:"Lucas",mehdy:"Mehdy",nathan:"Nathan"};
+  var ADMIN=false;
   function norm(s){return (s||"").trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
   window.ljSubmit=function(){
     var prenom=norm(document.getElementById('lj-prenom').value);
@@ -194,7 +195,7 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
     if(a && a.pin===code){
       document.getElementById('lj-login').style.display='none';
       window.ljOK=true;
-      if(a.isAdmin){ document.getElementById('lj-adminbtn').style.display='block'; }
+      if(a.isAdmin){ ADMIN=true; document.getElementById('lj-adminbtn').style.display='block'; }
       else { try{ fetch(LOG,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({vendeur:prenom+'_jour',nomSheet:a.nomSheet||''})}); }catch(e){} }
     } else {
       document.getElementById('lj-err').style.display='block';
@@ -204,6 +205,7 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
   document.addEventListener('keydown',function(e){ var lg=document.getElementById('lj-login'); if(e.key==='Enter' && lg && lg.style.display!=='none') window.ljSubmit(); });
   function parseCSV(t){var L=t.split('\n').filter(x=>x.trim());return L.slice(1).map(function(line){var v=[],c='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch=='"')q=!q;else if(ch==','&&!q){v.push(c);c='';}else c+=ch;}v.push(c);return v.map(function(x){return x.replace(/^"|"$/g,'').trim();});});}
   window.ljShowAdmin=async function(){
+    if(!ADMIN){ return; }
     document.getElementById('lj-admin-ov').classList.add('on');
     var body=document.getElementById('lj-admin-body'); body.textContent='Chargement…';
     try{
