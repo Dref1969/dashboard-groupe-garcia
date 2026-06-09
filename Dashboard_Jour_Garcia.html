@@ -140,7 +140,10 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
 <!-- ═══ ÉCRAN DE CONNEXION + MODE ADMIN CONNEXIONS ═══ -->
 <style>
 #lj-login{position:fixed;inset:0;z-index:100000;background:linear-gradient(160deg,#0F0F1E,#1A1A2E);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,'Segoe UI',sans-serif;color:#fff;padding:20px}
-#lj-login .ljlogo{background:#E2001A;color:#fff;font-weight:800;font-size:30px;padding:6px 18px;border-radius:10px;letter-spacing:1px}
+#lj-login .lj-brand{display:flex;flex-direction:column;align-items:center}
+#lj-login .lj-brand-text{font-size:32px;font-weight:800;letter-spacing:4px;color:#fff;opacity:0;transform:translateY(18px);animation:spU .8s ease .15s forwards}
+#lj-login .lj-brand-text b{color:#E2001A;font-weight:800}
+#lj-login .lj-brand-line{width:0;height:3px;margin-top:12px;border-radius:3px;background:linear-gradient(90deg,#E2001A,#FF6A3D);box-shadow:0 0 12px rgba(226,0,26,.55);animation:spL 1.1s ease .5s forwards}
 #lj-login h2{margin:18px 0 2px;font-size:18px;font-weight:700}
 #lj-login .sub{font-size:13px;opacity:.55;margin-bottom:22px}
 #lj-card{background:#fff;color:#0F0F1E;border-radius:16px;padding:22px;width:100%;max-width:320px;box-shadow:0 20px 50px rgba(0,0,0,.45)}
@@ -161,8 +164,11 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
 #lj-admin-card .cx{font-weight:800;color:#0F0F1E}#lj-admin-card .never{color:#E2001A;font-weight:700}
 </style>
 <div id="lj-login">
-  <div class="ljlogo">SFR</div>
-  <h2>Dashboard Jour · Groupe Garcia</h2>
+  <div class="lj-brand">
+    <div class="lj-brand-text">GROUPE <b>GARCIA</b></div>
+    <div class="lj-brand-line"></div>
+  </div>
+  <h2>Dashboard Jour</h2>
   <div class="sub">Accès réservé</div>
   <div id="lj-card">
     <label>Prénom</label>
