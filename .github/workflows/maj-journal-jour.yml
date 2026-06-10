@@ -1,9 +1,11 @@
 name: MAJ Journal Ventes Jour
 
 on:
-  # Toutes les heures, lun-sam 10h-20h Paris (heure d'été UTC+2 → 8-18 UTC)
+  # Toutes les 30 min, lun-sam 9h-20h Paris (heure d'été UTC+2 → 7h-18h UTC).
+  # Le 1er run de 9h vide le JSON de la veille avant l'ouverture des boutiques.
   schedule:
-    - cron: '0 8,9,10,11,12,13,14,15,16,17,18 * * 1-6'
+    - cron: '0,30 7-17 * * 1-6'
+    - cron: '0 18 * * 1-6'
   workflow_dispatch:
 
 permissions:
@@ -15,10 +17,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 

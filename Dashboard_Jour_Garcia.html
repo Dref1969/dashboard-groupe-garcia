@@ -1234,7 +1234,11 @@ init();
   function fmt(n){return (Math.round((n||0)*100)/100).toLocaleString('fr-FR')}
   function load(){
     fetch('./meilleure_vente.json?_='+Date.now()).then(function(r){return r.json()}).then(function(d){
-      mv=d; var b=d&&d.meilleure_vente; if(!b) return;
+      mv=d; var b=d&&d.meilleure_vente;
+      // Pop-up uniquement si les données datent d'AUJOURD'HUI : le matin avant le
+      // 1er scrape (9h), le JSON contient encore la veille → pas de pop-up périmé.
+      var t=new Date(), today=t.getFullYear()+('0'+(t.getMonth()+1)).slice(-2)+('0'+t.getDate()).slice(-2);
+      if(!b || (d.date||'')!==today){ document.getElementById('mv-btn').style.display='none'; mvClose(); return; }
       document.getElementById('mv-btn').style.display='block';
       document.getElementById('mv-nm').textContent=b.vendeur;
       document.getElementById('mv-ag').textContent=b.agence||'';

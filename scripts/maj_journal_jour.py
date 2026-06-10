@@ -45,6 +45,9 @@ def main():
         ci.get("N° Fac."),ci.get("Désignation"),ci.get("FAMILLE"),ci.get("Type Acte"),ci.get("Marge"))
     today=datetime.date.today().strftime("%Y%m%d")
     fac={}
+    # TOUS les vendeurs participent à la meilleure vente du jour — y compris
+    # ROMAIN GP (CDV) : contrairement au challenge vendeur du Dashboard, AUCUNE
+    # exclusion ici. Ne pas ajouter de filtre par nom.
     for r in grid:
         if iM is None or len(r)<=iM: continue
         v=(r[iV] if iV is not None else "").strip()
