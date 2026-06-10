@@ -878,7 +878,9 @@ function renderChallenges(el){
   let totalPrimeVendeurs=0, totalPrimeAmboise=0, totalPrimeLouane=0, totalPrimeRomain=0;
   HIST_MOIS.forEach(d=>{
     const p=PRIME_JOUR_(d.date);
-    (d.top3_gagnes||[]).forEach(nom=>{
+    // Managers/CDV (HASSENE, LOUANE, ROMAIN GP) ont leur propre challenge : on les
+    // ignore même si une vieille ligne d'historique les contient encore dans Top3_Gagnes.
+    (d.top3_gagnes||[]).filter(nom=>!EXCLUS_VENDEUR.includes(nom)).forEach(nom=>{
       vendeurWins[nom]=(vendeurWins[nom]||0)+1;
       vendeurPrimes[nom]=(vendeurPrimes[nom]||0)+p;
       totalPrimeVendeurs+=p;
@@ -953,11 +955,11 @@ function renderChallenges(el){
       <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>HASSENE (AMBOISE)</th><th>LOUANE (CHOLET)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
       <tbody>
         ${[...HIST_MOIS].reverse().map(d=>{
-          const _p=PRIME_JOUR_(d.date); const primeJour=((d.top3_gagnes||[]).length*_p)+(d.amboise_won?_p:0)+(d.louane_won?_p:0)+(d.groupe_won?_p:0);
+          const _p=PRIME_JOUR_(d.date); const _gagnesOK=(d.top3_gagnes||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)); const primeJour=(_gagnesOK.length*_p)+(d.amboise_won?_p:0)+(d.louane_won?_p:0)+(d.groupe_won?_p:0);
           return `<tr>
             <td><strong>${d.date}</strong></td>
-            <td>${(d.top3||[]).map(n=>{
-              const won=(d.top3_gagnes||[]).includes(n);
+            <td>${(d.top3||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)).map(n=>{
+              const won=_gagnesOK.includes(n);
               return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:1px 2px;${won?'background:#ECFDF5;color:var(--green)':'background:#FEF2F2;color:var(--red)'}">${esc(n)} ${won?'✓':'✗'}</span>`;
             }).join('')}</td>
             <td><span class="ch-badge ${d.amboise_won?'won':'lost'}">${d.amboise_won?fmt(d.amboise_marge)+' € ✓':'✗ '+fmt(d.amboise_marge)+' €'}</span></td>
