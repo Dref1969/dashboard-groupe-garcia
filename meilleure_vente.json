@@ -1,29 +1,69 @@
 {
- "maj": "2026-06-10 11:37",
+ "maj": "2026-06-10 15:31",
  "date": "20260610",
- "nb_factures": 1,
+ "nb_factures": 22,
  "meilleure_vente": {
-  "fac": "200020963",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200023143",
+  "vendeur": "EMILIE",
+  "agence": "ROMORANTIN",
   "articles": [
    {
-    "desig": "Câble USB C / USB C 3A 2m PD 60W Noir Bigben",
-    "marge": 25.18
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
    },
    {
     "desig": "Chargeur USB C Wrappé 45W Power Delivery GaN Blanc Bigben",
-    "marge": 23.85
+    "marge": 15.6
+   },
+   {
+    "desig": "HONOR 600 256GO NOIR SFR",
+    "marge": 71.99
+   },
+   {
+    "desig": "Coque renforcée Honor 600 AIR 3m Transparente + Garantie à vie Force Case",
+    "marge": 15.25
    }
   ],
-  "total": 49.03
+  "total": 229.35
  },
  "top": [
   {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 49.03,
-   "nb": 2
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 229.35,
+   "nb": 6
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ROMORANTIN",
+   "total": 198.75,
+   "nb": 5
+  },
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 195.93,
+   "nb": 4
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 158.76,
+   "nb": 6
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 125.0,
+   "nb": 1
   }
  ]
 }
