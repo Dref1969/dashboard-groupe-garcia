@@ -827,17 +827,12 @@ function renderVendeurs(el){
 function renderChallenges(el){
   // ── Exclusions : managers et CDV ne jouent PAS le challenge vendeur ──
   const EXCLUS_VENDEUR=["HASSENE","LOUANE","ROMAIN GP"];
-  // ── Boutiques exclues du jour ──
-  // Le lundi : RLR (Romorantin) et CLR (Châteaudun) restent contaminées par les chiffres du samedi.
-  // Les jours fériés : seul Cholet travaille → on exclut toutes les autres boutiques.
-  const FERIES_FR=["01/01/2026","06/04/2026","01/05/2026","08/05/2026","14/05/2026","25/05/2026","14/07/2026","15/08/2026","01/11/2026","11/11/2026","25/12/2026"];
-  const _now2=new Date();
-  const _dateStr2=String(_now2.getDate()).padStart(2,'0')+'/'+String(_now2.getMonth()+1).padStart(2,'0')+'/'+_now2.getFullYear();
-  const _isFerie=FERIES_FR.includes(_dateStr2);
-  const _isLundi=_now2.getDay()===1;
-  let BOU_EXCLUES_JOUR=[];
-  if(_isLundi) BOU_EXCLUES_JOUR=["RLR","CLR"];
-  if(_isFerie) BOU_EXCLUES_JOUR=["ALR","TLR","CLR","RLR","VLR"]; // Seul Cholet ouvert
+  // ── Boutiques fermées du jour : règle COMMUNE boutiquesFermeesJour()
+  //    (dimanche/1er mai = tout fermé ; lundi/férié = seule Cholet ouverte).
+  //    Basée sur la DATE DES DONNÉES, pas l'horloge du navigateur — l'ancienne
+  //    copie locale n'excluait que RLR+CLR le lundi, d'où des vendeurs de
+  //    boutiques fermées (ex. Mehdy/VLR) classés avec les chiffres de la veille.
+  const BOU_EXCLUES_JOUR=boutiquesFermeesJour(DATA_DATE);
   const vSort=[...VENDEURS]
     .filter(v=>!EXCLUS_VENDEUR.includes(v.nom))
     .filter(v=>!BOU_EXCLUES_JOUR.includes(v.bou))
@@ -863,7 +858,10 @@ function renderChallenges(el){
   const moisLabel=MOIS_NOMS[_moisC-1]+' '+_anneeC;
   const HIST_MOIS=CHALLENGE_HIST.filter(d=>{
     const p=(d.date||"").split('/');
-    return p.length===3 && parseInt(p[1],10)===_moisC && parseInt(p[2],10)===_anneeC;
+    if(p.length!==3 || parseInt(p[1],10)!==_moisC || parseInt(p[2],10)!==_anneeC) return false;
+    // Assurance : ignorer toute ligne tombant un dimanche (boutiques fermées,
+    // ligne forcément issue de chiffres de la veille).
+    return new Date(+p[2],+p[1]-1,+p[0]).getDay()!==0;
   });
   const premierJourLabel=HIST_MOIS.length?HIST_MOIS[0].date.slice(0,5):'01/'+String(_moisC).padStart(2,'0');
 
