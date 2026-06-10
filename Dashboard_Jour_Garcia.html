@@ -429,13 +429,21 @@ async function fetchJourData(){
 }
 
 async function fetchDilaxJour(){
-  // Visiteurs DILAX du jour (onglet DILAX_Jour, alimenté toutes les 2h par GitHub Actions)
+  // Visiteurs DILAX du jour (onglet DILAX_Jour, alimenté toutes les 30 min 9h-20h par GitHub Actions)
   // Lecture par POSITION (col A=code, col B=visiteurs) car gviz nulle l'en-tête "Visiteurs"
   // quand la colonne est 100% numérique → lecture par nom impossible.
   try{
     const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('DILAX_Jour')}`;
     const text=await fetchRetry(url,2,800);
     VIS_JOUR={};
+    // Garde anti-veille : l'en-tête de l'onglet porte l'horodatage du dernier scrape
+    // (ex. "10/06/2026 20:32"). Le matin avant le 1er run de 9h, les visiteurs sont
+    // encore ceux d'HIER → on les ignore (panier moyen affiché « — » plutôt que faux).
+    const ts=text.match(/(\d{2}\/\d{2}\/\d{4})\s+\d{1,2}:\d{2}/);
+    if(ts){
+      const t=new Date(), today=('0'+t.getDate()).slice(-2)+'/'+('0'+(t.getMonth()+1)).slice(-2)+'/'+t.getFullYear();
+      if(ts[1]!==today) return;
+    }
     text.split('\n').forEach(line=>{
       const m=line.match(/^"?([A-Z]+)"?\s*,\s*"?(\d+)"?/);
       if(m && BOUTIQUES[m[1]]) VIS_JOUR[m[1]]=parseInt(m[2])||0;

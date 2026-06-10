@@ -1,10 +1,12 @@
 name: MAJ DILAX
 
 on:
-  # Lundi-Samedi, toutes les 2h de 10h à 20h Paris (heure d'été UTC+2)
+  # Lundi-Samedi, toutes les 30 min de 9h à 20h Paris (heure d'été UTC+2 → 7h-18h UTC).
+  # Le 1er run de 9h purge les visiteurs de la veille avant l'ouverture des boutiques.
   # En hiver les runs auront lieu 1h plus tôt (Paris). Compromis volontaire.
   schedule:
-    - cron: '0 8,10,12,14,16,18 * * 1-6'
+    - cron: '0,30 7-17 * * 1-6'
+    - cron: '0 18 * * 1-6'
   # Trigger manuel via l'onglet Actions GitHub
   workflow_dispatch:
 
