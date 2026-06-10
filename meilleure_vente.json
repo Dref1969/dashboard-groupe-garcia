@@ -1,40 +1,42 @@
 {
- "maj": "2026-06-10 15:31",
+ "maj": "2026-06-10 18:29",
  "date": "20260610",
- "nb_factures": 22,
+ "nb_factures": 30,
  "meilleure_vente": {
-  "fac": "200023143",
-  "vendeur": "EMILIE",
-  "agence": "ROMORANTIN",
+  "fac": "200015924",
+  "vendeur": "CHLOE R",
+  "agence": "CHOLET",
   "articles": [
    {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
    },
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
+    "desig": "Chargeur USB C 20W Power Delivery Blanc Bigben",
+    "marge": 14.93
    },
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 62.19
    },
    {
-    "desig": "Chargeur USB C Wrappé 45W Power Delivery GaN Blanc Bigben",
-    "marge": 15.6
+    "desig": "SAMSUNG GALAXY A26 5G 128GO NOIR SFR",
+    "marge": 48.0
    },
    {
-    "desig": "HONOR 600 256GO NOIR SFR",
-    "marge": 71.99
-   },
-   {
-    "desig": "Coque renforcée Honor 600 AIR 3m Transparente + Garantie à vie Force Case",
-    "marge": 15.25
+    "desig": "ABONNEMENT",
+    "marge": 130.0
    }
   ],
-  "total": 229.35
+  "total": 305.12
  },
  "top": [
+  {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 305.12,
+   "nb": 5
+  },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
@@ -58,12 +60,6 @@
    "agence": "ROMORANTIN",
    "total": 158.76,
    "nb": 6
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 125.0,
-   "nb": 1
   }
  ]
 }
