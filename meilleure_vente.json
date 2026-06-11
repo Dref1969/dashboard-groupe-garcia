@@ -1,65 +1,49 @@
 {
- "maj": "2026-06-10 19:23",
- "date": "20260610",
- "nb_factures": 30,
+ "maj": "2026-06-11 11:20",
+ "date": "20260611",
+ "nb_factures": 22,
  "meilleure_vente": {
-  "fac": "200015924",
-  "vendeur": "CHLOE R",
-  "agence": "CHOLET",
+  "fac": "200020969",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "Chargeur USB C 20W Power Delivery Blanc Bigben",
-    "marge": 14.93
-   },
-   {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 62.19
-   },
-   {
-    "desig": "SAMSUNG GALAXY A26 5G 128GO NOIR SFR",
-    "marge": 48.0
-   },
-   {
-    "desig": "ABONNEMENT",
-    "marge": 130.0
+    "desig": "booster chubb - regul rem AVRIL + Derem",
+    "marge": 1200.0
    }
   ],
-  "total": 305.12
+  "total": 1200.0
  },
  "top": [
   {
-   "vendeur": "CHLOE R",
-   "agence": "CHOLET",
-   "total": 305.12,
-   "nb": 5
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 1200.0,
+   "nb": 1
   },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
-   "total": 229.35,
-   "nb": 6
+   "total": 520.0,
+   "nb": 1
   },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ROMORANTIN",
-   "total": 198.75,
-   "nb": 5
+   "total": 480.0,
+   "nb": 1
   },
   {
-   "vendeur": "LUCAS",
+   "vendeur": "MEHDY",
+   "agence": "VENDOME",
+   "total": 440.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ANAIS",
    "agence": "CHOLET",
-   "total": 195.93,
-   "nb": 4
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 158.76,
-   "nb": 6
+   "total": 310.0,
+   "nb": 1
   }
  ]
 }
