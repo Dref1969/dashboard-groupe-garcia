@@ -1,49 +1,61 @@
 {
- "maj": "2026-06-11 20:14",
- "date": "20260611",
- "nb_factures": 38,
+ "maj": "2026-06-12 10:59",
+ "date": "20260612",
+ "nb_factures": 8,
  "meilleure_vente": {
-  "fac": "200020969",
-  "vendeur": "HASSENE",
+  "fac": "200020977",
+  "vendeur": "JULIE TLR",
   "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "booster chubb - regul rem AVRIL + Derem",
-    "marge": 1200.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 25.0
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "XIAOMI REDMI NOTE 14 5G 256GO NOIR SFR",
+    "marge": 25.0
    }
   ],
-  "total": 1200.0
+  "total": 159.84
  },
  "top": [
   {
-   "vendeur": "HASSENE",
+   "vendeur": "JULIE TLR",
    "agence": "AMBOISE",
-   "total": 1200.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 520.0,
-   "nb": 1
+   "total": 159.84,
+   "nb": 4
   },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ROMORANTIN",
-   "total": 480.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "VENDOME",
-   "total": 440.0,
-   "nb": 1
+   "total": 139.36,
+   "nb": 5
   },
   {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
-   "total": 354.86,
-   "nb": 6
+   "total": 91.66,
+   "nb": 3
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 65.83,
+   "nb": 3
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 55.0,
+   "nb": 2
   }
  ]
 }
