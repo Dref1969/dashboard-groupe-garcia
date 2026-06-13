@@ -1,69 +1,7 @@
 {
- "maj": "2026-06-12 20:03",
- "date": "20260612",
- "nb_factures": 21,
- "meilleure_vente": {
-  "fac": "200015938",
-  "vendeur": "LOUANE",
-  "agence": "CHOLET",
-  "articles": [
-   {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
-   },
-   {
-    "desig": "HONOR 600 LITE 256GO NOIR SFR",
-    "marge": 80.0
-   },
-   {
-    "desig": "ACTE GESTION",
-    "marge": 1.5
-   },
-   {
-    "desig": "Coque Honor 600 Transparente Bigben",
-    "marge": 19.17
-   },
-   {
-    "desig": "Chargeur USB A 2.1A FastCharge Blanc WOW",
-    "marge": 19.67
-   }
-  ],
-  "total": 230.18
- },
- "top": [
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 230.18,
-   "nb": 6
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 198.19,
-   "nb": 4
-  },
-  {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 159.84,
-   "nb": 4
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ROMORANTIN",
-   "total": 139.36,
-   "nb": 5
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 115.83,
-   "nb": 3
-  }
- ]
+ "maj": "2026-06-13 09:54",
+ "date": "20260613",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
