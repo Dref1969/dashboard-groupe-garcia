@@ -1,7 +1,73 @@
 {
- "maj": "2026-06-13 19:18",
- "date": "20260613",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "maj": "2026-06-15 13:10",
+ "date": "20260615",
+ "nb_factures": 9,
+ "meilleure_vente": {
+  "fac": "200029330",
+  "vendeur": "ROMAIN",
+  "agence": "ANGERS",
+  "articles": [
+   {
+    "desig": "Article",
+    "marge": 0.0
+   },
+   {
+    "desig": "Câble USB A / USB C 3A 2m FastCharge Noir Bigben",
+    "marge": 19.27
+   },
+   {
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 18.28
+   },
+   {
+    "desig": "Coque renf MS 3M OFG iPhone 17 Pro",
+    "marge": 21.79
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 36.71
+   },
+   {
+    "desig": "REMISE DE 100€HT DEDUITE - SUITE REPRISE",
+    "marge": 0.0
+   },
+   {
+    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 114.0
+   }
+  ],
+  "total": 210.05
+ },
+ "top": [
+  {
+   "vendeur": "ROMAIN",
+   "agence": "ANGERS",
+   "total": 210.05,
+   "nb": 7
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 117.64,
+   "nb": 4
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 37.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 36.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 25.0,
+   "nb": 1
+  }
+ ]
 }
