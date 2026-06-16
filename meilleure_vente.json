@@ -1,32 +1,42 @@
 {
- "maj": "2026-06-16 12:09",
+ "maj": "2026-06-16 17:30",
  "date": "20260616",
- "nb_factures": 17,
+ "nb_factures": 30,
  "meilleure_vente": {
-  "fac": "200020984",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200021686",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
+    "desig": "ACTE GESTION",
     "marge": 25.0
    },
    {
-    "desig": "Coque renforcée Honor Honor 400S FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 42.25
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 24.84
+   },
+   {
+    "desig": "Coque renforcée Honor Honor 400S FEEL 2m Transparente + Garantie à vie Force Case",
+    "marge": 25.58
    },
    {
     "desig": "HONOR 400 SMART 128GO GRIS SFR",
-    "marge": 85.0
+    "marge": 80.0
    }
   ],
-  "total": 202.25
+  "total": 235.42
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 235.42,
+   "nb": 5
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -50,12 +60,6 @@
    "agence": "AMBOISE",
    "total": 139.67,
    "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 131.45,
-   "nb": 4
   }
  ]
 }
