@@ -31,7 +31,9 @@ function handleGoodaysData(data) {
     // Lignes 2-7 : les 6 boutiques triées Note desc
     // IMPORTANT : col A = CODE boutique (ALR/TLR/...) car le dashboard fait gd[v.bq]
     var rows = goodays.map(function(r) {
-      return [r.code, r.note, r.part, 0, r.avis, r.boutique, r.statut];
+      // NoteGoogle = r.note_google (avis Google scrapés du questionnaire GMB 1187,
+      // onglet Classement > Établissements) ; AvisGoogle = r.avis (nb de réponses).
+      return [r.code, r.note, r.part, (r.note_google || 0), r.avis, r.boutique, r.statut];
     });
     if (rows.length > 0) {
       sheet.getRange(2, 1, rows.length, 7).setValues(rows);

@@ -12,6 +12,8 @@ import os
 import sys
 import json
 import time
+import datetime
+import calendar
 import urllib.request
 from playwright.sync_api import sync_playwright
 
@@ -59,7 +61,7 @@ def dump(page, name):
 
 def scrape_goodays():
     """Retourne dict {code: {note, participations, avis_google}}."""
-    data = {c: {"note": 0, "part": 0, "avis": 0} for _, _, c in SHOPS}
+    data = {c: {"note": 0, "part": 0, "avis": 0, "note_google": 0} for _, _, c in SHOPS}
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
@@ -174,9 +176,76 @@ def scrape_goodays():
                 log(f"    {code} '{nom}' note={note} part={part}")
 
             log("Phase 2 OK — notes Top Sat extraites.")
-            # NB : avis Google (GMB) non extraits — le questionnaire /pro/surveys/1187
-            # n'affiche qu'un total toutes boutiques. Détail par boutique = filtrage
-            # fragile, repoussé à une itération dédiée. NoteGoogle/AvisGoogle restent 0.
+
+            # === 3. Avis Google (GMB) — questionnaire 1187, onglet Classement > Établissements ===
+            # Une seule page donne les 6 boutiques : Note moyenne /5 + Réponses (= nb d'avis).
+            # Période = mois en cours via ?date_range=YYYY-MM-01_YYYY-MM-<dernier jour>.
+            _t = datetime.date.today()
+            _last = calendar.monthrange(_t.year, _t.month)[1]
+            _dr = "%d-%02d-01_%d-%02d-%02d" % (_t.year, _t.month, _t.year, _t.month, _last)
+            log("Navigate vers GMB Classement (mois en cours %s)" % _dr)
+            page.goto("https://critizr.com/pro/surveys/1187?date_range=" + _dr,
+                      wait_until="domcontentloaded")
+            time.sleep(7)
+            dump(page, "06_gmb")
+            log("  URL GMB: %s" % page.url)
+
+            if "/login" in page.url.lower():
+                log("  ⚠ GMB redirige vers login (session non valide sur critizr.com) — avis Google non récupérés")
+            else:
+                # Onglet Classement (puis sous-onglet Établissements, sélectionné par défaut)
+                try:
+                    page.get_by_text("Classement", exact=True).first.click()
+                    time.sleep(3)
+                except Exception as e:
+                    log("  clic Classement échoué: %s" % e)
+                try:
+                    page.get_by_text("Établissements", exact=True).first.click()
+                    time.sleep(2)
+                except Exception:
+                    pass
+                dump(page, "07_gmb_classement")
+
+                # Table : nom établissement (contient "SFR") | Note moyenne (X,XX) | Réponses (entier)
+                gmb = page.evaluate("""
+                    () => {
+                        const tables = Array.from(document.querySelectorAll('table'));
+                        for (const t of tables) {
+                            if (!/Note moyenne/i.test(t.innerText)) continue;
+                            const out = [];
+                            t.querySelectorAll('tr').forEach(tr => {
+                                const cells = Array.from(tr.querySelectorAll('td'))
+                                    .map(td => td.innerText.trim()).filter(x => x);
+                                const nom = cells.find(c => /SFR/i.test(c));
+                                if (!nom) return;
+                                const note = cells.find(c => /^[0-9]+[.,][0-9]+$/.test(c)) || '';
+                                const ints = cells.filter(c => /^[0-9]+$/.test(c));
+                                const rep = ints.length ? ints[ints.length - 1] : '';
+                                out.push({nom: nom, note: note, rep: rep});
+                            });
+                            if (out.length) return out;
+                        }
+                        return [];
+                    }
+                """)
+                log("  Lignes GMB extraites : %d" % len(gmb))
+                for r in gmb:
+                    code = match_code(r["nom"])
+                    if not code:
+                        log("    ? GMB non matché : '%s'" % r["nom"])
+                        continue
+                    try:
+                        ng = float(r["note"].replace(",", "."))
+                    except ValueError:
+                        ng = 0.0
+                    try:
+                        av = int(r["rep"])
+                    except ValueError:
+                        av = 0
+                    data[code]["note_google"] = ng
+                    data[code]["avis"] = av
+                    log("    GMB %s '%s' note=%s avis=%s" % (code, r["nom"], ng, av))
+                log("Phase 3 OK — avis Google extraits.")
 
         finally:
             browser.close()
@@ -213,6 +282,7 @@ def main():
             "ecart": ecart,
             "avis": d.get("avis", 0),
             "part": d.get("part", 0),
+            "note_google": d.get("note_google", 0),
         })
 
     resultats.sort(key=lambda x: x["note"], reverse=True)
@@ -221,7 +291,7 @@ def main():
 
     log("Résultats triés Note desc :")
     for r in resultats:
-        log(f"  #{r['rang']} {r['boutique']:12s} note={r['note']:.2f}  {r['statut']}  avis={r['avis']}  part={r['part']}")
+        log(f"  #{r['rang']} {r['boutique']:12s} sat={r['note']:.2f} ({r['part']})  google={r['note_google']:.2f} ({r['avis']} avis)  {r['statut']}")
 
     # POST vers Apps Script (seulement si on a des données non nulles)
     has_data = any(r["note"] > 0 for r in resultats)
