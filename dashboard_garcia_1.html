@@ -216,7 +216,12 @@ async function loadReal(){
   n1=vs.map(v=>{const d=n1Map[v.bq]||{};return{...v,mg:d.mg||0,mb:d.mb||0,cy:d.cy||0,as:d.as||0,bx:d.bx||0}});}
   // Goodays (déjà chargé en parallèle)
   let gd={},gl={};
-  if(gr){gr.forEach(r=>{const b=r["Boutique"];const ns=pNum(r["NoteSat"]),ps=pNum(r["PartSat"]),ng=pNum(r["NoteGoogle"]),ag=pNum(r["AvisGoogle"]);
+  if(gr){gr.forEach(r=>{const b=r["Boutique"];
+  // Ne garder QUE les 6 vraies boutiques : sinon les lignes parasites du Sheet
+  // ("MOYENNE", ligne d'horodatage "17/06/2026 12:21" → parseFloat=17) polluaient
+  // la moyenne satisfaction et la faisaient grimper à ~5/5.
+  if(!b||!B.some(x=>x.c===b))return;
+  const ns=pNum(r["NoteSat"]),ps=pNum(r["PartSat"]),ng=pNum(r["NoteGoogle"]),ag=pNum(r["AvisGoogle"]);
   gd[b]={nt:ns,pt:ps};gl[b]={nt:ng,tt:ag,ms:ag}});}else{gd={ALR:{nt:0,pt:0},TLR:{nt:0,pt:0},CLR:{nt:0,pt:0},CHOLET:{nt:0,pt:0},RLR:{nt:0,pt:0},VLR:{nt:0,pt:0}};gl={ALR:{nt:0,tt:0,ms:0},TLR:{nt:0,tt:0,ms:0},CLR:{nt:0,tt:0,ms:0},CHOLET:{nt:0,tt:0,ms:0},RLR:{nt:0,tt:0,ms:0},VLR:{nt:0,tt:0,ms:0}};}
   // DILAX (déjà chargé en parallèle)
   let vi={ALR:0,TLR:0,CLR:0,CHOLET:0,RLR:0,VLR:0};
