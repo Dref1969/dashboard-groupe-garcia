@@ -1,65 +1,69 @@
 {
- "maj": "2026-06-16 20:44",
- "date": "20260616",
- "nb_factures": 30,
+ "maj": "2026-06-17 11:44",
+ "date": "20260617",
+ "nb_factures": 5,
  "meilleure_vente": {
-  "fac": "200021686",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200020991",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "ACTE GESTION",
-    "marge": 25.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 28.33
    },
    {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 27.36
    },
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 24.84
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
    },
    {
-    "desig": "Coque renforcée Honor Honor 400S FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 25.58
+    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 36.98
    },
    {
-    "desig": "HONOR 400 SMART 128GO GRIS SFR",
+    "desig": "Coque renforcée iPhone 17 FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
+    "marge": 33.92
+   },
+   {
+    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
     "marge": 80.0
    }
   ],
-  "total": 235.42
+  "total": 306.59
  },
  "top": [
   {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 235.42,
-   "nb": 5
-  },
-  {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
-   "total": 202.25,
-   "nb": 4
+   "total": 306.59,
+   "nb": 6
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "ANGERS",
+   "total": 203.43,
+   "nb": 7
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 20.1,
+   "nb": 1
   },
   {
    "vendeur": "JULIE TLR",
    "agence": "AMBOISE",
-   "total": 162.87,
-   "nb": 7
+   "total": 16.67,
+   "nb": 1
   },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
-   "total": 156.83,
-   "nb": 3
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 139.67,
-   "nb": 3
+   "total": 5.0,
+   "nb": 1
   }
  ]
 }
