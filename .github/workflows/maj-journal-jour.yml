@@ -1,8 +1,10 @@
 name: MAJ Journal Ventes Jour
 
 on:
-  # Toutes les 30 min, lun-sam 9h-20h Paris (heure d'été UTC+2 → 7h-18h UTC).
-  # Le 1er run de 9h vide le JSON de la veille avant l'ouverture des boutiques.
+  # CADENCE PILOTÉE PAR GOOGLE APPS SCRIPT (fiable) : la fonction declencherJournalJour()
+  # appelle ce workflow via workflow_dispatch TOUTES LES 5 MIN (9h-20h lun-sam). Le
+  # scheduler planifié de GitHub abandonne trop de démarrages pour tenir 5 min (cf. DILAX).
+  # Les crons ci-dessous ne sont qu'un filet de secours best-effort.
   schedule:
     - cron: '0,30 7-17 * * 1-6'
     - cron: '0 18 * * 1-6'
@@ -32,5 +34,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add meilleure_vente.json
-          git diff --staged --quiet || git commit -m "MAJ meilleure vente du jour [auto]"
+          git diff --staged --quiet && exit 0   # rien de neuf : pas de commit ni de push
+          git commit -m "MAJ meilleure vente du jour [auto]"
+          git pull --rebase origin main          # éviter les collisions de push à cadence 5 min
           git push

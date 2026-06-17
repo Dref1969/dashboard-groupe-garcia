@@ -1241,7 +1241,10 @@ init();
   var mv=null, autoShown=false;
   function fmt(n){return (Math.round((n||0)*100)/100).toLocaleString('fr-FR')}
   function load(){
-    fetch('./meilleure_vente.json?_='+Date.now()).then(function(r){return r.json()}).then(function(d){
+    // Lu depuis raw.githubusercontent.com (cache ~5 min) plutôt que depuis GitHub Pages :
+    // le scrape commit le JSON toutes les 5 min (piloté par Apps Script), et raw reflète
+    // le commit sans dépendre des rebuilds Pages (limités à ~10/h, incompatibles avec 5 min).
+    fetch('https://raw.githubusercontent.com/Dref1969/dashboard-groupe-garcia/main/meilleure_vente.json?_='+Date.now()).then(function(r){return r.json()}).then(function(d){
       mv=d; var b=d&&d.meilleure_vente;
       // Pop-up uniquement si les données datent d'AUJOURD'HUI : le matin avant le
       // 1er scrape (9h), le JSON contient encore la veille → pas de pop-up périmé.
@@ -1264,7 +1267,7 @@ init();
   }
   window.mvOpen=function(){document.getElementById('mv-overlay').classList.add('on')};
   window.mvClose=function(){document.getElementById('mv-overlay').classList.remove('on')};
-  load(); setInterval(load, 600000);
+  load(); setInterval(load, 120000);   // re-fetch toutes les 2 min (données scrapées toutes les 5 min)
 })();
 </script>
 </body>
