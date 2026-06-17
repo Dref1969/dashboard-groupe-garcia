@@ -1,40 +1,42 @@
 {
- "maj": "2026-06-17 11:44",
+ "maj": "2026-06-17 13:28",
  "date": "20260617",
- "nb_factures": 5,
+ "nb_factures": 14,
  "meilleure_vente": {
-  "fac": "200020991",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200029338",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 28.33
-   },
-   {
-    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
-    "marge": 27.36
-   },
    {
     "desig": "Extension Garantie 3ème année - +1000€",
     "marge": 100.0
    },
    {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 36.98
+    "desig": "ENCEINTE BLUETOOTH PORTABLE 20W - PREMIUM AVEC BASS BOOST - IPX5 - ROUGE - MUSE",
+    "marge": 36.77
    },
    {
-    "desig": "Coque renforcée iPhone 17 FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
-    "marge": 33.92
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 19.11
    },
    {
-    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 80.0
+    "desig": "APPLE IPHONE 17 PRO MAX 256GO ORANGE COS SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 163.33
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": -3.49
    }
   ],
-  "total": 306.59
+  "total": 315.72
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 315.72,
+   "nb": 5
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -50,19 +52,13 @@
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
-   "total": 20.1,
+   "total": 50.0,
    "nb": 1
   },
   {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 16.67,
-   "nb": 1
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 5.0,
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 22.04,
    "nb": 1
   }
  ]
