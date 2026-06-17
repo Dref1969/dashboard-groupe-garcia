@@ -184,7 +184,9 @@ def scrape_goodays():
             _last = calendar.monthrange(_t.year, _t.month)[1]
             _dr = "%d-%02d-01_%d-%02d-%02d" % (_t.year, _t.month, _t.year, _t.month, _last)
             log("Navigate vers GMB Classement (mois en cours %s)" % _dr)
-            page.goto("https://critizr.com/pro/surveys/1187?date_range=" + _dr,
+            # IMPORTANT : app.goodays.co (domaine où on s'est loggé) et NON critizr.com
+            # (même appli, mais le cookie de session ne suit pas vers critizr.com → login).
+            page.goto("https://app.goodays.co/pro/surveys/1187?date_range=" + _dr,
                       wait_until="domcontentloaded")
             time.sleep(7)
             dump(page, "06_gmb")
