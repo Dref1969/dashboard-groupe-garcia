@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-17 16:23",
+ "maj": "2026-06-17 16:28",
  "date": "20260617",
- "nb_factures": 25,
+ "nb_factures": 27,
  "meilleure_vente": {
   "fac": "200020992",
   "vendeur": "HASSENE",
@@ -62,14 +62,14 @@
    "nb": 6
   },
   {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 205.0,
-   "nb": 1
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 208.0,
+   "nb": 2
   },
   {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
    "total": 205.0,
    "nb": 1
   }
