@@ -11,7 +11,7 @@ import os, re, json, datetime, urllib.request
 from html.parser import HTMLParser
 
 JOURNAL_URL = ("http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin"
-               "?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dc669883ebefbb136e0d18334fe496")
+               "?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870fffe60db7c69cb0f8c")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "meilleure_vente.json")
 
 class TableParser(HTMLParser):

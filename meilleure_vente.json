@@ -1,77 +1,73 @@
 {
- "maj": "2026-06-17 20:07",
- "date": "20260617",
- "nb_factures": 32,
+ "maj": "2026-06-18 17:34",
+ "date": "20260618",
+ "nb_factures": 19,
  "meilleure_vente": {
-  "fac": "200020992",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200029340",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
-   {
-    "desig": "ETUI FOLIO STAND MAGNETIQUE NOIR COMPATIBLE SAMSUNG GALAXY S24 FE - JAYM®",
-    "marge": 16.33
-   },
    {
     "desig": "Extension Garantie 3ème année - +1000€",
     "marge": 100.0
    },
    {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 36.98
+    "desig": "Câble USB C / USB C 3A 2m PD 60W Noir Bigben",
+    "marge": 21.02
    },
    {
-    "desig": "Folio iPhone 17 Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 36.77
+    "desig": "Câble USB C / USB C 3A 2m PD 60W Noir Bigben",
+    "marge": 21.02
    },
    {
-    "desig": "ABONNEMENT",
-    "marge": 185.0
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 21.97
    },
    {
-    "desig": "ABONNEMENT",
-    "marge": 58.0
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 21.97
    },
    {
-    "desig": "APPLE IPHONE 17 256GO LAVANDE SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 72.0
+    "desig": "Coque renforcée iPhone 17 Pro FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
+    "marge": 24.75
    },
    {
-    "desig": "M SECURISEE PACK ALERTE SFR",
-    "marge": 35.0
+    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 108.33
    }
   ],
-  "total": 540.08
+  "total": 319.06
  },
  "top": [
   {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 540.08,
-   "nb": 8
-  },
-  {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
-   "total": 315.72,
-   "nb": 5
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 306.59,
-   "nb": 6
+   "total": 319.06,
+   "nb": 7
   },
   {
    "vendeur": "LUCAS",
    "agence": "CHOLET",
-   "total": 208.0,
-   "nb": 2
+   "total": 291.7,
+   "nb": 8
   },
   {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 205.0,
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 160.0,
    "nb": 1
+  },
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 131.43,
+   "nb": 3
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 76.51,
+   "nb": 2
   }
  ]
 }
