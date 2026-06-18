@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-18 15:38",
+ "maj": "2026-06-18 15:43",
  "date": "20260618",
- "nb_factures": 19,
+ "nb_factures": 20,
  "meilleure_vente": {
   "fac": "200029340",
   "vendeur": "ROMAIN GP",
@@ -52,6 +52,12 @@
    "nb": 8
   },
   {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 255.27,
+   "nb": 7
+  },
+  {
    "vendeur": "LUCAS",
    "agence": "CHOLET",
    "total": 160.0,
@@ -62,12 +68,6 @@
    "agence": "CHATEAUDUN",
    "total": 131.43,
    "nb": 3
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 76.51,
-   "nb": 2
   }
  ]
 }
