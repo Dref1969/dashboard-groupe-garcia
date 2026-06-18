@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-18 16:38",
+ "maj": "2026-06-18 16:48",
  "date": "20260618",
- "nb_factures": 23,
+ "nb_factures": 24,
  "meilleure_vente": {
   "fac": "200029340",
   "vendeur": "ROMAIN GP",
@@ -64,10 +64,10 @@
    "nb": 1
   },
   {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 146.44,
-   "nb": 4
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 157.29,
+   "nb": 5
   }
  ]
 }
