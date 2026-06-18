@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-18 15:53",
+ "maj": "2026-06-18 15:58",
  "date": "20260618",
- "nb_factures": 20,
+ "nb_factures": 21,
  "meilleure_vente": {
   "fac": "200029340",
   "vendeur": "ROMAIN GP",
@@ -64,10 +64,10 @@
    "nb": 1
   },
   {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 131.43,
-   "nb": 3
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 146.44,
+   "nb": 4
   }
  ]
 }
