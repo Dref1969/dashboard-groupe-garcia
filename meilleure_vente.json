@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-19 13:33",
+ "maj": "2026-06-19 13:38",
  "date": "20260619",
- "nb_factures": 13,
+ "nb_factures": 14,
  "meilleure_vente": {
   "fac": "200021692",
   "vendeur": "HAVAL",
@@ -54,16 +54,16 @@
    "nb": 5
   },
   {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 160.53,
+   "nb": 5
+  },
+  {
    "vendeur": "ROMAIN",
    "agence": "ANGERS",
    "total": 157.66,
    "nb": 3
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 133.03,
-   "nb": 5
   }
  ]
 }
