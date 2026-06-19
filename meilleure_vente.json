@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-19 14:38",
+ "maj": "2026-06-19 14:43",
  "date": "20260619",
- "nb_factures": 19,
+ "nb_factures": 21,
  "meilleure_vente": {
   "fac": "200021692",
   "vendeur": "HAVAL",
@@ -50,6 +50,12 @@
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
+   "total": 242.04,
+   "nb": 5
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
    "total": 199.99,
    "nb": 5
   },
@@ -58,12 +64,6 @@
    "agence": "ROMORANTIN",
    "total": 160.53,
    "nb": 5
-  },
-  {
-   "vendeur": "ROMAIN",
-   "agence": "ANGERS",
-   "total": 157.66,
-   "nb": 3
   }
  ]
 }
