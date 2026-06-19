@@ -1,7 +1,31 @@
 {
- "maj": "2026-06-19 07:48",
+ "maj": "2026-06-19 07:53",
  "date": "20260619",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 2,
+ "meilleure_vente": {
+  "fac": "200016003",
+  "vendeur": "CHLOE R",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "ACTE GESTION",
+    "marge": 25.0
+   }
+  ],
+  "total": 25.0
+ },
+ "top": [
+  {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 25.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 11.41,
+   "nb": 1
+  }
+ ]
 }
