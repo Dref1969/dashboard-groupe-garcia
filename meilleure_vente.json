@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-19 09:48",
+ "maj": "2026-06-19 09:53",
  "date": "20260619",
- "nb_factures": 4,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200029343",
   "vendeur": "ROMAIN GP",
@@ -54,6 +54,12 @@
    "agence": "CHOLET",
    "total": 11.41,
    "nb": 1
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 0.6,
+   "nb": 2
   }
  ]
 }
