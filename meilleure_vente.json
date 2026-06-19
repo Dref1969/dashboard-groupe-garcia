@@ -1,40 +1,42 @@
 {
- "maj": "2026-06-19 16:18",
+ "maj": "2026-06-19 16:23",
  "date": "20260619",
- "nb_factures": 30,
+ "nb_factures": 34,
  "meilleure_vente": {
-  "fac": "200021692",
+  "fac": "200021697",
   "vendeur": "HAVAL",
   "agence": "VENDOME",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 25.67
-   },
-   {
-    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
-    "marge": 10.78
-   },
-   {
-    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 21.41
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 13.71
    },
    {
     "desig": "Extension Garantie 3ème année - +1000€",
     "marge": 100.0
    },
    {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 80.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 24.84
+   },
+   {
+    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 127.01
+   },
+   {
+    "desig": "Coque renforcée Crystal Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 22.38
    }
   ],
-  "total": 254.53
+  "total": 287.94
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 287.94,
+   "nb": 5
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -54,16 +56,10 @@
    "nb": 5
   },
   {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 199.99,
-   "nb": 5
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 160.53,
-   "nb": 5
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 228.0,
+   "nb": 2
   }
  ]
 }
