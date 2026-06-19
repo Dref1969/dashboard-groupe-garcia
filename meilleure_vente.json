@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-19 09:28",
+ "maj": "2026-06-19 09:33",
  "date": "20260619",
- "nb_factures": 3,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200029343",
   "vendeur": "ROMAIN GP",
@@ -36,6 +36,12 @@
    "agence": "ANGERS",
    "total": 199.99,
    "nb": 5
+  },
+  {
+   "vendeur": "ROMAIN",
+   "agence": "ANGERS",
+   "total": 157.66,
+   "nb": 3
   },
   {
    "vendeur": "CHLOE R",
