@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-19 10:53",
+ "maj": "2026-06-19 10:58",
  "date": "20260619",
- "nb_factures": 7,
+ "nb_factures": 8,
  "meilleure_vente": {
   "fac": "200021692",
   "vendeur": "HAVAL",
@@ -54,16 +54,16 @@
    "nb": 3
   },
   {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 110.87,
+   "nb": 4
+  },
+  {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 36.69,
    "nb": 2
-  },
-  {
-   "vendeur": "CHLOE R",
-   "agence": "CHOLET",
-   "total": 25.0,
-   "nb": 1
   }
  ]
 }
