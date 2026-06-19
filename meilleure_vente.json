@@ -1,73 +1,7 @@
 {
- "maj": "2026-06-18 20:18",
- "date": "20260618",
- "nb_factures": 25,
- "meilleure_vente": {
-  "fac": "200029340",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
-  "articles": [
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   },
-   {
-    "desig": "Câble USB C / USB C 3A 2m PD 60W Noir Bigben",
-    "marge": 21.02
-   },
-   {
-    "desig": "Câble USB C / USB C 3A 2m PD 60W Noir Bigben",
-    "marge": 21.02
-   },
-   {
-    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
-    "marge": 21.97
-   },
-   {
-    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
-    "marge": 21.97
-   },
-   {
-    "desig": "Coque renforcée iPhone 17 Pro FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
-    "marge": 24.75
-   },
-   {
-    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 108.33
-   }
-  ],
-  "total": 319.06
- },
- "top": [
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 319.06,
-   "nb": 7
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 291.7,
-   "nb": 8
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 255.27,
-   "nb": 7
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 160.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 157.29,
-   "nb": 5
-  }
- ]
+ "maj": "2026-06-19 07:03",
+ "date": "20260619",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
