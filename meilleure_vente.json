@@ -1,36 +1,46 @@
 {
- "maj": "2026-06-19 10:03",
+ "maj": "2026-06-19 10:08",
  "date": "20260619",
- "nb_factures": 5,
+ "nb_factures": 7,
  "meilleure_vente": {
-  "fac": "200029343",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
+  "fac": "200021692",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
     "desig": "PRESTATION - SERVICE",
-    "marge": 25.0
+    "marge": 16.67
    },
    {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
+    "marge": 25.67
    },
    {
-    "desig": "Coque renforcée MagSafe iPhone 16e AIR 3m Transparente + Garantie à vie Force Case",
-    "marge": 13.1
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 10.78
    },
    {
-    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
-    "marge": 22.05
+    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
+    "marge": 21.41
    },
    {
-    "desig": "APPLE IPHONE 16E 128GO NOIR SFR *** GARANTIE CONSTRUCTEUR 1 AN ***",
-    "marge": 110.0
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
+    "marge": 80.0
    }
   ],
-  "total": 199.99
+  "total": 254.53
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 254.53,
+   "nb": 6
+  },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
@@ -44,22 +54,16 @@
    "nb": 3
   },
   {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 36.69,
+   "nb": 2
+  },
+  {
    "vendeur": "CHLOE R",
    "agence": "CHOLET",
    "total": 25.0,
    "nb": 1
-  },
-  {
-   "vendeur": "CHLOE R",
-   "agence": "CHOLET",
-   "total": 11.41,
-   "nb": 1
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 0.6,
-   "nb": 2
   }
  ]
 }
