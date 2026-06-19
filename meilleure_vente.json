@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-19 12:28",
+ "maj": "2026-06-19 12:33",
  "date": "20260619",
- "nb_factures": 10,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200021692",
   "vendeur": "HAVAL",
@@ -42,6 +42,12 @@
    "nb": 6
   },
   {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 244.95,
+   "nb": 5
+  },
+  {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
    "total": 199.99,
@@ -58,12 +64,6 @@
    "agence": "CHOLET",
    "total": 110.87,
    "nb": 4
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 36.69,
-   "nb": 2
   }
  ]
 }
