@@ -1,7 +1,37 @@
 {
- "maj": "2026-06-20 08:08",
+ "maj": "2026-06-20 08:13",
  "date": "20260620",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016014",
+  "vendeur": "LUCAS",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "Coque Honor 600 Transparente Bigben",
+    "marge": 15.83
+   },
+   {
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 47.19
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "HONOR 600 LITE 256GO NOIR SFR",
+    "marge": 105.0
+   }
+  ],
+  "total": 248.02
+ },
+ "top": [
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 248.02,
+   "nb": 4
+  }
+ ]
 }
