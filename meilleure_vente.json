@@ -1,65 +1,7 @@
 {
- "maj": "2026-06-19 19:42",
- "date": "20260619",
- "nb_factures": 34,
- "meilleure_vente": {
-  "fac": "200021697",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
-  "articles": [
-   {
-    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
-    "marge": 13.71
-   },
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 24.84
-   },
-   {
-    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 127.01
-   },
-   {
-    "desig": "Coque renforcée Crystal Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 22.38
-   }
-  ],
-  "total": 287.94
- },
- "top": [
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 287.94,
-   "nb": 5
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 254.53,
-   "nb": 6
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 244.95,
-   "nb": 5
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 242.04,
-   "nb": 5
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 228.0,
-   "nb": 2
-  }
- ]
+ "maj": "2026-06-20 07:03",
+ "date": "20260620",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
