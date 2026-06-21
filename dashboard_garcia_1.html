@@ -145,7 +145,7 @@ Chart.register(ChartDataLabels);
 
 /* ═══ CSV PARSER ═══ */
 function parseCSV(t){const ls=t.split("\n").filter(l=>l.trim());if(ls.length<2)return[];const pr=l=>{const r=[];let c="",q=0;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"'){if(q&&l[i+1]==='"'){c+='"';i++}else q=!q}else if(ch===','&&!q){r.push(c.trim());c=""}else c+=ch}r.push(c.trim());return r};const h=pr(ls[0]);return ls.slice(1).map(l=>{const v=pr(l),o={};h.forEach((k,i)=>o[k]=v[i]||"");return o})}
-function pNum(s){if(!s)return 0;return parseFloat(s.replace(",","."))||0}
+function pNum(s){if(!s)return 0;return parseFloat(String(s).replace(/\s/g,"").replace(",","."))||0}
 
 /* ═══ CACHE localStorage ═══ */
 const CACHE_PREFIX='garcia_mgr_';
@@ -377,7 +377,7 @@ function eD(d){
     const mpMobile3G=mdB.mpMobile3G||0;
     pb[b.c]={...b,bv,mg,pj,vv,pm,mn,vvN1,pmN1,mobN,mobN1,cyN,cyN1,g3N,acN,mpMob,fmMarge,margeMobile3G,mpMobile3G,ia,g:gd[b.c],gl:gl[b.c],ev:mn>0?(mg-mn)/mn:0};
   });
-  const mG=rk.reduce((s,v)=>s+v.mg,0),pG=rk.reduce((s,v)=>s+v.pj,0),mN=Object.values(pb).reduce((s,b)=>s+b.mn,0);
+  const mG=rk.reduce((s,v)=>s+v.mg,0),pG=Object.values(pb).reduce((s,b)=>s+b.pj,0),mN=Object.values(pb).reduce((s,b)=>s+b.mn,0);
   const vG=Object.values(vi).reduce((s,v)=>s+v,0),vGN1=Object.values(viN1).reduce((s,v)=>s+v,0);
   const pmG=vG>0?mG/vG:0,pmGN1=vGN1>0?mN/vGN1:0;
   const gM=Object.values(gd).reduce((s,g)=>s+g.nt,0)/Object.keys(gd).length;
