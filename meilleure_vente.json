@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-22 10:53",
+ "maj": "2026-06-22 10:58",
  "date": "20260622",
- "nb_factures": 3,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200016027",
   "vendeur": "LOUANE",
@@ -32,6 +32,12 @@
    "agence": "CHOLET",
    "total": 5.0,
    "nb": 1
+  },
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": -0.62,
+   "nb": 2
   }
  ]
 }
