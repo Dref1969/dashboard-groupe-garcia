@@ -1,28 +1,38 @@
 {
- "maj": "2026-06-22 14:48",
+ "maj": "2026-06-22 14:53",
  "date": "20260622",
- "nb_factures": 8,
+ "nb_factures": 10,
  "meilleure_vente": {
-  "fac": "200016033",
-  "vendeur": "LOUANE",
+  "fac": "200016035",
+  "vendeur": "LUCAS",
   "agence": "CHOLET",
   "articles": [
+   {
+    "desig": "Coque Samsung Galaxy A37 5G Transparente Bigben",
+    "marge": 30.33
+   },
    {
     "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
     "marge": 30.52
    },
    {
-    "desig": "Coque Honor Magic 8 Lite Transparente Bigben",
-    "marge": 22.0
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 80.0
    },
    {
-    "desig": "HONOR MAGIC 8 LITE 256GO NOIR SFR",
-    "marge": 69.16
+    "desig": "SAMSUNG GALAXY A37 128GO GRAPHITE SFR",
+    "marge": 80.0
    }
   ],
-  "total": 121.68
+  "total": 220.85
  },
  "top": [
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 220.85,
+   "nb": 4
+  },
   {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
@@ -46,12 +56,6 @@
    "agence": "CHOLET",
    "total": 34.69,
    "nb": 2
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 24.26,
-   "nb": 1
   }
  ]
 }
