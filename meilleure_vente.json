@@ -1,20 +1,34 @@
 {
- "maj": "2026-06-22 13:53",
+ "maj": "2026-06-22 13:58",
  "date": "20260622",
- "nb_factures": 6,
+ "nb_factures": 7,
  "meilleure_vente": {
-  "fac": "200016027",
+  "fac": "200016033",
   "vendeur": "LOUANE",
   "agence": "CHOLET",
   "articles": [
    {
-    "desig": "Watch 10 GPS 46 Alu Noir BrSp Noir S/M",
-    "marge": 76.81
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 30.52
+   },
+   {
+    "desig": "Coque Honor Magic 8 Lite Transparente Bigben",
+    "marge": 22.0
+   },
+   {
+    "desig": "HONOR MAGIC 8 LITE 256GO NOIR SFR",
+    "marge": 69.16
    }
   ],
-  "total": 76.81
+  "total": 121.68
  },
  "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 121.68,
+   "nb": 3
+  },
   {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
@@ -37,12 +51,6 @@
    "vendeur": "LUCAS",
    "agence": "CHOLET",
    "total": 5.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 1.5,
    "nb": 1
   }
  ]
