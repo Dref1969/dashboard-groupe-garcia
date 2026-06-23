@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-23 09:53",
+ "maj": "2026-06-23 09:58",
  "date": "20260623",
- "nb_factures": 3,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200029350",
   "vendeur": "LOUANE",
@@ -19,6 +19,18 @@
    "vendeur": "LOUANE",
    "agence": "ANGERS",
    "total": 33.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 27.4,
+   "nb": 1
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 25.0,
    "nb": 1
   },
   {
