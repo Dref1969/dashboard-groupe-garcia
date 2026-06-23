@@ -1,20 +1,38 @@
 {
- "maj": "2026-06-23 12:23",
+ "maj": "2026-06-23 12:28",
  "date": "20260623",
- "nb_factures": 5,
+ "nb_factures": 7,
  "meilleure_vente": {
-  "fac": "200029350",
+  "fac": "200029351",
   "vendeur": "LOUANE",
   "agence": "ANGERS",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 33.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 20.0
+   },
+   {
+    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 36.96
+   },
+   {
+    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
+    "marge": 17.25
+   },
+   {
+    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
+    "marge": 25.0
    }
   ],
-  "total": 33.0
+  "total": 99.21
  },
  "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 99.21,
+   "nb": 4
+  },
   {
    "vendeur": "LOUANE",
    "agence": "ANGERS",
@@ -36,12 +54,6 @@
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
-   "total": 25.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
    "total": 25.0,
    "nb": 1
   }
