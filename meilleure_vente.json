@@ -1,32 +1,34 @@
 {
- "maj": "2026-06-23 14:53",
+ "maj": "2026-06-23 14:58",
  "date": "20260623",
- "nb_factures": 11,
+ "nb_factures": 12,
  "meilleure_vente": {
-  "fac": "200029351",
-  "vendeur": "LOUANE",
-  "agence": "ANGERS",
+  "fac": "200021699",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 20.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 25.67
    },
    {
-    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 36.96
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
    },
    {
-    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 17.25
-   },
-   {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 25.0
+    "desig": "SAMSUNG GALAXY A37 256GO GRAPHITE SFR",
+    "marge": 60.0
    }
   ],
-  "total": 99.21
+  "total": 165.67
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 165.67,
+   "nb": 3
+  },
   {
    "vendeur": "LOUANE",
    "agence": "ANGERS",
@@ -50,12 +52,6 @@
    "agence": "AMBOISE",
    "total": 32.09,
    "nb": 2
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 27.4,
-   "nb": 1
   }
  ]
 }
