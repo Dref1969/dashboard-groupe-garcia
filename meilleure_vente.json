@@ -1,7 +1,37 @@
 {
- "maj": "2026-06-23 09:38",
+ "maj": "2026-06-23 09:43",
  "date": "20260623",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 3,
+ "meilleure_vente": {
+  "fac": "200029350",
+  "vendeur": "LOUANE",
+  "agence": "ANGERS",
+  "articles": [
+   {
+    "desig": "ABONNEMENT",
+    "marge": 33.0
+   }
+  ],
+  "total": 33.0
+ },
+ "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 33.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 25.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 25.0,
+   "nb": 1
+  }
+ ]
 }
