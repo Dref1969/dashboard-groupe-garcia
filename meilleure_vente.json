@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-23 16:48",
+ "maj": "2026-06-23 16:53",
  "date": "20260623",
- "nb_factures": 17,
+ "nb_factures": 18,
  "meilleure_vente": {
   "fac": "200021699",
   "vendeur": "HAVAL",
@@ -36,6 +36,12 @@
    "nb": 4
   },
   {
+   "vendeur": "HASSENE",
+   "agence": "VENDOME",
+   "total": 72.0,
+   "nb": 1
+  },
+  {
    "vendeur": "LOUANE",
    "agence": "ANGERS",
    "total": 55.0,
@@ -46,12 +52,6 @@
    "agence": "ANGERS",
    "total": 33.0,
    "nb": 1
-  },
-  {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 32.09,
-   "nb": 2
   }
  ]
 }
