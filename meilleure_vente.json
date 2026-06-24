@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-24 16:23",
+ "maj": "2026-06-24 16:28",
  "date": "20260624",
- "nb_factures": 20,
+ "nb_factures": 22,
  "meilleure_vente": {
   "fac": "200021701",
   "vendeur": "HAVAL",
@@ -50,16 +50,16 @@
    "nb": 1
   },
   {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 160.0,
+   "nb": 1
+  },
+  {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
    "total": 147.04,
    "nb": 6
-  },
-  {
-   "vendeur": "ROMAIN",
-   "agence": "ANGERS",
-   "total": 110.0,
-   "nb": 2
   }
  ]
 }
