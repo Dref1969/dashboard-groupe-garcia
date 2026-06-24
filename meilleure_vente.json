@@ -1,57 +1,7 @@
 {
- "maj": "2026-06-23 19:54",
- "date": "20260623",
- "nb_factures": 19,
- "meilleure_vente": {
-  "fac": "200021699",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
-  "articles": [
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 25.67
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
-   },
-   {
-    "desig": "SAMSUNG GALAXY A37 256GO GRAPHITE SFR",
-    "marge": 60.0
-   }
-  ],
-  "total": 165.67
- },
- "top": [
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 165.67,
-   "nb": 3
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 99.21,
-   "nb": 4
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "VENDOME",
-   "total": 72.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 55.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 33.0,
-   "nb": 1
-  }
- ]
+ "maj": "2026-06-24 07:03",
+ "date": "20260624",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
