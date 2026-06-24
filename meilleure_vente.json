@@ -1,7 +1,37 @@
 {
- "maj": "2026-06-24 08:08",
+ "maj": "2026-06-24 08:13",
  "date": "20260624",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016046",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "XIAOMI REDMI 15C 5G 128GO NOIR SFR",
+    "marge": 60.0
+   },
+   {
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 18.02
+   },
+   {
+    "desig": "Coque Xiaomi Redmi 15C 4G / 5G Transparente Bigben",
+    "marge": 17.83
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   }
+  ],
+  "total": 175.85
+ },
+ "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 175.85,
+   "nb": 4
+  }
+ ]
 }
