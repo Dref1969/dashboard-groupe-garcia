@@ -1,32 +1,42 @@
 {
- "maj": "2026-06-24 12:48",
+ "maj": "2026-06-24 12:53",
  "date": "20260624",
- "nb_factures": 5,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200016046",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "200021701",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "XIAOMI REDMI 15C 5G 128GO NOIR SFR",
-    "marge": 60.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 25.67
    },
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 18.02
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 13.71
    },
    {
-    "desig": "Coque Xiaomi Redmi 15C 4G / 5G Transparente Bigben",
-    "marge": 17.83
+    "desig": "Coque renforcée Samsung Galaxy A17 4G/5G FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
+    "marge": 21.41
    },
    {
     "desig": "Extension Garantie 3ème année - 500 à 1000€",
     "marge": 80.0
+   },
+   {
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 80.0
    }
   ],
-  "total": 175.85
+  "total": 220.79
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 220.79,
+   "nb": 5
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
@@ -49,12 +59,6 @@
    "vendeur": "LOUANE",
    "agence": "ANGERS",
    "total": 16.93,
-   "nb": 1
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 5.0,
    "nb": 1
   }
  ]
