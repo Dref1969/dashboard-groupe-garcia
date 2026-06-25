@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-25 09:08",
+ "maj": "2026-06-25 09:13",
  "date": "20260625",
- "nb_factures": 2,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200021755",
   "vendeur": "MEHDY",
@@ -36,6 +36,24 @@
    "agence": "CHATEAUDUN",
    "total": 196.46,
    "nb": 5
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 175.3,
+   "nb": 4
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 115.0,
+   "nb": 2
+  },
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 75.85,
+   "nb": 2
   },
   {
    "vendeur": "LOUANE",
