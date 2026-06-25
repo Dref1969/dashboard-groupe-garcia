@@ -1,36 +1,30 @@
 {
- "maj": "2026-06-25 16:13",
+ "maj": "2026-06-25 16:18",
  "date": "20260625",
- "nb_factures": 22,
+ "nb_factures": 24,
  "meilleure_vente": {
-  "fac": "200021756",
-  "vendeur": "MEHDY",
-  "agence": "CHATEAUDUN",
+  "fac": "200021011",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
+    "desig": "ABONNEMENT",
+    "marge": 180.0
    },
    {
-    "desig": "Etui folio noir BBC Honor X5C Plus",
-    "marge": 18.68
-   },
-   {
-    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 23.0
-   },
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   },
-   {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 60.0
+    "desig": "ABONNEMENT",
+    "marge": 58.0
    }
   ],
-  "total": 218.35
+  "total": 238.0
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 238.0,
+   "nb": 2
+  },
   {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
@@ -54,12 +48,6 @@
    "agence": "CHATEAUDUN",
    "total": 193.0,
    "nb": 2
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 187.08,
-   "nb": 4
   }
  ]
 }
