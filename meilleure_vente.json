@@ -1,7 +1,47 @@
 {
- "maj": "2026-06-25 08:53",
+ "maj": "2026-06-25 08:58",
  "date": "20260625",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 2,
+ "meilleure_vente": {
+  "fac": "200021755",
+  "vendeur": "MEHDY",
+  "agence": "CHATEAUDUN",
+  "articles": [
+   {
+    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.21
+   },
+   {
+    "desig": "Coque renforcée iPhone 17 Pro Max FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
+    "marge": 25.58
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "APPLE IPHONE 17 PRO MAX 512GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 25.0
+   }
+  ],
+  "total": 196.46
+ },
+ "top": [
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 196.46,
+   "nb": 5
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 33.0,
+   "nb": 1
+  }
+ ]
 }
