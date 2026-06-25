@@ -1,40 +1,42 @@
 {
- "maj": "2026-06-25 14:48",
+ "maj": "2026-06-25 14:53",
  "date": "20260625",
- "nb_factures": 18,
+ "nb_factures": 19,
  "meilleure_vente": {
-  "fac": "200023187",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200021756",
+  "vendeur": "MEHDY",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
     "desig": "PRESTATION - SERVICE",
     "marge": 16.67
    },
    {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 28.64
+    "desig": "Etui folio noir BBC Honor X5C Plus",
+    "marge": 18.68
    },
    {
-    "desig": "Chargeur USB A 30W QC3.0 Blanc Bigben",
-    "marge": 20.0
+    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 23.0
    },
    {
-    "desig": "Coque renforcée Honor 600 Smart FEEL Origine France Garantie 2m Transparente + Garantie à vie - Vrac B2B - Origine France Garantie Force Case",
-    "marge": 17.25
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "HONOR 600 SMART 128GO NOIR SFR",
-    "marge": 80.0
+    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
+    "marge": 60.0
    }
   ],
-  "total": 212.56
+  "total": 218.35
  },
  "top": [
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 218.35,
+   "nb": 5
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
@@ -58,12 +60,6 @@
    "agence": "ANGERS",
    "total": 175.3,
    "nb": 4
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 115.0,
-   "nb": 2
   }
  ]
 }
