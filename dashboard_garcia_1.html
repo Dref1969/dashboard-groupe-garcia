@@ -216,7 +216,7 @@ async function loadReal(){
   n1=vs.map(v=>{const d=n1Map[v.bq]||{};return{...v,mg:d.mg||0,mb:d.mb||0,cy:d.cy||0,as:d.as||0,bx:d.bx||0}});}
   // Goodays (déjà chargé en parallèle)
   let gd={},gl={};
-  if(gr){gr.forEach(r=>{const b=r["Boutique"];
+  if(gr){gr.forEach(r=>{const b=r["Boutique"]||(B.find(x=>x.n===(r["Nom"]||"").trim())||{}).c;
   // Ne garder QUE les 6 vraies boutiques : sinon les lignes parasites du Sheet
   // ("MOYENNE", ligne d'horodatage "17/06/2026 12:21" → parseFloat=17) polluaient
   // la moyenne satisfaction et la faisaient grimper à ~5/5.
