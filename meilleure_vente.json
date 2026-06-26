@@ -1,65 +1,7 @@
 {
- "maj": "2026-06-25 19:51",
- "date": "20260625",
- "nb_factures": 27,
- "meilleure_vente": {
-  "fac": "200016059",
-  "vendeur": "LUCAS",
-  "agence": "CHOLET",
-  "articles": [
-   {
-    "desig": "Coque renforcée Crystal Magsafe Iphone 15 (compatible IP13/14/16e/17e)- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 27.38
-   },
-   {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 30.52
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 80.0
-   },
-   {
-    "desig": "ACTE GESTION",
-    "marge": 25.0
-   },
-   {
-    "desig": "APPLE IPHONE 17E 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 80.0
-   }
-  ],
-  "total": 242.9
- },
- "top": [
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 242.9,
-   "nb": 5
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 238.0,
-   "nb": 2
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 223.1,
-   "nb": 7
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 218.35,
-   "nb": 5
-  },
-  {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 212.56,
-   "nb": 6
-  }
- ]
+ "maj": "2026-06-26 07:03",
+ "date": "20260626",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
