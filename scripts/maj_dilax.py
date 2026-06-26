@@ -225,19 +225,34 @@ def scrape_dilax():
             log(f"  URL après login: {page.url}")
 
             # === 2. Navigate Indicateurs clés > Rapport graphique ===
-            log("Navigate vers Rapport graphique")
-            # Click sur menu "Indicateurs clés"
-            for sel in ['a:has-text("Indicateurs clés")', 'text=Indicateurs clés']:
-                if page.locator(sel).first.is_visible():
-                    page.locator(sel).first.click()
-                    break
-            time.sleep(1)
-            # Click sur "Rapport graphique"
-            for sel in ['a:has-text("Rapport graphique")', 'text=Rapport graphique']:
-                if page.locator(sel).first.is_visible():
-                    page.locator(sel).first.click()
-                    break
-            page.wait_for_load_state("networkidle")
+            # DILAX a changé son menu latéral (libellés texte -> icones avec sous-menus
+            # au survol) : les selecteurs has-text("Indicateurs cles"/"Rapport graphique")
+            # ne sont plus is_visible() -> le clic n'avait jamais lieu et le script
+            # timeoutait (Timeout 30000ms). On navigue directement vers la route SPA du
+            # Rapport graphique, ce qui contourne entierement le menu et reste robuste
+            # aux futurs changements de menu.
+            log("Navigate vers Rapport graphique (route directe #/chart_view)")
+            page.goto("https://sfr.dilax.com/sfr/index.html#/chart_view")
+            try:
+                # La page Rapport graphique est prete quand le picker de periode est la
+                page.wait_for_selector('#relevantDateRange', timeout=20000)
+                log("  Rapport graphique charge (#relevantDateRange visible)")
+            except Exception:
+                # Fallback : ancienne methode par clic dans le menu (au cas ou la route change)
+                log("  #relevantDateRange absent — fallback clic menu")
+                for sel in ['a:has-text("Indicateurs clés")', 'text=Indicateurs clés']:
+                    if page.locator(sel).first.is_visible():
+                        page.locator(sel).first.click()
+                        break
+                time.sleep(1)
+                for sel in ['a:has-text("Rapport graphique")', 'text=Rapport graphique']:
+                    if page.locator(sel).first.is_visible():
+                        page.locator(sel).first.click()
+                        break
+                try:
+                    page.wait_for_load_state("networkidle", timeout=20000)
+                except Exception:
+                    pass
             time.sleep(3)
 
             # === 3. Configuration : Mois en cours + Fréquence Mensuel ===
