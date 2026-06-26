@@ -1,7 +1,37 @@
 {
- "maj": "2026-06-26 08:13",
+ "maj": "2026-06-26 08:18",
  "date": "20260626",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 3,
+ "meilleure_vente": {
+  "fac": "200016062",
+  "vendeur": "LUCAS",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "ACTE GESTION",
+    "marge": 55.0
+   }
+  ],
+  "total": 55.0
+ },
+ "top": [
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 55.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 1.5,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": -7.64,
+   "nb": 1
+  }
+ ]
 }
