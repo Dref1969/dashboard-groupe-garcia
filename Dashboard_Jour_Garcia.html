@@ -873,8 +873,8 @@ function renderChallenges(el){
   });
   const premierJourLabel=HIST_MOIS.length?HIST_MOIS[0].date.slice(0,5):'01/'+String(_moisC).padStart(2,'0');
 
-  // ── BOOST ×2 du jeudi 28/05 au samedi 30/05/2026 inclus ──
-  const BOOST_DATES=['28/05/2026','29/05/2026','30/05/2026'];
+  // ── BOOST ×2 : prime du jour 40 € au lieu de 20 € sur ces dates uniquement (28-30/05/2026 ; 26/06/2026) ──
+  const BOOST_DATES=['28/05/2026','29/05/2026','30/05/2026','26/06/2026'];
   const PRIME_JOUR_=(dateStr)=>BOOST_DATES.includes(dateStr)?40:20;
   const _todayStr=String(_now.getDate()).padStart(2,'0')+'/'+String(_moisC).padStart(2,'0')+'/'+_anneeC;
   const PRIME_AUJ=PRIME_JOUR_(_todayStr);
@@ -910,7 +910,7 @@ function renderChallenges(el){
     <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le ${premierJourLabel}</div></div>
     <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
     <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 500 €</div></div>
-    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${BOOST_ACTIF?'color:var(--orange)':''}">${PRIME_AUJ} €</div><div class="sub">${BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 — 28-30/05</strong>':'par challenge gagné'}</div></div>
+    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${BOOST_ACTIF?'color:var(--orange)':''}">${PRIME_AUJ} €</div><div class="sub">${BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 ACTIF</strong>':'par challenge gagné'}</div></div>
   </div>
 
   <!-- ══════ CUMUL DES PRIMES À DATE ══════ -->
