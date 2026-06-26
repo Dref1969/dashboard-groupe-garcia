@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-26 13:18",
+ "maj": "2026-06-26 13:23",
  "date": "20260626",
- "nb_factures": 11,
+ "nb_factures": 12,
  "meilleure_vente": {
   "fac": "200023190",
   "vendeur": "NATHAN",
@@ -60,9 +60,9 @@
    "nb": 1
   },
   {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 55.0,
+   "vendeur": "ANAIS",
+   "agence": "ANGERS",
+   "total": 80.0,
    "nb": 1
   }
  ]
