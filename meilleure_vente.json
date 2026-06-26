@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-26 14:23",
+ "maj": "2026-06-26 14:28",
  "date": "20260626",
- "nb_factures": 15,
+ "nb_factures": 17,
  "meilleure_vente": {
   "fac": "200023190",
   "vendeur": "NATHAN",
@@ -54,16 +54,16 @@
    "nb": 5
   },
   {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 137.19,
+   "nb": 3
+  },
+  {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 126.26,
    "nb": 4
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 106.5,
-   "nb": 2
   }
  ]
 }
