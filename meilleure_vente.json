@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-26 14:08",
+ "maj": "2026-06-26 14:13",
  "date": "20260626",
- "nb_factures": 13,
+ "nb_factures": 15,
  "meilleure_vente": {
   "fac": "200023190",
   "vendeur": "NATHAN",
@@ -48,6 +48,12 @@
    "nb": 4
   },
   {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 150.09,
+   "nb": 5
+  },
+  {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 126.26,
@@ -58,12 +64,6 @@
    "agence": "CHOLET",
    "total": 106.5,
    "nb": 2
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "ANGERS",
-   "total": 80.0,
-   "nb": 1
   }
  ]
 }
