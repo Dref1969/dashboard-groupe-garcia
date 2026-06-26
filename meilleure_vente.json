@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-26 09:38",
+ "maj": "2026-06-26 09:43",
  "date": "20260626",
- "nb_factures": 4,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200016062",
   "vendeur": "LUCAS",
@@ -19,6 +19,12 @@
    "vendeur": "LUCAS",
    "agence": "CHOLET",
    "total": 55.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 25.0,
    "nb": 1
   },
   {
