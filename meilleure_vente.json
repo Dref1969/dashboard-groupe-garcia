@@ -1,40 +1,42 @@
 {
- "maj": "2026-06-26 16:13",
+ "maj": "2026-06-26 16:18",
  "date": "20260626",
- "nb_factures": 23,
+ "nb_factures": 24,
  "meilleure_vente": {
-  "fac": "200023190",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200021016",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
+    "desig": "ACTE GESTION",
+    "marge": 0.5
    },
    {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 20.31
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "desig": "Coque renforcée Crystal Samsung Galaxy A57 - NOVIANT",
+    "marge": 29.46
    },
    {
-    "desig": "Chargeur USB A 30W QC3.0 Blanc Bigben",
-    "marge": 20.0
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
    },
    {
-    "desig": "Folio Honor 600 Smart Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 28.43
-   },
-   {
-    "desig": "HONOR 600 SMART 128GO NOIR SFR",
+    "desig": "SAMSUNG GALAXY A57 256GO BLEU NUIT SFR",
     "marge": 60.0
    }
   ],
-  "total": 195.41
+  "total": 199.8
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 199.8,
+   "nb": 5
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
@@ -58,12 +60,6 @@
    "agence": "AMBOISE",
    "total": 150.09,
    "nb": 5
-  },
-  {
-   "vendeur": "CHLOE R",
-   "agence": "CHOLET",
-   "total": 137.19,
-   "nb": 3
   }
  ]
 }
