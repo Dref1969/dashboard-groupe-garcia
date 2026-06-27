@@ -1,7 +1,29 @@
 {
- "maj": "2026-06-27 08:18",
+ "maj": "2026-06-27 08:23",
  "date": "20260627",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016068",
+  "vendeur": "CHLOE R",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "ABONNEMENT",
+    "marge": 12.0
+   },
+   {
+    "desig": "ABONNEMENT",
+    "marge": 12.0
+   }
+  ],
+  "total": 24.0
+ },
+ "top": [
+  {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 24.0,
+   "nb": 2
+  }
+ ]
 }
