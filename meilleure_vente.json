@@ -1,65 +1,7 @@
 {
- "maj": "2026-06-26 19:41",
- "date": "20260626",
- "nb_factures": 25,
- "meilleure_vente": {
-  "fac": "200021016",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
-  "articles": [
-   {
-    "desig": "ACTE GESTION",
-    "marge": 0.5
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
-   },
-   {
-    "desig": "Coque renforcée Crystal Samsung Galaxy A57 - NOVIANT",
-    "marge": 29.46
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
-   },
-   {
-    "desig": "SAMSUNG GALAXY A57 256GO BLEU NUIT SFR",
-    "marge": 60.0
-   }
-  ],
-  "total": 199.8
- },
- "top": [
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 199.8,
-   "nb": 5
-  },
-  {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 195.41,
-   "nb": 6
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "ANGERS",
-   "total": 176.94,
-   "nb": 4
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 161.44,
-   "nb": 4
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 150.09,
-   "nb": 5
-  }
- ]
+ "maj": "2026-06-27 07:03",
+ "date": "20260627",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
