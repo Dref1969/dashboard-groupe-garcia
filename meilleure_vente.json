@@ -1,24 +1,26 @@
 {
- "maj": "2026-06-27 08:38",
+ "maj": "2026-06-27 08:43",
  "date": "20260627",
- "nb_factures": 1,
+ "nb_factures": 2,
  "meilleure_vente": {
-  "fac": "200016068",
-  "vendeur": "CHLOE R",
-  "agence": "CHOLET",
+  "fac": "200023194",
+  "vendeur": "NATHAN",
+  "agence": "ROMORANTIN",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 12.0
-   },
-   {
-    "desig": "ABONNEMENT",
-    "marge": 12.0
+    "desig": "DORO LEVA L30 RED SFR",
+    "marge": 60.0
    }
   ],
-  "total": 24.0
+  "total": 60.0
  },
  "top": [
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 60.0,
+   "nb": 1
+  },
   {
    "vendeur": "CHLOE R",
    "agence": "CHOLET",
