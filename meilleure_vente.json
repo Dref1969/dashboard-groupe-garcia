@@ -1,20 +1,32 @@
 {
- "maj": "2026-06-27 09:43",
+ "maj": "2026-06-27 09:48",
  "date": "20260627",
- "nb_factures": 4,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200016069",
-  "vendeur": "CHLOE R",
-  "agence": "CHOLET",
+  "fac": "200021017",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
     "desig": "ABONNEMENT",
-    "marge": 160.0
+    "marge": 205.0
    }
   ],
-  "total": 160.0
+  "total": 205.0
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 205.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 185.27,
+   "nb": 5
+  },
   {
    "vendeur": "CHLOE R",
    "agence": "CHOLET",
@@ -32,12 +44,6 @@
    "agence": "ROMORANTIN",
    "total": 60.0,
    "nb": 1
-  },
-  {
-   "vendeur": "CHLOE R",
-   "agence": "CHOLET",
-   "total": 24.0,
-   "nb": 2
   }
  ]
 }
