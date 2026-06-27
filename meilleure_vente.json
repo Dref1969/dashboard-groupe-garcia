@@ -1,20 +1,46 @@
 {
- "maj": "2026-06-27 13:58",
+ "maj": "2026-06-27 14:03",
  "date": "20260627",
- "nb_factures": 13,
+ "nb_factures": 14,
  "meilleure_vente": {
-  "fac": "200021017",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200023195",
+  "vendeur": "NATHAN",
+  "agence": "ROMORANTIN",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 205.0
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 28.64
+   },
+   {
+    "desig": "Folio Honor 600 Smart Wallet Fonction Stand Noir - Certifié GRS Bigben",
+    "marge": 20.1
+   },
+   {
+    "desig": "Chargeur USB A 30W QC3.0 Blanc Bigben",
+    "marge": 20.0
+   },
+   {
+    "desig": "HONOR 600 SMART 128GO NOIR SFR",
+    "marge": 80.0
    }
   ],
-  "total": 205.0
+  "total": 215.41
  },
  "top": [
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 215.41,
+   "nb": 6
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -38,12 +64,6 @@
    "agence": "CHOLET",
    "total": 160.0,
    "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 130.1,
-   "nb": 3
   }
  ]
 }
