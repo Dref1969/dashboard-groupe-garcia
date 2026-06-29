@@ -1,7 +1,41 @@
 {
- "maj": "2026-06-29 08:23",
+ "maj": "2026-06-29 08:28",
  "date": "20260629",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016079",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "Chargeur USB C 25W Power Delivery Blanc Bigben",
+    "marge": 2.4
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "Folio Samsung Galaxy A17 4G/5G Wallet Fonction Stand Noir - Certifié GRS Bigben",
+    "marge": 28.43
+   },
+   {
+    "desig": "ACTE GESTION",
+    "marge": 25.0
+   },
+   {
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 60.0
+   }
+  ],
+  "total": 165.83
+ },
+ "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 165.83,
+   "nb": 5
+  }
+ ]
 }
