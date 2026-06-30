@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-30 09:43",
+ "maj": "2026-06-30 09:48",
  "date": "20260630",
- "nb_factures": 8,
+ "nb_factures": 9,
  "meilleure_vente": {
   "fac": "200023200",
   "vendeur": "EMILIE",
@@ -60,8 +60,8 @@
    "nb": 3
   },
   {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
    "total": 25.0,
    "nb": 1
   }
