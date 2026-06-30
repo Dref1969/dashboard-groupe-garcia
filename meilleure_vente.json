@@ -1,40 +1,46 @@
 {
- "maj": "2026-06-30 13:33",
+ "maj": "2026-06-30 13:38",
  "date": "20260630",
- "nb_factures": 12,
+ "nb_factures": 13,
  "meilleure_vente": {
-  "fac": "200023200",
+  "fac": "200023201",
   "vendeur": "EMILIE",
   "agence": "ROMORANTIN",
   "articles": [
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
    {
     "desig": "PRESTATION - SERVICE",
     "marge": 16.67
    },
    {
-    "desig": "Chargeur USB A 30W QC3.0 Blanc Bigben",
-    "marge": 20.0
+    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.21
    },
    {
-    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 17.25
+    "desig": "Chargeur USB C Wrappé 45W Power Delivery GaN Blanc Bigben",
+    "marge": 15.6
    },
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 30.52
+    "desig": "Coque renforcée Honor 600 AIR 3m Transparente + Garantie à vie Force Case",
+    "marge": 15.25
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 80.0
+    "desig": "HONOR 600 256GO ORANGE SFR",
+    "marge": 72.0
    }
   ],
-  "total": 214.44
+  "total": 228.73
  },
  "top": [
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 228.73,
+   "nb": 6
+  },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
@@ -58,12 +64,6 @@
    "agence": "CHATEAUDUN",
    "total": 60.12,
    "nb": 3
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "ANGERS",
-   "total": 48.0,
-   "nb": 1
   }
  ]
 }
