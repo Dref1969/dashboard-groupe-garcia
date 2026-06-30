@@ -1,25 +1,45 @@
 {
- "maj": "2026-06-30 08:53",
+ "maj": "2026-06-30 08:58",
  "date": "20260630",
- "nb_factures": 3,
+ "nb_factures": 5,
  "meilleure_vente": {
-  "fac": "200029373",
-  "vendeur": "ANAIS",
-  "agence": "ANGERS",
+  "fac": "200021762",
+  "vendeur": "MEHDY",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
-    "desig": "MIG FTTB-FTTH",
-    "marge": 90.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 17.49
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 60.0
    }
   ],
-  "total": 90.0
+  "total": 177.49
  },
  "top": [
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 177.49,
+   "nb": 3
+  },
   {
    "vendeur": "ANAIS",
    "agence": "ANGERS",
    "total": 90.0,
    "nb": 1
+  },
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 60.12,
+   "nb": 3
   },
   {
    "vendeur": "EMILIE",
