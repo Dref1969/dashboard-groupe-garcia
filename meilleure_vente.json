@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-30 09:58",
+ "maj": "2026-06-30 10:03",
  "date": "20260630",
- "nb_factures": 9,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200023200",
   "vendeur": "EMILIE",
@@ -60,9 +60,9 @@
    "nb": 3
   },
   {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 25.0,
+   "vendeur": "ANAIS",
+   "agence": "ANGERS",
+   "total": 48.0,
    "nb": 1
   }
  ]
