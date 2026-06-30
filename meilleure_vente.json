@@ -1,24 +1,26 @@
 {
- "maj": "2026-06-30 08:38",
+ "maj": "2026-06-30 08:43",
  "date": "20260630",
- "nb_factures": 2,
+ "nb_factures": 3,
  "meilleure_vente": {
-  "fac": "200023199",
-  "vendeur": "EMILIE",
-  "agence": "ROMORANTIN",
+  "fac": "200029373",
+  "vendeur": "ANAIS",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 17.17
-   },
-   {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 5.0
+    "desig": "MIG FTTB-FTTH",
+    "marge": 90.0
    }
   ],
-  "total": 22.17
+  "total": 90.0
  },
  "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "ANGERS",
+   "total": 90.0,
+   "nb": 1
+  },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
