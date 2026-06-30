@@ -1,7 +1,7 @@
 {
- "maj": "2026-06-30 15:18",
+ "maj": "2026-06-30 15:23",
  "date": "20260630",
- "nb_factures": 15,
+ "nb_factures": 19,
  "meilleure_vente": {
   "fac": "200023201",
   "vendeur": "EMILIE",
@@ -60,10 +60,10 @@
    "nb": 3
   },
   {
-   "vendeur": "ANAIS",
-   "agence": "ANGERS",
-   "total": 141.1,
-   "nb": 4
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 151.97,
+   "nb": 5
   }
  ]
 }
