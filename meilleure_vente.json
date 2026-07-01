@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-01 09:13",
+ "maj": "2026-07-01 09:18",
  "date": "20260701",
- "nb_factures": 5,
+ "nb_factures": 7,
  "meilleure_vente": {
   "fac": "200023203",
   "vendeur": "EMILIE",
@@ -48,6 +48,12 @@
    "nb": 6
   },
   {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 157.56,
+   "nb": 6
+  },
+  {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
    "total": 55.0,
@@ -57,12 +63,6 @@
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
    "total": 25.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 22.05,
    "nb": 1
   }
  ]
