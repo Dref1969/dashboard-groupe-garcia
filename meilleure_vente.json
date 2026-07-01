@@ -1,7 +1,29 @@
 {
- "maj": "2026-07-01 08:23",
+ "maj": "2026-07-01 08:28",
  "date": "20260701",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200021767",
+  "vendeur": "MEHDY",
+  "agence": "CHATEAUDUN",
+  "articles": [
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "DORO LEVA L30 BLACK SFR",
+    "marge": 5.0
+   }
+  ],
+  "total": 55.0
+ },
+ "top": [
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 55.0,
+   "nb": 2
+  }
+ ]
 }
