@@ -1,29 +1,57 @@
 {
- "maj": "2026-07-01 08:43",
+ "maj": "2026-07-01 08:48",
  "date": "20260701",
- "nb_factures": 1,
+ "nb_factures": 3,
  "meilleure_vente": {
-  "fac": "200021767",
-  "vendeur": "MEHDY",
-  "agence": "CHATEAUDUN",
+  "fac": "200023203",
+  "vendeur": "EMILIE",
+  "agence": "ROMORANTIN",
   "articles": [
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "desig": "Coque renforcée noir Matt Iron Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 18.49
    },
    {
-    "desig": "DORO LEVA L30 BLACK SFR",
-    "marge": 5.0
+    "desig": "Chargeur USB C Wrappé 45W Power Delivery GaN Blanc Bigben",
+    "marge": 15.6
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.21
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 72.0
    }
   ],
-  "total": 55.0
+  "total": 231.97
  },
  "top": [
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 231.97,
+   "nb": 6
+  },
   {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
    "total": 55.0,
    "nb": 2
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 25.0,
+   "nb": 1
   }
  ]
 }
