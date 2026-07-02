@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-02 16:53",
+ "maj": "2026-07-02 16:58",
  "date": "20260702",
- "nb_factures": 25,
+ "nb_factures": 26,
  "meilleure_vente": {
   "fac": "200021771",
   "vendeur": "HASSENE",
@@ -56,8 +56,8 @@
    "nb": 1
   },
   {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
    "total": 160.0,
    "nb": 1
   }
