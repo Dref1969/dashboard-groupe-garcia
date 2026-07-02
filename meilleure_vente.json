@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-02 11:53",
+ "maj": "2026-07-02 11:58",
  "date": "20260702",
- "nb_factures": 10,
+ "nb_factures": 12,
  "meilleure_vente": {
   "fac": "200021771",
   "vendeur": "HASSENE",
@@ -56,10 +56,10 @@
    "nb": 1
   },
   {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 148.17,
-   "nb": 4
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 160.0,
+   "nb": 1
   }
  ]
 }
