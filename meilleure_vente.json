@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-03 14:08",
+ "maj": "2026-07-03 14:13",
  "date": "20260703",
- "nb_factures": 15,
+ "nb_factures": 17,
  "meilleure_vente": {
   "fac": "200029387",
   "vendeur": "ROMAIN GP",
@@ -92,10 +92,10 @@
    "nb": 1
   },
   {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 100.0,
-   "nb": 1
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 122.91,
+   "nb": 4
   }
  ]
 }
