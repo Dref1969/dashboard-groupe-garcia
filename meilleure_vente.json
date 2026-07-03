@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-03 09:48",
+ "maj": "2026-07-03 09:53",
  "date": "20260703",
- "nb_factures": 4,
+ "nb_factures": 6,
  "meilleure_vente": {
   "fac": "200016108",
   "vendeur": "EMMY",
@@ -22,6 +22,12 @@
    "nb": 1
   },
   {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 50.0,
+   "nb": 1
+  },
+  {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 29.84,
@@ -34,8 +40,8 @@
    "nb": 1
   },
   {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
    "total": 10.0,
    "nb": 1
   }
