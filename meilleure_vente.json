@@ -1,20 +1,46 @@
 {
- "maj": "2026-07-03 10:33",
+ "maj": "2026-07-03 10:38",
  "date": "20260703",
- "nb_factures": 6,
+ "nb_factures": 7,
  "meilleure_vente": {
-  "fac": "200016108",
-  "vendeur": "EMMY",
-  "agence": "CHOLET",
+  "fac": "200023220",
+  "vendeur": "EMILIE",
+  "agence": "ROMORANTIN",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 100.0
+    "desig": "LENTILLES DE PROTECTION CAMERA ARRIERE COMPATIBLE POUR IPHONE 17 PRO / 17 PRO MAX - JAYM®",
+    "marge": 10.68
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Coque renforcée noir Matt Iron Magsafe Iphone 17 Pro - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 18.49
+   },
+   {
+    "desig": "Chargeur USB C Wrappé 45W Power Delivery GaN Blanc Bigben",
+    "marge": 15.6
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
+   },
+   {
+    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 80.0
    }
   ],
-  "total": 100.0
+  "total": 171.28
  },
  "top": [
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 171.28,
+   "nb": 6
+  },
   {
    "vendeur": "EMMY",
    "agence": "CHOLET",
@@ -37,12 +63,6 @@
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 17.17,
-   "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 10.0,
    "nb": 1
   }
  ]
