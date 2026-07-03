@@ -1,45 +1,49 @@
 {
- "maj": "2026-07-03 12:48",
+ "maj": "2026-07-03 12:53",
  "date": "20260703",
- "nb_factures": 8,
+ "nb_factures": 11,
  "meilleure_vente": {
-  "fac": "200023220",
-  "vendeur": "EMILIE",
-  "agence": "ROMORANTIN",
+  "fac": "200021723",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "LENTILLES DE PROTECTION CAMERA ARRIERE COMPATIBLE POUR IPHONE 17 PRO / 17 PRO MAX - JAYM®",
-    "marge": 10.68
-   },
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
-   },
-   {
-    "desig": "Coque renforcée noir Matt Iron Magsafe Iphone 17 Pro - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 18.49
-   },
-   {
-    "desig": "Chargeur USB C Wrappé 45W Power Delivery GaN Blanc Bigben",
-    "marge": 15.6
-   },
-   {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
+    "marge": 25.67
    },
    {
-    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 80.0
+    "desig": "Folio Honor X5C Plus Wallet Fonction Stand Noir - Certifié GRS Bigben",
+    "marge": 24.26
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
+    "marge": 85.0
    }
   ],
-  "total": 171.28
+  "total": 234.93
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 234.93,
+   "nb": 4
+  },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 171.28,
    "nb": 6
+  },
+  {
+   "vendeur": "CHLOE R",
+   "agence": "CHOLET",
+   "total": 160.0,
+   "nb": 1
   },
   {
    "vendeur": "EMMY",
@@ -51,18 +55,6 @@
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 50.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 29.84,
-   "nb": 1
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 25.0,
    "nb": 1
   }
  ]
