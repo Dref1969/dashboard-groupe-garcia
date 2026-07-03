@@ -1,32 +1,78 @@
 {
- "maj": "2026-07-03 13:03",
+ "maj": "2026-07-03 13:08",
  "date": "20260703",
- "nb_factures": 11,
+ "nb_factures": 13,
  "meilleure_vente": {
-  "fac": "200021723",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200029387",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 80.0
+   },
+   {
+    "desig": "Coque renforcée Honor Honor 400S FEEL 2m Transparente + Garantie à vie Force Case",
+    "marge": 32.25
+   },
+   {
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 102.33
+   },
+   {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 25.67
+    "marge": 182.55
    },
    {
-    "desig": "Folio Honor X5C Plus Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 24.26
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
    },
    {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
+    "desig": "CROSSCALL CORE M6 5G 128GO SFR-TEAM",
+    "marge": 181.5
    },
    {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 85.0
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "CROSSCALL CORE M6 5G 128GO SFR-TEAM",
+    "marge": 84.5
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "CROSSCALL CORE M6 5G 128GO SFR-TEAM",
+    "marge": 84.5
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "CROSSCALL CORE M6 5G 128GO SFR-TEAM",
+    "marge": 84.5
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "HONOR 400 SMART 128GO GRIS SFR",
+    "marge": 104.83
    }
   ],
-  "total": 234.93
+  "total": 1186.96
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 1186.96,
+   "nb": 14
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -46,15 +92,9 @@
    "nb": 1
   },
   {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
    "total": 100.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 50.0,
    "nb": 1
   }
  ]
