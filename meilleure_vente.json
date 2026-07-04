@@ -1,7 +1,33 @@
 {
- "maj": "2026-07-04 08:33",
+ "maj": "2026-07-04 08:38",
  "date": "20260704",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200021778",
+  "vendeur": "MEHDY",
+  "agence": "CHATEAUDUN",
+  "articles": [
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
+   },
+   {
+    "desig": "Folio iPhone 17 Pro Wallet Fonction Stand Noir - Certifié GRS Bigben",
+    "marge": 28.43
+   },
+   {
+    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 62.5
+   }
+  ],
+  "total": 120.77
+ },
+ "top": [
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 120.77,
+   "nb": 3
+  }
+ ]
 }
