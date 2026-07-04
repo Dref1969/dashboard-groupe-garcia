@@ -1,28 +1,38 @@
 {
- "maj": "2026-07-04 09:38",
+ "maj": "2026-07-04 09:43",
  "date": "20260704",
- "nb_factures": 2,
+ "nb_factures": 3,
  "meilleure_vente": {
-  "fac": "200021778",
-  "vendeur": "MEHDY",
-  "agence": "CHATEAUDUN",
+  "fac": "200016120",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
   "articles": [
    {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
+    "marge": 21.51
    },
    {
-    "desig": "Folio iPhone 17 Pro Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 28.43
+    "desig": "Coque renforcée MagSafe iPhone 17 Pro AIR XTREM 4m Norme Militaire MIL-STD 810G Transparente + Garantie à vie Force Case",
+    "marge": 11.1
    },
    {
-    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 62.5
+    "desig": "APPLE IPHONE 17 PRO 256GO ORANGE COS SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 72.0
    }
   ],
-  "total": 120.77
+  "total": 184.61
  },
  "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 184.61,
+   "nb": 4
+  },
   {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
