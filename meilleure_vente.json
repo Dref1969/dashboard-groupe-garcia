@@ -1,32 +1,50 @@
 {
- "maj": "2026-07-04 14:18",
+ "maj": "2026-07-04 14:23",
  "date": "20260704",
- "nb_factures": 24,
+ "nb_factures": 28,
  "meilleure_vente": {
-  "fac": "200016120",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "200021045",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
+    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 36.98
    },
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 21.51
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
    },
    {
-    "desig": "Coque renforcée MagSafe iPhone 17 Pro AIR XTREM 4m Norme Militaire MIL-STD 810G Transparente + Garantie à vie Force Case",
-    "marge": 11.1
+    "desig": "ABONNEMENT",
+    "marge": 160.0
    },
    {
-    "desig": "APPLE IPHONE 17 PRO 256GO ORANGE COS SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 72.0
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 16.0
    }
   ],
-  "total": 184.61
+  "total": 262.98
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 262.98,
+   "nb": 4
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 236.7,
+   "nb": 6
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 189.85,
+   "nb": 5
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
@@ -38,24 +56,6 @@
    "agence": "AMBOISE",
    "total": 174.51,
    "nb": 5
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 173.88,
-   "nb": 4
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 157.0,
-   "nb": 4
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 125.0,
-   "nb": 2
   }
  ]
 }
