@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-04 10:43",
+ "maj": "2026-07-04 10:48",
  "date": "20260704",
- "nb_factures": 10,
+ "nb_factures": 12,
  "meilleure_vente": {
   "fac": "200016120",
   "vendeur": "ANAIS",
@@ -34,6 +34,18 @@
    "nb": 4
   },
   {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 174.51,
+   "nb": 5
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 157.0,
+   "nb": 4
+  },
+  {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
    "total": 125.0,
@@ -44,18 +56,6 @@
    "agence": "CHATEAUDUN",
    "total": 120.77,
    "nb": 3
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 75.0,
-   "nb": 2
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 55.0,
-   "nb": 1
   }
  ]
 }
