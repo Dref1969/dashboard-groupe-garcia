@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-04 09:19",
+ "maj": "2026-07-04 09:23",
  "date": "20260704",
- "nb_factures": 1,
+ "nb_factures": 2,
  "meilleure_vente": {
   "fac": "200021778",
   "vendeur": "MEHDY",
@@ -28,6 +28,12 @@
    "agence": "CHATEAUDUN",
    "total": 120.77,
    "nb": 3
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 11.97,
+   "nb": 1
   }
  ]
 }
