@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-06 11:23",
+ "maj": "2026-07-06 11:24",
  "date": "20260706",
- "nb_factures": 3,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200016136",
   "vendeur": "ANAIS",
@@ -38,6 +38,12 @@
    "agence": "CHOLET",
    "total": 118.86,
    "nb": 2
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 1.5,
+   "nb": 1
   },
   {
    "vendeur": "ANAIS",
