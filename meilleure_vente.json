@@ -1,32 +1,38 @@
 {
- "maj": "2026-07-06 13:18",
+ "maj": "2026-07-06 13:23",
  "date": "20260706",
- "nb_factures": 4,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200016136",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "200029391",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 30.52
+    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 108.34
    },
    {
-    "desig": "Folio Honor 600 Smart Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 28.43
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
    },
    {
-    "desig": "HONOR 600 SMART 128GO GRIS SFR",
-    "marge": 60.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
    }
   ],
-  "total": 168.95
+  "total": 254.85
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 254.85,
+   "nb": 4
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
@@ -40,9 +46,9 @@
    "nb": 2
   },
   {
-   "vendeur": "ANAIS",
+   "vendeur": "LUCAS",
    "agence": "CHOLET",
-   "total": 1.5,
+   "total": 48.0,
    "nb": 1
   },
   {
