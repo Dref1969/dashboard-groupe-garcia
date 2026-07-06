@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-06 13:48",
+ "maj": "2026-07-06 13:53",
  "date": "20260706",
- "nb_factures": 6,
+ "nb_factures": 7,
  "meilleure_vente": {
   "fac": "200029391",
   "vendeur": "ROMAIN GP",
@@ -52,9 +52,9 @@
    "nb": 1
   },
   {
-   "vendeur": "ANAIS",
+   "vendeur": "LOUANE",
    "agence": "CHOLET",
-   "total": 1.5,
+   "total": 25.0,
    "nb": 1
   }
  ]
