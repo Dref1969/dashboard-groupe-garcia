@@ -366,7 +366,8 @@ function boutiquesFermeesJour(dateStr){
   const isFerie=FERIES_JOUR.includes(ds);
   const is1erMai=(d.getDate()===1 && d.getMonth()===4);
   if(jour===0 || is1erMai) return ["ALR","TLR","CLR","CHOLET","RLR","VLR"]; // dimanche / 1er mai : tout fermé
-  if(jour===1 || isFerie) return ["ALR","TLR","CLR","RLR","VLR"];           // lundi / férié : seule Cholet ouverte
+  if(jour===1) return ["TLR","CLR","RLR","VLR"];                            // lundi : Cholet + Angers(ALR) ouvertes
+  if(isFerie) return ["ALR","TLR","CLR","RLR","VLR"];                       // férié : seule Cholet ouverte
   return [];
 }
 function neutraliserBoutiquesFermees(){
