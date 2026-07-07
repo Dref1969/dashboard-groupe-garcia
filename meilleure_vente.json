@@ -1,20 +1,54 @@
 {
- "maj": "2026-07-07 13:28",
+ "maj": "2026-07-07 13:33",
  "date": "20260707",
- "nb_factures": 14,
+ "nb_factures": 18,
  "meilleure_vente": {
-  "fac": "200021784",
-  "vendeur": "MEHDY",
-  "agence": "CHATEAUDUN",
+  "fac": "200021049",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 180.0
+    "desig": "ACTE GESTION",
+    "marge": 0.5
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 17.5
+   },
+   {
+    "desig": "WEBTOSHOP",
+    "marge": 10.0
+   },
+   {
+    "desig": "Coque MagSafe iPhone 17 Hybride Transparente Irisée Bigben",
+    "marge": 33.67
+   },
+   {
+    "desig": "Coque Samsung Galaxy S26 Transparente Bigben",
+    "marge": 38.67
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 38.18
+   },
+   {
+    "desig": "SAMSUNG GALAXY S26 5G 256GO NOIR SFR",
+    "marge": 24.99
    }
   ],
-  "total": 180.0
+  "total": 243.51
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 243.51,
+   "nb": 8
+  },
   {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
@@ -37,12 +71,6 @@
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 95.68,
-   "nb": 3
-  },
-  {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 67.94,
    "nb": 3
   }
  ]
