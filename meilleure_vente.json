@@ -1,48 +1,46 @@
 {
- "maj": "2026-07-07 16:13",
+ "maj": "2026-07-07 16:18",
  "date": "20260707",
- "nb_factures": 23,
+ "nb_factures": 25,
  "meilleure_vente": {
-  "fac": "200021049",
+  "fac": "200021053",
   "vendeur": "HASSENE",
   "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "ACTE GESTION",
-    "marge": 0.5
-   },
-   {
     "desig": "PRESTATION - SERVICE",
-    "marge": 17.5
+    "marge": 16.67
    },
    {
-    "desig": "WEBTOSHOP",
-    "marge": 10.0
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 27.36
    },
    {
-    "desig": "Coque MagSafe iPhone 17 Hybride Transparente Irisée Bigben",
-    "marge": 33.67
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
    },
    {
-    "desig": "Coque Samsung Galaxy S26 Transparente Bigben",
-    "marge": 38.67
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
+    "desig": "Coque renforcée Samsung Galaxy A37 5G AIR 3m Transparente + Garantie à vie Force Case",
+    "marge": 31.92
    },
    {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
     "marge": 38.18
    },
    {
-    "desig": "SAMSUNG GALAXY S26 5G 256GO NOIR SFR",
-    "marge": 24.99
+    "desig": "SAMSUNG GALAXY A37 128GO LAVANDE SFR",
+    "marge": 80.0
    }
   ],
-  "total": 243.51
+  "total": 244.13
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 244.13,
+   "nb": 6
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -66,12 +64,6 @@
    "agence": "CHOLET",
    "total": 119.69,
    "nb": 3
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 116.24,
-   "nb": 4
   }
  ]
 }
