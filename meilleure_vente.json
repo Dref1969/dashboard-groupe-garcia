@@ -1,61 +1,7 @@
 {
- "maj": "2026-07-06 19:49",
- "date": "20260706",
- "nb_factures": 13,
- "meilleure_vente": {
-  "fac": "200029391",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
-  "articles": [
-   {
-    "desig": "APPLE IPHONE 17 PRO 256GO BLEU INT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 108.34
-   },
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   },
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
-   }
-  ],
-  "total": 254.85
- },
- "top": [
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 254.85,
-   "nb": 4
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 197.89,
-   "nb": 3
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 168.95,
-   "nb": 4
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 160.52,
-   "nb": 3
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 127.19,
-   "nb": 3
-  }
- ]
+ "maj": "2026-07-07 07:03",
+ "date": "20260707",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
