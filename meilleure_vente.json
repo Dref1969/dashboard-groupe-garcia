@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-07 14:53",
+ "maj": "2026-07-07 14:58",
  "date": "20260707",
- "nb_factures": 19,
+ "nb_factures": 20,
  "meilleure_vente": {
   "fac": "200021049",
   "vendeur": "HASSENE",
@@ -62,16 +62,16 @@
    "nb": 3
   },
   {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 116.24,
+   "nb": 4
+  },
+  {
    "vendeur": "GAETAN",
    "agence": "ANGERS",
    "total": 105.0,
    "nb": 1
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 95.68,
-   "nb": 3
   }
  ]
 }
