@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-07 13:13",
+ "maj": "2026-07-07 13:18",
  "date": "20260707",
- "nb_factures": 12,
+ "nb_factures": 14,
  "meilleure_vente": {
   "fac": "200021784",
   "vendeur": "MEHDY",
@@ -28,6 +28,12 @@
    "nb": 3
   },
   {
+   "vendeur": "GAETAN",
+   "agence": "ANGERS",
+   "total": 105.0,
+   "nb": 1
+  },
+  {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 95.68,
@@ -38,12 +44,6 @@
    "agence": "AMBOISE",
    "total": 67.94,
    "nb": 3
-  },
-  {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 50.0,
-   "nb": 1
   }
  ]
 }
