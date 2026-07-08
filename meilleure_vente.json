@@ -1,69 +1,7 @@
 {
- "maj": "2026-07-07 19:47",
- "date": "20260707",
- "nb_factures": 29,
- "meilleure_vente": {
-  "fac": "200021053",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
-  "articles": [
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
-   },
-   {
-    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
-    "marge": 27.36
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "Coque renforcée Samsung Galaxy A37 5G AIR 3m Transparente + Garantie à vie Force Case",
-    "marge": 31.92
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 38.18
-   },
-   {
-    "desig": "SAMSUNG GALAXY A37 128GO LAVANDE SFR",
-    "marge": 80.0
-   }
-  ],
-  "total": 244.13
- },
- "top": [
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 244.13,
-   "nb": 6
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 243.51,
-   "nb": 8
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 208.54,
-   "nb": 5
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 180.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 119.69,
-   "nb": 3
-  }
- ]
+ "maj": "2026-07-08 07:03",
+ "date": "20260708",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
