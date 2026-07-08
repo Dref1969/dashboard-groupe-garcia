@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-08 08:48",
+ "maj": "2026-07-08 08:53",
  "date": "20260708",
- "nb_factures": 3,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200021730",
   "vendeur": "HAVAL",
@@ -28,6 +28,12 @@
    "agence": "VENDOME",
    "total": 111.51,
    "nb": 3
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 37.0,
+   "nb": 1
   },
   {
    "vendeur": "EMMY",
