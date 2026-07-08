@@ -1,28 +1,34 @@
 {
- "maj": "2026-07-08 10:13",
+ "maj": "2026-07-08 10:18",
  "date": "20260708",
- "nb_factures": 11,
+ "nb_factures": 13,
  "meilleure_vente": {
-  "fac": "200021731",
+  "fac": "200021732",
   "vendeur": "HAVAL",
   "agence": "VENDOME",
   "articles": [
    {
+    "desig": "HONOR 600 SMART 128GO NOIR SFR",
+    "marge": 80.0
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 54.84
+   },
+   {
     "desig": "Extension Garantie 3ème année - +1000€",
     "marge": 100.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 51.98
-   },
-   {
-    "desig": "IPHONE 13 128GO ROSE TRES BON ETAT SFR *** GARANTIE CONSTRUCTEUR 1 AN ***",
-    "marge": 25.0
    }
   ],
-  "total": 176.98
+  "total": 234.84
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 234.84,
+   "nb": 3
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -42,15 +48,9 @@
    "nb": 3
   },
   {
-   "vendeur": "GAETAN",
-   "agence": "ANGERS",
-   "total": 89.59,
-   "nb": 4
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 80.0,
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 100.0,
    "nb": 1
   }
  ]
