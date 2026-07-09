@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-09 13:53",
+ "maj": "2026-07-09 13:58",
  "date": "20260709",
- "nb_factures": 13,
+ "nb_factures": 15,
  "meilleure_vente": {
   "fac": "200016157",
   "vendeur": "LUCAS",
@@ -42,16 +42,16 @@
    "nb": 5
   },
   {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 178.18,
-   "nb": 3
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 185.63,
+   "nb": 5
   },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
-   "total": 169.27,
-   "nb": 5
+   "total": 178.18,
+   "nb": 3
   }
  ]
 }
