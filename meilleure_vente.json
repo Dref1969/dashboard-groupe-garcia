@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-09 10:03",
+ "maj": "2026-07-09 10:13",
  "date": "20260709",
- "nb_factures": 5,
+ "nb_factures": 6,
  "meilleure_vente": {
   "fac": "200021736",
   "vendeur": "HAVAL",
@@ -30,6 +30,12 @@
    "nb": 3
   },
   {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 121.48,
+   "nb": 6
+  },
+  {
    "vendeur": "LUCAS",
    "agence": "CHOLET",
    "total": 102.19,
@@ -45,12 +51,6 @@
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 31.33,
-   "nb": 1
-  },
-  {
-   "vendeur": "GAETAN",
-   "agence": "ANGERS",
-   "total": 23.0,
    "nb": 1
   }
  ]
