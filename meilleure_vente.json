@@ -1,28 +1,34 @@
 {
- "maj": "2026-07-09 11:03",
+ "maj": "2026-07-09 11:13",
  "date": "20260709",
- "nb_factures": 6,
+ "nb_factures": 7,
  "meilleure_vente": {
-  "fac": "200021736",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200016157",
+  "vendeur": "LUCAS",
+  "agence": "CHOLET",
   "articles": [
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 38.18
+    "desig": "ABONNEMENT",
+    "marge": 12.0
    },
    {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
+    "desig": "ABONNEMENT",
+    "marge": 37.0
    },
    {
-    "desig": "HONOR 600 LITE 256GO NOIR SFR",
-    "marge": 60.0
+    "desig": "ABONNEMENT",
+    "marge": 180.0
    }
   ],
-  "total": 178.18
+  "total": 229.0
  },
  "top": [
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 229.0,
+   "nb": 3
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -46,12 +52,6 @@
    "agence": "AMBOISE",
    "total": 49.73,
    "nb": 2
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 31.33,
-   "nb": 1
   }
  ]
 }
