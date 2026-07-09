@@ -1,20 +1,46 @@
 {
- "maj": "2026-07-09 09:33",
+ "maj": "2026-07-09 09:38",
  "date": "20260709",
- "nb_factures": 2,
+ "nb_factures": 5,
  "meilleure_vente": {
-  "fac": "200023242",
-  "vendeur": "EMILIE",
-  "agence": "ROMORANTIN",
+  "fac": "200021736",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 31.33
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 38.18
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "HONOR 600 LITE 256GO NOIR SFR",
+    "marge": 60.0
    }
   ],
-  "total": 31.33
+  "total": 178.18
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 178.18,
+   "nb": 3
+  },
+  {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 102.19,
+   "nb": 3
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 49.73,
+   "nb": 2
+  },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
