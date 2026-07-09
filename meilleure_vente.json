@@ -1,57 +1,7 @@
 {
- "maj": "2026-07-08 19:17",
- "date": "20260708",
- "nb_factures": 33,
- "meilleure_vente": {
-  "fac": "200021732",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
-  "articles": [
-   {
-    "desig": "HONOR 600 SMART 128GO NOIR SFR",
-    "marge": 80.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 54.84
-   },
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   }
-  ],
-  "total": 234.84
- },
- "top": [
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 234.84,
-   "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 176.98,
-   "nb": 3
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 153.0,
-   "nb": 3
-  },
-  {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 138.43,
-   "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 111.51,
-   "nb": 3
-  }
- ]
+ "maj": "2026-07-09 07:04",
+ "date": "20260709",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
