@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-09 12:48",
+ "maj": "2026-07-09 12:54",
  "date": "20260709",
- "nb_factures": 7,
+ "nb_factures": 9,
  "meilleure_vente": {
   "fac": "200016157",
   "vendeur": "LUCAS",
@@ -42,16 +42,16 @@
    "nb": 6
   },
   {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 120.77,
+   "nb": 3
+  },
+  {
    "vendeur": "LUCAS",
    "agence": "CHOLET",
    "total": 102.19,
    "nb": 3
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 49.73,
-   "nb": 2
   }
  ]
 }
