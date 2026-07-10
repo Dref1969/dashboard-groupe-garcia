@@ -1,61 +1,7 @@
 {
- "maj": "2026-07-09 19:37",
- "date": "20260709",
- "nb_factures": 26,
- "meilleure_vente": {
-  "fac": "200016161",
-  "vendeur": "LUCAS",
-  "agence": "CHOLET",
-  "articles": [
-   {
-    "desig": "Coque iPhone 16 Pro Transparente Bigben",
-    "marge": 26.16
-   },
-   {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 38.86
-   },
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   },
-   {
-    "desig": "APPLE IPHONE 17 PRO MAX 256GO ORANGE COS SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 87.83
-   }
-  ],
-  "total": 252.85
- },
- "top": [
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 252.85,
-   "nb": 4
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 229.0,
-   "nb": 3
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 220.0,
-   "nb": 4
-  },
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 198.33,
-   "nb": 5
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 185.63,
-   "nb": 5
-  }
- ]
+ "maj": "2026-07-10 07:03",
+ "date": "20260710",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
