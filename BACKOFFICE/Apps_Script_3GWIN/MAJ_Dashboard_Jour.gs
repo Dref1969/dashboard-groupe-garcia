@@ -143,6 +143,9 @@ function majDashboardJour() {
       var noms = Object.keys(parsed.vendeurs);
       for (var n = 0; n < noms.length; n++) {
         var nom    = noms[n];
+        // Garde-fou : ne jamais compter un nom de BOUTIQUE comme vendeur
+        // (incident 24-26/06/2026 : 'ANGERS' a fuite dans le Top3 et gagne des primes)
+        if (NOM_TO_CODE_JOUR[nom.toUpperCase()]) continue;
         var indics = parsed.vendeurs[nom];
         if (!allVendeurs[nom]) {
           allVendeurs[nom] = { nom:nom, marge:0, mob:0, box:0, assu:0, cyber:0, g3a:0, access:0, margeAssu:0, margeServices:0, abo:0, parBoutique:{} };
