@@ -1,32 +1,42 @@
 {
- "maj": "2026-07-10 09:28",
+ "maj": "2026-07-10 09:33",
  "date": "20260710",
- "nb_factures": 5,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200021739",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200016165",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
   "articles": [
    {
-    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
-    "marge": 20.58
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 22.19
    },
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 24.84
+    "desig": "Folio Wallet 65% GRS Miracle 1 Noir",
+    "marge": 20.1
    },
    {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
    },
    {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 60.0
+    "desig": "SAMSUNG GALAXY S26 5G 256GO VIOLET SFR",
+    "marge": 108.33
+   },
+   {
+    "desig": "DEMENAGEMENT",
+    "marge": 5.0
    }
   ],
-  "total": 205.42
+  "total": 235.62
  },
  "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 235.62,
+   "nb": 5
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -49,12 +59,6 @@
    "vendeur": "EMMY",
    "agence": "CHOLET",
    "total": 110.0,
-   "nb": 2
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 80.0,
    "nb": 2
   }
  ]
