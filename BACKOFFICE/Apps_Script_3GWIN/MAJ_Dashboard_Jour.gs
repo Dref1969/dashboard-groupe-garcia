@@ -3,6 +3,15 @@
 // Groupe Garcia — Alimente l'onglet Donnees_Jour + Historique_Challenges
 // Consulte via : https://dref1969.github.io/dashboard-groupe-garcia/Dashboard_Jour_Garcia.html
 // ============================================================
+// ⚠️ DERIVE REPO/DEPLOYE (constat 11/07/2026) : la version DEPLOYEE dans le projet
+// Apps Script "Dashboard Manager Groupe Garcia" contient EN PLUS de ce fichier :
+//   - primeJourMontant_, envoyerEmailsGagnantsJour, installerTriggerEmailsGagnants20h,
+//     supprimerTriggerEmailsGagnants (emails gagnants 20h — trigger actif)
+//   - une variable jourFerme dans calculerChallenges_ (Romain ne gagne pas les
+//     lundis/feries) : groupe_won = !jourFerme && margeGroupeEff >= 3500
+// NE JAMAIS ecraser aveuglement le code deploye avec ce fichier : appliquer des
+// edits cibles (meme regle que pour les dashboards HTML).
+// ============================================================
 
 var BOUTIQUES_JOUR = [
   { code:'CHOLET', nom:'Cholet',     url:'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c40465507d9f65b951be6a989675e6fb' },
@@ -227,23 +236,25 @@ function majDashboardJour() {
   var sh = ss.getSheetByName(TAB_DONNEES_JOUR);
   if (!sh) sh = ss.insertSheet(TAB_DONNEES_JOUR);
 
-  var headers = ['Type','Code','Nom','Marge','Mob','Box','Cyber','Assu','G3A','Access','MargeAssu','MargeServices','Abo','MargeBox','BoxMig','Date','Heure'];
+  // Colonne Statut DEDIEE pour le flag FERME : gviz type la colonne Date en date
+  // (via la ligne META) et evacue toute chaine non-date du CSV exporte.
+  var headers = ['Type','Code','Nom','Marge','Mob','Box','Cyber','Assu','G3A','Access','MargeAssu','MargeServices','Abo','MargeBox','BoxMig','Date','Heure','Statut'];
   var rows = [headers];
-  rows.push(['META','','','','','','','','','','','','','','',dateStr,heureStr]);
+  rows.push(['META','','','','','','','','','','','','','','',dateStr,heureStr,'']);
 
   // MAGS triees par marge desc
   var magsList = Object.values(magsData).sort(function(a,b){ return b.marge - a.marge; });
   for (var m = 0; m < magsList.length; m++) {
     var mg = magsList[m];
-    // Colonne Date des lignes MAG = flag 'FERME' si boutique detectee fermee
+    // Colonne Statut des lignes MAG = flag 'FERME' si boutique detectee fermee
     // (lu par Dashboard_Jour_Garcia.html pour griser la boutique et l exclure)
-    rows.push(['MAG', mg.code, mg.nom, mg.marge, mg.mob, mg.box, mg.cyber, mg.assu, mg.g3a, mg.access, mg.margeAssu, mg.margeServices, mg.abo, mg.margeBox||0, mg.boxMig||0, (mg.ferme ? 'FERME' : ''), '']);
+    rows.push(['MAG', mg.code, mg.nom, mg.marge, mg.mob, mg.box, mg.cyber, mg.assu, mg.g3a, mg.access, mg.margeAssu, mg.margeServices, mg.abo, mg.margeBox||0, mg.boxMig||0, '', '', (mg.ferme ? 'FERME' : '')]);
   }
 
   // VENDEURS (pas de margeBox/boxMig au niveau vendeur — colonnes vides)
   for (var vi = 0; vi < vendeursArray.length; vi++) {
     var vd = vendeursArray[vi];
-    rows.push(['VENDEUR', vd.nom, vd.bou, vd.marge, vd.mob, vd.box, vd.cyber, vd.assu, vd.g3a, vd.access, vd.margeAssu, vd.margeServices, vd.abo, '', '', '', '']);
+    rows.push(['VENDEUR', vd.nom, vd.bou, vd.marge, vd.mob, vd.box, vd.cyber, vd.assu, vd.g3a, vd.access, vd.margeAssu, vd.margeServices, vd.abo, '', '', '', '', '']);
   }
 
   sh.clearContents();
