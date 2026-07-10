@@ -82,7 +82,12 @@ def scrape_goodays():
             page.fill('#id_email', GOODAYS_USER)
             time.sleep(1)
             page.click('button[type="submit"]')  # "Suivant"
-            page.wait_for_load_state("networkidle", timeout=20000)
+            # networkidle ne se déclenche plus systématiquement depuis ~24/06/2026
+            # (requêtes continues côté Goodays) → best-effort, jamais bloquant
+            try:
+                page.wait_for_load_state("networkidle", timeout=15000)
+            except Exception:
+                log("  networkidle non atteint après Suivant (non bloquant)")
             time.sleep(3)
             dump(page, "02_login_password")
             log(f"  URL après Suivant: {page.url}")
@@ -107,7 +112,13 @@ def scrape_goodays():
 
             time.sleep(1)
             page.click('button[type="submit"]')  # "Se connecter"
-            page.wait_for_load_state("networkidle", timeout=30000)
+            # CAUSE DES ÉCHECS 24/06→10/07/2026 : wait_for_load_state("networkidle")
+            # ne se déclenchait plus (polling continu côté Goodays → le réseau n'est
+            # jamais "idle"). Le vrai critère de login = l'URL quitte /login.
+            try:
+                page.wait_for_url(lambda u: "/login" not in u.lower(), timeout=45000)
+            except Exception:
+                log("  toujours sur /login après 45s")
             time.sleep(5)
             dump(page, "03_after_login")
             log(f"  URL après login: {page.url}")
