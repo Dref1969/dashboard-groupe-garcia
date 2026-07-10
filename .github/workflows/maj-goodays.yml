@@ -1,10 +1,15 @@
 name: MAJ Goodays
 
+# CADENCE PILOTÉE PAR GOOGLE APPS SCRIPT (fiable), pas par le scheduler GitHub.
+# Le cron GitHub partait avec 2-4h de retard (scheduler best-effort, cf. maj-dilax.yml).
+# La fonction declencherGoodays() du projet Apps Script "Dashboard Manager Groupe
+# Garcia" (fichier miroir BACKOFFICE/Apps_Script_3GWIN/Declencheur_DILAX.gs) appelle
+# ce workflow via l'API workflow_dispatch 1x/jour entre 8h et 9h Paris, lun-sam.
+# Le cron ci-dessous n'est qu'un filet de secours best-effort.
 on:
-  # 1x par jour, lun-sam à 6h UTC = 8h Paris (heure d'été)
   schedule:
-    - cron: '0 6 * * 1-6'
-  # Trigger manuel via l'onglet Actions GitHub
+    - cron: '0 6 * * 1-6'   # secours best-effort (la vraie cadence vient de Google)
+  # Trigger manuel via l'onglet Actions GitHub + dispatch Apps Script
   workflow_dispatch:
 
 jobs:

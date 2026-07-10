@@ -126,3 +126,40 @@ function installerTriggerJournal() {
   ScriptApp.newTrigger('declencherJournalJour').timeBased().everyMinutes(5).create();
   Logger.log('OK : déclencheur declencherJournalJour créé (toutes les 5 min).');
 }
+
+
+// ============================================================
+// Goodays (satisfaction + avis Google) : dispatch 1x/jour à ~8h Paris
+// Le cron GitHub de maj-goodays.yml partait avec 2-4h de retard (scheduler
+// GitHub peu fiable, cf. DILAX) → c'est désormais ce déclencheur qui pilote.
+// Réutilise GITHUB_TOKEN + GH_OWNER/GH_REPO/GH_REF ci-dessus.
+// ============================================================
+function declencherGoodays() {
+  var tz = 'Europe/Paris';
+  var now = new Date();
+  var jour = parseInt(Utilities.formatDate(now, tz, 'u'), 10);   // 1=lundi … 7=dimanche
+  if (jour === 7) { Logger.log('Dimanche — pas de déclenchement Goodays.'); return; }
+  var token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  if (!token) { Logger.log('ERREUR : GITHUB_TOKEN absente.'); return; }
+  var url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO +
+            '/actions/workflows/maj-goodays.yml/dispatches';
+  var resp = UrlFetchApp.fetch(url, {
+    method: 'post', contentType: 'application/json',
+    headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json',
+               'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'GroupeGarcia-AppsScript' },
+    payload: JSON.stringify({ ref: GH_REF }), muteHttpExceptions: true
+  });
+  var code = resp.getResponseCode();
+  Logger.log('Dispatch Goodays : HTTP ' + code + (code === 204 ? ' OK' : ' - ' + resp.getContentText()));
+}
+
+// À exécuter UNE FOIS : déclencheur quotidien entre 8h et 9h (Europe/Paris).
+function installerTriggerGoodays() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'declencherGoodays') ScriptApp.deleteTrigger(triggers[i]);
+  }
+  ScriptApp.newTrigger('declencherGoodays').timeBased().everyDays(1).atHour(8)
+    .inTimezone('Europe/Paris').create();
+  Logger.log('OK : déclencheur declencherGoodays créé (tous les jours entre 8h et 9h, Paris).');
+}
