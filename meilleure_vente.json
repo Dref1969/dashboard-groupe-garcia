@@ -1,32 +1,44 @@
 {
- "maj": "2026-07-10 09:08",
+ "maj": "2026-07-10 09:13",
  "date": "20260710",
- "nb_factures": 3,
+ "nb_factures": 5,
  "meilleure_vente": {
-  "fac": "200016164",
-  "vendeur": "EMMY",
-  "agence": "CHOLET",
+  "fac": "200021739",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "Transfert de données de mobile à mobile SFR CLIENT RED",
-    "marge": 16.67
+    "desig": "Coque renforcée Honor X5C Plus FEEL 2m Transparente + Garantie à vie Force Case",
+    "marge": 20.58
    },
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 22.19
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 24.84
    },
    {
-    "desig": "Coque renforcée Honor 600 Smart FEEL Origine France Garantie 2m Transparente + Garantie à vie - Vrac B2B - Origine France Garantie Force Case",
-    "marge": 17.25
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
    },
    {
-    "desig": "HONOR 600 SMART 128GO NOIR SFR",
+    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
     "marge": 60.0
    }
   ],
-  "total": 116.11
+  "total": 205.42
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 205.42,
+   "nb": 4
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 150.64,
+   "nb": 5
+  },
   {
    "vendeur": "EMMY",
    "agence": "CHOLET",
