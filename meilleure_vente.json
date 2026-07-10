@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-10 15:03",
+ "maj": "2026-07-10 15:08",
  "date": "20260710",
- "nb_factures": 38,
+ "nb_factures": 41,
  "meilleure_vente": {
   "fac": "200016169",
   "vendeur": "ANAIS",
@@ -50,16 +50,16 @@
    "nb": 5
   },
   {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 220.85,
+   "nb": 4
+  },
+  {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 217.2,
    "nb": 6
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 205.42,
-   "nb": 4
   }
  ]
 }
