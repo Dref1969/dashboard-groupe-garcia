@@ -69,26 +69,32 @@ var INDICATEURS = {
 };
 
 var TAB_MAGS_DETAIL       = 'Mags_Mois_Detail';
+var TAB_CONFIG            = 'Config';
 
 
 // ---- POINT D ENTREE PRINCIPAL -----------------------------
 
 function maj3GWIN() {
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var start = new Date();
+  var start   = new Date();
+  var erreurs = [];
 
-  // 1. Jours ouvres
-  var joursInfo     = calcJoursOuvres_();
-  var joursTotal    = joursInfo.total;
-  var joursEcoules  = joursInfo.ecoules;
+  // 1. Jours ouvres PAR BOUTIQUE (samedi ouvert partout, lundi = CHOLET+ALR,
+  //    ferie = CHOLET seul, dimanche + 1er mai = tout ferme)
+  var joursInfo   = calcJoursOuvres_();
+  var joursParBou = joursInfo.parBoutique;
+  var joursMax    = joursInfo.max;
 
-  // 2. Jours travailles depuis onglet RAF
-  var joursTravailles = getJoursTravailles_(ss);
+  // 2. Jours travailles par vendeur depuis Objectifs_Indiv (echec bruyant)
+  var joursTravailles = {};
+  try {
+    joursTravailles = getJoursTravailles_();
+  } catch(je) {
+    erreurs.push('JoursTravailles: ' + je.message);
+  }
 
   // 3. Scraping des 6 boutiques
   var allVendeurs = {};
   var magsData    = [];
-  var erreurs     = [];
 
   for (var b = 0; b < BOUTIQUES.length; b++) {
     var boutique = BOUTIQUES[b];
@@ -123,11 +129,12 @@ function maj3GWIN() {
         var nom    = noms[n];
         var indics = parsed.vendeurs[nom];
         if (!allVendeurs[nom]) {
-          allVendeurs[nom] = { nom:nom, marge:0, mob:0, assu:0, cyber:0, g3a:0, access:0, tracker:0, parBoutique:{} };
+          allVendeurs[nom] = { nom:nom, marge:0, mob:0, box:0, assu:0, cyber:0, g3a:0, access:0, tracker:0, parBoutique:{} };
         }
         var v = allVendeurs[nom];
         v.marge   += indics.marge   || 0;
         v.mob     += indics.mob     || 0;
+        v.box     += indics.box     || 0;
         v.assu    += indics.assu    || 0;
         v.cyber   += indics.cyber   || 0;
         v.g3a     += indics.g3a     || 0;
@@ -190,6 +197,7 @@ function maj3GWIN() {
       nom:      v.nom,
       marge:    v.marge,
       mob:      v.mob,
+      box:      v.box,
       g3a:      v.g3a,
       cyber:    v.cyber,
       assu:     v.assu,
@@ -197,11 +205,12 @@ function maj3GWIN() {
     });
   }
 
-  // 5. Formater payload
+  // 5. Formater payload (K/L = jours ouvres de la boutique du vendeur)
   var vendeurs = [];
   for (var j = 0; j < vendeursList.length; j++) {
     var v = vendeursList[j];
-    var jTrav = joursTravailles[v.nom] || joursTotal;
+    var jb    = joursParBou[v.boutique] || joursMax;
+    var jTrav = joursTravailles[(v.nom || '').toUpperCase()] || jb.total;
     vendeurs.push({
       A: v.boutique,
       B: v.nom,
@@ -213,8 +222,8 @@ function maj3GWIN() {
       H: Math.round(v.assu),
       I: Math.round(v.mob),
       J: round2_(v.access),
-      K: joursEcoules,
-      L: joursTotal,
+      K: jb.ecoules,
+      L: jb.total,
       M: jTrav
     });
   }
@@ -225,11 +234,27 @@ function maj3GWIN() {
   var r1 = postApi_(URL_SHEET_PRINCIPAL,   payload);
   var r2 = postApi_(URL_SHEET_GARCIA_VEND, payload);
 
+  // 6bis. Colonnes N:O (MobHorsW2S/Box) de Données_Commissions :
+  // le endpoint POST n'ecrit que A:M, on ecrit N:O directement ici
+  // (alignees par nom de vendeur) et on purge les lignes orphelines.
+  try {
+    ecrireColonnesNO_(vendeursList);
+  } catch(ne) {
+    erreurs.push('ColonnesNO: ' + ne.message);
+  }
+
   // 6ter. Ecriture onglet Mags_Mois_Detail (agregats 3GWIN par boutique)
   try {
     ecrireMagsDetail_(magsData);
   } catch(me) {
     erreurs.push('MagsDetail: ' + me.message);
+  }
+
+  // 6quater. MAJ Config!A2 (Mois en cours) + B2 (Derniere MAJ)
+  try {
+    ecrireConfigMois_();
+  } catch(ce) {
+    erreurs.push('Config: ' + ce.message);
   }
 
   // 7. Resume
@@ -241,9 +266,14 @@ function maj3GWIN() {
     mobGrp   += magsData[k].mob;
   }
 
+  var joursStr = [];
+  for (var jbk in joursParBou) {
+    joursStr.push(jbk + ' ' + joursParBou[jbk].ecoules + '/' + joursParBou[jbk].total);
+  }
+
   var lignes = [
     'MAJ 3GWIN — ' + new Date().toLocaleString('fr-FR'),
-    'Duree : ' + duree + 's | Jour ouvre : ' + joursEcoules + '/' + joursTotal,
+    'Duree : ' + duree + 's | Jours ouvres : ' + joursStr.join(' | '),
     '',
     'Marge groupe : ' + margeGrp.toFixed(2) + ' euros | Mobiles : ' + mobGrp,
     'Vendeurs : ' + vendeurs.length + ' | Boutiques : ' + magsData.length,
@@ -357,7 +387,14 @@ function parseMagsView_(html) {
 }
 
 
-// ---- JOURS OUVRES -----------------------------------------
+// ---- JOURS OUVRES (PAR BOUTIQUE) ---------------------------
+// Regle reelle d'ouverture (et non lundi-vendredi) :
+//   - dimanche : tout ferme
+//   - 1er mai : tout ferme
+//   - jour ferie (hors 1er mai) : seule CHOLET ouvre
+//   - lundi non ferie : CHOLET + ALR ouvrent (ALR depuis le 06/07/2026)
+//   - mardi a samedi non ferie : toutes les boutiques ouvrent
+// Retourne { parBoutique:{CODE:{total,ecoules}}, max:{total,ecoules} }
 
 function calcJoursOuvres_() {
   var now   = new Date();
@@ -384,35 +421,65 @@ function calcJoursOuvres_() {
   feries[fmt(addDays(year,pM,pD,39))] = 1; // Ascension
   feries[fmt(addDays(year,pM,pD,50))] = 1; // Lundi de Pentecote
 
-  function isOuvre(dt){ var w=dt.getDay(); return w!==0 && w!==6 && !feries[fmt(dt)]; }
+  var codes = [];
+  for (var bi=0; bi<BOUTIQUES.length; bi++) codes.push(BOUTIQUES[bi].code);
 
-  var total=0, ecoules=0;
-  var d2=new Date(year,month,1);
-  while (d2.getMonth()===month) {
-    if (isOuvre(d2)){ total++; if(d2<=now) ecoules++; }
+  function boutiquesOuvertes(dt) {
+    var w = dt.getDay();
+    var fdt = fmt(dt);
+    if (w === 0) return [];                    // dimanche : tout ferme
+    if (fdt === year+'-05-01') return [];      // 1er mai : tout ferme
+    if (feries[fdt]) return ['CHOLET'];        // ferie : Cholet seule
+    if (w === 1) return ['CHOLET','ALR'];      // lundi : Cholet + Angers
+    return codes;                              // mardi a samedi : toutes
+  }
+
+  var parBoutique = {};
+  for (var ci=0; ci<codes.length; ci++) parBoutique[codes[ci]] = { total:0, ecoules:0 };
+
+  var d2 = new Date(year, month, 1);
+  while (d2.getMonth() === month) {
+    var ouvertes = boutiquesOuvertes(d2);
+    for (var oi=0; oi<ouvertes.length; oi++) {
+      var pb = parBoutique[ouvertes[oi]];
+      if (pb) { pb.total++; if (d2 <= now) pb.ecoules++; }
+    }
     d2.setDate(d2.getDate()+1);
   }
-  return { total:total, ecoules:ecoules };
+
+  // Reference "groupe" = la boutique la plus ouverte (CHOLET en pratique)
+  var max = { total:0, ecoules:0 };
+  for (var ci2=0; ci2<codes.length; ci2++) {
+    if (parBoutique[codes[ci2]].total > max.total) max = parBoutique[codes[ci2]];
+  }
+  return { parBoutique: parBoutique, max: max };
 }
 
 function pad_(n){ return n<10?'0'+n:String(n); }
 
 
-// ---- RAF : JOURS TRAVAILLES --------------------------------
+// ---- JOURS TRAVAILLES (Objectifs_Indiv) --------------------
+// Ancienne version : lisait un onglet 'RAF' absent et retombait EN SILENCE
+// sur le total du mois -> colonne M (JoursTravailles) uniformement fausse.
+// Les jours reels par vendeur sont maintenus dans Objectifs_Indiv
+// (colonnes : Vendeur | ObjMobiles | ObjG3A | ObjCyber | ObjAssu | ObjAccess | JoursTravailles).
+// L'echec est desormais BRUYANT : erreur remontee dans le resume de la MAJ.
 
-function getJoursTravailles_(ss) {
-  try {
-    var sh = ss.getSheetByName('RAF');
-    if (!sh) return {};
-    var data = sh.getRange(2,1,Math.max(sh.getLastRow()-1,1),13).getValues();
-    var map  = {};
-    for (var i=0; i<data.length; i++) {
-      var nom   = String(data[i][1]||'').trim(); // Colonne B
-      var jours = Number(data[i][12]);           // Colonne M
-      if (nom && jours) map[nom] = jours;
-    }
-    return map;
-  } catch(_){ return {}; }
+function getJoursTravailles_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_PRINCIPAL);
+  var sh = ss.getSheetByName('Objectifs_Indiv');
+  if (!sh) throw new Error("Onglet 'Objectifs_Indiv' introuvable dans le Sheet Principal");
+  var lastRow = sh.getLastRow();
+  if (lastRow < 2) throw new Error("Onglet 'Objectifs_Indiv' vide");
+  var data = sh.getRange(2, 1, lastRow-1, 7).getValues();
+  var map  = {};
+  for (var i=0; i<data.length; i++) {
+    var nom   = String(data[i][0]||'').trim().toUpperCase(); // Colonne A : Vendeur (nomSheet 3GWIN)
+    var jours = Number(data[i][6]);                          // Colonne G : JoursTravailles
+    if (nom && jours > 0) map[nom] = jours;
+  }
+  if (!Object.keys(map).length) throw new Error("Aucun JoursTravailles lisible dans 'Objectifs_Indiv'");
+  return map;
 }
 
 
@@ -452,6 +519,58 @@ function fetchPage_(url) {
 // ---- UTILITAIRES ------------------------------------------
 
 function round2_(n) { return Math.round(n*100)/100; }
+
+
+// ---- CONFIG : "Mois en cours" + "Derniere MAJ" ----
+// Garcia Vendeurs dashboard lit Config!A2 pour afficher le mois courant.
+// Auparavant la valeur etait figee a "avril 2026" tant que personne ne la
+// modifiait manuellement. Ce fix la regenere a chaque MAJ 3GWIN.
+
+function ecrireConfigMois_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_PRINCIPAL);
+  var sh = ss.getSheetByName(TAB_CONFIG);
+  if (!sh) sh = ss.insertSheet(TAB_CONFIG);
+  // Si l onglet est vide on initialise les en-tetes
+  if (sh.getLastRow() < 1) {
+    sh.getRange('A1:B1').setValues([['Mois en cours','Derniere MAJ']]).setFontWeight('bold');
+  }
+  var M = ['janvier','fevrier','mars','avril','mai','juin','juillet','aout','septembre','octobre','novembre','decembre'];
+  var d = new Date();
+  var moisLabel = M[d.getMonth()] + ' ' + d.getFullYear();
+  sh.getRange('A2').setValue(moisLabel);
+  sh.getRange('B2').setValue(Utilities.formatDate(d, Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm:ss'));
+}
+
+
+// ---- DONNEES_COMMISSIONS N:O (MobHorsW2S / Box par vendeur) ----
+// Le endpoint POST (API1) n'ecrit que les colonnes A:M : N:O restaient
+// figees (valeurs d'anciens mois + lignes orphelines). On les reecrit ici
+// a chaque MAJ, alignees par nom de vendeur (colonne B), et on vide les
+// lignes sans vendeur correspondant.
+
+var TAB_DONNEES_COMM = 'Données_Commissions';
+
+function ecrireColonnesNO_(vendeursList) {
+  var ss = SpreadsheetApp.openById(SHEET_ID_PRINCIPAL);
+  var sh = ss.getSheetByName(TAB_DONNEES_COMM);
+  if (!sh) throw new Error('Onglet ' + TAB_DONNEES_COMM + ' introuvable');
+
+  var map = {};
+  for (var i=0; i<vendeursList.length; i++) {
+    var v = vendeursList[i];
+    map[(v.nom||'').trim().toUpperCase()] = [Math.round(v.mob||0), Math.round(v.box||0)];
+  }
+
+  var lastRow = sh.getLastRow();
+  if (lastRow < 2) return;
+  var noms = sh.getRange(2, 2, lastRow-1, 1).getValues(); // colonne B (Vendeur)
+  var out  = [];
+  for (var r=0; r<noms.length; r++) {
+    var nom = String(noms[r][0]||'').trim().toUpperCase();
+    out.push(map[nom] || ['','']);
+  }
+  sh.getRange(2, 14, out.length, 2).setValues(out); // colonnes N:O
+}
 
 
 // ---- MAGS MOIS DETAIL (agregats 3GWIN par boutique, pour dashboard) ----
