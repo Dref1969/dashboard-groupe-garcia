@@ -970,3 +970,20 @@ function majDashboardJour_force() {
   majDashboardJour.__force = true;
   try { majDashboardJour(); } finally { majDashboardJour.__force = false; }
 }
+
+
+// DIAGNOSTIC : etat des 6 pages 3GWIN jour (date affichee vs aujourd hui, nb vendeurs).
+// A lancer depuis l editeur pour verifier la detection de fermeture (flag FERME).
+function debugPagesJour() {
+  var todayShort = Utilities.formatDate(new Date(), 'Europe/Paris', 'dd/MM/yy');
+  var out = [];
+  for (var b = 0; b < BOUTIQUES_JOUR.length; b++) {
+    try {
+      var html = fetchPageJour_(BOUTIQUES_JOUR[b].url);
+      var parsed = parsePageJour_(html);
+      out.push(BOUTIQUES_JOUR[b].code + ': parsed=' + (!!parsed) + ' pageDate=' + (parsed && parsed.pageDate) + ' today=' + todayShort + ' nbVend=' + (parsed ? Object.keys(parsed.vendeurs).length : -1));
+    } catch(e) { out.push(BOUTIQUES_JOUR[b].code + ': ERR ' + e.message); }
+  }
+  Logger.log(out.join(' | '));
+  return out.join(' | ');
+}
