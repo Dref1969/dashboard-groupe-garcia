@@ -372,8 +372,11 @@ function boutiquesFermeesJour(dateStr){
 }
 function neutraliserBoutiquesFermees(){
   const fermees=boutiquesFermeesJour(DATA_DATE);
+  // + fermetures DETECTEES par le scraper (flag FERME dans Donnees_Jour : page 3GWIN
+  // figee sur un jour anterieur = fermeture exceptionnelle hors calendrier, ex CLR 10-11/07)
+  MAGS.forEach(m=>{ if(m.ferme && !fermees.includes(m.code)) fermees.push(m.code); });
   if(!fermees.length) return;
-  MAGS.forEach(m=>{ if(fermees.includes(m.code)){ m.marge=0;m.mob=0;m.box=0;m.margeBox=0;m.boxMig=0;m.cyber=0;m.assu=0;m.g3a=0;m.access=0;m.abo=0; } });
+  MAGS.forEach(m=>{ if(fermees.includes(m.code)){ m.ferme=true; m.marge=0;m.mob=0;m.box=0;m.margeBox=0;m.boxMig=0;m.cyber=0;m.assu=0;m.g3a=0;m.access=0;m.abo=0; } });
   VENDEURS=VENDEURS.filter(v=>!fermees.includes(v.bou));
 }
 
@@ -401,7 +404,10 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:parseFloat(r.Access)||0,
-    abo:parseInt(r.Abo)||0
+    abo:parseInt(r.Abo)||0,
+    // Flag ecrit par MAJ_Dashboard_Jour.gs (colonne Date des lignes MAG) quand la
+    // page 3GWIN de la boutique est figee sur un jour anterieur = fermee ce jour
+    ferme:String(r.Date||"").trim().toUpperCase()==="FERME"
   }));
 
   if(MAGS.length===0) initEmptyMags();
@@ -632,7 +638,7 @@ function renderSynthese(el){
     const pm=vj>0?(b.marge/vj):0;
     return `<tr>
     <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
-    <td><span class="dot" style="background:${b.color}"></span>${b.nom}</td>
+    <td><span class="dot" style="background:${b.color}"></span>${b.nom}${b.ferme?' <span style="font-size:10px;font-weight:700;color:#94A3B8;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:1px 6px;vertical-align:middle">FERMÉE</span>':''}</td>
     <td><strong>${fmt(b.marge)} €</strong></td>
     <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
     <td>${vj>0?fmt(vj):'—'}</td><td>${pmBadge(pm,vj)}</td>
@@ -842,6 +848,9 @@ function renderChallenges(el){
   //    copie locale n'excluait que RLR+CLR le lundi, d'où des vendeurs de
   //    boutiques fermées (ex. Mehdy/VLR) classés avec les chiffres de la veille.
   const BOU_EXCLUES_JOUR=boutiquesFermeesJour(DATA_DATE);
+  // + boutiques detectees fermees par le scraper (flag FERME) — deja neutralisees
+  // en amont, mais on les exclut aussi explicitement des calculs de challenges
+  MAGS.forEach(m=>{ if(m.ferme && !BOU_EXCLUES_JOUR.includes(m.code)) BOU_EXCLUES_JOUR.push(m.code); });
   const vSort=[...VENDEURS]
     .filter(v=>!EXCLUS_VENDEUR.includes(v.nom))
     .filter(v=>!BOU_EXCLUES_JOUR.includes(v.bou))

@@ -88,6 +88,8 @@ function majDashboardJour() {
   var allVendeurs = {};
   var magsData    = {};
   var erreurs     = [];
+  // Date du jour au format des en-tetes de pages 3GWIN (dd/MM/yy)
+  var todayShort  = Utilities.formatDate(start, 'Europe/Paris', 'dd/MM/yy');
 
   for (var b = 0; b < BOUTIQUES_JOUR.length; b++) {
     var boutique = BOUTIQUES_JOUR[b];
@@ -97,6 +99,18 @@ function majDashboardJour() {
       if (!parsed) {
         // Page vide ou "Erreur item n existe plus" — boutique a 0
         magsData[boutique.code] = emptyMag_(boutique);
+        continue;
+      }
+
+      // FERMETURE DETECTEE (data-driven) : la page affiche une journee anterieure
+      // a aujourd hui -> boutique fermee (caisse jamais ouverte), chiffres figes
+      // sur le dernier jour ouvert (ex: CLR fermee les 10-11/07/2026, page restee
+      // sur jeudi 09/07). On ignore TOUT (mag + vendeurs) pour ne pas polluer
+      // classements, marge groupe et challenges avec les chiffres de la veille.
+      if (parsed.pageDate && parsed.pageDate !== todayShort) {
+        var magFerme = emptyMag_(boutique);
+        magFerme.ferme = true;
+        magsData[boutique.code] = magFerme;
         continue;
       }
 
@@ -163,6 +177,11 @@ function majDashboardJour() {
         var k = mjKeys[ki];
         if (typeof mj[k] === 'number' && !isNaN(mj[k])) magsData[mc][k] = mj[k];
       }
+      // Si la vue canonique "Mags jour" (roll-over a minuit cote 3GWIN) donne une
+      // marge reelle a une boutique detectee fermee, c est qu elle est en fait
+      // ouverte (Mags jour fait foi). Ses vendeurs restent absents ce scrape-la
+      // (page figee = chiffres vendeurs perimes), auto-repare des que la page roule.
+      if (magsData[mc].ferme && magsData[mc].marge > 0) magsData[mc].ferme = false;
     }
   } catch(mje) {
     erreurs.push('MagsJour: ' + mje.message);
@@ -216,7 +235,9 @@ function majDashboardJour() {
   var magsList = Object.values(magsData).sort(function(a,b){ return b.marge - a.marge; });
   for (var m = 0; m < magsList.length; m++) {
     var mg = magsList[m];
-    rows.push(['MAG', mg.code, mg.nom, mg.marge, mg.mob, mg.box, mg.cyber, mg.assu, mg.g3a, mg.access, mg.margeAssu, mg.margeServices, mg.abo, mg.margeBox||0, mg.boxMig||0, '', '']);
+    // Colonne Date des lignes MAG = flag 'FERME' si boutique detectee fermee
+    // (lu par Dashboard_Jour_Garcia.html pour griser la boutique et l exclure)
+    rows.push(['MAG', mg.code, mg.nom, mg.marge, mg.mob, mg.box, mg.cyber, mg.assu, mg.g3a, mg.access, mg.margeAssu, mg.margeServices, mg.abo, mg.margeBox||0, mg.boxMig||0, (mg.ferme ? 'FERME' : ''), '']);
   }
 
   // VENDEURS (pas de margeBox/boxMig au niveau vendeur — colonnes vides)
@@ -289,6 +310,13 @@ function parsePageJour_(html) {
   }
   if (hStart < 0) return null;
 
+  // Date de la journee affichee par la page (en-tete "VENDEUR dd/MM/yy dd/MM/yy").
+  // Une page de boutique FERMEE (caisse jamais rouverte) reste figee sur le dernier
+  // jour ouvert : comparer cette date a aujourd hui detecte la fermeture de facon
+  // fiable, quelle que soit la raison (lundi, ferie, travaux, fermeture exceptionnelle).
+  var mDate = cells[hStart].match(/^VENDEUR\s+(\d{2}\/\d{2}\/\d{2})/);
+  var pageDate = mDate ? mDate[1] : null;
+
   var ncols = 0;
   for (var j = hStart + 1; j < Math.min(hStart + 25, cells.length); j++) {
     if (cells[j].indexOf('RESULTAT') === 0) { ncols = j - hStart + 1; break; }
@@ -312,7 +340,7 @@ function parsePageJour_(html) {
     rows[cells[r]] = cells.slice(r + 1, r + ncols);
   }
 
-  var result = { vendeurs:{}, resultat:{} };
+  var result = { vendeurs:{}, resultat:{}, pageDate: pageDate };
   var labels = Object.keys(INDIC_JOUR);
 
   for (var li = 0; li < labels.length; li++) {
@@ -376,6 +404,13 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   if (nowChal.getDay() === 1) BOU_EXCLUES = ['RLR','CLR'];
   if (FERIES_FR.indexOf(dateChal) >= 0) BOU_EXCLUES = ['ALR','TLR','CLR','RLR','VLR']; // Seul Cholet ouvert
 
+  // Exclusion DATA-DRIVEN : boutiques detectees fermees au scrape (page 3GWIN figee
+  // sur un jour anterieur). Couvre les fermetures exceptionnelles que le calendrier
+  // lundi/feries ne connait pas (ex: CLR fermee les 10-11/07/2026).
+  for (var fb = 0; fb < mags.length; fb++) {
+    if (mags[fb].ferme && BOU_EXCLUES.indexOf(mags[fb].code) < 0) BOU_EXCLUES.push(mags[fb].code);
+  }
+
   var magsFiltres = mags.filter(function(m){ return BOU_EXCLUES.indexOf(m.code) < 0; });
   var vendeursFiltres = vendeurs.filter(function(v){ return BOU_EXCLUES.indexOf(v.bou) < 0; });
 
@@ -411,7 +446,10 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   var margeGroupe = magsFiltres.reduce(function(s,m){ return s + m.marge; }, 0);
   var boostGroupe = magsFiltres.reduce(function(s,m){ return s + boostBou(m.code); }, 0);
   var margeGroupeEff = margeGroupe - boostGroupe;
-  var groupe_won = margeGroupeEff >= 4000;
+  // Seuil officiel abaisse de 4000 a 3500 le 21/05/2026 (deja applique cote
+  // dashboard HTML, jamais reporte ici -> sous-comptait les victoires de Romain
+  // dans l historique : 05/06 et 03/07/2026 gagnes mais enregistres NON).
+  var groupe_won = margeGroupeEff >= 3500;
 
   return {
     top3: top3,
@@ -571,6 +609,34 @@ function corrigerLigne21Avril() {
   var msg = 'Ligne 21/04 corrigee : Top3=NATHAN,ANAIS,EMILIE | Gagnants=NATHAN,ANAIS | Groupe=2992,05 €';
   Logger.log(msg);
   try { SpreadsheetApp.getUi().alert('Correction 21/04', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
+}
+
+
+// ONE-SHOT (11/07/2026) : corrections Historique_Challenges — challenge CDV Romain
+//  Le seuil officiel est 3500 depuis le 21/05/2026 mais ce script etait reste a 4000 :
+//  1) 05/06/2026 : groupe 3500,11 >= 3500 -> Groupe_Won passe a OUI (gagne, donnees propres)
+//  2) 03/07/2026 : groupe 3692,04 >= 3500 -> Groupe_Won passe a OUI (gagne, donnees propres)
+//  3) 10/07/2026 : CLR fermee, page figee sur jeudi 09/07 -> retirer ses 203,33 EUR
+//     de la marge groupe : 3591,76 -> 3388,43 (< 3500, Groupe_Won reste NON)
+function corrigerChallenges_20260711() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
+  var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
+  if (!sh) { Logger.log('Onglet introuvable'); return; }
+
+  var lastRow = sh.getLastRow();
+  var dates   = sh.getRange(2, 1, lastRow - 1, 1).getValues();
+  var done    = [];
+  for (var i = 0; i < dates.length; i++) {
+    var ds = normDate_(dates[i][0]);
+    var r  = i + 2;
+    if (ds === '05/06/2026') { sh.getRange(r, 9).setValue('OUI'); done.push('05/06 Groupe_Won=OUI'); }
+    if (ds === '03/07/2026') { sh.getRange(r, 9).setValue('OUI'); done.push('03/07 Groupe_Won=OUI'); }
+    if (ds === '10/07/2026') { sh.getRange(r, 8).setValue('3388,43'); sh.getRange(r, 9).setValue('NON'); done.push('10/07 Groupe_Marge=3388,43 (CLR fermee retiree)'); }
+  }
+  var msg = 'Corrections challenges : ' + (done.length ? done.join(' | ') : 'AUCUNE ligne trouvee');
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('Corrections 11/07', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
+  return msg;
 }
 
 
