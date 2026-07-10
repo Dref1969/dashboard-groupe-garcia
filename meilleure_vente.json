@@ -1,24 +1,38 @@
 {
- "maj": "2026-07-10 08:38",
+ "maj": "2026-07-10 08:43",
  "date": "20260710",
- "nb_factures": 2,
+ "nb_factures": 3,
  "meilleure_vente": {
-  "fac": "200016163",
+  "fac": "200016164",
   "vendeur": "EMMY",
   "agence": "CHOLET",
   "articles": [
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "desig": "Transfert de données de mobile à mobile SFR CLIENT RED",
+    "marge": 16.67
    },
    {
-    "desig": "DORO LEVA L30 BLACK SFR",
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 22.19
+   },
+   {
+    "desig": "Coque renforcée Honor 600 Smart FEEL Origine France Garantie 2m Transparente + Garantie à vie - Vrac B2B - Origine France Garantie Force Case",
+    "marge": 17.25
+   },
+   {
+    "desig": "HONOR 600 SMART 128GO NOIR SFR",
     "marge": 60.0
    }
   ],
-  "total": 110.0
+  "total": 116.11
  },
  "top": [
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 116.11,
+   "nb": 4
+  },
   {
    "vendeur": "EMMY",
    "agence": "CHOLET",
