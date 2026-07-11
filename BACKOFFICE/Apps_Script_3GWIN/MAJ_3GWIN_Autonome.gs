@@ -673,6 +673,13 @@ function majFacturesMois_() {
     });
   }
 
+  // Garde anti-effacement : si le scrape renvoie 0 ligne (vue 3GWIN vide,
+  // token expire, panne reseau), on ne reecrit PAS l'onglet : on conserve
+  // les donnees precedentes et on remonte une erreur dans le resume.
+  if (!lines.length) {
+    throw new Error('scrape factures vide (0 ligne) - onglet Factures_Mois conserve');
+  }
+
   // Grouper par facture
   var factures = {};
   for (var i = 0; i < lines.length; i++) {
