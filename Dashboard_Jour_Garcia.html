@@ -431,6 +431,18 @@ async function fetchJourData(){
   }));
   VENDEURS.sort((a,b)=>b.marge-a.marge);
 
+  // FALLBACK anti-zéros (11/07/2026) : la vue "Mags jour" 3GWIN reste à ZÉRO en cours
+  // de journée (remplie seulement après clôture) et peut écraser les marges boutiques
+  // côté scraper. Si une boutique NON fermée est à 0 alors que ses vendeurs ont des
+  // ventes réelles, on reconstruit ses indicateurs en sommant ses vendeurs.
+  MAGS.forEach(m=>{
+    if(m.ferme||m.marge>0) return;
+    const vs=VENDEURS.filter(v=>v.bou===m.code);
+    if(!vs.length) return;
+    const s=k=>vs.reduce((t,v)=>t+(v[k]||0),0);
+    if(s('marge')>0){ m.marge=s('marge'); m.mob=s('mob'); m.box=s('box'); m.cyber=s('cyber'); m.assu=s('assu'); m.g3a=s('g3a'); m.access=s('access'); m.abo=s('abo'); }
+  });
+
   // Neutralisation des boutiques fermées (lundi/férié/dimanche) — basée sur la date des données
   neutraliserBoutiquesFermees();
   MAGS.sort((a,b)=>b.marge-a.marge);
