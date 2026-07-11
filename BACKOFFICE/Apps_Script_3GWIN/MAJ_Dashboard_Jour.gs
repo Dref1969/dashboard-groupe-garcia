@@ -8,7 +8,7 @@
 //   - primeJourMontant_, envoyerEmailsGagnantsJour, installerTriggerEmailsGagnants20h,
 //     supprimerTriggerEmailsGagnants (emails gagnants 20h — trigger actif)
 //   - une variable jourFerme dans calculerChallenges_ (Romain ne gagne pas les
-//     lundis/feries) : groupe_won = !jourFerme && margeGroupeEff >= 3500
+//     lundis/feries) : groupe_won = !jourFerme && margeGroupeEff >= 3200
 // NE JAMAIS ecraser aveuglement le code deploye avec ce fichier : appliquer des
 // edits cibles (meme regle que pour les dashboards HTML).
 // ============================================================
@@ -460,10 +460,9 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   var margeGroupe = magsFiltres.reduce(function(s,m){ return s + m.marge; }, 0);
   var boostGroupe = magsFiltres.reduce(function(s,m){ return s + boostBou(m.code); }, 0);
   var margeGroupeEff = margeGroupe - boostGroupe;
-  // Seuil officiel abaisse de 4000 a 3500 le 21/05/2026 (deja applique cote
-  // dashboard HTML, jamais reporte ici -> sous-comptait les victoires de Romain
-  // dans l historique : 05/06 et 03/07/2026 gagnes mais enregistres NON).
-  var groupe_won = margeGroupeEff >= 3500;
+  // Seuil abaisse a 3200 le 11/07/2026 (decision Frederic, NON retroactif).
+  // Historique des seuils : 4000 jusqu au 20/05, 3500 du 21/05 au 10/07, 3200 depuis le 11/07.
+  var groupe_won = margeGroupeEff >= 3200;
 
   return {
     top3: top3,
@@ -1021,5 +1020,27 @@ function corrigerAngers_juin2026() {
   var msg = 'Purge ANGERS : ' + (done.length ? done.join(' | ') : 'aucune ligne');
   Logger.log(msg);
   try { SpreadsheetApp.getUi().alert('Purge ANGERS juin', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
+  return msg;
+}
+
+
+// ONE-SHOT (11/07/2026, execute) : decision Frederic — NON-retroactivite du seuil.
+// Les 05/06 (3500,11) et 03/07 (3692,04), un temps passes a OUI apres l alignement
+// du seuil 3500, ont ete remis a NON. Aucune prime retroactive pour Romain.
+function annulerRomain_20260711() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
+  var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
+  if (!sh) { Logger.log('Onglet introuvable'); return; }
+  var lastRow = sh.getLastRow();
+  var dates = sh.getRange(2, 1, lastRow - 1, 1).getValues();
+  var done = [];
+  for (var i = 0; i < dates.length; i++) {
+    var ds = normDate_(dates[i][0]);
+    var r = i + 2;
+    if (ds === '05/06/2026' || ds === '03/07/2026') { sh.getRange(r, 9).setValue('NON'); done.push(ds + ' Groupe_Won=NON'); }
+  }
+  var msg = 'Annulation Romain : ' + (done.length ? done.join(' | ') : 'aucune ligne');
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('Annulation Romain', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
   return msg;
 }

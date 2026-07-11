@@ -867,8 +867,8 @@ function renderChallenges(el){
   const ch2aPct=Math.min(100,margeTLR/700*100);
   const ch2bWon=margeCholet>=1000;
   const ch2bPct=Math.min(100,margeCholet/1000*100);
-  const ch3Won=margeGroupe>=3500;
-  const ch3Pct=Math.min(100,margeGroupe/3500*100);
+  const ch3Won=margeGroupe>=3200; // seuil abaisse a 3200 le 11/07/2026 (non retroactif)
+  const ch3Pct=Math.min(100,margeGroupe/3200*100);
 
   // ── Cumuls depuis CHALLENGE_HIST (filtrés sur le mois en cours, reset auto le 1er) ──
   const _now=new Date();
@@ -921,7 +921,7 @@ function renderChallenges(el){
   <div class="g4" style="margin-bottom:16px">
     <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le ${premierJourLabel}</div></div>
     <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
-    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 500 €</div></div>
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 200 €</div></div>
     <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${BOOST_ACTIF?'color:var(--orange)':''}">${PRIME_AUJ} €</div><div class="sub">${BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 ACTIF</strong>':'par challenge gagné'}</div></div>
   </div>
 
@@ -1081,7 +1081,7 @@ function renderChallenges(el){
       <div style="display:flex;align-items:center;gap:12px">
         <div class="ch-icon" style="background:linear-gradient(135deg,var(--green),var(--cyan))">R</div>
         <div>
-          <div class="ch-title">Romain CDV — 3 500 € groupe</div>
+          <div class="ch-title">Romain CDV — 3 200 € groupe</div>
           <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></div>
         </div>
       </div>
@@ -1090,7 +1090,7 @@ function renderChallenges(el){
     <div class="ch-target">
       <div class="cur" style="color:${ch3Won?'var(--green)':'var(--txt)'}">${fmt(margeGroupe)} €</div>
       <div class="sep">/</div>
-      <div class="obj">3 500 €</div>
+      <div class="obj">3 200 €</div>
     </div>
     <div class="ch-bar-wrap">
       <div class="ch-bar" style="width:${ch3Pct}%;background:${ch3Won?'var(--green)':ch3Pct>=70?'var(--orange)':'linear-gradient(90deg,var(--green),var(--cyan))'}"></div>
