@@ -26,12 +26,12 @@ var BOUTIQUES = [
   { code:'ALR',    nom:'ANGERS',     url:'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404b6a74ec2d2bcc23e5db778' },
 ];
 
+// LOUANE : RPV de CHOLET pour son payplan (gere cote garcia-vendeurs via
+// RPV_STORES), mais ses ventes perso en renfort restent rattachees a ANGERS
+// ici : elles ne doivent PAS gonfler les chiffres de Cholet. Elle est
+// consideree vendeuse uniquement pour le challenge du jour (pipeline Jour).
+// Decision Frederic 11/07/2026.
 var RPV_VENDEURS = ['ROMAIN GP', 'LOUANE'];
-
-// Rattachement force dans les dashboards : LOUANE est RPV de CHOLET
-// (payplan marge magasin Cholet). Ses ventes perso restent codees ANGERS
-// dans 3GWIN (renforts, hors payplan) - decision Frederic 11/07/2026.
-var BOUTIQUE_OVERRIDE = { 'LOUANE': 'CHOLET' };
 
 var URL_SHEET_PRINCIPAL   = 'https://script.google.com/macros/s/AKfycbz2fJtcs1DOb7XEMk_jCdTBFus6bDkw73LzEVhrRLcCCWwhU77wZTJVuZvPheX5HO8ESA/exec';
 var URL_SHEET_GARCIA_VEND = 'https://script.google.com/macros/s/AKfycbzjzvU76vwY5nbaqRGRnBBWNKq3lu82lQItNOPJ3ENqowhr22bSnfLW8w3MTsA2AD0o/exec';
@@ -197,7 +197,6 @@ function maj3GWIN() {
         mainCode = codes[c];
       }
     }
-    if (BOUTIQUE_OVERRIDE[v.nom]) mainCode = BOUTIQUE_OVERRIDE[v.nom];
     vendeursList.push({
       boutique: mainCode,
       nom:      v.nom,
