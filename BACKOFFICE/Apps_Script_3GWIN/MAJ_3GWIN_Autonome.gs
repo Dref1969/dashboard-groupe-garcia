@@ -37,7 +37,7 @@ var URL_SHEET_PRINCIPAL   = 'https://script.google.com/macros/s/AKfycbz2fJtcs1DO
 var URL_SHEET_GARCIA_VEND = 'https://script.google.com/macros/s/AKfycbzjzvU76vwY5nbaqRGRnBBWNKq3lu82lQItNOPJ3ENqowhr22bSnfLW8w3MTsA2AD0o/exec';
 
 // URL 3GWIN des factures detaillees du MOIS en cours (vraie marge + modele par ligne)
-var URL_FACTURES_MOIS     = 'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870ff7ce06cdc1b';
+var URL_FACTURES_MOIS     = 'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870ff7ce06c6748ab';
 var URL_DETAIL_VENTES     = 'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CTX_7772-3-HBdpLrnPnK-908931BF/index/SYNC_100412531';
 
 // URL 3GWIN "Mags mois" : agregats canoniques 6 boutiques + RESULTAT AG (source de verite des marges boutique)
