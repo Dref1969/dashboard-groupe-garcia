@@ -185,15 +185,19 @@ function majDashboardJour() {
     for (var mc in magsData) {
       var mj = mjData[mc];
       if (!mj) continue;
+      // ⚠️ La vue Mags jour reste a ZERO en cours de journee (remplie seulement
+      // apres cloture cote 3GWIN) : ne JAMAIS ecraser les valeurs reelles des
+      // pages boutiques par des zeros (bug du 11/07 : dashboard a 0 toute la
+      // journee, masque avant par le zombie majJour qui reecrivait les vraies
+      // valeurs chaque heure). Override applique SEULEMENT si marge reelle.
+      // Les fermetures sont deja gerees par la detection pageDate (flag FERME).
+      if (!(typeof mj.marge === 'number' && mj.marge > 0)) continue;
       for (var ki = 0; ki < mjKeys.length; ki++) {
         var k = mjKeys[ki];
         if (typeof mj[k] === 'number' && !isNaN(mj[k])) magsData[mc][k] = mj[k];
       }
-      // Si la vue canonique "Mags jour" (roll-over a minuit cote 3GWIN) donne une
-      // marge reelle a une boutique detectee fermee, c est qu elle est en fait
-      // ouverte (Mags jour fait foi). Ses vendeurs restent absents ce scrape-la
-      // (page figee = chiffres vendeurs perimes), auto-repare des que la page roule.
-      if (magsData[mc].ferme && magsData[mc].marge > 0) magsData[mc].ferme = false;
+      // Mags jour a une marge reelle pour une boutique detectee fermee -> ouverte.
+      if (magsData[mc].ferme) magsData[mc].ferme = false;
     }
   } catch(mje) {
     erreurs.push('MagsJour: ' + mje.message);
