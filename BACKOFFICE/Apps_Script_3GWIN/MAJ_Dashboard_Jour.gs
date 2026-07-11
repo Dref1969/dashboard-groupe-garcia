@@ -990,3 +990,36 @@ function debugPagesJour() {
   Logger.log(out.join(' | '));
   return out.join(' | ');
 }
+
+
+// ONE-SHOT (11/07/2026, execute) : retire le faux vendeur 'ANGERS' (ligne de total
+// boutique qui a fuite dans le classement) des Top3 / Top3_Gagnes des 24-26/06/2026.
+// Resultat : 24/06 Top3=MEHDY,ANAIS ; 25/06 Top3=MEHDY,HAVAL (gagnes conserves) ;
+// 26/06 Top3=NATHAN,HAVAL (aucun gagnant, ANGERS etait le seul >= 400).
+function corrigerAngers_juin2026() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
+  var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
+  if (!sh) { Logger.log('Onglet introuvable'); return; }
+  var lastRow = sh.getLastRow();
+  var dates = sh.getRange(2, 1, lastRow - 1, 1).getValues();
+  var cibles = ['24/06/2026', '25/06/2026', '26/06/2026'];
+  var done = [];
+  function purge(s) {
+    return String(s || '').split(',').map(function(x){ return x.trim(); })
+      .filter(function(x){ return x && x.toUpperCase() !== 'ANGERS'; }).join(',');
+  }
+  for (var i = 0; i < dates.length; i++) {
+    var ds = normDate_(dates[i][0]);
+    if (cibles.indexOf(ds) < 0) continue;
+    var r = i + 2;
+    var top3 = purge(sh.getRange(r, 2).getValue());
+    var gagnes = purge(sh.getRange(r, 3).getValue());
+    sh.getRange(r, 2).setValue(top3);
+    sh.getRange(r, 3).setValue(gagnes);
+    done.push(ds + ' -> Top3=[' + top3 + '] Gagnes=[' + gagnes + ']');
+  }
+  var msg = 'Purge ANGERS : ' + (done.length ? done.join(' | ') : 'aucune ligne');
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('Purge ANGERS juin', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
+  return msg;
+}
