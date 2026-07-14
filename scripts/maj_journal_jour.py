@@ -10,8 +10,13 @@ Si le token expire un jour, mettre à jour JOURNAL_URL ci-dessous.
 import os, re, json, datetime, urllib.request
 from html.parser import HTMLParser
 
-JOURNAL_URL = ("http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin"
-               "?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870fffe60db7c69cb0f8c")
+# 14/07/2026 : la publication JOUR a ete SUPPRIMEE de 3GWIN (menage du 10-11/07).
+# On scrape la publication MOIS (TOUTES JOURNAL DES VENTES MIX MOIS, ~8-20 Mo,
+# donnees vivantes) : le filtre "date == aujourd'hui" ci-dessous isole le jour.
+# Meme token que URL_FACTURES_MOIS de MAJ_3GWIN_Autonome.gs — si l'un meurt,
+# l'autre aussi (regeneration : VENDEUR ITEM AGENDA > Publication Web/Mail).
+JOURNAL_URL = ("https://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin"
+               "?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870ff7ce06c6748ab")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "meilleure_vente.json")
 
 class TableParser(HTMLParser):
