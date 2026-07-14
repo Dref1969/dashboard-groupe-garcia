@@ -1,65 +1,55 @@
 {
- "maj": "2026-07-10 19:20",
- "date": "20260710",
- "nb_factures": 51,
+ "maj": "2026-07-14 13:01",
+ "date": "20260714",
+ "nb_factures": 4,
  "meilleure_vente": {
-  "fac": "200016169",
-  "vendeur": "ANAIS",
+  "fac": "200016212",
+  "vendeur": "LOUANE",
   "agence": "CHOLET",
   "articles": [
    {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
     "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 22.19
+    "marge": 30.52
    },
    {
-    "desig": "Coque Samsung Galaxy S26 Transparente Bigben",
-    "marge": 22.0
+    "desig": "Coque renforcée iPhone 16e FEEL Origine France Garantie 2m Transparente + Garantie à vie - Origine France Garantie Force Case",
+    "marge": 24.75
    },
    {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
-   },
-   {
-    "desig": "SAMSUNG GALAXY S26 5G 256GO NOIR SFR",
-    "marge": 163.33
-   },
-   {
-    "desig": "ACTE GESTION",
-    "marge": 1.5
+    "desig": "APPLE IPHONE 17E 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 26.67
    }
   ],
-  "total": 289.02
+  "total": 131.94
  },
  "top": [
   {
-   "vendeur": "ANAIS",
+   "vendeur": "LOUANE",
    "agence": "CHOLET",
-   "total": 289.02,
-   "nb": 5
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 237.85,
+   "total": 131.94,
    "nb": 4
   },
   {
-   "vendeur": "ANAIS",
+   "vendeur": "LOUANE",
    "agence": "CHOLET",
-   "total": 235.62,
-   "nb": 5
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 220.85,
+   "total": 107.03,
    "nb": 4
   },
   {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 217.2,
-   "nb": 6
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 60.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 10.0,
+   "nb": 1
   }
  ]
 }
