@@ -15,17 +15,28 @@ JOURNAL_URL = ("http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "meilleure_vente.json")
 
 class TableParser(HTMLParser):
+    # Piles table/tr/td : la page d'erreur 3GWIN ("Pas de tableau à afficher")
+    # contient des tables imbriquées dans des cellules — un parseur à état plat
+    # plantait en AttributeError et faisait échouer le workflow toutes les 5 min.
     def __init__(self):
-        super().__init__(); self.tables=[]; self.cur=None; self.row=None; self.cell=None
+        super().__init__(); self.tables=[]; self.stack=[]; self.rows=[]; self.cell=None
     def handle_starttag(self, tag, attrs):
-        if tag=="table": self.cur=[]; self.tables.append(self.cur)
-        elif tag=="tr" and self.cur is not None: self.row=[]; self.cur.append(self.row)
-        elif tag in ("td","th") and self.row is not None: self.cell=[]
+        if tag=="table":
+            cur=[]; self.tables.append(cur); self.stack.append(cur); self.rows.append(None); self.cell=None
+        elif tag=="tr" and self.stack:
+            row=[]; self.stack[-1].append(row); self.rows[-1]=row; self.cell=None
+        elif tag in ("td","th") and self.rows and self.rows[-1] is not None: self.cell=[]
     def handle_endtag(self, tag):
-        if tag in ("td","th") and self.cell is not None:
-            self.row.append(re.sub(r"\s+"," ","".join(self.cell)).strip()); self.cell=None
-        elif tag=="tr": self.row=None
-        elif tag=="table": self.cur=None
+        if tag in ("td","th"):
+            if self.cell is not None and self.rows and self.rows[-1] is not None:
+                self.rows[-1].append(re.sub(r"\s+"," ","".join(self.cell)).strip())
+            self.cell=None
+        elif tag=="tr":
+            if self.rows: self.rows[-1]=None
+            self.cell=None
+        elif tag=="table":
+            if self.stack: self.stack.pop(); self.rows.pop()
+            self.cell=None
     def handle_data(self, d):
         if self.cell is not None: self.cell.append(d)
 
@@ -36,8 +47,17 @@ def numf(x):
 
 def main():
     html = urllib.request.urlopen(urllib.request.Request(JOURNAL_URL, headers={"User-Agent":"Mozilla/5.0"}), timeout=40).read().decode("utf-8","replace")
+    if "Pas de tableau" in html:
+        # Token/publication 3GWIN mort : sortie PROPRE (exit 0) pour ne pas
+        # spammer un email d'échec toutes les 5 min. Régénérer le lien dans
+        # 3GWIN : VENDEUR ITEM AGENDA > Publication Web/Mail > ligne
+        # "TOUTES JOURNAL DES VENTES MIX JOUR" > Forcer Publication.
+        print("ATTENTION : page 3GWIN sans tableau (token/publication expiré ?) — meilleure_vente.json inchangé.")
+        return
     p=TableParser(); p.feed(html)
-    if not p.tables: raise SystemExit("Aucun tableau (token 3GWIN expiré ?).")
+    if not p.tables:
+        print("ATTENTION : aucun tableau dans la page 3GWIN — meilleure_vente.json inchangé.")
+        return
     grid=max(p.tables, key=len)
     hdr=next((r for r in grid[:6] if "Vendeur" in r and "Marge" in r), grid[0])
     ci={c.strip():i for i,c in enumerate(hdr)}
