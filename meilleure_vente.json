@@ -1,10 +1,10 @@
 {
- "maj": "2026-07-15 09:03",
+ "maj": "2026-07-15 09:07",
  "date": "20260715",
- "nb_factures": 9,
+ "nb_factures": 10,
  "meilleure_vente": {
   "fac": "200021794",
-  "vendeur": "ROMAIN GP",
+  "vendeur": "MEHDY",
   "agence": "CHATEAUDUN",
   "articles": [
    {
@@ -16,7 +16,7 @@
  },
  "top": [
   {
-   "vendeur": "ROMAIN GP",
+   "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
    "total": 720.0,
    "nb": 1
@@ -40,10 +40,10 @@
    "nb": 6
   },
   {
-   "vendeur": "JULIE TLR",
-   "agence": "AMBOISE",
-   "total": 80.0,
-   "nb": 1
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 164.41,
+   "nb": 5
   }
  ]
 }
