@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-15 10:08",
+ "maj": "2026-07-15 10:13",
  "date": "20260715",
- "nb_factures": 16,
+ "nb_factures": 22,
  "meilleure_vente": {
   "fac": "200021794",
   "vendeur": "MEHDY",
@@ -40,10 +40,10 @@
    "nb": 6
   },
   {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 164.41,
-   "nb": 5
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 168.84,
+   "nb": 6
   }
  ]
 }
