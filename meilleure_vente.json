@@ -1,20 +1,32 @@
 {
- "maj": "2026-07-15 08:43",
+ "maj": "2026-07-15 08:48",
  "date": "20260715",
- "nb_factures": 3,
+ "nb_factures": 9,
  "meilleure_vente": {
-  "fac": "200021748",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200021794",
+  "vendeur": "ROMAIN GP",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
     "desig": "booster chubb - regul rem MAI + Derem",
-    "marge": 520.0
+    "marge": 720.0
    }
   ],
-  "total": 520.0
+  "total": 720.0
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "CHATEAUDUN",
+   "total": 720.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 520.0,
+   "nb": 1
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -22,15 +34,15 @@
    "nb": 1
   },
   {
-   "vendeur": "ROMAIN GP",
-   "agence": "VENDOME",
-   "total": 80.0,
-   "nb": 1
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 268.57,
+   "nb": 6
   },
   {
-   "vendeur": "ANAIS",
-   "agence": "VENDOME",
-   "total": 40.0,
+   "vendeur": "JULIE TLR",
+   "agence": "AMBOISE",
+   "total": 80.0,
    "nb": 1
   }
  ]
