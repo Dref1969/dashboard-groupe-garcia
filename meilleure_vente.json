@@ -1,7 +1,37 @@
 {
- "maj": "2026-07-15 08:13",
+ "maj": "2026-07-15 08:18",
  "date": "20260715",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 3,
+ "meilleure_vente": {
+  "fac": "200021748",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
+  "articles": [
+   {
+    "desig": "booster chubb - regul rem MAI + Derem",
+    "marge": 520.0
+   }
+  ],
+  "total": 520.0
+ },
+ "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 520.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "VENDOME",
+   "total": 80.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "VENDOME",
+   "total": 40.0,
+   "nb": 1
+  }
+ ]
 }
