@@ -1,7 +1,25 @@
 {
- "maj": "2026-07-16 08:13",
+ "maj": "2026-07-16 08:18",
  "date": "20260716",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200023272",
+  "vendeur": "NATHAN",
+  "agence": "ROMORANTIN",
+  "articles": [
+   {
+    "desig": "ABONNEMENT",
+    "marge": 23.0
+   }
+  ],
+  "total": 23.0
+ },
+ "top": [
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 23.0,
+   "nb": 1
+  }
+ ]
 }
