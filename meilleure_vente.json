@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-16 09:13",
+ "maj": "2026-07-16 09:18",
  "date": "20260716",
- "nb_factures": 4,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200016237",
   "vendeur": "ANAIS",
@@ -26,6 +26,12 @@
    "agence": "ROMORANTIN",
    "total": 37.0,
    "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 30.2,
+   "nb": 2
   },
   {
    "vendeur": "NATHAN",
