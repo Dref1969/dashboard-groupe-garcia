@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-16 17:58",
+ "maj": "2026-07-16 18:02",
  "date": "20260716",
- "nb_factures": 13,
+ "nb_factures": 23,
  "meilleure_vente": {
   "fac": "200021805",
   "vendeur": "MEHDY",
@@ -38,28 +38,28 @@
    "nb": 5
   },
   {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 125.0,
+   "nb": 2
+  },
+  {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 114.17,
    "nb": 1
   },
   {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 65.0,
-   "nb": 1
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 105.0,
+   "nb": 2
   },
   {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 55.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 37.0,
-   "nb": 1
+   "vendeur": "JULIE TLR",
+   "agence": "AMBOISE",
+   "total": 82.09,
+   "nb": 4
   }
  ]
 }
