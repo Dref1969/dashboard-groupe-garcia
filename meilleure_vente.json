@@ -1,24 +1,42 @@
 {
- "maj": "2026-07-16 08:58",
+ "maj": "2026-07-16 09:03",
  "date": "20260716",
- "nb_factures": 1,
+ "nb_factures": 4,
  "meilleure_vente": {
-  "fac": "200023272",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200016237",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 23.0
+    "desig": "ACTE GESTION",
+    "marge": 55.0
    }
   ],
-  "total": 23.0
+  "total": 55.0
  },
  "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 55.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 37.0,
+   "nb": 1
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
    "total": 23.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 10.0,
    "nb": 1
   }
  ]
