@@ -1,7 +1,43 @@
 {
- "maj": "2026-07-17 09:23",
+ "maj": "2026-07-17 09:28",
  "date": "20260717",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 2,
+ "meilleure_vente": {
+  "fac": "200021811",
+  "vendeur": "MEHDY",
+  "agence": "CHATEAUDUN",
+  "articles": [
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 8.33
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 17.34
+   },
+   {
+    "desig": "Coque iPhone 15 Transparente Bigben",
+    "marge": 17.83
+   },
+   {
+    "desig": "APPLE IPHONE 17E 256GO ROSE SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 9.17
+   }
+  ],
+  "total": 52.67
+ },
+ "top": [
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": 52.67,
+   "nb": 4
+  },
+  {
+   "vendeur": "JULIE TLR",
+   "agence": "AMBOISE",
+   "total": 8.93,
+   "nb": 1
+  }
+ ]
 }
