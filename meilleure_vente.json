@@ -1,37 +1,57 @@
 {
- "maj": "2026-07-17 10:03",
+ "maj": "2026-07-17 10:08",
  "date": "20260717",
- "nb_factures": 2,
+ "nb_factures": 4,
  "meilleure_vente": {
-  "fac": "200021811",
-  "vendeur": "MEHDY",
-  "agence": "CHATEAUDUN",
+  "fac": "200021092",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
     "desig": "PRESTATION - SERVICE",
-    "marge": 8.33
+    "marge": 33.33
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "Etui Flip Wallet noir Galaxy A17 4G/5G",
+    "marge": 22.87
    },
    {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 17.34
+    "marge": 29.84
    },
    {
-    "desig": "Coque iPhone 15 Transparente Bigben",
-    "marge": 17.83
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 27.44
    },
    {
-    "desig": "APPLE IPHONE 17E 256GO ROSE SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 9.17
+    "desig": "SAMSUNG GALAXY A17 5G 128GO BLEU SFR",
+    "marge": 30.83
    }
   ],
-  "total": 52.67
+  "total": 194.31
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 194.31,
+   "nb": 6
+  },
   {
    "vendeur": "MEHDY",
    "agence": "CHATEAUDUN",
    "total": 52.67,
    "nb": 4
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 31.5,
+   "nb": 1
   },
   {
    "vendeur": "JULIE TLR",
