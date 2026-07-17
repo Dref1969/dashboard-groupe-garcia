@@ -903,23 +903,29 @@ function renderChallenges(el){
   const _todayStr=String(_now.getDate()).padStart(2,'0')+'/'+String(_moisC).padStart(2,'0')+'/'+_anneeC;
   const PRIME_AUJ=PRIME_JOUR_(_todayStr);
   const BOOST_ACTIF=BOOST_DATES.includes(_todayStr);
+  // ── JOURS SPÉCIAUX (annonce CDV) : 1er du Top 3 = top1 €, 2e/3e = topn €, managers = mgr € ──
+  const JOURS_SPECIAUX={'17/07/2026':{top1:40,topn:20,mgr:40}};
+  const SPEC_AUJ=JOURS_SPECIAUX[_todayStr];
 
   const vendeurWins={};
   const vendeurPrimes={};
   let amboiseWins=0, louaneWins=0, romainWins=0;
   let totalPrimeVendeurs=0, totalPrimeAmboise=0, totalPrimeLouane=0, totalPrimeRomain=0;
   HIST_MOIS.forEach(d=>{
+    const spec=JOURS_SPECIAUX[d.date];
     const p=PRIME_JOUR_(d.date);
+    const pm=spec?spec.mgr:p;
     // Managers/CDV (HASSENE, LOUANE, ROMAIN GP) ont leur propre challenge : on les
     // ignore même si une vieille ligne d'historique les contient encore dans Top3_Gagnes.
-    (d.top3_gagnes||[]).filter(nom=>!EXCLUS_VENDEUR.includes(nom)).forEach(nom=>{
+    (d.top3_gagnes||[]).filter(nom=>!EXCLUS_VENDEUR.includes(nom)).forEach((nom,i)=>{
+      const pv=spec?(i===0?spec.top1:spec.topn):p;
       vendeurWins[nom]=(vendeurWins[nom]||0)+1;
-      vendeurPrimes[nom]=(vendeurPrimes[nom]||0)+p;
-      totalPrimeVendeurs+=p;
+      vendeurPrimes[nom]=(vendeurPrimes[nom]||0)+pv;
+      totalPrimeVendeurs+=pv;
     });
-    if(d.amboise_won){ amboiseWins++; totalPrimeAmboise+=p; }
-    if(d.louane_won){ louaneWins++; totalPrimeLouane+=p; }
-    if(d.groupe_won){ romainWins++; totalPrimeRomain+=p; }
+    if(d.amboise_won){ amboiseWins++; totalPrimeAmboise+=pm; }
+    if(d.louane_won){ louaneWins++; totalPrimeLouane+=pm; }
+    if(d.groupe_won){ romainWins++; totalPrimeRomain+=pm; }
   });
   const nbJours=HIST_MOIS.length;
   const totalPrimeGlobal=totalPrimeVendeurs+totalPrimeAmboise+totalPrimeLouane+totalPrimeRomain;
@@ -934,7 +940,7 @@ function renderChallenges(el){
     <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le ${premierJourLabel}</div></div>
     <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
     <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 200 €</div></div>
-    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${BOOST_ACTIF?'color:var(--orange)':''}">${PRIME_AUJ} €</div><div class="sub">${BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 ACTIF</strong>':'par challenge gagné'}</div></div>
+    <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${(BOOST_ACTIF||SPEC_AUJ)?'color:var(--orange)':''}">${SPEC_AUJ?'20-40':PRIME_AUJ} €</div><div class="sub">${SPEC_AUJ?'<strong style="color:var(--orange)">JOUR SPÉCIAL : 1er du Top 3 = 40 € · Managers ×2</strong>':(BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 ACTIF</strong>':'par challenge gagné')}</div></div>
   </div>
 
   <!-- ══════ CUMUL DES PRIMES À DATE ══════ -->
@@ -987,7 +993,7 @@ function renderChallenges(el){
       <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>HASSENE (AMBOISE)</th><th>LOUANE (CHOLET)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
       <tbody>
         ${[...HIST_MOIS].reverse().map(d=>{
-          const _p=PRIME_JOUR_(d.date); const _gagnesOK=(d.top3_gagnes||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)); const primeJour=(_gagnesOK.length*_p)+(d.amboise_won?_p:0)+(d.louane_won?_p:0)+(d.groupe_won?_p:0);
+          const _sp=JOURS_SPECIAUX[d.date]; const _p=PRIME_JOUR_(d.date); const _pm=_sp?_sp.mgr:_p; const _gagnesOK=(d.top3_gagnes||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)); const _pv=_sp?_gagnesOK.reduce((s,_,i)=>s+(i===0?_sp.top1:_sp.topn),0):(_gagnesOK.length*_p); const primeJour=_pv+(d.amboise_won?_pm:0)+(d.louane_won?_pm:0)+(d.groupe_won?_pm:0);
           return `<tr>
             <td><strong>${d.date}</strong></td>
             <td>${(d.top3||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)).map(n=>{
@@ -1015,7 +1021,7 @@ function renderChallenges(el){
         <div class="ch-icon" style="background:linear-gradient(135deg,var(--blue),var(--purple))">V</div>
         <div>
           <div class="ch-title">Challenge Vendeur — Top 3 + 400 € min</div>
-          <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''}</div>
+          <div class="ch-period">${SPEC_AUJ?'20-40':PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''}${SPEC_AUJ?' <span style="color:var(--orange);font-weight:700">1er = 40 €</span>':''}</div>
         </div>
       </div>
     </div>
@@ -1046,7 +1052,7 @@ function renderChallenges(el){
           <div class="ch-icon" style="background:var(--purple)">A</div>
           <div>
             <div class="ch-title">Hassene — Manager Amboise — 700 €</div>
-            <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></div>
+            <div class="ch-period">${SPEC_AUJ?SPEC_AUJ.mgr:PRIME_AUJ} € / jour${(BOOST_ACTIF||SPEC_AUJ)?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></div>
           </div>
         </div>
         <span class="ch-badge ${ch2aWon?'won':'pending'}">${ch2aWon?'GAGNÉ':'En cours'}</span>
@@ -1069,7 +1075,7 @@ function renderChallenges(el){
           <div class="ch-icon" style="background:var(--red)">L</div>
           <div>
             <div class="ch-title">Louane — Manageuse Cholet — 1 000 €</div>
-            <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></div>
+            <div class="ch-period">${SPEC_AUJ?SPEC_AUJ.mgr:PRIME_AUJ} € / jour${(BOOST_ACTIF||SPEC_AUJ)?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></div>
           </div>
         </div>
         <span class="ch-badge ${ch2bWon?'won':'pending'}">${ch2bWon?'GAGNÉ':'En cours'}</span>
@@ -1094,7 +1100,7 @@ function renderChallenges(el){
         <div class="ch-icon" style="background:linear-gradient(135deg,var(--green),var(--cyan))">R</div>
         <div>
           <div class="ch-title">Romain CDV — 3 200 € groupe</div>
-          <div class="ch-period">${PRIME_AUJ} € / jour${BOOST_ACTIF?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></div>
+          <div class="ch-period">${SPEC_AUJ?SPEC_AUJ.mgr:PRIME_AUJ} € / jour${(BOOST_ACTIF||SPEC_AUJ)?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeRomain)} €</strong></div>
         </div>
       </div>
       <span class="ch-badge ${ch3Won?'won':'pending'}">${ch3Won?'GAGNÉ':'En cours'}</span>
