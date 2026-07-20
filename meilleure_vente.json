@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-20 09:43",
+ "maj": "2026-07-20 09:48",
  "date": "20260720",
- "nb_factures": 1,
+ "nb_factures": 3,
  "meilleure_vente": {
   "fac": "200016265",
   "vendeur": "EMMY",
@@ -19,6 +19,18 @@
    "vendeur": "EMMY",
    "agence": "CHOLET",
    "total": 80.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 48.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 1.5,
    "nb": 1
   }
  ]
