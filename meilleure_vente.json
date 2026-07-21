@@ -1,7 +1,25 @@
 {
- "maj": "2026-07-21 08:03",
+ "maj": "2026-07-21 08:08",
  "date": "20260721",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016278",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "ABONNEMENT",
+    "marge": 33.0
+   }
+  ],
+  "total": 33.0
+ },
+ "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 33.0,
+   "nb": 1
+  }
+ ]
 }
