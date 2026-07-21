@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-21 08:18",
+ "maj": "2026-07-21 08:23",
  "date": "20260721",
- "nb_factures": 1,
+ "nb_factures": 2,
  "meilleure_vente": {
   "fac": "200016278",
   "vendeur": "ANAIS",
@@ -19,6 +19,12 @@
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 33.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 28.38,
    "nb": 1
   }
  ]
