@@ -1,20 +1,30 @@
 {
- "maj": "2026-07-21 09:38",
+ "maj": "2026-07-21 09:43",
  "date": "20260721",
- "nb_factures": 2,
+ "nb_factures": 4,
  "meilleure_vente": {
-  "fac": "200016278",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "200029424",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 33.0
+    "desig": "Câble USB A / USB C 3A 2m FastCharge Noir Bigben",
+    "marge": 15.85
+   },
+   {
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 19.03
    }
   ],
-  "total": 33.0
+  "total": 34.88
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 34.88,
+   "nb": 2
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
@@ -25,6 +35,12 @@
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
    "total": 28.38,
+   "nb": 1
+  },
+  {
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
+   "total": -3.8,
    "nb": 1
   }
  ]
