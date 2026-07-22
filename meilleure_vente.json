@@ -1,61 +1,7 @@
 {
- "maj": "2026-07-21 19:12",
- "date": "20260721",
- "nb_factures": 38,
- "meilleure_vente": {
-  "fac": "200021819",
-  "vendeur": "MEHDY",
-  "agence": "CHATEAUDUN",
-  "articles": [
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 48.18
-   },
-   {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
-   },
-   {
-    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
-    "marge": 5.0
-   },
-   {
-    "desig": "ABONNEMENT",
-    "marge": 160.0
-   }
-  ],
-  "total": 313.18
- },
- "top": [
-  {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
-   "total": 313.18,
-   "nb": 4
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 206.51,
-   "nb": 2
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 166.5,
-   "nb": 2
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 165.33,
-   "nb": 3
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 150.0,
-   "nb": 4
-  }
- ]
+ "maj": "2026-07-22 07:03",
+ "date": "20260722",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
