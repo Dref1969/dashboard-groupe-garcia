@@ -1,7 +1,69 @@
 {
- "maj": "2026-07-22 09:03",
+ "maj": "2026-07-22 09:08",
  "date": "20260722",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 6,
+ "meilleure_vente": {
+  "fac": "200021770",
+  "vendeur": "ROMAIN GP",
+  "agence": "VENDOME",
+  "articles": [
+   {
+    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 28.64
+   },
+   {
+    "desig": "Coque renforcée Honor Magic 8 Lite AIR 3m Transparente + Garantie à vie Force Case",
+    "marge": 23.58
+   },
+   {
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 30.38
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 25.0
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "HONOR MAGIC 8 LITE 256GO VERT SFR",
+    "marge": 66.67
+   }
+  ],
+  "total": 274.27
+ },
+ "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "VENDOME",
+   "total": 274.27,
+   "nb": 6
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 156.54,
+   "nb": 6
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 148.14,
+   "nb": 5
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 107.91,
+   "nb": 4
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 98.89,
+   "nb": 4
+  }
+ ]
 }
