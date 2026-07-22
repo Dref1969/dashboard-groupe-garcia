@@ -625,6 +625,8 @@ function ecrireMagsDetail_(magsData) {
 
 function majFacturesMois_() {
   var html = fetchPage_(URL_FACTURES_MOIS);
+  // 22/07/2026 : la publication couvre ~30 jours glissants -> ne garder que le mois courant
+  var moisCourant = Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyyMM');
 
   // Parse toutes les lignes factures
   var trMatches = html.match(/<tr>[\s\S]*?<\/tr>/g) || [];
@@ -642,6 +644,7 @@ function majFacturesMois_() {
     var entete = cells[6];
     if (entete !== 'FACTURE' && entete !== 'AVOIR') continue;
     if (!cells[4] || !cells[11]) continue;
+    if ((cells[1] || '').indexOf(moisCourant) !== 0) continue; // hors mois courant
 
     var famille = cells[11];
     var codeArt = (cells[9] || '').toUpperCase();
@@ -655,8 +658,9 @@ function majFacturesMois_() {
       continue;
     }
 
-    var nCmd47 = (cells[47] || '').trim();
-    var isW2S  = nCmd47.length > 0;
+    // 22/07/2026 : cells[47] est un banal "N° Commande" (rempli ~1 vente sur 3),
+    // PAS un marqueur W2S (aucun W2S dans cette publication) -> ne plus exclure.
+    var isW2S  = false;
 
     lines.push({
       boutique:    cells[3],
