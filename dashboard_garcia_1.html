@@ -47,6 +47,8 @@ table{width:100%;border-collapse:collapse;font-size:12px}th{padding:8px 6px;font
 .sp-status{margin-top:28px;opacity:0;animation:spU .5s ease 1.8s forwards}.sp-status span{font-size:11px;color:#64748B}.sp-dots{display:inline-flex;gap:4px;margin-left:6px;vertical-align:middle}.sp-dot{width:5px;height:5px;border-radius:50%;background:#3B82F6;opacity:.3;animation:spP .8s ease infinite}.sp-dot:nth-child(2){animation-delay:.15s}.sp-dot:nth-child(3){animation-delay:.3s}
 @keyframes spU{to{opacity:1;transform:translateY(0)}}@keyframes spL{to{width:180px}}@keyframes spP{0%,100%{opacity:.3}50%{opacity:1}}
 @keyframes topArrowBounce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,10px)}}
+@keyframes mmArrowSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.mm-top{display:inline-block;color:var(--green);font-weight:900;margin-right:5px;animation:mmArrowSlide .8s ease-in-out infinite;filter:drop-shadow(0 1px 2px rgba(5,150,105,.35))}
 @keyframes trendUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @keyframes trendDown{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 .trend{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle}
@@ -531,7 +533,7 @@ return`<div class="g4"><div class="cd kpi"><div class="kpi-label">Marge groupe</
 ${mbHTML(C.margeBreak||{})}
 <div class="sec">Top 10 mobiles les plus vendus — ${(D&&D.moisEnCours)||"mois en cours"}</div>
 <div class="cd"><div class="tw"><table><thead><tr><th class="tl" style="width:40px">#</th><th class="tl">Modèle</th><th class="tc">Quantité</th><th class="tc">Marge totale</th><th class="tc">Marge moyenne</th></tr></thead><tbody>
-${(C.topMob||[]).map((m,i)=>{const mp=m.qte>0?m.marge/m.qte:0;const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}`;return`<tr><td class="tl" style="font-weight:700">${medal}</td><td class="tl" style="font-weight:600">${m.modele}</td><td class="tc" style="font-weight:700">${$(m.qte)}</td><td class="tc" style="font-weight:700;color:var(--green)">${$E(m.marge)}</td><td class="tc" style="color:var(--sub)">${$D(mp,0)}€</td></tr>`}).join("")||'<tr><td class="tc" colspan="5" style="color:var(--sub)">Aucun mobile vendu</td></tr>'}
+${(()=>{const L=C.topMob||[];const bestMM=new Set(L.filter(m=>m.qte>0).slice().sort((a,b)=>b.marge/b.qte-a.marge/a.qte).slice(0,3).map(m=>m.modele));return L.map((m,i)=>{const mp=m.qte>0?m.marge/m.qte:0;const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}`;const isTop=bestMM.has(m.modele);return`<tr><td class="tl" style="font-weight:700">${medal}</td><td class="tl" style="font-weight:600">${m.modele}</td><td class="tc" style="font-weight:700">${$(m.qte)}</td><td class="tc" style="font-weight:700;color:var(--green)">${$E(m.marge)}</td><td class="tc" style="${isTop?'font-weight:800;color:var(--green)':'color:var(--sub)'}">${isTop?'<span class="mm-top">➜</span>':''}${$D(mp,0)}€</td></tr>`}).join("")||'<tr><td class="tc" colspan="5" style="color:var(--sub)">Aucun mobile vendu</td></tr>'})()}
 </tbody></table></div></div>
 <div class="sec">Items prioritaires — Groupe</div>
 <div class="cd"><div class="kpi-label" style="margin-bottom:10px">Détail items prioritaires</div><div class="tw"><table><thead><tr><th class="tl">Item</th><th class="tc">Réalisé</th><th class="tc">Objectif</th><th class="tc">Projection</th><th class="tc">Progression</th></tr></thead><tbody>
