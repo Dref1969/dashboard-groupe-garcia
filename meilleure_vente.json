@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-22 14:23",
+ "maj": "2026-07-22 14:28",
  "date": "20260722",
- "nb_factures": 18,
+ "nb_factures": 20,
  "meilleure_vente": {
   "fac": "200021770",
   "vendeur": "ROMAIN GP",
@@ -48,6 +48,12 @@
    "nb": 4
   },
   {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 162.43,
+   "nb": 4
+  },
+  {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
    "total": 156.54,
@@ -58,12 +64,6 @@
    "agence": "ANGERS",
    "total": 148.14,
    "nb": 5
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 107.91,
-   "nb": 4
   }
  ]
 }
