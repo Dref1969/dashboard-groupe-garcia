@@ -1,28 +1,52 @@
 {
- "maj": "2026-07-23 13:03",
+ "maj": "2026-07-23 13:08",
  "date": "20260723",
- "nb_factures": 10,
+ "nb_factures": 12,
  "meilleure_vente": {
-  "fac": "200029435",
+  "fac": "200029440",
   "vendeur": "ROMAIN GP",
   "agence": "ANGERS",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 23.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 25.0
    },
    {
-    "desig": "ABONNEMENT",
-    "marge": 210.0
+    "desig": "Coque renforcée Honor 600 Smart FEEL Origine France Garantie 2m Transparente + Garantie à vie - Vrac B2B - Origine France Garantie Force Case",
+    "marge": 25.58
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 38.18
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "HONOR 600 SMART 128GO GRIS SFR",
+    "marge": 80.0
    }
   ],
-  "total": 233.0
+  "total": 268.76
  },
  "top": [
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
+   "total": 268.76,
+   "nb": 5
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
    "total": 233.0,
+   "nb": 2
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 183.0,
    "nb": 2
   },
   {
@@ -36,18 +60,6 @@
    "agence": "CHOLET",
    "total": 74.1,
    "nb": 3
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 50.0,
-   "nb": 2
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 25.0,
-   "nb": 1
   }
  ]
 }
