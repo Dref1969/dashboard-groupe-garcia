@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-23 13:48",
+ "maj": "2026-07-23 13:53",
  "date": "20260723",
- "nb_factures": 13,
+ "nb_factures": 14,
  "meilleure_vente": {
   "fac": "200029440",
   "vendeur": "ROMAIN GP",
@@ -56,10 +56,10 @@
    "nb": 2
   },
   {
-   "vendeur": "LOUANE",
+   "vendeur": "EMMY",
    "agence": "CHOLET",
-   "total": 93.67,
-   "nb": 4
+   "total": 135.52,
+   "nb": 3
   }
  ]
 }
