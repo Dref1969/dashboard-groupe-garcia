@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-23 13:33",
+ "maj": "2026-07-23 13:38",
  "date": "20260723",
- "nb_factures": 12,
+ "nb_factures": 13,
  "meilleure_vente": {
   "fac": "200029440",
   "vendeur": "ROMAIN GP",
@@ -44,6 +44,12 @@
    "nb": 2
   },
   {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 214.44,
+   "nb": 6
+  },
+  {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 183.0,
@@ -54,12 +60,6 @@
    "agence": "CHOLET",
    "total": 93.67,
    "nb": 4
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 74.1,
-   "nb": 3
   }
  ]
 }
