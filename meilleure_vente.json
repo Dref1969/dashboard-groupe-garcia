@@ -1,7 +1,47 @@
 {
- "maj": "2026-07-27 08:18",
+ "maj": "2026-07-27 08:23",
  "date": "20260727",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 2,
+ "meilleure_vente": {
+  "fac": "200029443",
+  "vendeur": "ROMAIN",
+  "agence": "ANGERS",
+  "articles": [
+   {
+    "desig": "Article",
+    "marge": 0.0
+   },
+   {
+    "desig": "Coque renforcée noir Matt Iron Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 25.99
+   },
+   {
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 29.55
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 37.34
+   },
+   {
+    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 306.29
+   }
+  ],
+  "total": 399.17
+ },
+ "top": [
+  {
+   "vendeur": "ROMAIN",
+   "agence": "ANGERS",
+   "total": 399.17,
+   "nb": 5
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 38.0,
+   "nb": 1
+  }
+ ]
 }
