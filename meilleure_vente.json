@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-27 10:23",
+ "maj": "2026-07-27 10:28",
  "date": "20260727",
- "nb_factures": 3,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200029443",
   "vendeur": "ROMAIN",
@@ -35,6 +35,12 @@
    "vendeur": "ROMAIN",
    "agence": "ANGERS",
    "total": 399.17,
+   "nb": 5
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 197.29,
    "nb": 5
   },
   {
