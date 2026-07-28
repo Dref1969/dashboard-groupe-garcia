@@ -897,8 +897,8 @@ function renderChallenges(el){
   });
   const premierJourLabel=HIST_MOIS.length?HIST_MOIS[0].date.slice(0,5):'01/'+String(_moisC).padStart(2,'0');
 
-  // ── BOOST ×2 : prime du jour 40 € au lieu de 20 € sur ces dates uniquement (28-30/05/2026 ; 26/06/2026 ; 30/06/2026 ; 23/07/2026) ──
-  const BOOST_DATES=['28/05/2026','29/05/2026','30/05/2026','26/06/2026','30/06/2026','23/07/2026'];
+  // ── BOOST ×2 : prime du jour 40 € au lieu de 20 € sur ces dates uniquement (28-30/05/2026 ; 26/06/2026 ; 30/06/2026 ; 23/07/2026 ; 28-31/07/2026) ──
+  const BOOST_DATES=['28/05/2026','29/05/2026','30/05/2026','26/06/2026','30/06/2026','23/07/2026','28/07/2026','29/07/2026','30/07/2026','31/07/2026'];
   const PRIME_JOUR_=(dateStr)=>BOOST_DATES.includes(dateStr)?40:20;
   const _todayStr=String(_now.getDate()).padStart(2,'0')+'/'+String(_moisC).padStart(2,'0')+'/'+_anneeC;
   const PRIME_AUJ=PRIME_JOUR_(_todayStr);
