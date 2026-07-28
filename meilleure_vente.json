@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-28 13:48",
+ "maj": "2026-07-28 13:53",
  "date": "20260728",
- "nb_factures": 19,
+ "nb_factures": 20,
  "meilleure_vente": {
   "fac": "200016343",
   "vendeur": "LUCAS",
@@ -54,16 +54,16 @@
    "nb": 6
   },
   {
+   "vendeur": "LUCAS",
+   "agence": "CHOLET",
+   "total": 141.69,
+   "nb": 4
+  },
+  {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
    "total": 120.83,
    "nb": 2
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 118.86,
-   "nb": 4
   }
  ]
 }
