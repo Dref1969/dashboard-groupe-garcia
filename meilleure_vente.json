@@ -1,24 +1,54 @@
 {
- "maj": "2026-07-29 10:03",
+ "maj": "2026-07-29 10:08",
  "date": "20260729",
- "nb_factures": 3,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200023328",
-  "vendeur": "EMILIE",
-  "agence": "ROMORANTIN",
+  "fac": "200029457",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "DORO LEVA L30 BLACK SFR",
-    "marge": 60.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
+   },
+   {
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": -5.89
+   },
+   {
+    "desig": "Coque Samsung Galaxy A37 5G Transparente Bigben",
+    "marge": 22.0
+   },
+   {
+    "desig": "SAMSUNG GALAXY A37 256GO GRAPHITE SFR",
+    "marge": 80.0
    },
    {
     "desig": "Extension Garantie 3ème année - 0 à 500€",
     "marge": 50.0
    }
   ],
-  "total": 110.0
+  "total": 175.95
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 175.95,
+   "nb": 5
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 141.14,
+   "nb": 2
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 113.92,
+   "nb": 2
+  },
   {
    "vendeur": "EMILIE",
    "agence": "ROMORANTIN",
@@ -30,12 +60,6 @@
    "agence": "ROMORANTIN",
    "total": 100.0,
    "nb": 3
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 10.0,
-   "nb": 1
   }
  ]
 }
