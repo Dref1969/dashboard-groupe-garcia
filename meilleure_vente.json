@@ -1,7 +1,29 @@
 {
- "maj": "2026-07-29 08:23",
+ "maj": "2026-07-29 08:28",
  "date": "20260729",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200023328",
+  "vendeur": "EMILIE",
+  "agence": "ROMORANTIN",
+  "articles": [
+   {
+    "desig": "DORO LEVA L30 BLACK SFR",
+    "marge": 60.0
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   }
+  ],
+  "total": 110.0
+ },
+ "top": [
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 110.0,
+   "nb": 2
+  }
+ ]
 }
