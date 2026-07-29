@@ -1,7 +1,7 @@
 {
- "maj": "2026-07-29 08:53",
+ "maj": "2026-07-29 08:58",
  "date": "20260729",
- "nb_factures": 1,
+ "nb_factures": 3,
  "meilleure_vente": {
   "fac": "200023328",
   "vendeur": "EMILIE",
@@ -24,6 +24,18 @@
    "agence": "ROMORANTIN",
    "total": 110.0,
    "nb": 2
+  },
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 100.0,
+   "nb": 3
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 10.0,
+   "nb": 1
   }
  ]
 }
