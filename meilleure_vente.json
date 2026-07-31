@@ -1,61 +1,7 @@
 {
- "maj": "2026-07-30 19:17",
- "date": "20260730",
- "nb_factures": 15,
- "meilleure_vente": {
-  "fac": "200029461",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
-  "articles": [
-   {
-    "desig": "Casque AirQuiet Hybrid ANC - NOVIANT",
-    "marge": 63.34
-   },
-   {
-    "desig": "Coque renforcée noir Matt Iron Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 26.82
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
-   },
-   {
-    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 127.0
-   }
-  ],
-  "total": 247.0
- },
- "top": [
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 247.0,
-   "nb": 4
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 131.72,
-   "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 116.14,
-   "nb": 2
-  },
-  {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 106.09,
-   "nb": 4
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 105.0,
-   "nb": 2
-  }
- ]
+ "maj": "2026-07-31 07:03",
+ "date": "20260731",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
