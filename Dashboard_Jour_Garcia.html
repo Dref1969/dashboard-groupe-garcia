@@ -194,8 +194,8 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
 (function(){
   var SHEET="1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY";
   var LOG="https://script.google.com/macros/s/AKfycbwoBG5ehjdbOkKaP82-XxOHtann6yFVtX0fu7NJe34amykw2CTsHNc523ETjjT0xnsH/exec";
-  var AUTH={admin:{pin:"1564",isAdmin:true},anais:{pin:"1210",nomSheet:"ANAIS"},chloe:{pin:"1127",nomSheet:"CHLOE R"},emilie:{pin:"8403",nomSheet:"EMILIE"},emmy:{pin:"4651",nomSheet:"EMMY"},gaetan:{pin:"0203",nomSheet:"GAETAN"},hassene:{pin:"0605",nomSheet:"HASSENE"},haval:{pin:"6262",nomSheet:"HAVAL"},julie:{pin:"2203",nomSheet:"JULIE TLR"},louane:{pin:"2910",nomSheet:"LOUANE"},lucas:{pin:"7520",nomSheet:"LUCAS"},mehdy:{pin:"1973",nomSheet:"MEHDY"},nathan:{pin:"1214",nomSheet:"NATHAN"}};
-  var NAMES={anais:"Anaïs",chloe:"Chloé",emilie:"Émilie",emmy:"Emmy",hassene:"Hassène",haval:"Haval",julie:"Julie",louane:"Louane",lucas:"Lucas",mehdy:"Mehdy",nathan:"Nathan"};
+  var AUTH={admin:{pin:"1564",isAdmin:true},anais:{pin:"1210",nomSheet:"ANAIS"},emilie:{pin:"8403",nomSheet:"EMILIE"},emmy:{pin:"4651",nomSheet:"EMMY"},hassene:{pin:"0605",nomSheet:"HASSENE"},haval:{pin:"6262",nomSheet:"HAVAL"},julie:{pin:"2203",nomSheet:"JULIE TLR"},louane:{pin:"2910",nomSheet:"LOUANE"},lucas:{pin:"7520",nomSheet:"LUCAS"},mehdy:{pin:"1973",nomSheet:"MEHDY"},nathan:{pin:"1214",nomSheet:"NATHAN"}};
+  var NAMES={anais:"Anaïs",emilie:"Émilie",emmy:"Emmy",hassene:"Hassène",haval:"Haval",julie:"Julie",louane:"Louane",lucas:"Lucas",mehdy:"Mehdy",nathan:"Nathan"};
   var ADMIN=false; var KEY='lj_jour_session';
   function norm(s){return (s||"").trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
   function ljApply(prenom,a,doLog){
@@ -230,7 +230,7 @@ tbody tr.tier2 td:nth-child(2)::after{content:' ★';color:#D97706;font-size:11p
       var rows=parseCSV(await (await fetch(url)).text());
       var agg={};
       rows.forEach(function(r){ var v=(r[1]||'').toLowerCase(); var ts=r[0]||''; if(v.slice(-5)==='_jour'){ var p=v.slice(0,-5); if(!agg[p])agg[p]={n:0,last:''}; agg[p].n++; if(ts>agg[p].last)agg[p].last=ts; } });
-      var order=['anais','chloe','emilie','emmy','hassene','haval','julie','louane','lucas','mehdy','nathan'];
+      var order=['anais','emilie','emmy','hassene','haval','julie','louane','lucas','mehdy','nathan'];
       var rh=order.map(function(p){var d=agg[p]||{n:0,last:''};return '<tr><td>'+(NAMES[p]||p)+'</td><td class="'+(d.n?'cx':'never')+'">'+(d.n||'jamais')+'</td><td style="color:#666">'+(d.last? d.last.replace('T',' ').slice(5,16):'—')+'</td></tr>';}).join('');
       var tot=Object.keys(agg).reduce(function(s,k){return s+agg[k].n;},0);
       body.innerHTML='<table><tr><th>Vendeur</th><th>Connexions</th><th>Dernière</th></tr>'+rh+'</table><div style="padding:10px 16px;font-size:11px;color:#999">Total : '+tot+' connexion(s) au Dashboard Jour</div>';
