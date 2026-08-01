@@ -108,28 +108,43 @@ function maj3GWIN() {
       var parsed = parsePage_(html);
       if (!parsed) { erreurs.push('Parse echoue : ' + boutique.nom); continue; }
 
+      // Garde anti-publication figee : si la page sert encore la periode d'un
+      // mois precedent, on n'en prend NI les vendeurs NI les totaux. La ligne
+      // mags est quand meme poussee a zero -> l'etape 3bis la remplira depuis
+      // "Mags mois" (lien global, reste fiable quand une page boutique fige).
+      var periodeOk = periodeEstMoisCourant_(parsed.periode);
+      if (!periodeOk) {
+        erreurs.push(boutique.nom + ' : publication 3GWIN figee sur "' + parsed.periode +
+                     '" -> vendeurs ignores, totaux repris de Mags mois');
+      }
+      if (parsed.nomsIgnores && parsed.nomsIgnores.length) {
+        erreurs.push(boutique.nom + ' : colonne vendeur cassee cote 3GWIN (' +
+                     parsed.nomsIgnores.join(', ') + ') -> a reparer dans 3GWIN');
+      }
+      var res = periodeOk ? parsed.resultat : {};
+
       // Totaux boutique
       magsData.push({
         boutique:       boutique.nom,
         code:           boutique.code,
-        marge:          parsed.resultat.marge         || 0,
-        mob:            parsed.resultat.mob           || 0,
-        box:            parsed.resultat.box           || 0,
-        margeBox:       parsed.resultat.margeBox      || 0,
-        abo:            parsed.resultat.abo           || 0,
-        margeAbo:       parsed.resultat.margeAbo      || 0,
-        boxMig:         parsed.resultat.boxMig        || 0,
-        assu:           parsed.resultat.assu          || 0,
-        cyber:          parsed.resultat.cyber         || 0,
-        alba:           parsed.resultat.g3a           || 0,
-        tracker:        parsed.resultat.tracker       || 0,
-        access:         parsed.resultat.access        || 0,
-        margeAssu:      parsed.resultat.margeAssu     || 0,
-        margeServices:  parsed.resultat.margeServices || 0
+        marge:          res.marge         || 0,
+        mob:            res.mob           || 0,
+        box:            res.box           || 0,
+        margeBox:       res.margeBox      || 0,
+        abo:            res.abo           || 0,
+        margeAbo:       res.margeAbo      || 0,
+        boxMig:         res.boxMig        || 0,
+        assu:           res.assu          || 0,
+        cyber:          res.cyber         || 0,
+        alba:           res.g3a           || 0,
+        tracker:        res.tracker       || 0,
+        access:         res.access        || 0,
+        margeAssu:      res.margeAssu     || 0,
+        margeServices:  res.margeServices || 0
       });
 
       // Vendeurs
-      var noms = Object.keys(parsed.vendeurs);
+      var noms = periodeOk ? Object.keys(parsed.vendeurs) : [];
       for (var n = 0; n < noms.length; n++) {
         var nom    = noms[n];
         var indics = parsed.vendeurs[nom];
@@ -158,7 +173,13 @@ function maj3GWIN() {
   // par 3GWIN au manager. On override les champs sourcables, les autres restent
   // en fallback (RESULTAT par boutique).
   try {
-    var mmHtml = fetchPage_(URL_MAGS_MOIS);
+    var mmHtml   = fetchPage_(URL_MAGS_MOIS);
+    var mmParsed = parsePage_(mmHtml);
+    // Meme garde : si "Mags mois" est lui-meme fige sur un mois precedent, on
+    // n'override rien (sinon on ecraserait des totaux justes par des faux).
+    if (mmParsed && !periodeEstMoisCourant_(mmParsed.periode)) {
+      throw new Error('publication figee sur "' + mmParsed.periode + '" -> override ignore');
+    }
     var mmData = parseMagsView_(mmHtml);
     var mmKeys = ['marge','mob','box','margeBox','abo','margeAbo','boxMig','assu','cyber','tracker','access','margeAssu','margeServices'];
     for (var mi = 0; mi < magsData.length; mi++) {
@@ -332,6 +353,15 @@ function parsePage_(html) {
   // Noms vendeurs (header[1] ... header[ncols-2])
   var vendeurs = cells.slice(hStart + 1, hStart + ncols - 1);
 
+  // Colonnes vendeur cassees cote 3GWIN (item supprime/renomme) : on garde
+  // l'index (les valeurs restent alignees) mais on n'en fait pas un vendeur.
+  var idxValides = [];
+  var nomsIgnores = [];
+  for (var vz = 0; vz < vendeurs.length; vz++) {
+    if (colonneVendeurInvalide_(vendeurs[vz])) nomsIgnores.push(vendeurs[vz]);
+    else idxValides.push(vz);
+  }
+
   // Dictionnaire indicateur -> valeurs
   var rows = {};
   for (var r = hStart + ncols; r + ncols <= cells.length; r += ncols) {
@@ -339,7 +369,8 @@ function parsePage_(html) {
   }
 
   // Extraire les indicateurs voulus
-  var result = { vendeurs:{}, resultat:{} };
+  // periode = en-tete brut "VENDEUR jj/mm/aa jj/mm/aa" -> controle anti-publication figee
+  var result = { vendeurs:{}, resultat:{}, periode:cells[hStart], nomsIgnores:nomsIgnores };
   var labels = Object.keys(INDICATEURS);
 
   for (var li = 0; li < labels.length; li++) {
@@ -356,10 +387,11 @@ function parsePage_(html) {
     }
     if (!row) continue;
 
-    for (var vi = 0; vi < vendeurs.length; vi++) {
-      var vnom = vendeurs[vi];
+    for (var vi = 0; vi < idxValides.length; vi++) {
+      var vidx = idxValides[vi];
+      var vnom = vendeurs[vidx];
       if (!result.vendeurs[vnom]) result.vendeurs[vnom] = {};
-      result.vendeurs[vnom][cle] = parseVal_(row[vi]);
+      result.vendeurs[vnom][cle] = parseVal_(row[vidx]);
     }
     result.resultat[cle] = parseVal_(row[vendeurs.length]);
   }
@@ -371,6 +403,40 @@ function parseVal_(str) {
   if (!str) return 0;
   var n = parseFloat(String(str).replace(/[euros%\s]/g,'').replace(',','.'));
   return isNaN(n) ? 0 : n;
+}
+
+
+// ---- GARDES ANTI-PUBLICATION FIGEE / COLONNE CASSEE -------
+// Une publication 3GWIN peut cesser de se rafraichir et continuer a servir la
+// periode du MOIS PRECEDENT. Cas reel du 01/08/2026 : le lien Chateaudun
+// affichait encore "CHATEAUDUN 25/07 01:22" et l'en-tete "VENDEUR 01/07/26
+// 25/07/26" alors que les 5 autres etaient sur 01/08/26. Les chiffres de
+// juillet (HASSENE 565,42 + MEHDY 3785,83 + ROMAIN GP 87,50 = 4438,75 EUR)
+// ont ete importes comme s'ils etaient d'aout, alors que "Mags mois" donnait
+// Chateaudun a 0 EUR. Marge groupe affichee 5211 EUR au lieu de 1022 EUR.
+//
+// Le controle "sommeVendeurs <-> RESULTAT" ne detecte PAS ce cas : les deux
+// sont coherents entre eux, mais sur le mauvais mois. D'ou ce controle de
+// periode, qui porte sur la date de FIN (derniere date de l'en-tete).
+function periodeEstMoisCourant_(entete) {
+  if (!entete) return true;                    // en-tete illisible -> ne pas bloquer
+  var dates = String(entete).match(/\d{1,2}\/\d{1,2}\/\d{2,4}/g);
+  if (!dates || !dates.length) return true;    // idem
+  var fin = dates[dates.length - 1].split('/');
+  var mois = parseInt(fin[1], 10);
+  var an   = parseInt(fin[2], 10);
+  if (an < 100) an += 2000;
+  var now = new Date();
+  return mois === (now.getMonth() + 1) && an === now.getFullYear();
+}
+
+// Colonne vendeur cassee cote 3GWIN : quand l'item vendeur est supprime ou
+// renomme, 3GWIN ecrit litteralement "Erreur ! Cet item n'existe plus" a la
+// place du nom (constate sur Amboise et Angers le 01/08/2026). Sans ce filtre,
+// cette chaine remonte dans Donnees_Commissions comme un vendeur a 0.
+function colonneVendeurInvalide_(nom) {
+  if (!nom || !String(nom).trim()) return true;
+  return /erreur\s*!|n.existe\s+plus|<>\s*inconnu/i.test(nom);
 }
 
 
