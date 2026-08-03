@@ -380,6 +380,19 @@ function neutraliserBoutiquesFermees(){
   VENDEURS=VENDEURS.filter(v=>!fermees.includes(v.bou));
 }
 
+// Parse un nombre au format FRANÇAIS renvoyé par gviz (Sheet en locale fr).
+// gviz exporte "1367,5" avec une VIRGULE décimale : parseFloat("1367,5") = 1367
+// → tous les centimes étaient perdus sur le Dashboard Jour (constaté 04/08/2026).
+// On retire les espaces (y compris insécables, séparateurs de milliers) et on
+// convertit la virgule en point avant parseFloat.
+function numFR(v){
+  if(typeof v==="number") return v;
+  if(v===null||v===undefined) return 0;
+  const s=String(v).replace(/[\s  ]/g,"").replace(",",".");
+  const n=parseFloat(s);
+  return isNaN(n)?0:n;
+}
+
 async function fetchJourData(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(TAB_NAME)}`;
   const text=await fetchRetry(url);
@@ -395,15 +408,15 @@ async function fetchJourData(){
     code:r.Code||"",
     nom:r.Nom||"",
     color:(BOUTIQUES[r.Code]||{}).color||"#888",
-    marge:parseFloat(r.Marge)||0,
+    marge:numFR(r.Marge),
     mob:parseInt(r.Mob)||0,
     box:parseInt(r.Box)||0,
-    margeBox:parseFloat(r.MargeBox)||0,
+    margeBox:numFR(r.MargeBox),
     boxMig:parseInt(r.BoxMig)||0,
     cyber:parseInt(r.Cyber)||0,
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
-    access:parseFloat(r.Access)||0,
+    access:numFR(r.Access),
     abo:parseInt(r.Abo)||0,
     // Flag ecrit par MAJ_Dashboard_Jour.gs (colonne Statut des lignes MAG) quand la
     // page 3GWIN de la boutique est figee sur un jour anterieur = fermee ce jour.
@@ -418,29 +431,38 @@ async function fetchJourData(){
   VENDEURS=rows.filter(r=>r.Type==="VENDEUR").map(r=>({
     nom:r.Code||"",
     bou:r.Nom||"",
-    marge:parseFloat(r.Marge)||0,
+    marge:numFR(r.Marge),
     mob:parseInt(r.Mob)||0,
     box:parseInt(r.Box)||0,
     cyber:parseInt(r.Cyber)||0,
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
-    access:parseFloat(r.Access)||0,
-    margeAssu:parseFloat(r.MargeAssu)||0,
-    margeServices:parseFloat(r.MargeServices)||0,
+    access:numFR(r.Access),
+    margeAssu:numFR(r.MargeAssu),
+    margeServices:numFR(r.MargeServices),
     abo:parseInt(r.Abo)||0
   }));
   VENDEURS.sort((a,b)=>b.marge-a.marge);
 
-  // FALLBACK anti-zéros (11/07/2026) : la vue "Mags jour" 3GWIN reste à ZÉRO en cours
-  // de journée (remplie seulement après clôture) et peut écraser les marges boutiques
-  // côté scraper. Si une boutique NON fermée est à 0 alors que ses vendeurs ont des
-  // ventes réelles, on reconstruit ses indicateurs en sommant ses vendeurs.
+  // FALLBACK anti-incohérence (11/07/2026, ÉTENDU le 04/08/2026)
+  // Invariant : la ligne MAG d'une boutique ouverte ne peut pas être INFÉRIEURE à la
+  // somme de ses propres vendeurs (mêmes colonnes, même page 3GWIN).
+  //  - 11/07 : la vue "Mags jour" reste à ZÉRO en cours de journée et écrasait les
+  //    marges boutiques par des zéros côté scraper.
+  //  - 03/08 : pire, la publication "Mags jour" s'est FIGÉE à 11h14 et a écrasé
+  //    CHOLET 1367,50 € par 402,86 € (état réel du matin). Le test "marge>0" laissait
+  //    passer cette valeur périmée → marge boutique fausse toute la soirée.
+  // On reconstruit donc dès que les vendeurs totalisent PLUS que la ligne MAG,
+  // et plus seulement quand la ligne MAG est à zéro.
   MAGS.forEach(m=>{
-    if(m.ferme||m.marge>0) return;
+    if(m.ferme) return;
     const vs=VENDEURS.filter(v=>v.bou===m.code);
     if(!vs.length) return;
     const s=k=>vs.reduce((t,v)=>t+(v[k]||0),0);
-    if(s('marge')>0){ m.marge=s('marge'); m.mob=s('mob'); m.box=s('box'); m.cyber=s('cyber'); m.assu=s('assu'); m.g3a=s('g3a'); m.access=s('access'); m.abo=s('abo'); }
+    if(s('marge')>(m.marge||0)+0.01){
+      m.marge=s('marge'); m.mob=s('mob'); m.box=s('box'); m.cyber=s('cyber');
+      m.assu=s('assu'); m.g3a=s('g3a'); m.access=s('access'); m.abo=s('abo');
+    }
   });
 
   // Neutralisation des boutiques fermées (lundi/férié/dimanche) — basée sur la date des données
