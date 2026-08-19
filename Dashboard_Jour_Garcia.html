@@ -1156,12 +1156,15 @@ const MOIS_FR=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août
 
 function updateDates(){
   const now=new Date();
-  const jourSemaine=JOURS_FR[now.getDay()];
   const dateStr=DATA_DATE||`${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
   const heureStr=DATA_HEURE||`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const parts=dateStr.split('/');
   const jour=parseInt(parts[0]);const mois=parseInt(parts[1])-1;const annee=parts[2]||now.getFullYear();
   const moisNom=MOIS_FR[mois]||"";
+  // 19/08/2026 : le jour de la semaine etait pris sur `now` alors que le
+  // quantieme vient de DATA_DATE -> en-tete incoherente (Mardi 3 Aout 2026
+  // pour des donnees du lundi 3). Calcule desormais sur la date REELLE.
+  const jourSemaine=JOURS_FR[new Date(annee,mois,jour).getDay()];
   const splashSub=document.querySelector('.sp-logo-sub');
   if(splashSub) splashSub.textContent=`Dashboard Jour — ${jour} ${moisNom} ${annee}`;
   const spKpis=document.querySelector('.sp-kpis');
