@@ -1,7 +1,7 @@
 {
- "maj": "2026-08-20 09:38",
+ "maj": "2026-08-20 09:43",
  "date": "20260820",
- "nb_factures": 3,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200021152",
   "vendeur": "HASSENE",
@@ -52,10 +52,22 @@
    "nb": 5
   },
   {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 81.84,
+   "nb": 4
+  },
+  {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
    "total": 80.0,
    "nb": 2
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 10.0,
+   "nb": 1
   }
  ]
 }
