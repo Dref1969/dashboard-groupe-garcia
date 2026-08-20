@@ -1,7 +1,29 @@
 {
- "maj": "2026-08-20 08:33",
+ "maj": "2026-08-20 08:38",
  "date": "20260820",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016575",
+  "vendeur": "LOUANE",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "BOX 5G TPLINK (NX511V) MIXNW SFR",
+    "marge": 0.0
+   },
+   {
+    "desig": "ABONNEMENT",
+    "marge": 80.0
+   }
+  ],
+  "total": 80.0
+ },
+ "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 80.0,
+   "nb": 2
+  }
+ ]
 }
