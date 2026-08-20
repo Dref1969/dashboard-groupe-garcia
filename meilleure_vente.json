@@ -1,44 +1,46 @@
 {
- "maj": "2026-08-20 15:03",
+ "maj": "2026-08-20 15:08",
  "date": "20260820",
- "nb_factures": 5,
+ "nb_factures": 16,
  "meilleure_vente": {
-  "fac": "200021152",
+  "fac": "200021153",
   "vendeur": "HASSENE",
   "agence": "AMBOISE",
   "articles": [
-   {
-    "desig": "ACTE GESTION",
-    "marge": 0.5
-   },
-   {
-    "desig": "ACTE GESTION",
-    "marge": 25.0
-   },
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
-   },
    {
     "desig": "Extension Garantie 3ème année - 0 à 500€",
     "marge": 50.0
    },
    {
-    "desig": "Coque Samsung Galaxy A37 5G Transparente Bigben",
-    "marge": 38.67
+    "desig": "PRESTATION - SERVICE",
+    "marge": 33.33
    },
    {
     "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 39.67
+    "marge": 31.33
    },
    {
-    "desig": "SAMSUNG GALAXY A37 128GO GRAPHITE SFR",
-    "marge": 50.0
+    "desig": "Etui Flip Wallet noir Galaxy A17 4G/5G",
+    "marge": 22.87
+   },
+   {
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 27.36
+   },
+   {
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 60.0
    }
   ],
-  "total": 220.51
+  "total": 224.89
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 224.89,
+   "nb": 6
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -52,22 +54,16 @@
    "nb": 5
   },
   {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 81.84,
-   "nb": 4
-  },
-  {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
-   "total": 80.0,
+   "total": 128.0,
    "nb": 2
   },
   {
-   "vendeur": "EMILIE",
-   "agence": "ROMORANTIN",
-   "total": 10.0,
-   "nb": 1
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 114.67,
+   "nb": 3
   }
  ]
 }
