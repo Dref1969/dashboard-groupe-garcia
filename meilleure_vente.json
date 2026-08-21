@@ -1,69 +1,7 @@
 {
- "maj": "2026-08-20 18:30",
- "date": "20260820",
- "nb_factures": 16,
- "meilleure_vente": {
-  "fac": "200021153",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
-  "articles": [
-   {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 33.33
-   },
-   {
-    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 31.33
-   },
-   {
-    "desig": "Etui Flip Wallet noir Galaxy A17 4G/5G",
-    "marge": 22.87
-   },
-   {
-    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
-    "marge": 27.36
-   },
-   {
-    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
-    "marge": 60.0
-   }
-  ],
-  "total": 224.89
- },
- "top": [
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 224.89,
-   "nb": 6
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 220.51,
-   "nb": 7
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 179.94,
-   "nb": 5
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 128.0,
-   "nb": 2
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 114.67,
-   "nb": 3
-  }
- ]
+ "maj": "2026-08-21 07:03",
+ "date": "20260821",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
