@@ -382,7 +382,7 @@ function eD(d){
   const mG=rk.reduce((s,v)=>s+v.mg,0),pG=Object.values(pb).reduce((s,b)=>s+b.pj,0),mN=Object.values(pb).reduce((s,b)=>s+b.mn,0);
   const vG=Object.values(vi).reduce((s,v)=>s+v,0),vGN1=Object.values(viN1).reduce((s,v)=>s+v,0);
   const pmG=vG>0?mG/vG:0,pmGN1=vGN1>0?mN/vGN1:0;
-  const gM=Object.values(gd).reduce((s,g)=>s+g.nt,0)/Object.keys(gd).length;
+  const _gdR=Object.values(gd).filter(g=>g.pt>0);const gM=_gdR.length?_gdR.reduce((s,g)=>s+g.nt,0)/_gdR.length:0;
   const gT=Object.values(gl).reduce((s,g)=>s+g.tt,0),gMo=Object.values(gl).reduce((s,g)=>s+g.ms,0);
   const iG=RI.map(it=>{const t=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.r||0),0),to=rk.reduce((s,v)=>s+(v.its.find(i=>i.k===it.k)?.o||0),0);if(it.k==="g3a"){const tg3=rk.reduce((s,v)=>s+v.g3,0),tmb=rk.reduce((s,v)=>s+v.mb,0);return{...it,tr:tmb>0?Math.round(tg3/tmb*10000)/100:0,to:it.ob}}return it.pc||it.cu?{...it,tr:t/Math.max(1,rk.length),to:it.ob}:{...it,tr:t,to}});
   const mobGN=rk.reduce((s,v)=>s+v.mb,0),mobGN1=Object.values(pb).reduce((s,b)=>s+b.mobN1,0);
