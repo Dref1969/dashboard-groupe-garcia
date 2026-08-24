@@ -1,24 +1,42 @@
 {
- "maj": "2026-08-24 09:48",
+ "maj": "2026-08-24 09:53",
  "date": "20260824",
- "nb_factures": 1,
+ "nb_factures": 2,
  "meilleure_vente": {
-  "fac": "200016620",
-  "vendeur": "ANAIS",
+  "fac": "200016621",
+  "vendeur": "LOUANE",
   "agence": "CHOLET",
   "articles": [
    {
-    "desig": "ACTE GESTION",
-    "marge": 1.5
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
    },
    {
-    "desig": "ACTE GESTION",
-    "marge": 1.5
+    "desig": "Coque Samsung Galaxy A57 5G Transparente Bigben",
+    "marge": 21.17
+   },
+   {
+    "desig": "Chargeur USB C 20W Power Delivery Blanc Bigben",
+    "marge": 14.1
+   },
+   {
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 22.19
+   },
+   {
+    "desig": "SAMSUNG GALAXY A57 128GO LAVANDE SFR",
+    "marge": 25.0
    }
   ],
-  "total": 3.0
+  "total": 132.46
  },
  "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 132.46,
+   "nb": 5
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
