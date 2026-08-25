@@ -1,7 +1,7 @@
 {
- "maj": "2026-08-25 15:33",
+ "maj": "2026-08-25 15:37",
  "date": "20260825",
- "nb_factures": 34,
+ "nb_factures": 42,
  "meilleure_vente": {
   "fac": "200016648",
   "vendeur": "LUCAS",
@@ -22,6 +22,12 @@
    "nb": 1
   },
   {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 560.0,
+   "nb": 1
+  },
+  {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
    "total": 480.0,
@@ -38,12 +44,6 @@
    "agence": "CHOLET",
    "total": 400.0,
    "nb": 1
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 322.44,
-   "nb": 4
   }
  ]
 }
