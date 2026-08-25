@@ -1,7 +1,65 @@
 {
- "maj": "2026-08-25 13:33",
+ "maj": "2026-08-25 13:38",
  "date": "20260825",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 18,
+ "meilleure_vente": {
+  "fac": "200016636",
+  "vendeur": "ANAIS",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "Extension Garantie 3ème année - 500 à 1000€",
+    "marge": 80.0
+   },
+   {
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 22.19
+   },
+   {
+    "desig": "Folio Honor 600 Smart Wallet Fonction Stand Noir - Certifié GRS Bigben",
+    "marge": 20.1
+   },
+   {
+    "desig": "HONOR 600 SMART 128GO GRIS SFR",
+    "marge": 80.0
+   },
+   {
+    "desig": "ACTE GESTION",
+    "marge": 1.5
+   }
+  ],
+  "total": 203.79
+ },
+ "top": [
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 203.79,
+   "nb": 5
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 173.3,
+   "nb": 5
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 160.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 142.89,
+   "nb": 5
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 137.36,
+   "nb": 3
+  }
+ ]
 }
