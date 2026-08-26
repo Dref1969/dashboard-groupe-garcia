@@ -1,7 +1,7 @@
 {
- "maj": "2026-08-26 08:43",
+ "maj": "2026-08-26 08:48",
  "date": "20260826",
- "nb_factures": 1,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200016650",
   "vendeur": "ANAIS",
@@ -19,6 +19,24 @@
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 25.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 15.83,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 14.85,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMILIE",
+   "agence": "ROMORANTIN",
+   "total": 5.0,
    "nb": 1
   }
  ]
