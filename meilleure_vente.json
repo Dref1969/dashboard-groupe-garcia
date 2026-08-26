@@ -1,49 +1,7 @@
 {
- "maj": "2026-08-25 18:31",
- "date": "20260825",
- "nb_factures": 52,
- "meilleure_vente": {
-  "fac": "200021166",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
-  "articles": [
-   {
-    "desig": "booster chubb - regul rem JUIN + Derem",
-    "marge": 640.0
-   }
-  ],
-  "total": 640.0
- },
- "top": [
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 640.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LUCAS",
-   "agence": "CHOLET",
-   "total": 640.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 560.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 480.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 435.6,
-   "nb": 9
-  }
- ]
+ "maj": "2026-08-26 07:03",
+ "date": "20260826",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
