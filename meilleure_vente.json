@@ -1,7 +1,7 @@
 {
- "maj": "2026-08-26 14:58",
+ "maj": "2026-08-26 15:48",
  "date": "20260826",
- "nb_factures": 24,
+ "nb_factures": 29,
  "meilleure_vente": {
   "fac": "200029476",
   "vendeur": "ROMAIN GP",
@@ -42,15 +42,15 @@
    "nb": 4
   },
   {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 150.1,
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 176.98,
    "nb": 3
   },
   {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 143.33,
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 150.1,
    "nb": 3
   }
  ]
