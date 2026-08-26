@@ -1,7 +1,7 @@
 {
- "maj": "2026-08-26 13:28",
+ "maj": "2026-08-26 13:33",
  "date": "20260826",
- "nb_factures": 10,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200021169",
   "vendeur": "HASSENE",
@@ -50,14 +50,14 @@
    "nb": 3
   },
   {
-   "vendeur": "MEHDY",
-   "agence": "CHATEAUDUN",
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
    "total": 25.0,
    "nb": 1
   },
   {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
+   "vendeur": "MEHDY",
+   "agence": "CHATEAUDUN",
    "total": 25.0,
    "nb": 1
   }
