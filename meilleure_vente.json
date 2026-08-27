@@ -1,57 +1,7 @@
 {
- "maj": "2026-08-26 19:41",
- "date": "20260826",
- "nb_factures": 33,
- "meilleure_vente": {
-  "fac": "200029476",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
-  "articles": [
-   {
-    "desig": "Casque AirQuiet Hybrid ANC - NOVIANT",
-    "marge": 70.84
-   },
-   {
-    "desig": "Watch Ultra 2 47mm 4G Noir Titane",
-    "marge": 153.11
-   },
-   {
-    "desig": "SAMSUNG GALAXY Z FOLD8 256GO GRAPHITE SFR",
-    "marge": 108.33
-   }
-  ],
-  "total": 332.28
- },
- "top": [
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 332.28,
-   "nb": 3
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 245.27,
-   "nb": 5
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 228.89,
-   "nb": 4
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 176.98,
-   "nb": 3
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 150.1,
-   "nb": 3
-  }
- ]
+ "maj": "2026-08-27 07:03",
+ "date": "20260827",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
