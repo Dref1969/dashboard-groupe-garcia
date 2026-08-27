@@ -1,7 +1,49 @@
 {
- "maj": "2026-08-27 09:18",
+ "maj": "2026-08-27 09:23",
  "date": "20260827",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 5,
+ "meilleure_vente": {
+  "fac": "200029479",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
+  "articles": [
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.01
+   }
+  ],
+  "total": 29.01
+ },
+ "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 29.01,
+   "nb": 1
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 29.01,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 6.5,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 6.5,
+   "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 3.0,
+   "nb": 2
+  }
+ ]
 }
