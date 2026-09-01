@@ -876,8 +876,10 @@ function renderVendeurs(el){
 //  CHALLENGES
 // ═══════════════════════════════════════
 function renderChallenges(el){
-  // ── Exclusions : managers et CDV ne jouent PAS le challenge vendeur ──
-  const EXCLUS_VENDEUR=["HASSENE","LOUANE","ROMAIN GP"];
+  // ── Exclusions : seul le CDV ne joue PAS le challenge vendeur ──
+  // Depuis le 01/09/2026, Hassène et Louane intègrent le Top 3 vendeur (fin de leurs
+  // challenges boutique Amboise 700 € / Cholet 1 000 € — décision Frédéric 01/09/2026).
+  const EXCLUS_VENDEUR=["ROMAIN GP"];
   // ── Boutiques fermées du jour : règle COMMUNE boutiquesFermeesJour()
   //    (dimanche/1er mai = tout fermé ; lundi/férié = seule Cholet ouverte).
   //    Basée sur la DATE DES DONNÉES, pas l'horloge du navigateur — l'ancienne
@@ -894,13 +896,6 @@ function renderChallenges(el){
   const top3=vSort.slice(0,3);
   const _MAGS_OK=MAGS.filter(m=>!BOU_EXCLUES_JOUR.includes(m.code));
   const margeGroupe=_MAGS_OK.reduce((s,m)=>s+(m.marge||0),0);
-  const margeTLR=(_MAGS_OK.find(m=>m.code==='TLR')||{marge:0}).marge;
-  const margeCholet=(_MAGS_OK.find(m=>m.code==='CHOLET')||{marge:0}).marge;
-
-  const ch2aWon=margeTLR>=700;
-  const ch2aPct=Math.min(100,margeTLR/700*100);
-  const ch2bWon=margeCholet>=1000;
-  const ch2bPct=Math.min(100,margeCholet/1000*100);
   const ch3Won=margeGroupe>=3200; // seuil abaisse a 3200 le 11/07/2026 (non retroactif)
   const ch3Pct=Math.min(100,margeGroupe/3200*100);
 
@@ -931,26 +926,24 @@ function renderChallenges(el){
 
   const vendeurWins={};
   const vendeurPrimes={};
-  let amboiseWins=0, louaneWins=0, romainWins=0;
-  let totalPrimeVendeurs=0, totalPrimeAmboise=0, totalPrimeLouane=0, totalPrimeRomain=0;
+  let romainWins=0;
+  let totalPrimeVendeurs=0, totalPrimeRomain=0;
   HIST_MOIS.forEach(d=>{
     const spec=JOURS_SPECIAUX[d.date];
     const p=PRIME_JOUR_(d.date);
     const pm=spec?spec.mgr:p;
-    // Managers/CDV (HASSENE, LOUANE, ROMAIN GP) ont leur propre challenge : on les
-    // ignore même si une vieille ligne d'historique les contient encore dans Top3_Gagnes.
+    // Le CDV (ROMAIN GP) a son propre challenge : on l'ignore même si une vieille
+    // ligne d'historique le contient encore dans Top3_Gagnes.
     (d.top3_gagnes||[]).filter(nom=>!EXCLUS_VENDEUR.includes(nom)).forEach((nom,i)=>{
       const pv=spec?(i===0?spec.top1:spec.topn):p;
       vendeurWins[nom]=(vendeurWins[nom]||0)+1;
       vendeurPrimes[nom]=(vendeurPrimes[nom]||0)+pv;
       totalPrimeVendeurs+=pv;
     });
-    if(d.amboise_won){ amboiseWins++; totalPrimeAmboise+=pm; }
-    if(d.louane_won){ louaneWins++; totalPrimeLouane+=pm; }
     if(d.groupe_won){ romainWins++; totalPrimeRomain+=pm; }
   });
   const nbJours=HIST_MOIS.length;
-  const totalPrimeGlobal=totalPrimeVendeurs+totalPrimeAmboise+totalPrimeLouane+totalPrimeRomain;
+  const totalPrimeGlobal=totalPrimeVendeurs+totalPrimeRomain;
 
   // Tri vendeurs par gains décroissants
   const vendeurCumulArr=Object.entries(vendeurWins).sort((a,b)=>b[1]-a[1]);
@@ -982,18 +975,6 @@ function renderChallenges(el){
           </tr>`;
         }).join('')}
         <tr>
-          <td><strong>Hassene — Manager Amboise</strong> <span class="dot" style="background:#7C3AED"></span><span style="font-size:10px;color:var(--sub)">TLR</span></td>
-          <td>Manager</td>
-          <td><strong>${amboiseWins}</strong> / ${nbJours} jours</td>
-          <td><strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></td>
-        </tr>
-        <tr>
-          <td><strong>Louane — Manageuse Cholet</strong> <span class="dot" style="background:#DC2626"></span><span style="font-size:10px;color:var(--sub)">Cholet</span></td>
-          <td>Manageuse</td>
-          <td><strong>${louaneWins}</strong> / ${nbJours} jours</td>
-          <td><strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></td>
-        </tr>
-        <tr>
           <td><strong>Romain</strong></td>
           <td>Chef des Ventes</td>
           <td><strong>${romainWins}</strong> / ${nbJours} jours</td>
@@ -1012,18 +993,16 @@ function renderChallenges(el){
   <div class="stitle">HISTORIQUE JOUR PAR JOUR</div>
   <div class="cd" style="margin-bottom:16px;overflow-x:auto">
     <table>
-      <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>HASSENE (AMBOISE)</th><th>LOUANE (CHOLET)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
+      <thead><tr><th>DATE</th><th>TOP 3 VENDEURS (GAGNANTS)</th><th>ROMAIN (GROUPE)</th><th>PRIMES DU JOUR</th></tr></thead>
       <tbody>
         ${[...HIST_MOIS].reverse().map(d=>{
-          const _sp=JOURS_SPECIAUX[d.date]; const _p=PRIME_JOUR_(d.date); const _pm=_sp?_sp.mgr:_p; const _gagnesOK=(d.top3_gagnes||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)); const _pv=_sp?_gagnesOK.reduce((s,_,i)=>s+(i===0?_sp.top1:_sp.topn),0):(_gagnesOK.length*_p); const primeJour=_pv+(d.amboise_won?_pm:0)+(d.louane_won?_pm:0)+(d.groupe_won?_pm:0);
+          const _sp=JOURS_SPECIAUX[d.date]; const _p=PRIME_JOUR_(d.date); const _pm=_sp?_sp.mgr:_p; const _gagnesOK=(d.top3_gagnes||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)); const _pv=_sp?_gagnesOK.reduce((s,_,i)=>s+(i===0?_sp.top1:_sp.topn),0):(_gagnesOK.length*_p); const primeJour=_pv+(d.groupe_won?_pm:0);
           return `<tr>
             <td><strong>${d.date}</strong></td>
             <td>${(d.top3||[]).filter(n=>!EXCLUS_VENDEUR.includes(n)).map(n=>{
               const won=_gagnesOK.includes(n);
               return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:1px 2px;${won?'background:#ECFDF5;color:var(--green)':'background:#FEF2F2;color:var(--red)'}">${esc(n)} ${won?'✓':'✗'}</span>`;
             }).join('')}</td>
-            <td><span class="ch-badge ${d.amboise_won?'won':'lost'}">${d.amboise_won?fmt(d.amboise_marge)+' € ✓':'✗ '+fmt(d.amboise_marge)+' €'}</span></td>
-            <td><span class="ch-badge ${d.louane_won?'won':'lost'}">${d.louane_won?fmt(d.louane_marge)+' € ✓':'✗ '+fmt(d.louane_marge)+' €'}</span></td>
             <td><span class="ch-badge ${d.groupe_won?'won':'lost'}">${d.groupe_won?fmt(d.groupe_marge)+' € ✓':'✗ '+fmt(d.groupe_marge)+' €'}</span></td>
             <td><strong style="color:${primeJour>0?'var(--green)':'var(--sub)'}">${primeJour>0?'+'+fmt(primeJour)+' €':'0 €'}</strong></td>
           </tr>`;
@@ -1065,56 +1044,8 @@ function renderChallenges(el){
     ${vSort.length>3?`<div style="margin-top:8px;font-size:10px;color:var(--mut)">4e : ${esc(vSort[3].nom)} — ${fmt(vSort[3].marge)} € | 5e : ${esc(vSort[4]?.nom||'-')} — ${fmt(vSort[4]?.marge||0)} €</div>`:''}
   </div>
 
-  <!-- CHALLENGE 2 : MANAGER -->
-  <div class="g2" style="margin-bottom:16px">
-    <div class="ch-card">
-      <div class="ch-accent" style="background:var(--purple)"></div>
-      <div class="ch-header">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="ch-icon" style="background:var(--purple)">A</div>
-          <div>
-            <div class="ch-title">Hassene — Manager Amboise — 700 €</div>
-            <div class="ch-period">${SPEC_AUJ?SPEC_AUJ.mgr:PRIME_AUJ} € / jour${(BOOST_ACTIF||SPEC_AUJ)?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeAmboise)} €</strong></div>
-          </div>
-        </div>
-        <span class="ch-badge ${ch2aWon?'won':'pending'}">${ch2aWon?'GAGNÉ':'En cours'}</span>
-      </div>
-      <div class="ch-target">
-        <div class="cur" style="color:${ch2aWon?'var(--green)':'var(--txt)'}">${fmt(margeTLR)} €</div>
-        <div class="sep">/</div>
-        <div class="obj">700 €</div>
-      </div>
-      <div class="ch-bar-wrap">
-        <div class="ch-bar" style="width:${ch2aPct}%;background:${ch2aWon?'var(--green)':ch2aPct>=70?'var(--orange)':'linear-gradient(90deg,var(--blue),var(--purple))'}"></div>
-      </div>
-      <div class="ch-pct" style="color:${ch2aWon?'var(--green)':'var(--blue)'}">${fmtD(ch2aPct,0)}%</div>
-    </div>
-
-    <div class="ch-card">
-      <div class="ch-accent" style="background:var(--red)"></div>
-      <div class="ch-header">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="ch-icon" style="background:var(--red)">L</div>
-          <div>
-            <div class="ch-title">Louane — Manageuse Cholet — 1 000 €</div>
-            <div class="ch-period">${SPEC_AUJ?SPEC_AUJ.mgr:PRIME_AUJ} € / jour${(BOOST_ACTIF||SPEC_AUJ)?' <span style="color:var(--orange);font-weight:700">×2</span>':''} | cumul: <strong style="color:var(--green)">${fmt(totalPrimeLouane)} €</strong></div>
-          </div>
-        </div>
-        <span class="ch-badge ${ch2bWon?'won':'pending'}">${ch2bWon?'GAGNÉ':'En cours'}</span>
-      </div>
-      <div class="ch-target">
-        <div class="cur" style="color:${ch2bWon?'var(--green)':'var(--txt)'}">${fmt(margeCholet)} €</div>
-        <div class="sep">/</div>
-        <div class="obj">1 000 €</div>
-      </div>
-      <div class="ch-bar-wrap">
-        <div class="ch-bar" style="width:${ch2bPct}%;background:${ch2bWon?'var(--green)':ch2bPct>=70?'var(--orange)':'var(--red)'}"></div>
-      </div>
-      <div class="ch-pct" style="color:${ch2bWon?'var(--green)':'var(--red)'}">${fmtD(ch2bPct,0)}%</div>
-    </div>
-  </div>
-
-  <!-- CHALLENGE 3 : CDV -->
+  <!-- CHALLENGE 2 : CDV (les challenges managers Amboise/Cholet ont pris fin le 31/08/2026 :
+       Hassène et Louane jouent le Top 3 vendeur depuis le 01/09/2026) -->
   <div class="ch-card" style="margin-bottom:16px">
     <div class="ch-accent" style="background:linear-gradient(90deg,var(--green),var(--cyan))"></div>
     <div class="ch-header">
