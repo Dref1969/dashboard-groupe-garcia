@@ -51,6 +51,15 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 .stitle{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--sub);margin:16px 0 10px;display:flex;align-items:center;gap:8px}
 .stitle::before{content:'';width:12px;height:2px;background:var(--blue);border-radius:2px}
 .cd canvas{max-height:220px}
+.rep-wrap{display:flex;gap:18px;align-items:center;margin-top:8px}
+.rep-chart{flex:0 0 230px;height:210px;position:relative}
+.rep-list{flex:1;min-width:0}
+.rep-row{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px solid var(--brd)}
+.rep-row:last-child{border-bottom:0}
+.rep-row .lbl{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rep-row .amt{font-weight:700;min-width:72px;text-align:right}
+.rep-row .pct{color:var(--sub);min-width:46px;text-align:right;font-weight:600}
+@media(max-width:600px){.rep-wrap{flex-direction:column}.rep-chart{flex:0 0 auto;width:100%;height:200px}}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{text-align:left;padding:8px 10px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--brd);white-space:nowrap}
 tbody td{padding:8px 10px;border-bottom:1px solid #F1F5F9;white-space:nowrap}
@@ -347,7 +356,7 @@ function parseCSV(text){
 function initEmptyMags(){
   MAGS=[];
   Object.keys(BOUTIQUES).forEach(code=>{
-    MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0});
+    MAGS.push({code,nom:BOUTIQUES[code].nom,color:BOUTIQUES[code].color,marge:0,mob:0,box:0,assu:0,cyber:0,g3a:0,access:0,abo:0,margeAssu:0,margeServices:0,margeBox:0,boxMig:0});
   });
 }
 
@@ -376,7 +385,7 @@ function neutraliserBoutiquesFermees(){
   // figee sur un jour anterieur = fermeture exceptionnelle hors calendrier, ex CLR 10-11/07)
   MAGS.forEach(m=>{ if(m.ferme && !fermees.includes(m.code)) fermees.push(m.code); });
   if(!fermees.length) return;
-  MAGS.forEach(m=>{ if(fermees.includes(m.code)){ m.ferme=true; m.marge=0;m.mob=0;m.box=0;m.margeBox=0;m.boxMig=0;m.cyber=0;m.assu=0;m.g3a=0;m.access=0;m.abo=0; } });
+  MAGS.forEach(m=>{ if(fermees.includes(m.code)){ m.ferme=true; m.marge=0;m.mob=0;m.box=0;m.margeBox=0;m.boxMig=0;m.cyber=0;m.assu=0;m.g3a=0;m.access=0;m.abo=0;m.margeAssu=0;m.margeServices=0; } });
   VENDEURS=VENDEURS.filter(v=>!fermees.includes(v.bou));
 }
 
@@ -417,6 +426,8 @@ async function fetchJourData(){
     assu:parseInt(r.Assu)||0,
     g3a:parseInt(r.G3A)||0,
     access:numFR(r.Access),
+    margeAssu:numFR(r.MargeAssu),
+    margeServices:numFR(r.MargeServices),
     abo:parseInt(r.Abo)||0,
     // Flag ecrit par MAJ_Dashboard_Jour.gs (colonne Statut des lignes MAG) quand la
     // page 3GWIN de la boutique est figee sur un jour anterieur = fermee ce jour.
@@ -462,6 +473,7 @@ async function fetchJourData(){
     if(s('marge')>(m.marge||0)+0.01){
       m.marge=s('marge'); m.mob=s('mob'); m.box=s('box'); m.cyber=s('cyber');
       m.assu=s('assu'); m.g3a=s('g3a'); m.access=s('access'); m.abo=s('abo');
+      m.margeAssu=s('margeAssu'); m.margeServices=s('margeServices');
     }
   });
 
@@ -778,11 +790,44 @@ function renderSynthese(el){
   });
 }
 
+// ── Répartition de la marge du jour d'une boutique ──
+// Mêmes conventions que le graphique "marge par mobile vendu" : Cyber 25 €, migration box 30 €,
+// G3A 50 €. Le reste (marge totale − composantes connues) = marge mobiles & abonnements.
+// Couleurs = catégories de marge du design system Garcia.
+const REP_ITEMS=[
+  {k:'mobiles', l:'Mobiles & abos',    c:'#0F172A'},
+  {k:'access',  l:'Accessoires',       c:'#D97706'},
+  {k:'assu',    l:'Assurance',         c:'#059669'},
+  {k:'g3a',     l:'G3A',               c:'#7C3AED'},
+  {k:'cyber',   l:'Cyber',             c:'#E11D48'},
+  {k:'box',     l:'Box',               c:'#DC2626'},
+  {k:'boxMig',  l:'Migration box',     c:'#EC4899'},
+  {k:'services',l:'Presta / services', c:'#F59E0B'}
+];
+function margeRepartition(mag){
+  const v={access:mag.access||0,assu:mag.margeAssu||0,g3a:(mag.g3a||0)*50,cyber:(mag.cyber||0)*25,
+           box:mag.margeBox||0,boxMig:(mag.boxMig||0)*30,services:mag.margeServices||0};
+  const connu=Object.values(v).reduce((a,b)=>a+b,0);
+  v.mobiles=Math.max(0,(mag.marge||0)-connu);
+  return REP_ITEMS.map(it=>({...it,v:Math.round(v[it.k]*100)/100})).filter(it=>it.v>0.005);
+}
+// Plugin Chart.js : montant total au centre du donut
+const repCenterPlugin={id:'repCenter',afterDraw(chart){
+  const t=chart.config.options.plugins.repCenter;if(!t)return;
+  const {ctx,chartArea:{left,right,top,bottom}}=chart;const x=(left+right)/2,y=(top+bottom)/2;
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font="800 18px 'Plus Jakarta Sans'";ctx.fillStyle='#0F1419';ctx.fillText(t.value,x,y-6);
+  ctx.font="600 10px 'Plus Jakarta Sans'";ctx.fillStyle='#64748B';ctx.fillText(t.label,x,y+12);
+  ctx.restore();
+}};
+
 function renderBoutique(el,code){
   const mag=MAGS.find(b=>b.code===code);
   if(!mag){el.innerHTML='';return}
   const vendeurs=[...VENDEURS.filter(v=>v.bou===code)].sort((a,b)=>b.marge-a.marge);
   const txA=mag.mob>0?(mag.assu/mag.mob*100):0,txG=mag.mob>0?(mag.g3a/mag.mob*100):0,txAcc=mag.mob>0?mag.access/mag.mob:0;
+  const rep=mag.marge>0?margeRepartition(mag):[];
+  const repTot=rep.reduce((a,it)=>a+it.v,0);
 
   const vRows=vendeurs.map((v,i)=>{
     const cls=v.marge>=800?'tier2':v.marge>=400?'tier1':'';
@@ -819,6 +864,16 @@ function renderBoutique(el,code){
     <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${mag.mob>0?fmtD(txAcc,1)+' €':'—'}</div>
       <div class="sub">CA: ${fmt(mag.access)} €</div></div>
   </div>
+  ${rep.length?`
+  <div class="cd" style="margin-bottom:12px">
+    <h3>RÉPARTITION DE LA MARGE DU JOUR</h3>
+    <div class="rep-wrap">
+      <div class="rep-chart"><canvas id="cBRep"></canvas></div>
+      <div class="rep-list">${rep.map(it=>`
+        <div class="rep-row"><span class="dot" style="background:${it.c}"></span><span class="lbl">${it.l}</span><span class="amt">${fmt(it.v)} €</span><span class="pct">${repTot>0?(it.v/repTot*100).toFixed(0):0}%</span></div>`).join('')}
+      </div>
+    </div>
+  </div>`:''}
   <div class="g2" style="margin-bottom:12px">
     <div class="cd"><h3>MARGE PAR VENDEUR</h3><canvas id="cBMarge"></canvas></div>
     <div class="cd"><h3>MARGE PAR MOBILE VENDU</h3><canvas id="cBPerf"></canvas></div>
@@ -838,6 +893,16 @@ function renderBoutique(el,code){
   const vColors=vendeurs.map((_,i)=>palette[i%palette.length]);
 
   requestAnimationFrame(()=>{
+    if(rep.length){
+      safeChart('cBRep',{
+        type:'doughnut',data:{labels:rep.map(it=>it.l),datasets:[{data:rep.map(it=>it.v),backgroundColor:rep.map(it=>it.c),borderColor:'#fff',borderWidth:2,hoverOffset:4}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},
+          repCenter:{value:fmt(mag.marge)+' €',label:'MARGE JOUR'},
+          tooltip:{callbacks:{label:ctx=>' '+ctx.label+' : '+fmt(ctx.parsed)+' € ('+(repTot>0?(ctx.parsed/repTot*100).toFixed(0):0)+'%)'}},
+          datalabels:{color:'#fff',font:{weight:700,size:10,family:'Plus Jakarta Sans'},formatter:(v)=>{const p=repTot>0?v/repTot*100:0;return p>=7?p.toFixed(0)+'%':''}}}},
+        plugins:[repCenterPlugin]
+      });
+    }
     safeChart('cBMarge',{
       type:'doughnut',data:{labels:vLabels,datasets:[{data:vendeurs.map(v=>v.marge),backgroundColor:vColors.map(c=>c+'CC'),borderColor:'#fff',borderWidth:2}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:11,family:'Plus Jakarta Sans'}}},datalabels:{color:'#fff',font:{weight:700,size:11},formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(0)+'%':''}}}}
