@@ -1,73 +1,7 @@
 {
- "maj": "2026-09-03 20:24",
- "date": "20260903",
- "nb_factures": 33,
- "meilleure_vente": {
-  "fac": "200029495",
-  "vendeur": "ROMAIN",
-  "agence": "ANGERS",
-  "articles": [
-   {
-    "desig": "Article",
-    "marge": 0.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.76
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.76
-   },
-   {
-    "desig": "Coque Samsung Galaxy A36 5G / A56 5G Transparente Bigben",
-    "marge": 30.25
-   },
-   {
-    "desig": "Coque Samsung Galaxy A36 5G / A56 5G Transparente Bigben",
-    "marge": 30.25
-   },
-   {
-    "desig": "SAMSUNG GALAXY A56 5G EE 256GO GRAPHITE SFR",
-    "marge": 94.0
-   },
-   {
-    "desig": "SAMSUNG GALAXY A56 5G EE 256GO GRAPHITE SFR",
-    "marge": 94.0
-   }
-  ],
-  "total": 308.02
- },
- "top": [
-  {
-   "vendeur": "ROMAIN",
-   "agence": "ANGERS",
-   "total": 308.02,
-   "nb": 7
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "CHATEAUDUN",
-   "total": 243.0,
-   "nb": 2
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "CHATEAUDUN",
-   "total": 205.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 180.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 160.0,
-   "nb": 1
-  }
- ]
+ "maj": "2026-09-04 07:03",
+ "date": "20260904",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
