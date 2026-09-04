@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-04 14:28",
+ "maj": "2026-09-04 14:33",
  "date": "20260904",
- "nb_factures": 13,
+ "nb_factures": 17,
  "meilleure_vente": {
   "fac": "200021184",
   "vendeur": "HASSENE",
@@ -50,6 +50,12 @@
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
+   "total": 162.59,
+   "nb": 7
+  },
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
    "total": 161.61,
    "nb": 6
   },
@@ -58,12 +64,6 @@
    "agence": "CHOLET",
    "total": 125.02,
    "nb": 3
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 75.0,
-   "nb": 2
   }
  ]
 }
