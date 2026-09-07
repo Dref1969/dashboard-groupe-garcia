@@ -37,8 +37,13 @@ var EXCLUS_TOP3         = ['HASSENE', 'LOUANE', 'ROMAIN GP'];
 // L affichage du dashboard et les classements continuent d utiliser la marge brute.
 var TAB_BOOSTERS        = 'Boosters_Challenge';
 
-// URL 3GWIN des factures detaillees du jour (vraie marge + modele mobile par ligne)
-var URL_FACTURES_JOUR   = 'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dc669883ebefbb136e0d183374ea';
+// URL 3GWIN des factures detaillees (vraie marge + modele mobile par ligne).
+// 07/09/2026 : pointe desormais sur la publication MOIS. La publication JOUR
+// ("TOUTES JOURNAL DES VENTES MIX JOUR") a ete supprimee de 3GWIN lors du menage
+// du 10-11/07/2026 et son lien renvoyait "Pas de tableau a afficher" depuis.
+// majFactures_ filtre les lignes sur la date du jour (obligatoire : sans ce
+// filtre, tout le mois serait agrege comme s'il s'agissait de la journee).
+var URL_FACTURES_JOUR   = 'https://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870ff7ce06c6748ab';
 
 // URL 3GWIN "Mags jour" : agregats canoniques 6 boutiques + RESULTAT AG
 // Avantage : roll-over automatique du jour cote 3GWIN (les 6 pages "Vendeurs jour"
@@ -693,6 +698,14 @@ function nettoyerDoublonsChallenges() {
 function majFactures_(ss, dateStr, heureStr) {
   var html  = fetchPageJour_(URL_FACTURES_JOUR);
   var lines = parseFacturesHtml_(html);
+
+  // La source est la publication MOIS (cf. URL_FACTURES_JOUR) : on ne garde que
+  // les lignes du jour, sinon tout le mois serait agrege comme une seule journee.
+  // 3GWIN date ses lignes au format AAAAMMJJ ; dateStr est en JJ/MM/AAAA.
+  var jourToken = Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyyMMdd');
+  var nbTotal   = lines.length;
+  lines = lines.filter(function(l) { return String(l.date).trim() === jourToken; });
+  Logger.log('Factures : ' + nbTotal + ' lignes du mois -> ' + lines.length + ' du ' + jourToken);
 
   // 1. Grouper les lignes par N° facture
   var factures = {}; // numFac -> { vendeur, boutique, totalMarge, hasMobile, lignes: [...] }

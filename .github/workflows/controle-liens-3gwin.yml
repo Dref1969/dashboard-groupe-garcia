@@ -1,0 +1,32 @@
+name: Controle liens 3GWIN
+
+# Filet de securite : les liens de publication 3GWIN meurent silencieusement
+# quand la publication est supprimee ou regeneree cote 3GWIN (arrive le
+# 10-11/07/2026, panne vue seulement 4 jours plus tard). Les scripts sortent
+# proprement quand un lien est mort, donc plus rien n'alerte : ce workflow est
+# le seul signal. Il n'echoue QUE si un lien est reellement hors service apres
+# reessais -> un seul email, uniquement quand il y a vraiment un probleme.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1-6'   # 08h00 Paris l'ete / 07h00 l'hiver, du lundi au samedi
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Tester tous les liens de publication 3GWIN
+        run: python scripts/controle_liens_3gwin.py
