@@ -9,6 +9,11 @@ Si le token expire un jour, mettre à jour JOURNAL_URL ci-dessous.
 """
 import os, re, json, datetime, urllib.request
 from html.parser import HTMLParser
+from zoneinfo import ZoneInfo
+
+# Le runner GitHub Actions tourne en UTC : sans ce fuseau, la date du filtre et
+# l'horodatage 'maj' affiche par le pop-up sont decales de 1 a 2 h (Paris).
+PARIS = ZoneInfo('Europe/Paris')
 
 # 14/07/2026 : la publication JOUR a ete SUPPRIMEE de 3GWIN (menage du 10-11/07).
 # On scrape la publication MOIS (TOUTES JOURNAL DES VENTES MIX MOIS, ~8-20 Mo,
@@ -68,7 +73,7 @@ def main():
     ci={c.strip():i for i,c in enumerate(hdr)}
     iDate,iAg,iV,iFac,iD,iFam,iActe,iM = (ci.get("Date"),ci.get("Ag."),ci.get("Vendeur"),
         ci.get("N° Fac."),ci.get("Désignation"),ci.get("FAMILLE"),ci.get("Type Acte"),ci.get("Marge"))
-    today=datetime.date.today().strftime("%Y%m%d")
+    today=datetime.datetime.now(PARIS).strftime("%Y%m%d")
     fac={}
     # TOUS les vendeurs participent à la meilleure vente du jour — y compris
     # ROMAIN GP (CDV) : contrairement au challenge vendeur du Dashboard, AUCUNE
@@ -87,7 +92,7 @@ def main():
     for o in top: o["total"]=round(o["total"],2)
     best = top[0] if top else None
     data={
-      "maj": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+      "maj": datetime.datetime.now(PARIS).strftime("%Y-%m-%d %H:%M"),
       "date": today,
       "nb_factures": len(fac),
       "meilleure_vente": best,
