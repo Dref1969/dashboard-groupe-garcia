@@ -1,24 +1,60 @@
 {
- "maj": "2026-09-07 18:18",
+ "maj": "2026-09-07 20:51",
  "date": "20260907",
- "nb_factures": 1,
+ "nb_factures": 11,
  "meilleure_vente": {
-  "fac": "200016771",
-  "vendeur": "ROMAIN GP",
+  "fac": "200016780",
+  "vendeur": "EMILIEN",
   "agence": "CHOLET",
   "articles": [
    {
-    "desig": "BOX 5G TPLINK (NX511V) MIXNW SFR",
-    "marge": 0.0
+    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 127.0
    },
    {
-    "desig": "ABONNEMENT",
-    "marge": 80.0
+    "desig": "ECOUTEURS TRUE WIRELESS BLUETOOTH 5.0 ANTI-BRUIT AVEC AFFICHAGE ECRAN - BLANC - BLAUPUNKT",
+    "marge": 8.35
+   },
+   {
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 30.52
+   },
+   {
+    "desig": "Chargeur USB C 20W Power Delivery Blanc Bigben",
+    "marge": 19.1
+   },
+   {
+    "desig": "Coque renforcée Crystal Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 19.05
    }
   ],
-  "total": 80.0
+  "total": 204.02
  },
  "top": [
+  {
+   "vendeur": "EMILIEN",
+   "agence": "CHOLET",
+   "total": 204.02,
+   "nb": 5
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "CHOLET",
+   "total": 197.84,
+   "nb": 6
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 152.52,
+   "nb": 4
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 80.0,
+   "nb": 2
+  },
   {
    "vendeur": "ROMAIN GP",
    "agence": "CHOLET",
