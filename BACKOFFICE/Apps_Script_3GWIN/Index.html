@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Manager — Groupe Garcia — Avril 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--dk:#0f172a;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#eab308;--bg:#f1f5f9;--card:#fff;--border:#e2e8f0;--mute:#94a3b8;--txt:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+
+/* ──── HEADER ──── */
+.app-header{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#fff;padding:22px 32px;display:flex;align-items:center;justify-content:space-between}
+.app-header h1{font-size:18px;font-weight:900;letter-spacing:-.3px}
+.app-header .sub{font-size:11px;color:#64748b;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-badge{background:rgba(59,130,246,.2);color:#93c5fd;font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.3px}
+.header-date{font-size:12px;color:#64748b}
+
+/* ──── NAV ──── */
+.nav{display:flex;gap:4px;padding:12px 32px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.nav button{padding:10px 22px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:var(--mute);transition:all .2s}
+.nav button:hover{background:#f8fafc;color:var(--dk)}
+.nav button.on{background:var(--dk);color:#fff;box-shadow:0 2px 8px rgba(15,23,42,.2)}
+
+/* ──── SECTIONS ──── */
+.sec{display:none;padding:28px 32px;max-width:1280px;margin:0 auto}
+.sec.on{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ──── KPI CARDS ──── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border-radius:14px;padding:20px 16px;text-align:center;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.kpi .v{font-size:24px;font-weight:900;color:var(--dk);white-space:nowrap}
+.kpi .l{font-size:9px;color:var(--mute);text-transform:uppercase;letter-spacing:1.2px;margin-top:6px;font-weight:600}
+.kpi.dark{background:var(--dk)}
+.kpi.dark .v{color:#fff}
+.kpi.dark .l{color:#475569}
+.kpi.accent{border-top:3px solid var(--bl)}
+
+/* ──── SHOP GRID ──── */
+.stitle{font-size:16px;font-weight:800;color:var(--dk);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.stitle .icon{font-size:18px}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.shop-card{background:var(--card);border-radius:14px;padding:20px;transition:transform .15s,box-shadow .15s}
+.shop-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.shop-name{font-size:15px;font-weight:900;color:var(--dk);margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between}
+.shop-code{font-size:10px;color:var(--mute);font-weight:600;background:#f1f5f9;padding:2px 8px;border-radius:6px}
+.shop-row{display:flex;justify-content:space-between;padding:4px 0}
+.sl{color:var(--mute);font-size:12px}
+.sv{font-weight:700;font-size:13px;white-space:nowrap}
+
+/* ──── VENDOR CARDS ──── */
+.bout-nav{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+.bout-nav button{padding:10px 20px;border:2px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:#64748b;transition:all .2s}
+.bout-nav button:hover{border-color:var(--bl);color:var(--bl)}
+.bout-nav button.on{background:var(--dk);color:#fff;border-color:var(--dk)}
+.page{display:none}.page.on{display:block;animation:fadeIn .25s}
+.page-head{margin-bottom:24px}
+.page-head h2{font-size:22px;font-weight:900;margin-bottom:14px}
+.page-kpis{display:flex;gap:14px;flex-wrap:wrap}
+.pk{background:var(--card);border-radius:12px;padding:16px 22px;text-align:center}
+.pv{display:block;font-size:20px;font-weight:800;white-space:nowrap}
+.pl{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:1px}
+
+.vcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.vcard{background:var(--card);border-radius:16px;padding:22px;transition:transform .15s,box-shadow .15s}
+.vcard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.vcard-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.vcard-name{font-size:16px;font-weight:900;flex:1}
+.vcard-days{font-size:11px;color:var(--mute);font-weight:600;background:#f1f5f9;padding:3px 10px;border-radius:8px}
+.vcard-obj{font-size:13px;font-weight:800;padding:4px 14px;border-radius:20px}
+
+.vcard-marge{display:flex;gap:16px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #f1f5f9}
+.ml{font-size:10px;color:var(--mute);display:block;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.mv{font-size:18px;font-weight:800;white-space:nowrap}
+
+.metrics{display:flex;gap:6px}
+.metric{flex:1;text-align:center}
+.mlabel{font-size:9px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:700}
+.mval{font-size:15px;font-weight:800;padding:6px 0;border-radius:8px}
+.mobj{font-size:9px;color:var(--mute);margin-top:3px;font-weight:600}
+
+/* ──── DYNAMIC COLORS ──── */
+.c-green{color:var(--gr)}.c-red{color:var(--rd)}.c-orange{color:var(--or)}.c-blue{color:var(--bl)}.c-mute{color:var(--mute)}
+.bg-green{background:#dcfce7;color:#16a34a}.bg-red{background:#fee2e2;color:#dc2626}.bg-orange{background:#fef9c3;color:#a16207}.bg-mute{background:#f1f5f9;color:var(--mute)}
+.pill{display:inline-block;font-weight:800;font-size:14px;padding:4px 14px;border-radius:8px}
+
+/* ──── RANKING ──── */
+.rank-header,.rank-row{display:flex;align-items:center;gap:10px;padding:10px 16px}
+.rank-header{background:#f8fafc;border-radius:10px;margin-bottom:4px;font-size:10px;color:var(--mute);text-transform:uppercase;font-weight:700;letter-spacing:.5px}
+.rank-row{background:#fff;border-radius:12px;margin-bottom:6px;transition:transform .15s,box-shadow .15s}
+.rank-row:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.rank-pos{width:40px;text-align:center;font-size:20px;font-weight:900}
+.rank-info{width:140px}
+.rank-name{font-weight:900;font-size:14px;color:var(--dk)}
+.rank-bout{font-size:11px;color:var(--mute)}
+.rank-days{font-size:10px;color:var(--bl);font-weight:600}
+.rank-marge-col{flex:1;min-width:140px}
+.rank-marge-val{font-size:16px;font-weight:900;color:var(--dk)}
+.rank-bar{height:5px;background:#f1f5f9;border-radius:4px;margin:3px 0}
+.rank-bar-fill{height:100%;border-radius:4px}
+.rank-metrics{width:60px;text-align:center}
+.rank-obj{width:60px;text-align:center}
+
+/* ──── ALERTS ──── */
+.alert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-bottom:32px}
+.alert-card{background:var(--card);border-radius:14px;padding:18px;border-left:5px solid;transition:transform .15s}
+.alert-card:hover{transform:translateY(-2px)}
+.alert-card.crit{border-color:var(--rd)}.alert-card.warn{border-color:var(--or)}.alert-card.ok{border-color:var(--gr)}
+.alert-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.alert-name{font-weight:900;font-size:14px}
+.alert-bout{color:var(--mute);font-size:12px}
+.alert-obj{margin-left:auto;font-weight:800}
+.alert-detail{font-size:12px;color:#64748b;line-height:1.7;margin-bottom:10px}
+.alert-action{font-size:13px;font-weight:700;color:var(--dk);background:#f1f5f9;padding:6px 14px;border-radius:8px;display:inline-block}
+
+.ba-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+.ba-card{background:#fff;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border-left:5px solid}
+.ba-urg{border-color:var(--rd)}.ba-hi{border-color:var(--or)}.ba-ok{border-color:var(--gr)}
+.ba-name{font-weight:800;min-width:100px}.ba-prio{font-size:12px;font-weight:600;min-width:130px}.ba-motif{font-size:12px;color:#64748b}
+
+/* ──── OBJ TABLE ──── */
+.obj-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:14px;overflow:hidden;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.obj-table th{background:var(--dk);color:#fff;padding:14px 16px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;text-align:center}
+.obj-table th:first-child{text-align:left}
+.obj-table td{padding:12px 16px;font-size:13px;text-align:center;border-bottom:1px solid #f8fafc}
+.obj-table td:first-child{text-align:left;font-weight:800;color:var(--dk)}
+.obj-table tr:last-child td{border-bottom:none}
+.obj-table tr:hover{background:#f8fafc}
+.obj-table .days{color:var(--bl);font-weight:800}
+
+/* ──── EDITABLE INPUTS ──── */
+.edit-input{width:60px;padding:4px 6px;border:2px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;text-align:center;background:#f8fafc;transition:all .2s}
+.edit-input:focus{outline:none;border-color:var(--bl);background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.edit-input.wide{width:90px}
+
+/* ──── INFO BANNER ──── */
+.info-banner{border-radius:16px;padding:22px 26px;margin-bottom:28px;display:flex;align-items:center;gap:16px}
+.info-banner.blue{background:linear-gradient(135deg,#3b82f6 0%,#1e40af 100%);color:#fff}
+.info-banner.green{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);color:#fff}
+.info-banner .icon{font-size:32px}
+.info-banner .text h3{font-size:15px;font-weight:800;margin-bottom:4px}
+.info-banner .text p{font-size:12px;opacity:.85}
+
+/* ──── COLOR LEGEND ──── */
+.legend-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.legend-card{background:#fff;border-radius:12px;padding:16px 20px;flex:1;min-width:220px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.legend-title{font-weight:800;font-size:13px;margin-bottom:10px;color:var(--dk)}
+.legend-item{display:flex;gap:8px;align-items:center;margin-bottom:5px}
+.legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0}
+
+/* ──── RESPONSIVE ──── */
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}.shop-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}.shop-grid{grid-template-columns:1fr}.sec{padding:16px}.app-header{padding:16px}.nav{padding:10px 16px}}
+</style></head><body>
+
+<div class="app-header">
+<div>
+    <h1>DASHBOARD MANAGER — GROUPE GARCIA</h1>
+    <div class="sub">Avril 2026 · 01/04 au 30/04 · 22 jours ouvrés · Source : 3GWIN + mob.place + Dilax + Goodays</div>
+</div>
+<div class="header-right">
+    <span class="header-badge">AVRIL 2026</span>
+    <span class="header-date" id="currentDate"></span>
+</div>
+</div>
+
+<div class="nav">
+<button class="on" onclick="go('synth',this)">Synthèse</button>
+<button onclick="go('objectifs',this)">Objectifs</button>
+<button onclick="go('bout',this)">Boutiques</button>
+<button onclick="go('classement',this)">Classement</button>
+<button onclick="go('actions',this)">Actions</button>
+</div>
+
+<!-- All sections rendered by JS -->
+<div class="sec on" id="s-synth"></div>
+<div class="sec" id="s-objectifs"></div>
+<div class="sec" id="s-bout"></div>
+<div class="sec" id="s-classement"></div>
+<div class="sec" id="s-actions"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+//  DATA MODEL — Groupe Garcia Avril 2026
+// ══════════════════════════════════════════════════════════════════════════════
+const MONTH = 'Avril 2026';
+const TOTAL_DAYS = 22;
+const BASE_OBJ = { mob:20, g3a:50, cyber:15, assu:40, access:30 };
+
+const vendors = [
+  { name:'LUCAS',   days:21, boutique:'Cholet',     code:'CHOLET' },
+  { name:'ANAIS',   days:19, boutique:'Cholet',     code:'CHOLET' },
+  { name:'EMMY',    days:6,  boutique:'Cholet',     code:'CHOLET' },
+  { name:'CHLOE',   days:11, boutique:'Cholet',     code:'CHOLET' },
+  { name:'HASSENE', days:22, boutique:'Amboise',    code:'TLR' },
+  { name:'JULIE',   days:10, boutique:'Amboise',    code:'TLR' },
+  { name:'NATHAN',  days:13, boutique:'Amboise',    code:'TLR' },
+  { name:'ILIAN',   days:13, boutique:'Amboise',    code:'TLR' },
+  { name:'EMILIE',  days:20, boutique:'Amboise',    code:'TLR' },
+  { name:'MEHDY',   days:22, boutique:'Vendôme',    code:'VLR' },
+  { name:'WILL',    days:22, boutique:'Romorantin',  code:'RLR' },
+  { name:'RACHEL',  days:9,  boutique:'Châteaudun', code:'CLR' },
+  { name:'AXEL',    days:22, boutique:'Angers',     code:'ALR' },
+  { name:'PAULINE', days:17, boutique:'Angers',     code:'ALR' },
+];
+
+// Prorated objectives
+vendors.forEach(v => {
+  v.obj = {
+    mob:  Math.round(BASE_OBJ.mob * v.days / TOTAL_DAYS),
+    g3a:  BASE_OBJ.g3a,
+    cyber:Math.round(BASE_OBJ.cyber * v.days / TOTAL_DAYS),
+    assu: BASE_OBJ.assu,
+    access:BASE_OBJ.access
+  };
+  // Realizations — editable
+  v.real = { mob:0, g3a:0, cyber:0, assu:0, access:0, marge:0 };
+});
+
+const boutiques = ['Cholet','Amboise','Vendôme','Romorantin','Châteaudun','Angers'];
+const boutiquesCodes = {Cholet:'CHOLET',Amboise:'TLR','Vendôme':'VLR',Romorantin:'RLR','Châteaudun':'CLR',Angers:'ALR'};
+// Boutique-level data
+const shopData = {};
+boutiques.forEach(b => { shopData[b] = { panier:0, marge:0, mob:0, box:0, passages:0, txTransfo:0, txAssu:0, goodays:0 }; });
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  COLOR LOGIC (from prompt rules)
+// ══════════════════════════════════════════════════════════════════════════════
+function panierColor(v) {
+  if(v===0) return 'c-mute';
+  if(v < 10) return 'c-red';
+  if(v <= 11) return 'c-orange';
+  return 'c-green';
+}
+function assuColor(v) {
+  if(v===0) return 'c-mute';
+  if(v >= 40) return 'c-green';
+  return 'c-red'; // < 40% = rouge
+}
+function itemColor(real, obj) {
+  if(real===0 && obj > 0) return 'bg-mute';
+  return real >= obj ? 'bg-green' : 'bg-red';
+}
+function itemPill(real, obj) {
+  if(real===0 && obj > 0) return 'pill bg-mute';
+  return real >= obj ? 'pill bg-green' : 'pill bg-red';
+}
+function objBadgeColor(score, total) {
+  if(score === 0 && total > 0) return 'background:#f1f5f9;color:#94a3b8';
+  if(score >= 4) return 'background:#dcfce7;color:#16a34a';
+  if(score >= 3) return 'background:#fef9c3;color:#a16207';
+  return 'background:#fee2e2;color:#dc2626';
+}
+function countItems(v) {
+  let score = 0;
+  if(v.real.mob >= v.obj.mob) score++;
+  if(v.real.g3a >= v.obj.g3a) score++;
+  if(v.real.cyber >= v.obj.cyber) score++;
+  if(v.real.assu >= v.obj.assu) score++;
+  if(v.real.access >= v.obj.access) score++;
+  return score;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  RENDER FUNCTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+function renderAll() {
+  renderSynth();
+  renderObjectifs();
+  renderBoutiques();
+  renderClassement();
+  renderActions();
+}
+
+function renderSynth() {
+  const totalMarge = vendors.reduce((s,v) => s+v.real.marge, 0);
+  const totalMob = vendors.reduce((s,v) => s+v.real.mob, 0);
+  const totalCyber = vendors.reduce((s,v) => s+v.real.cyber, 0);
+  const avgAssu = vendors.filter(v=>v.real.mob>0).length > 0
+    ? vendors.reduce((s,v) => s+v.real.assu, 0) / vendors.filter(v=>v.real.mob>0).length : 0;
+  const avgAccess = vendors.filter(v=>v.real.mob>0).length > 0
+    ? vendors.reduce((s,v) => s+v.real.access, 0) / vendors.filter(v=>v.real.mob>0).length : 0;
+
+  const shopSummaries = boutiques.map(b => {
+    const d = shopData[b];
+    return `<div class="shop-card">
+      <div class="shop-name">${b}<span class="shop-code">${boutiquesCodes[b]}</span></div>
+      <div class="shop-row"><span class="sl">Panier moyen</span><span class="sv ${panierColor(d.panier)}">${d.panier ? d.panier.toFixed(1)+'€' : '—'}</span></div>
+      <div class="shop-row"><span class="sl">Marge</span><span class="sv">${d.marge ? d.marge.toLocaleString('fr-FR')+'€' : '—'}</span></div>
+      <div class="shop-row"><span class="sl">Mob</span><span class="sv">${d.mob || '—'}</span></div>
+      <div class="shop-row"><span class="sl">Box</span><span class="sv">${d.box || '—'}</span></div>
+      <div class="shop-row"><span class="sl">Passages</span><span class="sv">${d.passages || '—'}</span></div>
+      <div class="shop-row"><span class="sl">Tx Transfo</span><span class="sv">${d.txTransfo ? d.txTransfo+'%' : '—'}</span></div>
+      <div class="shop-row"><span class="sl">Tx Assurance</span><span class="sv ${assuColor(d.txAssu)}">${d.txAssu ? d.txAssu+'%' : '—'}</span></div>
+      <div class="shop-row"><span class="sl">Goodays</span><span class="sv">${d.goodays ? d.goodays+'/5' : '—'}</span></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('s-synth').innerHTML = `
+    <div class="info-banner blue">
+      <div class="icon">📊</div>
+      <div class="text">
+        <h3>${MONTH} — Dashboard interactif</h3>
+        <p>Saisissez les données de performance dans l'onglet Boutiques. Les KPIs, couleurs et classement se mettent à jour automatiquement.</p>
+      </div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi dark"><div class="v">${totalMarge ? totalMarge.toLocaleString('fr-FR')+'€' : '—'}</div><div class="l">Marge totale</div></div>
+      <div class="kpi dark"><div class="v">${totalMob || '—'}</div><div class="l">Mob HW2S</div></div>
+      <div class="kpi"><div class="v">${totalCyber || '—'}</div><div class="l">SFR Cyber</div></div>
+      <div class="kpi"><div class="v ${assuColor(avgAssu)}">${avgAssu ? avgAssu.toFixed(1)+'%' : '—'}</div><div class="l">Tx Assurance moy.</div></div>
+      <div class="kpi"><div class="v">${avgAccess ? avgAccess.toFixed(0)+'€' : '—'}</div><div class="l">Tx Accessoire moy.</div></div>
+    </div>
+    <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+      ${boutiques.map(b => {
+        const d = shopData[b];
+        return `<div class="kpi"><div class="v">${d.marge ? d.marge.toLocaleString('fr-FR')+'€' : '—'}</div><div class="l">${b}</div></div>`;
+      }).join('')}
+      <div class="kpi"><div class="v">${Object.values(shopData).reduce((s,d)=>s+d.passages,0) || '—'}</div><div class="l">Passages total</div></div>
+    </div>
+    <div class="stitle"><span class="icon">🏪</span> Performance par boutique</div>
+    <div class="shop-grid">${shopSummaries}</div>`;
+}
+
+function renderObjectifs() {
+  const rows = vendors.map(v => `<tr>
+    <td>${v.name}</td>
+    <td class="days">${v.days}</td>
+    <td>${v.obj.mob}</td>
+    <td>${v.obj.g3a}%</td>
+    <td>${v.obj.cyber}</td>
+    <td>${v.obj.assu}%</td>
+    <td>${v.obj.access}€</td>
+  </tr>`).join('');
+
+  document.getElementById('s-objectifs').innerHTML = `
+    <div class="stitle"><span class="icon">🎯</span> Payplan ${MONTH} — 5 Items</div>
+    <div class="kpi-row">
+      <div class="kpi accent"><div class="v">20</div><div class="l">Mobiles</div></div>
+      <div class="kpi accent"><div class="v">50%</div><div class="l">Garantie 3A</div></div>
+      <div class="kpi accent"><div class="v">15</div><div class="l">SFR Cyber</div></div>
+      <div class="kpi accent"><div class="v">40%</div><div class="l">Tx Assurance</div></div>
+      <div class="kpi accent"><div class="v">30€</div><div class="l">Tx Accessoire</div></div>
+    </div>
+    <div class="stitle"><span class="icon">👥</span> Objectifs individuels proratisés</div>
+    <table class="obj-table">
+      <thead><tr><th>Collaborateur</th><th>Jours</th><th>Mob</th><th>Garantie 3A</th><th>SFR Cyber</th><th>Tx Assu</th><th>Tx Access</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="stitle"><span class="icon">🎨</span> Codes couleurs</div>
+    <div class="legend-row">
+      <div class="legend-card">
+        <div class="legend-title">Panier Moyen</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--rd)"></div><span style="font-size:12px">Inférieur à 10€</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--or)"></div><span style="font-size:12px">De 10€ à 11€</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gr)"></div><span style="font-size:12px">11€ et plus</span></div>
+      </div>
+      <div class="legend-card">
+        <div class="legend-title">Taux d'Assurance</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--rd)"></div><span style="font-size:12px">Inférieur à 40%</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gr)"></div><span style="font-size:12px">40% et plus (ouvert)</span></div>
+      </div>
+      <div class="legend-card">
+        <div class="legend-title">Items Prioritaires</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gr)"></div><span style="font-size:12px">Objectif atteint</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--rd)"></div><span style="font-size:12px">Objectif non atteint</span></div>
+      </div>
+    </div>`;
+}
+
+function renderBoutiques() {
+  const pages = boutiques.map((b,i) => {
+    const bVendors = vendors.filter(v => v.boutique === b);
+    const bCode = boutiquesCodes[b];
+    const d = shopData[b];
+
+    const vendorCards = bVendors.map((v,vi) => {
+      const idx = vendors.indexOf(v);
+      const score = countItems(v);
+      const eurJour = v.days > 0 && v.real.marge > 0 ? Math.round(v.real.marge / v.days) : 0;
+      return `<div class="vcard">
+        <div class="vcard-top">
+          <span class="vcard-name">${v.name}</span>
+          <span class="vcard-days">${v.days}j</span>
+          <span class="vcard-obj" style="${objBadgeColor(score,5)}">${score}/5</span>
+        </div>
+        <div class="vcard-marge">
+          <div><span class="ml">Marge</span>
+            <input class="edit-input wide" type="number" value="${v.real.marge}" min="0" onchange="updateVendor(${idx},'marge',this.value)" placeholder="0">
+          </div>
+          <div><span class="ml">€/Jour</span><span class="mv c-blue">${eurJour ? eurJour+'€' : '—'}</span></div>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="mlabel">Mob</div>
+            <div><input class="edit-input" type="number" value="${v.real.mob}" min="0" onchange="updateVendor(${idx},'mob',this.value)"></div>
+            <div class="mobj">obj: ${v.obj.mob}</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">G3A</div>
+            <div><input class="edit-input" type="number" value="${v.real.g3a}" min="0" max="100" onchange="updateVendor(${idx},'g3a',this.value)" placeholder="%"></div>
+            <div class="mobj">obj: ${v.obj.g3a}%</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">Cyber</div>
+            <div><input class="edit-input" type="number" value="${v.real.cyber}" min="0" onchange="updateVendor(${idx},'cyber',this.value)"></div>
+            <div class="mobj">obj: ${v.obj.cyber}</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">Assu</div>
+            <div><input class="edit-input" type="number" value="${v.real.assu}" min="0" max="100" onchange="updateVendor(${idx},'assu',this.value)" placeholder="%"></div>
+            <div class="mobj">obj: ${v.obj.assu}%</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">Access</div>
+            <div><input class="edit-input" type="number" value="${v.real.access}" min="0" onchange="updateVendor(${idx},'access',this.value)" placeholder="€"></div>
+            <div class="mobj">obj: ${v.obj.access}€</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="page ${i===0?'on':''}" id="p-${b.normalize('NFD').replace(/[\u0300-\u036f]/g,'')}">
+      <div class="page-head">
+        <h2>${b} (${bCode})</h2>
+        <div class="page-kpis">
+          <div class="pk"><span class="pv">${d.marge ? d.marge.toLocaleString('fr-FR')+'€' : '—'}</span><span class="pl">Marge</span></div>
+          <div class="pk"><span class="pv ${panierColor(d.panier)}">${d.panier ? d.panier.toFixed(1)+'€' : '—'}</span><span class="pl">Panier Moyen</span></div>
+          <div class="pk"><span class="pv">${d.mob || '—'}</span><span class="pl">Mob HW2S</span></div>
+          <div class="pk"><span class="pv">${d.box || '—'}</span><span class="pl">Box</span></div>
+          <div class="pk"><span class="pv ${assuColor(d.txAssu)}">${d.txAssu ? d.txAssu+'%' : '—'}</span><span class="pl">Tx Assurance</span></div>
+          <div class="pk"><span class="pv">${d.goodays ? d.goodays+'/5' : '—'}</span><span class="pl">Goodays</span></div>
+        </div>
+      </div>
+      <div class="vcards">${vendorCards}</div>
+    </div>`;
+  }).join('');
+
+  const navBtns = boutiques.map((b,i) => {
+    const id = b.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    return `<button class="${i===0?'on':''}" onclick="goBout('${id}',this)">${b}</button>`;
+  }).join('');
+
+  document.getElementById('s-bout').innerHTML = `
+    <div class="bout-nav">${navBtns}</div>
+    ${pages}`;
+}
+
+function renderClassement() {
+  const sorted = [...vendors].sort((a,b) => b.real.marge - a.real.marge);
+  const maxMarge = Math.max(...sorted.map(v=>v.real.marge), 1);
+  const medals = ['🥇','🥈','🥉'];
+
+  const rows = sorted.map((v,i) => {
+    const score = countItems(v);
+    const pct = Math.round(v.real.marge / maxMarge * 100);
+    return `<div class="rank-row">
+      <div class="rank-pos">${i<3 ? medals[i] : i+1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${v.name}</div>
+        <div class="rank-bout">${v.boutique}</div>
+        <div class="rank-days">${v.days}j</div>
+      </div>
+      <div class="rank-marge-col">
+        <div class="rank-marge-val">${v.real.marge ? v.real.marge.toLocaleString('fr-FR')+'€' : '—'}</div>
+        <div class="rank-bar"><div class="rank-bar-fill" style="width:${pct}%;background:var(--bl)"></div></div>
+      </div>
+      <div class="rank-metrics"><span class="${itemPill(v.real.mob,v.obj.mob)}">${v.real.mob}</span></div>
+      <div class="rank-metrics"><span class="${itemPill(v.real.g3a,v.obj.g3a)}">${v.real.g3a}%</span></div>
+      <div class="rank-metrics"><span class="${itemPill(v.real.cyber,v.obj.cyber)}">${v.real.cyber}</span></div>
+      <div class="rank-metrics"><span class="${itemPill(v.real.assu,v.obj.assu)}">${v.real.assu}%</span></div>
+      <div class="rank-metrics"><span class="${itemPill(v.real.access,v.obj.access)}">${v.real.access}€</span></div>
+      <div class="rank-obj"><span class="vcard-obj" style="${objBadgeColor(score,5)}">${score}/5</span></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('s-classement').innerHTML = `
+    <div class="stitle"><span class="icon">🏆</span> Classement vendeurs par marge — Tous magasins</div>
+    <div class="rank-header">
+      <div class="rank-pos"></div>
+      <div class="rank-info">Vendeur</div>
+      <div class="rank-marge-col">Marge</div>
+      <div class="rank-metrics">Mob</div>
+      <div class="rank-metrics">G3A</div>
+      <div class="rank-metrics">Cyber</div>
+      <div class="rank-metrics">Assu</div>
+      <div class="rank-metrics">Access</div>
+      <div class="rank-obj">Obj</div>
+    </div>
+    ${rows}`;
+}
+
+function renderActions() {
+  // Generate alerts based on current data
+  const hasData = vendors.some(v => v.real.marge > 0);
+
+  let alertsHtml = '';
+  if(hasData) {
+    const alerts = vendors
+      .map(v => ({ ...v, score: countItems(v) }))
+      .filter(v => v.score < 3 && v.real.marge > 0)
+      .sort((a,b) => a.score - b.score);
+
+    alertsHtml = alerts.map(v => {
+      const missing = [];
+      if(v.real.mob < v.obj.mob) missing.push(`Mob (${v.real.mob}/${v.obj.mob})`);
+      if(v.real.g3a < v.obj.g3a) missing.push(`G3A (${v.real.g3a}%/${v.obj.g3a}%)`);
+      if(v.real.cyber < v.obj.cyber) missing.push(`Cyber (${v.real.cyber}/${v.obj.cyber})`);
+      if(v.real.assu < v.obj.assu) missing.push(`Assu (${v.real.assu}%/${v.obj.assu}%)`);
+      if(v.real.access < v.obj.access) missing.push(`Access (${v.real.access}€/${v.obj.access}€)`);
+      const crit = v.score <= 1 ? 'crit' : 'warn';
+      const action = v.score <= 1 ? 'Accompagnement urgent' : 'Point individuel';
+      return `<div class="alert-card ${crit}">
+        <div class="alert-top"><span class="alert-name">${v.name}</span><span class="alert-bout">${v.boutique}</span><span class="alert-obj" style="color:var(--rd)">${v.score}/5</span></div>
+        <div class="alert-detail">Objectifs non atteints : ${missing.join(', ')}</div>
+        <div class="alert-action">${action}</div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('s-actions').innerHTML = `
+    ${!hasData ? `<div class="info-banner green">
+      <div class="icon">✅</div>
+      <div class="text">
+        <h3>Début de mois — Aucune alerte pour le moment</h3>
+        <p>Les alertes seront générées automatiquement dès que vous saisirez des données de performance dans l'onglet Boutiques.</p>
+      </div>
+    </div>` : `<div class="stitle"><span class="icon">⚠️</span> Alertes vendeurs</div>
+    <div class="alert-grid">${alertsHtml || '<div class="info-banner green"><div class="icon">✅</div><div class="text"><h3>Tous les vendeurs sont sur la bonne voie !</h3></div></div>'}</div>`}
+    <div class="stitle" style="margin-top:28px"><span class="icon">📋</span> Rappel des objectifs ${MONTH}</div>
+    <div class="kpi-row">
+      <div class="kpi" style="border-left:4px solid var(--bl)"><div class="v">20</div><div class="l">Mobiles</div></div>
+      <div class="kpi" style="border-left:4px solid var(--bl)"><div class="v">50%</div><div class="l">Garantie 3A</div></div>
+      <div class="kpi" style="border-left:4px solid var(--bl)"><div class="v">15</div><div class="l">SFR Cyber</div></div>
+      <div class="kpi" style="border-left:4px solid var(--bl)"><div class="v">40%</div><div class="l">Tx Assurance</div></div>
+      <div class="kpi" style="border-left:4px solid var(--bl)"><div class="v">30€</div><div class="l">Tx Accessoire</div></div>
+    </div>
+    <div class="stitle" style="margin-top:28px"><span class="icon">📌</span> Points de vigilance (héritage Mars 2026)</div>
+    <div class="alert-grid">
+      <div class="alert-card warn">
+        <div class="alert=top"><span class="alert-name">ILIAN</span><span class="alert-bout">Amboise</span><span class="alert-obj" style="color:var(--or)">Vigilance</span></div>
+        <div class="alert-detail">Mars : 0/5 items atteints. Marge cumulée 2 159€. Accompagnement renforcé à prévoir.</div>
+        <div class="alert-action">Accompagnement terrain</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-top"><span class="alert-name">NATHAN</span><span class="alert-bout">Amboise</span><span class="alert-obj" style="color:var(--or)">Vigilance</span></div>
+        <div class="alert-detail">Mars : 0/5 items atteints. Marge cumulée 1 176€. Renforcer le coaching ventes mobiles.</div>
+        <div class="alert-action">Coaching individuel</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-top"><span class="alert-name">PAULINE</span><span class="alert-bout">Angers</span><span class="alert-obj" style="color:var(--or)">Vigilance</span></div>
+        <div class="alert-detail">Mars : 0/5 items atteints. Marge cumulée 756€. Accompagnement fort nécessaire.</div>
+        <div class="alert-action">Accompagnement terrain</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-top"><span class="alert-name">JULIE</span><span class="alert-bout">Amboise</span><span class="alert-obj" style="color:var(--or)">Vigilance</span></div>
+        <div class="alert-detail">Mars : 1/5 items atteints. Marge cumulée 1 265€. Travailler la proposition systématique.</div>
+        <div class="alert-action">Coaching individuel</div>
+      </div>
+    </div>
+    <div class="stitle" style="margin-top:28px"><span class="icon">⭐</span> Alertes satisfaction (Goodays) — Héritage Mars</div>
+    <div class="ba-grid">
+      <div class="ba-card ba-urg"><span class="ba-name">Amboise</span><span class="ba-prio">3.94/5 en mars</span><span class="ba-motif">Note < 4.50 — Sensibiliser l'équipe</span></div>
+      <div class="ba-card ba-hi"><span class="ba-name">Romorantin</span><span class="ba-prio">4.19/5 en mars</span><span class="ba-motif">Note < 4.50 — Sensibiliser l'équipe</span></div>
+      <div class="ba-card ba-hi"><span class="ba-name">Vendôme</span><span class="ba-prio">4.27/5 en mars</span><span class="ba-motif">Note < 4.50 — Sensibiliser l'équipe</span></div>
+      <div class="ba-card ba-hi"><span class="ba-name">Châteaudun</span><span class="ba-prio">4.32/5 en mars</span><span class="ba-motif">Note < 4.50 — Sensibiliser l'équipe</span></div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  INTERACTION HANDLERS
+// ══════════════════════════════════════════════════════════════════════════════
+function updateVendor(idx, field, value) {
+  vendors[idx].real[field] = parseFloat(value) || 0;
+  renderAll();
+  // Restore active tab & page
+  restoreNav();
+}
+
+let activeTab = 'bout';
+let activeBout = boutiques[0].normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+function go(id, btn) {
+  activeTab = id;
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function goBout(id, btn) {
+  activeBout = id;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  document.querySelectorAll('.bout-nav button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function restoreNav() {
+  // Restore section
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-'+activeTab).classList.add('on');
+  document.querySelectorAll('.nav button').forEach((b,i) => {
+    b.classList.remove('on');
+    if(b.textContent.toLowerCase().includes(activeTab.substring(0,4))) b.classList.add('on');
+  });
+  const tabMap = {synth:0,objectifs:1,bout:2,classement:3,actions:4};
+  document.querySelectorAll('.nav button').forEach((b,i)=>{ b.classList.remove('on'); if(i===tabMap[activeTab]) b.classList.add('on'); });
+  // Restore boutique page
+  if(activeTab === 'bout') {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+    const el = document.getElementById('p-'+activeBout);
+    if(el) el.classList.add('on');
+    document.querySelectorAll('.bout-nav button').forEach(b => {
+      b.classList.remove('on');
+      if(b.textContent.normalize('NFD').replace(/[\u0300-\u036f]/g,'') === activeBout.normalize('NFD').replace(/[\u0300-\u036f]/g,'')) b.classList.add('on');
+    });
+  }
+}
+
+// Set current date
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+// Initial render
+activeTab = 'synth';
+renderAll();
+</script>
+
+<script>
+// AUTO-RUN DILAX
+if (typeof google !== "undefined" && google.script) {
+  google.script.run.withSuccessHandler(function(r){console.log("runDilax done",r);}).withFailureHandler(function(e){console.error("runDilax fail",e);}).runDilax();
+}
+</script></body></html>

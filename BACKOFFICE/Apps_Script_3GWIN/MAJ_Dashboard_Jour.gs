@@ -3,15 +3,6 @@
 // Groupe Garcia — Alimente l'onglet Donnees_Jour + Historique_Challenges
 // Consulte via : https://dref1969.github.io/dashboard-groupe-garcia/Dashboard_Jour_Garcia.html
 // ============================================================
-// ⚠️ DERIVE REPO/DEPLOYE (constat 11/07/2026) : la version DEPLOYEE dans le projet
-// Apps Script "Dashboard Manager Groupe Garcia" contient EN PLUS de ce fichier :
-//   - primeJourMontant_, envoyerEmailsGagnantsJour, installerTriggerEmailsGagnants20h,
-//     supprimerTriggerEmailsGagnants (emails gagnants 20h — trigger actif)
-//   - une variable jourFerme dans calculerChallenges_ (Romain ne gagne pas les
-//     lundis/feries) : groupe_won = !jourFerme && margeGroupeEff >= 3200
-// NE JAMAIS ecraser aveuglement le code deploye avec ce fichier : appliquer des
-// edits cibles (meme regle que pour les dashboards HTML).
-// ============================================================
 
 var BOUTIQUES_JOUR = [
   { code:'CHOLET', nom:'Cholet',     url:'http://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c40465507d9f65b951be6a989675e6fb' },
@@ -26,7 +17,7 @@ var SHEET_ID_JOUR       = '1su6J88rzRF9hnZXwOsD8gkSDQpDl_XI1Ifjcoost6rY';
 var TAB_DONNEES_JOUR    = 'Donnees_Jour';
 var TAB_HIST_CHALLENGES = 'Historique_Challenges';
 var TAB_FACTURES_JOUR   = 'Factures_Jour';
-var EXCLUS_TOP3         = ['HASSENE', 'LOUANE', 'ROMAIN GP'];
+var EXCLUS_TOP3         = ['ROMAIN GP']; // 01/09/2026 : Hassene et Louane integrent le Top 3 (fin challenges boutique Amboise/Cholet)
 
 // Onglet du Sheet contenant les boosters MARGE a deduire du challenge du jour.
 // Structure : A = Nom vendeur (tel qu apparait dans 3GWIN), B = Montant en euros,
@@ -41,7 +32,7 @@ var TAB_BOOSTERS        = 'Boosters_Challenge';
 // 07/09/2026 : pointe desormais sur la publication MOIS. La publication JOUR
 // ("TOUTES JOURNAL DES VENTES MIX JOUR") a ete supprimee de 3GWIN lors du menage
 // du 10-11/07/2026 et son lien renvoyait "Pas de tableau a afficher" depuis.
-// majFactures_ filtre les lignes sur la date du jour (obligatoire : sans ce
+// majFactures_ filtre les lignes sur la date du jour (OBLIGATOIRE : sans ce
 // filtre, tout le mois serait agrege comme s'il s'agissait de la journee).
 var URL_FACTURES_JOUR   = 'https://3cx.3gwin.net/WD180AWP/WD180Awp.exe/CONNECT/Web3gwin?3G=183b18f2ccc8c404436921c92d9e664263e8bee98e787b33d8de0edc0dc5a6dcc615af6c5c9870ff7ce06c6748ab';
 
@@ -186,6 +177,22 @@ function majDashboardJour() {
   try {
     var mjHtml = fetchPageJour_(URL_MAGS_JOUR);
     var mjData = parseMagsViewJour_(mjHtml);
+    // GARDE-FOU FRAICHEUR MAGS JOUR (ajoute 19/08/2026).
+    // La vue "Mags jour" est emise par ANGERS : elle GELE des qu Angers ne
+    // publie plus (constat 19/08/2026 : figee sur le 12/08 depuis 7 jours) et
+    // elle ecrasait alors les pages boutiques FRAICHES avec les chiffres d un
+    // autre jour (TLR 1210,56 et CHOLET 953,31 du 12/08 rejoues chaque jour).
+    // On n accepte l override que si l en-tete de la vue porte la date du jour.
+    var mjTxt   = String(mjHtml).replace(/<[^>]+>/g, " ");
+    var mjD     = /VENDEUR\s+(\d{2})\/(\d{2})\/(\d{2})/.exec(mjTxt);
+    var mjAjd   = new Date();
+    var mjFrais = !!(mjD && parseInt(mjD[1], 10) === mjAjd.getDate() &&
+                            parseInt(mjD[2], 10) === (mjAjd.getMonth() + 1));
+    if (!mjFrais) {
+      erreurs.push("Mags jour perimee ignoree (en-tete " +
+                   (mjD ? mjD[1] + "/" + mjD[2] : "introuvable") + ")");
+      mjData = {};
+    }
     var mjKeys = ['marge','mob','box','margeBox','boxMig','assu','cyber','g3a','access','margeAssu','margeServices','abo'];
     for (var mc in magsData) {
       var mj = mjData[mc];
@@ -196,7 +203,7 @@ function majDashboardJour() {
       // journee, masque avant par le zombie majJour qui reecrivait les vraies
       // valeurs chaque heure). Override applique SEULEMENT si marge reelle.
       // Les fermetures sont deja gerees par la detection pageDate (flag FERME).
-      if (!(typeof mj.marge === 'number' && mj.marge > 0)) continue;
+      if (!(typeof mj.marge === 'number' && mj.marge > (magsData[mc].marge || 0))) continue;
       for (var ki = 0; ki < mjKeys.length; ki++) {
         var k = mjKeys[ki];
         if (typeof mj[k] === 'number' && !isNaN(mj[k])) magsData[mc][k] = mj[k];
@@ -248,8 +255,6 @@ function majDashboardJour() {
   var sh = ss.getSheetByName(TAB_DONNEES_JOUR);
   if (!sh) sh = ss.insertSheet(TAB_DONNEES_JOUR);
 
-  // Colonne Statut DEDIEE pour le flag FERME : gviz type la colonne Date en date
-  // (via la ligne META) et evacue toute chaine non-date du CSV exporte.
   var headers = ['Type','Code','Nom','Marge','Mob','Box','Cyber','Assu','G3A','Access','MargeAssu','MargeServices','Abo','MargeBox','BoxMig','Date','Heure','Statut'];
   var rows = [headers];
   rows.push(['META','','','','','','','','','','','','','','',dateStr,heureStr,'']);
@@ -258,8 +263,6 @@ function majDashboardJour() {
   var magsList = Object.values(magsData).sort(function(a,b){ return b.marge - a.marge; });
   for (var m = 0; m < magsList.length; m++) {
     var mg = magsList[m];
-    // Colonne Statut des lignes MAG = flag 'FERME' si boutique detectee fermee
-    // (lu par Dashboard_Jour_Garcia.html pour griser la boutique et l exclure)
     rows.push(['MAG', mg.code, mg.nom, mg.marge, mg.mob, mg.box, mg.cyber, mg.assu, mg.g3a, mg.access, mg.margeAssu, mg.margeServices, mg.abo, mg.margeBox||0, mg.boxMig||0, '', '', (mg.ferme ? 'FERME' : '')]);
   }
 
@@ -333,10 +336,9 @@ function parsePageJour_(html) {
   }
   if (hStart < 0) return null;
 
-  // Date de la journee affichee par la page (en-tete "VENDEUR dd/MM/yy dd/MM/yy").
-  // Une page de boutique FERMEE (caisse jamais rouverte) reste figee sur le dernier
-  // jour ouvert : comparer cette date a aujourd hui detecte la fermeture de facon
-  // fiable, quelle que soit la raison (lundi, ferie, travaux, fermeture exceptionnelle).
+  // Date de la journee affichee par la page (en-tete VENDEUR dd/MM/yy dd/MM/yy).
+  // Une page de boutique FERMEE reste figee sur le dernier jour ouvert : comparer
+  // cette date a aujourd hui detecte la fermeture de facon fiable.
   var mDate = cells[hStart].match(/^VENDEUR\s+(\d{2}\/\d{2}\/\d{2})/);
   var pageDate = mDate ? mDate[1] : null;
 
@@ -418,18 +420,16 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   boosters = boosters || {};
 
   // Boutiques exclues du jour :
-  //  - Lundi : RLR + CLR fermees (chiffres samedi reliquat dans 3GWIN)
+  //  - Lundi : Cholet + Angers(ALR) ouvertes, les 4 autres fermees (reliquat samedi 3GWIN)
   //  - Jours feries : seul Cholet travaille (toutes les autres sont fermees)
   var FERIES_FR = ['01/01/2026','06/04/2026','01/05/2026','08/05/2026','14/05/2026','25/05/2026','14/07/2026','15/08/2026','01/11/2026','11/11/2026','25/12/2026'];
   var nowChal = new Date();
   var dateChal = Utilities.formatDate(nowChal, 'Europe/Paris', 'dd/MM/yyyy');
   var BOU_EXCLUES = [];
-  if (nowChal.getDay() === 1) BOU_EXCLUES = ['RLR','CLR'];
+  if (nowChal.getDay() === 1) BOU_EXCLUES = ['TLR','CLR','RLR','VLR'];
   if (FERIES_FR.indexOf(dateChal) >= 0) BOU_EXCLUES = ['ALR','TLR','CLR','RLR','VLR']; // Seul Cholet ouvert
 
-  // Exclusion DATA-DRIVEN : boutiques detectees fermees au scrape (page 3GWIN figee
-  // sur un jour anterieur). Couvre les fermetures exceptionnelles que le calendrier
-  // lundi/feries ne connait pas (ex: CLR fermee les 10-11/07/2026).
+  // Exclusion DATA-DRIVEN : boutiques detectees fermees au scrape (page figee).
   for (var fb = 0; fb < mags.length; fb++) {
     if (mags[fb].ferme && BOU_EXCLUES.indexOf(mags[fb].code) < 0) BOU_EXCLUES.push(mags[fb].code);
   }
@@ -455,23 +455,21 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   var top3 = eligibles.slice(0, 3).map(function(v){ return v.nom; });
   var top3_gagnes = eligibles.slice(0, 3).filter(function(v){ return eff(v) >= 400; }).map(function(v){ return v.nom; });
 
-  // Hassene / Amboise (TLR exclu si ferie) — marge TLR moins boosters TLR
+  // Challenge boutique Amboise (Hassene) TERMINE le 31/08/2026 - marge journalisee, Won force a NON
   var tlr = magsFiltres.find(function(m){ return m.code === 'TLR'; }) || { marge:0 };
   var tlrEff = (tlr.marge || 0) - boostBou('TLR');
-  var amboise_won = tlrEff >= 700;
+  var amboise_won = false; // fin du challenge 700 (Hassene en Top 3 depuis 01/09/2026)
 
-  // Louane / Cholet — marge CHOLET moins boosters CHOLET
+  // Challenge boutique Cholet (Louane) TERMINE le 31/08/2026 - marge journalisee, Won force a NON
   var cholet = magsFiltres.find(function(m){ return m.code === 'CHOLET'; }) || { marge:0 };
   var choletEff = (cholet.marge || 0) - boostBou('CHOLET');
-  var louane_won = choletEff >= 1000;
+  var louane_won = false; // fin du challenge 1000 (Louane en Top 3 depuis 01/09/2026)
 
   // Romain / Groupe — somme marge boutiques moins somme boosters de toutes les boutiques retenues
   var margeGroupe = magsFiltres.reduce(function(s,m){ return s + m.marge; }, 0);
   var boostGroupe = magsFiltres.reduce(function(s,m){ return s + boostBou(m.code); }, 0);
   var margeGroupeEff = margeGroupe - boostGroupe;
-  // Seuil abaisse a 3200 le 11/07/2026 (decision Frederic, NON retroactif).
-  // Historique des seuils : 4000 jusqu au 20/05, 3500 du 21/05 au 10/07, 3200 depuis le 11/07.
-  var groupe_won = margeGroupeEff >= 3200;
+  var jourFerme = (nowChal.getDay() === 1) || (FERIES_FR.indexOf(dateChal) >= 0); var groupe_won = !jourFerme && margeGroupeEff >= 3200; // seuil abaisse a 3200 le 11/07/2026 (decision Frederic, NON retroactif ; historique : 4000 jusqu au 20/05, 3500 du 21/05 au 10/07) // Romain ne gagne jamais lundi/ferie (regle Fred 10/06)
 
   return {
     top3: top3,
@@ -546,7 +544,12 @@ function ecrireChallenges_(ss, dateStr, ch) {
       // qui legitimement reduit la marge groupe en dessous du scrape stocke).
       var forceMode = (typeof majDashboardJour !== 'undefined') && (majDashboardJour.__force === true);
 
-      if (newGroupe >= existingGroupe || jourSpec || forceMode) {
+      // 19/08/2026 - autorise la RECTIFICATION A LA BAISSE de la ligne DU JOUR :
+      // une valeur ecrite tot par une publication 3GWIN perimee restait gravee
+      // jusqu au soir et declenchait des primes indues. La protection anti-scrape
+      // vide reste active (on exige newGroupe > 0).
+      var baisseJourOk = (dateStr === dsE) && (newGroupe > 0);
+      if (newGroupe >= existingGroupe || jourSpec || forceMode || baisseJourOk) {
         sh.getRange(keepIdx + 2, 1, 1, row.length).setValues([row]);
       } else {
         Logger.log('Scrape ignore pour ' + dateStr + ' : nouveau groupe=' + newGroupe + ' < stocke=' + existingGroupe);
@@ -631,34 +634,6 @@ function corrigerLigne21Avril() {
   var msg = 'Ligne 21/04 corrigee : Top3=NATHAN,ANAIS,EMILIE | Gagnants=NATHAN,ANAIS | Groupe=2992,05 €';
   Logger.log(msg);
   try { SpreadsheetApp.getUi().alert('Correction 21/04', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
-}
-
-
-// ONE-SHOT (11/07/2026) : corrections Historique_Challenges — challenge CDV Romain
-//  Le seuil officiel est 3500 depuis le 21/05/2026 mais ce script etait reste a 4000 :
-//  1) 05/06/2026 : groupe 3500,11 >= 3500 -> Groupe_Won passe a OUI (gagne, donnees propres)
-//  2) 03/07/2026 : groupe 3692,04 >= 3500 -> Groupe_Won passe a OUI (gagne, donnees propres)
-//  3) 10/07/2026 : CLR fermee, page figee sur jeudi 09/07 -> retirer ses 203,33 EUR
-//     de la marge groupe : 3591,76 -> 3388,43 (< 3500, Groupe_Won reste NON)
-function corrigerChallenges_20260711() {
-  var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
-  var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
-  if (!sh) { Logger.log('Onglet introuvable'); return; }
-
-  var lastRow = sh.getLastRow();
-  var dates   = sh.getRange(2, 1, lastRow - 1, 1).getValues();
-  var done    = [];
-  for (var i = 0; i < dates.length; i++) {
-    var ds = normDate_(dates[i][0]);
-    var r  = i + 2;
-    if (ds === '05/06/2026') { sh.getRange(r, 9).setValue('OUI'); done.push('05/06 Groupe_Won=OUI'); }
-    if (ds === '03/07/2026') { sh.getRange(r, 9).setValue('OUI'); done.push('03/07 Groupe_Won=OUI'); }
-    if (ds === '10/07/2026') { sh.getRange(r, 8).setValue('3388,43'); sh.getRange(r, 9).setValue('NON'); done.push('10/07 Groupe_Marge=3388,43 (CLR fermee retiree)'); }
-  }
-  var msg = 'Corrections challenges : ' + (done.length ? done.join(' | ') : 'AUCUNE ligne trouvee');
-  Logger.log(msg);
-  try { SpreadsheetApp.getUi().alert('Corrections 11/07', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
-  return msg;
 }
 
 
@@ -991,8 +966,172 @@ function majDashboardJour_force() {
 }
 
 
-// DIAGNOSTIC : etat des 6 pages 3GWIN jour (date affichee vs aujourd hui, nb vendeurs).
-// A lancer depuis l editeur pour verifier la detection de fermeture (flag FERME).
+// ============================================================
+// ENVOI EMAILS GAGNANTS — automatique chaque soir 20h
+// Lit la ligne du jour dans Historique_Challenges, identifie les
+// gagnants (Top3_Gagnes + challenges specifiques Hassene/Louane/Romain GP),
+// envoie un email court avec le lien dashboard + PIN d acces.
+// Skip si aucun gagnant ou si email/PIN manquant pour un vendeur.
+// ============================================================
+
+var EMAILS_VENDEURS = {
+  'MEHDY':   'mehdyy13@gmail.com',
+  'HAVAL':   'Dmrdghaval@gmail.com',
+  'ALEXIS':   'alexis.clr.sfr@gmail.com',
+  'EMILIEN': 'emilien.cholet.sfr@gmail.com',
+  'HASSENE': 'hassene.tlr.sfr@gmail.com',
+  'EMILIE':  'emilieb.rlr.sfr@gmail.com',
+  'ANAIS':   'anais.cholet.sfr@gmail.com',
+  'LUCAS':   'lucas.cholet.sfr@gmail.com',
+  'LOUANE':  'louane.cholet.sfr@gmail.com' // ajoutee 01/09/2026 : passe en Top 3, doit recevoir l email gagnant
+  // A completer quand on recoit les autres emails (NATHAN, ILIAN, AXEL, PAULINE, WILL, EMMY, CHLOE R, LOUANE, ROMAIN GP)
+};
+
+var PINS_VENDEURS = {
+  'ANAIS':     '1210',
+  'AXEL':      '5819',
+  'CHLOE R':   '1127',
+  'EMILIE':    '8403',
+  'EMMY':      '4651',
+  'HASSENE':   '0605',
+  'HAVAL':     '6262',
+  'ALEXIS':     '5593',
+  'EMILIEN':   '2611',
+  'ILIAN':     '3586',
+  'LOUANE':    '2910',
+  'LUCAS':     '7520',
+  'MEHDY':     '1973',
+  'NATHAN':    '1214',
+  'PAULINE':   '3074',
+  'RACHEL':    '6425',
+  'WILL':      '9130'
+};
+
+var URL_DASHBOARD_VENDEURS = 'https://dref1969.github.io/garcia-vendeurs/';
+
+// ── BOOST ×2 : prime challenge du jour à 40 € au lieu de 20 € sur ces dates UNIQUEMENT ──
+// ⚠️ TEMPORAIRE — retirer '26/06/2026' après le 26/06 (aligné sur BOOST_DATES des dashboards).
+var BOOST_DATES_PRIME = ['28/05/2026','29/05/2026','30/05/2026','26/06/2026'];
+function primeJourMontant_(dateStr){ return BOOST_DATES_PRIME.indexOf(String(dateStr||'').trim()) >= 0 ? 40 : 20; }
+
+function envoyerEmailsGagnantsJour() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
+  var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
+  if (!sh) { Logger.log('Onglet Historique_Challenges absent'); return; }
+
+  var data = sh.getDataRange().getValues();
+  if (data.length < 2) { Logger.log('Aucune donnee'); return; }
+  var hdr = data[0];
+  function col(name){ return hdr.indexOf(name); }
+  var iDate = col('Date'), iTop3G = col('Top3_Gagnes'),
+      iAmb = col('Amboise_Won'), iLou = col('Louane_Won'), iGrp = col('Groupe_Won');
+
+  // Cherche la ligne dont la Date == aujourd hui
+  var tz = Session.getScriptTimeZone();
+  var todayStr = Utilities.formatDate(new Date(), tz, 'dd/MM/yyyy');
+  var rowJour = null;
+  for (var i = data.length - 1; i >= 1; i--) {
+    var d = data[i][iDate];
+    var dStr = (d instanceof Date) ? Utilities.formatDate(d, tz, 'dd/MM/yyyy') : String(d).trim();
+    if (dStr === todayStr) { rowJour = data[i]; break; }
+  }
+  if (!rowJour) { Logger.log('Aucune ligne pour ' + todayStr + ' - skip envoi emails'); return; }
+
+  // Identifie les gagnants (dedup par nom : 1 email max par vendeur)
+  var gagnantsMap = {};
+  var top3 = String(rowJour[iTop3G] || '').split(',').map(function(s){return s.trim().toUpperCase();}).filter(Boolean);
+  top3.forEach(function(nom){ gagnantsMap[nom] = 'Top 3 vendeur'; });
+  if (String(rowJour[iAmb] || '').toUpperCase() === 'OUI') gagnantsMap['HASSENE']   = 'Amboise';
+  if (String(rowJour[iLou] || '').toUpperCase() === 'OUI') gagnantsMap['LOUANE']    = 'Cholet';
+  if (String(rowJour[iGrp] || '').toUpperCase() === 'OUI') gagnantsMap['ROMAIN GP'] = 'Groupe';
+
+  var nbGagnants = Object.keys(gagnantsMap).length;
+  if (nbGagnants === 0) { Logger.log('Aucun gagnant le ' + todayStr + ' - skip envoi'); return; }
+
+  // Envoie les emails (skip si email ou PIN manquant)
+  var primeAuj = primeJourMontant_(todayStr); // 40 € sur les jours BOOST
+  var nbEnvoyes = 0;
+  var nbSkip = 0;
+  Object.keys(gagnantsMap).forEach(function(nom){
+    var email = EMAILS_VENDEURS[nom];
+    var pin   = PINS_VENDEURS[nom];
+    var typeChall = gagnantsMap[nom];
+    if (!email || !pin) {
+      Logger.log('Skip ' + nom + ' (email=' + email + ', pin=' + pin + ')');
+      nbSkip++;
+      return;
+    }
+    var prenom = nom.charAt(0) + nom.slice(1).toLowerCase().split(' ')[0]; // 'ROMAIN GP' -> 'Romain'
+    var prenomLower = nom.toLowerCase().split(' ')[0];
+    var sujet = '\u{1F3C6} +' + primeAuj + ' € prime challenge du ' + todayStr;
+    var corps =
+      '<p>Bonjour ' + prenom + ',</p>' +
+      '<p>\u{1F3C6} Tu as gagné le challenge <strong>' + typeChall + '</strong> aujourd\'hui → <strong>+' + primeAuj + ' € de prime</strong>.</p>' +
+      '<p>Suis tes résultats en direct :<br>' +
+      '\u{1F449} <a href="' + URL_DASHBOARD_VENDEURS + '">' + URL_DASHBOARD_VENDEURS + '</a><br>' +
+      'Prénom : <strong>' + prenomLower + '</strong> · PIN : <strong>' + pin + '</strong></p>' +
+      '<p>Frederic</p>';
+    try {
+      MailApp.sendEmail({ to: email, subject: sujet, htmlBody: corps, name: 'Frederic Garcia' });
+      nbEnvoyes++;
+    } catch (e) {
+      Logger.log('Erreur envoi ' + nom + ' (' + email + ') : ' + e.message);
+    }
+  });
+  Logger.log('Emails gagnants ' + todayStr + ' : ' + nbEnvoyes + ' envoyes, ' + nbSkip + ' skip (sur ' + nbGagnants + ' gagnants)');
+}
+
+function installerTriggerEmailsGagnants20h() {
+  // Supprime triggers existants pour cette fonction
+  ScriptApp.getProjectTriggers().forEach(function(t){
+    if (t.getHandlerFunction() === 'envoyerEmailsGagnantsJour') ScriptApp.deleteTrigger(t);
+  });
+  // Nouveau trigger : tous les jours a 20h (heure Europe/Paris du compte)
+  ScriptApp.newTrigger('envoyerEmailsGagnantsJour')
+    .timeBased()
+    .atHour(20)
+    .everyDays(1)
+    .create();
+  try { SpreadsheetApp.getUi().alert('Declencheur cree : envoi emails gagnants tous les jours a 20h'); } catch(_) {}
+}
+
+function supprimerTriggerEmailsGagnants() {
+  ScriptApp.getProjectTriggers().forEach(function(t){
+    if (t.getHandlerFunction() === 'envoyerEmailsGagnantsJour') ScriptApp.deleteTrigger(t);
+  });
+  try { SpreadsheetApp.getUi().alert('Declencheur emails gagnants supprime'); } catch(_) {}
+}
+
+
+
+// ONE-SHOT (11/07/2026) : corrections Historique_Challenges — challenge CDV Romain
+//  Le seuil officiel est 3500 depuis le 21/05/2026 mais ce script etait reste a 4000 :
+//  1) 05/06/2026 : groupe 3500,11 >= 3500 -> Groupe_Won passe a OUI (gagne, donnees propres)
+//  2) 03/07/2026 : groupe 3692,04 >= 3500 -> Groupe_Won passe a OUI (gagne, donnees propres)
+//  3) 10/07/2026 : CLR fermee, page figee sur jeudi 09/07 -> retirer ses 203,33 EUR
+//     de la marge groupe : 3591,76 -> 3388,43 (< 3500, Groupe_Won reste NON)
+function corrigerChallenges_20260711() {
+  var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
+  var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
+  if (!sh) { Logger.log('Onglet introuvable'); return; }
+
+  var lastRow = sh.getLastRow();
+  var dates   = sh.getRange(2, 1, lastRow - 1, 1).getValues();
+  var done    = [];
+  for (var i = 0; i < dates.length; i++) {
+    var ds = normDate_(dates[i][0]);
+    var r  = i + 2;
+    if (ds === '05/06/2026') { sh.getRange(r, 9).setValue('OUI'); done.push('05/06 Groupe_Won=OUI'); }
+    if (ds === '03/07/2026') { sh.getRange(r, 9).setValue('OUI'); done.push('03/07 Groupe_Won=OUI'); }
+    if (ds === '10/07/2026') { sh.getRange(r, 8).setValue('3388,43'); sh.getRange(r, 9).setValue('NON'); done.push('10/07 Groupe_Marge=3388,43 (CLR fermee retiree)'); }
+  }
+  var msg = 'Corrections challenges : ' + (done.length ? done.join(' | ') : 'AUCUNE ligne trouvee');
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('Corrections 11/07', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
+  return msg;
+}
+
+
 function debugPagesJour() {
   var todayShort = Utilities.formatDate(new Date(), 'Europe/Paris', 'dd/MM/yy');
   var out = [];
@@ -1008,10 +1147,9 @@ function debugPagesJour() {
 }
 
 
-// ONE-SHOT (11/07/2026, execute) : retire le faux vendeur 'ANGERS' (ligne de total
-// boutique qui a fuite dans le classement) des Top3 / Top3_Gagnes des 24-26/06/2026.
-// Resultat : 24/06 Top3=MEHDY,ANAIS ; 25/06 Top3=MEHDY,HAVAL (gagnes conserves) ;
-// 26/06 Top3=NATHAN,HAVAL (aucun gagnant, ANGERS etait le seul >= 400).
+// ONE-SHOT (11/07/2026) : retire le faux vendeur 'ANGERS' (ligne de total boutique
+// qui a fuite dans le classement) des Top3 / Top3_Gagnes des 24, 25 et 26/06/2026.
+// Le vrai 4e vendeur de ces journees est inconnu -> pas de promotion, listes purgees.
 function corrigerAngers_juin2026() {
   var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
   var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
@@ -1041,9 +1179,9 @@ function corrigerAngers_juin2026() {
 }
 
 
-// ONE-SHOT (11/07/2026, execute) : decision Frederic — NON-retroactivite du seuil.
-// Les 05/06 (3500,11) et 03/07 (3692,04), un temps passes a OUI apres l alignement
-// du seuil 3500, ont ete remis a NON. Aucune prime retroactive pour Romain.
+// ONE-SHOT (11/07/2026) : decision Frederic — NE PAS crediter retroactivement les
+// victoires CDV Romain des 05/06 et 03/07 (>= 3500 mais enregistrees NON a l epoque).
+// Remet Groupe_Won=NON sur ces 2 dates. Le seuil 3500 reste applique POUR L AVENIR.
 function annulerRomain_20260711() {
   var ss = SpreadsheetApp.openById(SHEET_ID_JOUR);
   var sh = ss.getSheetByName(TAB_HIST_CHALLENGES);
@@ -1061,3 +1199,4 @@ function annulerRomain_20260711() {
   try { SpreadsheetApp.getUi().alert('Annulation Romain', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch(_) {}
   return msg;
 }
+
