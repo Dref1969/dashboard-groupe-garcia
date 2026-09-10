@@ -477,11 +477,36 @@ async function fetchJourData(){
     }
   });
 
+  // ── BOOSTERS ASSURANCE (règle Frédéric 10/09/2026) ──
+  // Les primes assurance injectées dans 3GWIN (1×/mois) gonflent « Marge Assu » et donc
+  // la marge du jour. Une vraie vente assurance rapporte 55 € → booster =
+  // max(0, margeAssu − assu×55), déduit de la marge (vendeur, boutique, groupe/challenge).
+  // Même règle que MAJ_Dashboard_Jour.gs (Historique_Challenges). La marge brute est
+  // conservée dans margeBrute et le montant déduit dans booster (affiché en petit).
+  appliquerBoostersAssu();
+
   // Neutralisation des boutiques fermées (lundi/férié/dimanche) — basée sur la date des données
   neutraliserBoutiquesFermees();
   MAGS.sort((a,b)=>b.marge-a.marge);
   VENDEURS.sort((a,b)=>b.marge-a.marge);
 }
+
+const MARGE_ASSU_UNIT=55;
+function boosterAssu(o){return Math.max(0,Math.round(((o.margeAssu||0)-(o.assu||0)*MARGE_ASSU_UNIT)*100)/100);}
+function appliquerBoostersAssu(){
+  const r2=x=>Math.round(x*100)/100;
+  [...VENDEURS,...MAGS].forEach(o=>{
+    o.booster=boosterAssu(o);
+    if(o.booster>0){
+      o.margeBrute=o.marge;
+      o.marge=r2(o.marge-o.booster);
+      o.margeAssu=r2((o.margeAssu||0)-o.booster);
+    }
+  });
+}
+// Petit indicateur sous la marge quand un booster assurance a été déduit
+function boostTag(o){return (o&&o.booster>0)?`<div style="font-size:9px;color:var(--orange);font-weight:600;white-space:nowrap" title="Marge 3GWIN brute ${fmt(o.margeBrute)} € − booster assurance injecté ${fmt(o.booster)} €">booster assu −${fmt(o.booster)} €</div>`:'';}
+function totalBoosters(){return MAGS.reduce((s,m)=>s+(m.booster||0),0);}
 
 async function fetchDilaxJour(){
   // Visiteurs DILAX du jour (onglet DILAX_Jour, alimenté toutes les 30 min 9h-20h par GitHub Actions)
@@ -687,7 +712,7 @@ function renderSynthese(el){
     return `<tr>
     <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
     <td><span class="dot" style="background:${b.color}"></span>${b.nom}${b.ferme?' <span style="font-size:10px;font-weight:700;color:#94A3B8;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:1px 6px;vertical-align:middle">FERMÉE</span>':''}</td>
-    <td><strong>${fmt(b.marge)} €</strong></td>
+    <td><strong>${fmt(b.marge)} €</strong>${boostTag(b)}</td>
     <td>${b.mob}</td><td>${b.box}</td><td>${b.cyber}</td><td>${b.assu}</td><td>${b.g3a}</td><td>${fmt(b.access)} €</td>
     <td>${vj>0?fmt(vj):'—'}</td><td>${pmBadge(pm,vj)}</td>
   </tr>`;});
@@ -703,13 +728,13 @@ function renderSynthese(el){
       <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
       <td><strong>${esc(v.nom)}</strong></td>
       <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
-      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+      <td>${fmt(v.marge)} €${boostTag(v)}</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
     </tr>`;
   });
 
   el.innerHTML=`${errBanner()}
   <div class="g4" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • ${DATA_DATE||"--/--/----"}</div></div>
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(T.marge)} €</div><div class="sub">6 boutiques • ${DATA_DATE||"--/--/----"}</div>${totalBoosters()>0?`<div class="sub" style="color:var(--orange);font-weight:600">hors boosters assu −${fmt(totalBoosters())} € (brut ${fmt(T.marge+totalBoosters())} €)</div>`:''}</div>
     <div class="cd kpi"><h3>MOBILES DU JOUR</h3><div class="val">${T.mob}</div><div class="sub">vendus aujourd'hui</div></div>
     <div class="cd kpi"><h3>BOX DU JOUR</h3><div class="val">${T.box}</div><div class="sub">raccordements</div></div>
     <div class="cd kpi"><h3>SFR CYBER</h3><div class="val">${T.cyber}</div><div class="sub">sécurité</div></div>
@@ -834,7 +859,7 @@ function renderBoutique(el,code){
     return `<tr${cls?' class="'+cls+'"':''}>
     <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
     <td><strong>${esc(v.nom)}</strong></td>
-    <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+    <td>${fmt(v.marge)} €${boostTag(v)}</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
   </tr>`;
   });
 
@@ -844,7 +869,7 @@ function renderBoutique(el,code){
     <div class="info"><h2>${mag.nom}</h2><p>${code} — Journée du ${DATA_DATE||"--/--/----"}</p></div>
   </div>
   <div class="g4" style="margin-bottom:12px">
-    <div class="cd kpi"><h3>MARGE JOUR</h3><div class="val">${fmt(mag.marge)} €</div></div>
+    <div class="cd kpi"><h3>MARGE JOUR</h3><div class="val">${fmt(mag.marge)} €</div>${boostTag(mag)}</div>
     <div class="cd kpi"><h3>MOBILES</h3><div class="val">${mag.mob}</div><div class="sub">${mag.box} box</div></div>
     <div class="cd kpi"><h3>CYBER</h3><div class="val">${mag.cyber}</div></div>
     <div class="cd kpi"><h3>G3A</h3><div class="val">${mag.g3a}</div><div class="sub">${mag.assu} assu</div></div>
@@ -924,7 +949,7 @@ function renderVendeurs(el){
       <td><span class="rk ${rkCls(i)}">${i+1}</span></td>
       <td><strong>${esc(v.nom)}</strong></td>
       <td><span class="dot" style="background:${bInfo.color}"></span>${bInfo.nom}</td>
-      <td>${fmt(v.marge)} €</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
+      <td>${fmt(v.marge)} €${boostTag(v)}</td><td>${v.mob}</td><td>${v.g3a}</td><td>${v.cyber}</td><td>${v.assu}</td><td>${fmt(v.access)} €</td><td>${v.box}</td>
     </tr>`;
   });
   el.innerHTML=`${errBanner()}
@@ -1019,7 +1044,7 @@ function renderChallenges(el){
   <div class="g4" style="margin-bottom:16px">
     <div class="cd kpi"><h3>JOURS ENREGISTRÉS</h3><div class="val">${nbJours}</div><div class="sub">depuis le ${premierJourLabel}</div></div>
     <div class="cd kpi"><h3>TOTAL PRIMES</h3><div class="val" style="color:var(--green)">${fmt(totalPrimeGlobal)} €</div><div class="sub">tous challenges confondus</div></div>
-    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 200 €</div></div>
+    <div class="cd kpi"><h3>MARGE DU JOUR</h3><div class="val">${fmt(margeGroupe)} €</div><div class="sub">obj CDV : 3 200 €</div>${totalBoosters()>0?`<div class="sub" style="color:var(--orange);font-weight:600">boosters assu déduits −${fmt(totalBoosters())} €</div>`:''}</div>
     <div class="cd kpi"><h3>PRIME / JOUR</h3><div class="val" style="${(BOOST_ACTIF||SPEC_AUJ)?'color:var(--orange)':''}">${SPEC_AUJ?'20-40':PRIME_AUJ} €</div><div class="sub">${SPEC_AUJ?'<strong style="color:var(--orange)">JOUR SPÉCIAL : 1er du Top 3 = 40 € · Managers ×2</strong>':(BOOST_ACTIF?'<strong style="color:var(--orange)">BOOST ×2 ACTIF</strong>':'par challenge gagné')}</div></div>
   </div>
 
@@ -1099,7 +1124,7 @@ function renderChallenges(el){
         return `<div class="ch-participant">
           <div class="name"><span class="rk ${rkCls(i)}">${i+1}</span> ${esc(v.nom)} <span class="dot" style="background:${bInfo.color}"></span><span style="font-size:10px;color:var(--sub);font-weight:400">${bInfo.nom}</span></div>
           <div style="display:flex;align-items:center;gap:8px">
-            <div class="result" style="color:${won?'var(--green)':'var(--txt)'}">${fmt(v.marge)} €</div>
+            <div class="result" style="color:${won?'var(--green)':'var(--txt)'}">${fmt(v.marge)} €${boostTag(v)}</div>
             <span class="ch-badge ${won?'won':'lost'}">${won?'GAGNÉ':'< 400 €'}</span>
             ${cumul>0?`<span style="font-size:10px;color:var(--green);font-weight:700">cumul: ${vendeurPrimes[v.nom]||0} €</span>`:''}
           </div>
