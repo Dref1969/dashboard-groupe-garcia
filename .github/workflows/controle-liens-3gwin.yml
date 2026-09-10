@@ -6,6 +6,12 @@ name: Controle liens 3GWIN
 # proprement quand un lien est mort, donc plus rien n'alerte : ce workflow est
 # le seul signal. Il n'echoue QUE si un lien est reellement hors service apres
 # reessais -> un seul email, uniquement quand il y a vraiment un probleme.
+#
+# 10/09/2026 : il detecte aussi les publications FIGEES (lien vivant mais page
+# perimee). L'en-tete "<AGENCE> JJ/MM HH:MM" de chaque page est compare au
+# dernier jour d'ouverture de l'agence emettrice. Sans ca, le controle passait
+# au vert pendant que le JOURNAL DES VENTES MIX MOIS etait gele depuis 2 jours
+# (11/07, 07/09 et 09/09/2026).
 
 on:
   schedule:
