@@ -1,20 +1,26 @@
 {
- "maj": "2026-09-10 15:33",
+ "maj": "2026-09-10 15:38",
  "date": "20260910",
- "nb_factures": 26,
+ "nb_factures": 29,
  "meilleure_vente": {
-  "fac": "200016799",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "100000097",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
     "desig": "booster chubb - regul rem JUILLET + Derem",
-    "marge": 640.0
+    "marge": 760.0
    }
   ],
-  "total": 640.0
+  "total": 760.0
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 760.0,
+   "nb": 1
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
@@ -38,12 +44,6 @@
    "agence": "CHATEAUDUN",
    "total": 245.67,
    "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 228.98,
-   "nb": 4
   }
  ]
 }
