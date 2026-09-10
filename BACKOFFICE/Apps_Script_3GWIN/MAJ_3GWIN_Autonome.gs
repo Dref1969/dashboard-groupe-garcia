@@ -12,7 +12,7 @@
 //
 // TRIGGER AUTOMATIQUE (optionnel) :
 //   Menu "ðŸ”„ MAJ 3GWIN" > "âš™ï¸ Configurer le dÃ©clencheur auto"
-//   â†’ ExÃ©cutera la MAJ toutes les 2 heures automatiquement
+//   â†’ ExÃ©cutera la MAJ toutes les heures automatiquement
 // ============================================================
 
 // ---- CONFIGURATION ----------------------------------------
@@ -859,7 +859,7 @@ function onOpen() {
     .createMenu('MAJ 3GWIN')
     .addItem('Lancer la mise a jour', 'maj3GWIN')
     .addSeparator()
-    .addItem('Configurer declencheur auto (toutes les 2h)', 'configurerTrigger')
+    .addItem('Configurer declencheur auto (toutes les heures)', 'configurerTrigger')
     .addItem('Supprimer le declencheur auto', 'supprimerTrigger')
     .addToUi();
 }
@@ -873,9 +873,9 @@ function configurerTrigger() {
   for (var t=0; t<triggers.length; t++) {
     if (triggers[t].getHandlerFunction() === 'maj3GWIN') ScriptApp.deleteTrigger(triggers[t]);
   }
-  // Nouveau trigger toutes les 2 heures
-  ScriptApp.newTrigger('maj3GWIN').timeBased().everyHours(2).create();
-  SpreadsheetApp.getUi().alert('Declencheur cree : MAJ automatique toutes les 2 heures');
+  // Nouveau trigger toutes les heures (10/09/2026 : etait 2h -> jusqu'a 2h de retard en fin de journee)
+  ScriptApp.newTrigger('maj3GWIN').timeBased().everyHours(1).create();
+  SpreadsheetApp.getUi().alert('Declencheur cree : MAJ automatique toutes les heures');
 }
 
 function supprimerTrigger() {
