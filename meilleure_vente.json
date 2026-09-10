@@ -1,5 +1,5 @@
 {
- "maj": "2026-09-10 12:38",
+ "maj": "2026-09-10 12:43",
  "date": "20260910",
  "nb_factures": 17,
  "meilleure_vente": {
@@ -46,13 +46,13 @@
    "nb": 5
   },
   {
-   "vendeur": "HASSENE",
+   "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 129.17,
    "nb": 1
   },
   {
-   "vendeur": "HASSENE",
+   "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 125.0,
    "nb": 1
