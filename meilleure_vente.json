@@ -1,32 +1,34 @@
 {
- "maj": "2026-09-10 13:48",
+ "maj": "2026-09-10 13:53",
  "date": "20260910",
- "nb_factures": 17,
+ "nb_factures": 18,
  "meilleure_vente": {
-  "fac": "200021877",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200021893",
+  "vendeur": "HASSENE",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
-    "desig": "ACTE GESTION",
-    "marge": 25.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 11.98
+    "desig": "Coque FC Feel 2M OFG Galaxy A17 4G/5G",
+    "marge": 40.67
    },
    {
     "desig": "Extension Garantie 3ème année - +1000€",
     "marge": 100.0
    },
    {
-    "desig": "HONOR 600 SMART 128GO NOIR SFR",
-    "marge": 92.0
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 105.0
    }
   ],
-  "total": 228.98
+  "total": 245.67
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "CHATEAUDUN",
+   "total": 245.67,
+   "nb": 3
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -49,12 +51,6 @@
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 129.17,
-   "nb": 1
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 125.0,
    "nb": 1
   }
  ]
