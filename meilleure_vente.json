@@ -1,10 +1,10 @@
 {
- "maj": "2026-09-10 14:03",
+ "maj": "2026-09-10 14:08",
  "date": "20260910",
  "nb_factures": 18,
  "meilleure_vente": {
   "fac": "200021893",
-  "vendeur": "HASSENE",
+  "vendeur": "ALEXIS",
   "agence": "CHATEAUDUN",
   "articles": [
    {
@@ -24,7 +24,7 @@
  },
  "top": [
   {
-   "vendeur": "HASSENE",
+   "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 245.67,
    "nb": 3
