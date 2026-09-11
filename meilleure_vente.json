@@ -1,7 +1,31 @@
 {
- "maj": "2026-09-11 10:28",
+ "maj": "2026-09-11 10:33",
  "date": "20260911",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 2,
+ "meilleure_vente": {
+  "fac": "200016808",
+  "vendeur": "EMILIEN",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "Chargeur 20W USB-C V3 - NOVIANT",
+    "marge": 22.05
+   }
+  ],
+  "total": 22.05
+ },
+ "top": [
+  {
+   "vendeur": "EMILIEN",
+   "agence": "CHOLET",
+   "total": 22.05,
+   "nb": 1
+  },
+  {
+   "vendeur": "EMILIEN",
+   "agence": "CHOLET",
+   "total": -20.0,
+   "nb": 1
+  }
+ ]
 }
