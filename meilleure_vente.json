@@ -1,36 +1,30 @@
 {
- "maj": "2026-09-11 18:13",
+ "maj": "2026-09-11 18:17",
  "date": "20260911",
- "nb_factures": 22,
+ "nb_factures": 24,
  "meilleure_vente": {
-  "fac": "200016809",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "200021230",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
     "desig": "ACTE GESTION",
-    "marge": 25.0
+    "marge": 55.0
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 22.19
-   },
-   {
-    "desig": "Coque Honor Magic 8 Lite Transparente Bigben",
-    "marge": 22.0
-   },
-   {
-    "desig": "HONOR MAGIC 8 LITE 256GO NOIR SFR",
-    "marge": 80.0
+    "desig": "ABONNEMENT",
+    "marge": 185.0
    }
   ],
-  "total": 199.19
+  "total": 240.0
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 240.0,
+   "nb": 2
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
@@ -53,12 +47,6 @@
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 55.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 29.01,
    "nb": 1
   }
  ]
