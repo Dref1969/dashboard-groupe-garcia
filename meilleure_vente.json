@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-12 11:13",
+ "maj": "2026-09-12 11:18",
  "date": "20260912",
- "nb_factures": 3,
+ "nb_factures": 4,
  "meilleure_vente": {
   "fac": "200023495",
   "vendeur": "NATHAN",
@@ -31,6 +31,12 @@
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 19.92,
+   "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 1.5,
    "nb": 1
   }
  ]
