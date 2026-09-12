@@ -1,33 +1,37 @@
 {
- "maj": "2026-09-12 10:38",
+ "maj": "2026-09-12 10:43",
  "date": "20260912",
- "nb_factures": 1,
+ "nb_factures": 3,
  "meilleure_vente": {
-  "fac": "200023494",
+  "fac": "200023495",
   "vendeur": "NATHAN",
   "agence": "ROMORANTIN",
   "articles": [
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
-   },
-   {
-    "desig": "Coque Magnet Galaxy S26 transparente",
-    "marge": 7.75
-   },
-   {
-    "desig": "SAMSUNG GALAXY S26 5G 256GO BLEU SFR",
-    "marge": 5.0
+    "desig": "ABONNEMENT",
+    "marge": 50.0
    }
   ],
-  "total": 42.59
+  "total": 50.0
  },
  "top": [
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
+   "total": 50.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
    "total": 42.59,
    "nb": 3
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 19.92,
+   "nb": 1
   }
  ]
 }
