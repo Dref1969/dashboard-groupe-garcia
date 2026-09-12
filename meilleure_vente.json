@@ -1,32 +1,42 @@
 {
- "maj": "2026-09-12 15:08",
+ "maj": "2026-09-12 15:13",
  "date": "20260912",
- "nb_factures": 13,
+ "nb_factures": 15,
  "meilleure_vente": {
-  "fac": "200021902",
-  "vendeur": "ALEXIS",
-  "agence": "CHATEAUDUN",
+  "fac": "200021235",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "Coque renforcée Samsung Galaxy A37 5G AIR 3m Transparente + Garantie à vie Force Case",
-    "marge": 31.92
+    "desig": "PRESTATION - SERVICE",
+    "marge": 0.0
+   },
+   {
+    "desig": "Coque Samsung R13 Transparente Bigben",
+    "marge": 38.67
    },
    {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
     "marge": 38.18
    },
    {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
+    "desig": "ABONNEMENT",
+    "marge": 205.0
    },
    {
-    "desig": "SAMSUNG GALAXY A37 128GO GRAPHITE SFR",
-    "marge": 105.0
+    "desig": "SAMSUNG GALAXY S26 FE 128GO VERT D'EAU SFR",
+    "marge": 78.0
    }
   ],
-  "total": 275.1
+  "total": 359.85
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 359.85,
+   "nb": 5
+  },
   {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
@@ -49,12 +59,6 @@
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 105.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 100.0,
    "nb": 1
   }
  ]
