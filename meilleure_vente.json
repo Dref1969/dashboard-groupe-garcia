@@ -1,20 +1,44 @@
 {
- "maj": "2026-09-12 11:33",
+ "maj": "2026-09-12 11:38",
  "date": "20260912",
- "nb_factures": 4,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200023495",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200021902",
+  "vendeur": "ALEXIS",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 50.0
+    "desig": "Coque renforcée Samsung Galaxy A37 5G AIR 3m Transparente + Garantie à vie Force Case",
+    "marge": 31.92
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 38.18
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "SAMSUNG GALAXY A37 128GO GRAPHITE SFR",
+    "marge": 105.0
    }
   ],
-  "total": 50.0
+  "total": 275.1
  },
  "top": [
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 275.1,
+   "nb": 4
+  },
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 205.0,
+   "nb": 1
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
@@ -31,12 +55,6 @@
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 19.92,
-   "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 1.5,
    "nb": 1
   }
  ]
