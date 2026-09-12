@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-12 12:43",
+ "maj": "2026-09-12 12:48",
  "date": "20260912",
- "nb_factures": 7,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200021902",
   "vendeur": "ALEXIS",
@@ -46,16 +46,16 @@
    "nb": 1
   },
   {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 50.0,
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 105.0,
    "nb": 1
   },
   {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 42.59,
-   "nb": 3
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 100.0,
+   "nb": 1
   }
  ]
 }
