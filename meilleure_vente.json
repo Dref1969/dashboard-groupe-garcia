@@ -1,36 +1,44 @@
 {
- "maj": "2026-09-15 13:20",
+ "maj": "2026-09-15 13:25",
  "date": "20260915",
- "nb_factures": 12,
+ "nb_factures": 16,
  "meilleure_vente": {
-  "fac": "200023496",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200021243",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 7.5
+    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 36.98
    },
    {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 21.51
+    "desig": "Coque iPhone 17 Transparente Bigben",
+    "marge": 38.67
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 80.0
+    "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 140.0
    }
   ],
-  "total": 159.01
+  "total": 215.65
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 215.65,
+   "nb": 3
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
    "total": 159.01,
+   "nb": 4
+  },
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 128.02,
    "nb": 4
   },
   {
@@ -44,18 +52,6 @@
    "agence": "CHOLET",
    "total": 100.0,
    "nb": 1
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 100.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 99.19,
-   "nb": 4
   }
  ]
 }
