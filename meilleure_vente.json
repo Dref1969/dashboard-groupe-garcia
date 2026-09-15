@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-15 19:10",
+ "maj": "2026-09-15 19:13",
  "date": "20260915",
- "nb_factures": 42,
+ "nb_factures": 46,
  "meilleure_vente": {
   "fac": "200029522",
   "vendeur": "LOUANE",
@@ -42,6 +42,12 @@
    "nb": 6
   },
   {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 240.98,
+   "nb": 4
+  },
+  {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
    "total": 215.65,
@@ -57,12 +63,6 @@
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
    "total": 187.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 180.0,
    "nb": 1
   }
  ]
