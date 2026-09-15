@@ -1,28 +1,46 @@
 {
- "maj": "2026-09-15 17:58",
+ "maj": "2026-09-15 18:03",
  "date": "20260915",
- "nb_factures": 36,
+ "nb_factures": 37,
  "meilleure_vente": {
-  "fac": "200021243",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200029522",
+  "vendeur": "LOUANE",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 36.98
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
    },
    {
-    "desig": "Coque iPhone 17 Transparente Bigben",
-    "marge": 38.67
+    "desig": "PRESTATION - SERVICE",
+    "marge": 8.33
+   },
+   {
+    "desig": "Coque renforcée Crystal Magsafe Iphone 17 - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 18.22
+   },
+   {
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 17.88
+   },
+   {
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 17.88
    },
    {
     "desig": "APPLE IPHONE 17 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 140.0
+    "marge": 195.0
    }
   ],
-  "total": 215.65
+  "total": 287.15
  },
  "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 287.15,
+   "nb": 6
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -46,12 +64,6 @@
    "agence": "CHOLET",
    "total": 180.0,
    "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 179.79,
-   "nb": 4
   }
  ]
 }
