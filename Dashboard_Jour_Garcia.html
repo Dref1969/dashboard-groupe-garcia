@@ -552,7 +552,7 @@ function computeTotals(){
   MAGS.forEach(b=>{T.marge+=b.marge;T.mob+=b.mob;T.box+=b.box;T.assu+=b.assu;T.cyber+=b.cyber;T.g3a+=b.g3a;T.access+=b.access;T.visJour+=(VIS_JOUR[b.code]||0)});
   T.txAssu=T.mob>0?(T.assu/T.mob*100):0;
   T.txG3a=T.mob>0?(T.g3a/T.mob*100):0;
-  T.txAccess=T.mob>0?T.access/T.mob:0;
+  T.txAccess=(T.mob+T.box)>0?T.access/(T.mob+T.box):0;   // par ACTE (mobile + box)
   T.pmJour=T.visJour>0?(T.marge/T.visJour):0;  // panier moyen jour groupe = marge jour / visiteurs jour
 }
 
@@ -743,7 +743,7 @@ function renderSynthese(el){
       ${T.mob>0?`<div class="tag ${T.txAssu>=50?'green':T.txAssu>=30?'orange':'red'}">${T.txAssu>=50?'✓ Objectif':'À améliorer'}</div>`:''}</div>
     <div class="cd kpi"><h3>TX G3A</h3><div class="val">${T.mob>0?fmtD(T.txG3a,1)+'%':'—'}</div><div class="sub">${T.g3a} / ${T.mob} mob</div>
       ${T.mob>0?`<div class="tag ${T.txG3a>=50?'green':T.txG3a>=30?'orange':'red'}">${T.txG3a>=50?'✓ Objectif':'À améliorer'}</div>`:''}</div>
-    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${T.mob>0?fmtD(T.txAccess,1)+' €':'—'}</div><div class="sub">CA: ${fmt(T.access)} €</div></div>
+    <div class="cd kpi"><h3>ACCESS / ACTE</h3><div class="val">${(T.mob+T.box)>0?fmtD(T.txAccess,1)+' €':'—'}</div><div class="sub">Marge: ${fmt(T.access)} € · ${T.mob+T.box} actes</div></div>
   </div>
   <div class="stitle">MARGE DU JOUR PAR BOUTIQUE</div>
   <div class="g2" style="margin-bottom:12px">
@@ -845,7 +845,7 @@ function renderBoutique(el,code){
   const mag=MAGS.find(b=>b.code===code);
   if(!mag){el.innerHTML='';return}
   const vendeurs=[...VENDEURS.filter(v=>v.bou===code)].sort((a,b)=>b.marge-a.marge);
-  const txA=mag.mob>0?(mag.assu/mag.mob*100):0,txG=mag.mob>0?(mag.g3a/mag.mob*100):0,txAcc=mag.mob>0?mag.access/mag.mob:0;
+  const txA=mag.mob>0?(mag.assu/mag.mob*100):0,txG=mag.mob>0?(mag.g3a/mag.mob*100):0,txAcc=(mag.mob+(mag.box||0))>0?mag.access/(mag.mob+(mag.box||0)):0;   // par ACTE (mobile + box)
   const rep=mag.marge>0?margeRepartition(mag):[];
   const repTot=rep.reduce((a,it)=>a+it.v,0);
 
@@ -881,8 +881,8 @@ function renderBoutique(el,code){
     <div class="cd kpi"><h3>TX G3A</h3><div class="val">${mag.mob>0?fmtD(txG,1)+'%':'—'}</div>
       <div class="sub">${mag.g3a} g3a / ${mag.mob} mob</div>
       ${mag.mob>0?`<div class="tag ${txG>=50?'green':txG>=30?'orange':'red'}">${txG>=50?'✓':'⚠'}</div>`:''}</div>
-    <div class="cd kpi"><h3>ACCESS / MOB</h3><div class="val">${mag.mob>0?fmtD(txAcc,1)+' €':'—'}</div>
-      <div class="sub">CA: ${fmt(mag.access)} €</div></div>
+    <div class="cd kpi"><h3>ACCESS / ACTE</h3><div class="val">${(mag.mob+(mag.box||0))>0?fmtD(txAcc,1)+' €':'—'}</div>
+      <div class="sub">Marge: ${fmt(mag.access)} € · ${mag.mob+(mag.box||0)} actes</div></div>
   </div>
   ${rep.length?`
   <div class="cd" style="margin-bottom:12px">
