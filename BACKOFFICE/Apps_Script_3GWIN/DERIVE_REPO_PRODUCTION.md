@@ -8,7 +8,7 @@ empreinte SHA-256 contre les modèles de l'éditeur Apps Script).
 
 | Fichier | Lignes en production |
 |---|---|
-| `MAJ_Dashboard_Jour.gs` | 1203 au 09/09 - **1230 au 16/09, miroir partiel, voir "Etat au 16/09/2026"** |
+| `MAJ_Dashboard_Jour.gs` | 1203 au 09/09 - **1230 au 16/09, miroir reconstruit le 16/09 : 1216/1230 lignes prouvees identiques, voir "Etat au 16/09/2026"** |
 | `MAJ_3GWIN_Autonome.gs` | 888 |
 | `Declencheur_DILAX.gs` | 87 |
 | `Code.gs` | 54 |
@@ -73,7 +73,7 @@ Les 15 liens 3GWIN distincts sont **identiques** entre repo et production : le
 workflow de surveillance « Contrôle liens 3GWIN »
 (`scripts/controle_liens_3gwin.py`) reste fiable.
 
-## État au 16/09/2026 — `MAJ_Dashboard_Jour.gs` : miroir PARTIEL
+## État au 16/09/2026 — `MAJ_Dashboard_Jour.gs` : miroir RECONSTRUIT (1216/1230 lignes identiques)
 
 Correctif déployé en production ce jour, **directement dans l'éditeur** (emails de gain du
 challenge de 20h) : `envoyerEmailsGagnantsJour()` écartait silencieusement tout gagnant
@@ -87,13 +87,26 @@ Emmy n'ont jamais reçu leur email. Changements, reportés à l'identique dans c
 `BOOST_DATES_PRIME` a aussi été réaligné ici sur les 12 dates : la production les avait
 déjà (vérifié le 16/09), c'est le miroir qui était resté à 4.
 
-**Écart restant, NON reporté** : la production a évolué entre le 09/09 et le 16/09 sur deux
-fonctions — **+13 lignes dans `calculerChallenges_`** (l. 419-499 en prod) et **+9 lignes dans
-`ecrireChallenges_`** (l. 507-592 en prod) — très probablement la colonne `Boosters_Assu`
-apparue dans `Historique_Challenges`. Tout le reste du fichier est aligné (carte des fonctions
-et des constantes identique, décalée de +22 puis +27 lignes). Ce contenu n'a pas pu être
-rapatrié depuis la session Claude (sortie filtrée) : **à resynchroniser par la méthode
-ci-dessous** (Ctrl+A / Ctrl+C dans l'éditeur). Compte attendu après resynchronisation : 1230 lignes.
+**Origine des 22 lignes supplémentaires** : déploiement Claude du **10/09/2026** (projet
+« Daschboard Vendeur jour », mémoire `boosters-assurance-deduction-auto`) — déduction automatique
+des boosters assurance dans le challenge du jour (`booster = max(0, MargeAssu − Assu × 55 €)`,
+colonnes J `Groupe_Brut` / K `Boosters_Assu` de `Historique_Challenges`). Fait directement dans
+l'éditeur, sans passer par ce repo.
+
+**Miroir reconstruit le 16/09/2026 au soir** à partir de la copie locale
+`Daschboard Vendeur jour/BACKOFFICE/Apps_Script_3GWIN/MAJ_Dashboard_Jour.gs` (10/09, 19:30) :
+1230 lignes, **toutes les constantes et les 29 fonctions commencent aux mêmes lignes qu'en
+production**. Comparaison ligne à ligne du bloc `calculerChallenges_` + `ecrireChallenges_`
+(prod 419-592) par empreinte (longueur + somme des codes) : **160 lignes sur 174 identiques**.
+Les 14 lignes de production suivantes diffèrent de leur équivalent local et n'ont pas pu être
+rapatriées (sortie filtrée) : **423, 429, 432, 469, 472, 474, 477, 483, 569-574**. D'après la
+copie locale, il s'agit de commentaires (calendrier des fermetures, fin des challenges Amboise/
+Cholet, historique du seuil groupe), de `amboise_won`/`louane_won`/`groupe_won`, et du bloc de
+protection anti-scrape-partiel de `ecrireChallenges_` (comparaison sur le brut, lignes 569-574,
+6 lignes en prod contre 1 en local). Rien qui touche aux emails de gain.
+
+Pour un miroir exact au caractère près : Ctrl+A / Ctrl+C dans l'éditeur (méthode ci-dessous),
+puis vérifier que le SHA-256 du fichier obtenu est celui de `monaco.editor.getModels()`.
 
 ## Rappel de méthode
 

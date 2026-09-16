@@ -420,16 +420,18 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   boosters = boosters || {};
 
   // Boutiques exclues du jour :
-  //  - Lundi : Cholet + Angers(ALR) ouvertes, les 4 autres fermees (reliquat samedi 3GWIN)
+  //  - Lundi : RLR + CLR fermees (chiffres samedi reliquat dans 3GWIN)
   //  - Jours feries : seul Cholet travaille (toutes les autres sont fermees)
   var FERIES_FR = ['01/01/2026','06/04/2026','01/05/2026','08/05/2026','14/05/2026','25/05/2026','14/07/2026','15/08/2026','01/11/2026','11/11/2026','25/12/2026'];
   var nowChal = new Date();
   var dateChal = Utilities.formatDate(nowChal, 'Europe/Paris', 'dd/MM/yyyy');
   var BOU_EXCLUES = [];
-  if (nowChal.getDay() === 1) BOU_EXCLUES = ['TLR','CLR','RLR','VLR'];
+  if (nowChal.getDay() === 1) BOU_EXCLUES = ['RLR','CLR'];
   if (FERIES_FR.indexOf(dateChal) >= 0) BOU_EXCLUES = ['ALR','TLR','CLR','RLR','VLR']; // Seul Cholet ouvert
 
-  // Exclusion DATA-DRIVEN : boutiques detectees fermees au scrape (page figee).
+  // Exclusion DATA-DRIVEN : boutiques detectees fermees au scrape (page 3GWIN figee
+  // sur un jour anterieur). Couvre les fermetures exceptionnelles que le calendrier
+  // lundi/feries ne connait pas (ex: CLR fermee les 10-11/07/2026).
   for (var fb = 0; fb < mags.length; fb++) {
     if (mags[fb].ferme && BOU_EXCLUES.indexOf(mags[fb].code) < 0) BOU_EXCLUES.push(mags[fb].code);
   }
@@ -437,17 +439,28 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   var magsFiltres = mags.filter(function(m){ return BOU_EXCLUES.indexOf(m.code) < 0; });
   var vendeursFiltres = vendeurs.filter(function(v){ return BOU_EXCLUES.indexOf(v.bou) < 0; });
 
+  // BOOSTER ASSURANCE AUTOMATIQUE (regle Frederic 10/09/2026) : les primes assurance
+  // injectees dans 3GWIN (1x/mois) gonflent "Marge Assu" et donc la marge du jour.
+  // Une vraie vente assurance rapporte 55 EUR -> booster = max(0, margeAssu - assu*55),
+  // deduit de la marge pour le challenge (vendeur, boutique, groupe). Les boosters
+  // manuels de l onglet Boosters_Challenge (date du jour) s AJOUTENT a la deduction auto.
+  var MARGE_ASSU_UNIT = 55;
+  function boostAuto(o){ return Math.max(0, round2_((o.margeAssu || 0) - (o.assu || 0) * MARGE_ASSU_UNIT)); }
+  function boostV(v){ return boostAuto(v) + (boosters[v.nom] || 0); }
   // Helper : marge effective d un vendeur (apres deduction du booster eventuel)
-  function eff(v){ return (v.marge || 0) - (boosters[v.nom] || 0); }
+  function eff(v){ return (v.marge || 0) - boostV(v); }
 
-  // Helper : somme des boosters des vendeurs rattaches a une boutique donnee
+  // Helper : booster d une boutique = booster auto de la ligne MAG + boosters manuels de ses vendeurs
   function boostBou(code){
-    var total = 0;
+    var mag = magsFiltres.find(function(m){ return m.code === code; });
+    var total = mag ? boostAuto(mag) : 0;
     for (var i = 0; i < vendeursFiltres.length; i++) {
       if (vendeursFiltres[i].bou === code) total += (boosters[vendeursFiltres[i].nom] || 0);
     }
     return total;
   }
+  var boostersDetail = vendeursFiltres.filter(function(v){ return boostV(v) > 0; })
+    .map(function(v){ return v.nom + ':' + String(round2_(boostV(v))).replace('.', ','); }).join(';');
 
   // Top 3 : vendeurs SAUF exclus, tries par marge effective desc
   var eligibles = vendeursFiltres.filter(function(v){ return EXCLUS_TOP3.indexOf(v.nom) < 0; });
@@ -455,21 +468,24 @@ function calculerChallenges_(mags, vendeurs, boosters) {
   var top3 = eligibles.slice(0, 3).map(function(v){ return v.nom; });
   var top3_gagnes = eligibles.slice(0, 3).filter(function(v){ return eff(v) >= 400; }).map(function(v){ return v.nom; });
 
-  // Challenge boutique Amboise (Hassene) TERMINE le 31/08/2026 - marge journalisee, Won force a NON
+  // Challenges boutique Amboise (Hassene) et Cholet (Louane) TERMINES le 31/08/2026 :
+  // depuis le 01/09/2026 Hassene et Louane jouent le Top 3 vendeur. On continue de
+  // journaliser les marges (colonnes Amboise_Marge / Louane_Marge) mais Won reste NON.
   var tlr = magsFiltres.find(function(m){ return m.code === 'TLR'; }) || { marge:0 };
   var tlrEff = (tlr.marge || 0) - boostBou('TLR');
-  var amboise_won = false; // fin du challenge 700 (Hassene en Top 3 depuis 01/09/2026)
+  var amboise_won = false;
 
-  // Challenge boutique Cholet (Louane) TERMINE le 31/08/2026 - marge journalisee, Won force a NON
   var cholet = magsFiltres.find(function(m){ return m.code === 'CHOLET'; }) || { marge:0 };
   var choletEff = (cholet.marge || 0) - boostBou('CHOLET');
-  var louane_won = false; // fin du challenge 1000 (Louane en Top 3 depuis 01/09/2026)
+  var louane_won = false;
 
   // Romain / Groupe — somme marge boutiques moins somme boosters de toutes les boutiques retenues
   var margeGroupe = magsFiltres.reduce(function(s,m){ return s + m.marge; }, 0);
   var boostGroupe = magsFiltres.reduce(function(s,m){ return s + boostBou(m.code); }, 0);
   var margeGroupeEff = margeGroupe - boostGroupe;
-  var jourFerme = (nowChal.getDay() === 1) || (FERIES_FR.indexOf(dateChal) >= 0); var groupe_won = !jourFerme && margeGroupeEff >= 3200; // seuil abaisse a 3200 le 11/07/2026 (decision Frederic, NON retroactif ; historique : 4000 jusqu au 20/05, 3500 du 21/05 au 10/07) // Romain ne gagne jamais lundi/ferie (regle Fred 10/06)
+  // Seuil abaisse a 3200 le 11/07/2026 (decision Frederic, NON retroactif).
+  // Historique des seuils : 4000 jusqu au 20/05, 3500 du 21/05 au 10/07, 3200 depuis le 11/07.
+  var groupe_won = margeGroupeEff >= 3200;
 
   return {
     top3: top3,
@@ -479,7 +495,9 @@ function calculerChallenges_(mags, vendeurs, boosters) {
     louane_marge: round2_(choletEff),
     louane_won: louane_won,
     groupe_marge: round2_(margeGroupeEff),
-    groupe_won: groupe_won
+    groupe_won: groupe_won,
+    groupe_brut: round2_(margeGroupe),
+    boosters_detail: boostersDetail
   };
 }
 
@@ -509,8 +527,12 @@ function ecrireChallenges_(ss, dateStr, ch) {
     String(ch.louane_marge).replace('.', ','),
     ch.louane_won ? 'OUI' : 'NON',
     String(ch.groupe_marge).replace('.', ','),
-    ch.groupe_won ? 'OUI' : 'NON'
+    ch.groupe_won ? 'OUI' : 'NON',
+    String(ch.groupe_brut).replace('.', ','),
+    ch.boosters_detail || ''
   ];
+  // Colonnes J/K (marge groupe BRUTE + detail boosters assu deduits) — ajoutees le 10/09/2026
+  if (String(sh.getRange(1, 10).getValue() || '') === '') sh.getRange(1, 10, 1, 2).setValues([['Groupe_Brut','Boosters_Assu']]);
 
   // 1. Dedoublonner les doublons existants pour cette date (ne garder que la DERNIERE occurrence)
   var lastRow = sh.getLastRow();
@@ -529,8 +551,13 @@ function ecrireChallenges_(ss, dateStr, ch) {
       // Ne remplacer la ligne existante que si le nouveau scrape a une groupe_marge
       // >= a celle deja stockee. Evite qu un scrape tardif/partiel (page 3GWIN vide)
       // n ecrase un scrape precedent plus complet de la meme journee.
+      // Comparaison sur la marge groupe BRUTE (col J) : la deduction des boosters assu
+      // rend la marge effective (col H) plus petite que le brut d un scrape precedent.
       var existingGroupe = parseFloat(String(sh.getRange(keepIdx + 2, 8).getValue() || '0').replace(',', '.')) || 0;
-      var newGroupe = parseFloat(ch.groupe_marge) || 0;
+      var existingBrut = parseFloat(String(sh.getRange(keepIdx + 2, 10).getValue() || '').replace(',', '.'));
+      if (isNaN(existingBrut)) existingBrut = existingGroupe;
+      existingGroupe = existingBrut;
+      var newGroupe = parseFloat(ch.groupe_brut) || 0;
 
       // Sur lundi/ferie, on FORCE l'ecrasement : le plus petit groupe (Cholet seul / sans
       // RLR-CLR) est CORRECT, donc on ne doit pas conserver l'ancien chiffre incluant
@@ -544,12 +571,7 @@ function ecrireChallenges_(ss, dateStr, ch) {
       // qui legitimement reduit la marge groupe en dessous du scrape stocke).
       var forceMode = (typeof majDashboardJour !== 'undefined') && (majDashboardJour.__force === true);
 
-      // 19/08/2026 - autorise la RECTIFICATION A LA BAISSE de la ligne DU JOUR :
-      // une valeur ecrite tot par une publication 3GWIN perimee restait gravee
-      // jusqu au soir et declenchait des primes indues. La protection anti-scrape
-      // vide reste active (on exige newGroupe > 0).
-      var baisseJourOk = (dateStr === dsE) && (newGroupe > 0);
-      if (newGroupe >= existingGroupe || jourSpec || forceMode || baisseJourOk) {
+      if (newGroupe >= existingGroupe || jourSpec || forceMode) {
         sh.getRange(keepIdx + 2, 1, 1, row.length).setValues([row]);
       } else {
         Logger.log('Scrape ignore pour ' + dateStr + ' : nouveau groupe=' + newGroupe + ' < stocke=' + existingGroupe);
