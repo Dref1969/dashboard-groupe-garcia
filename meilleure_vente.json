@@ -1,7 +1,25 @@
 {
- "maj": "2026-09-16 10:18",
+ "maj": "2026-09-16 10:23",
  "date": "20260916",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200029527",
+  "vendeur": "LOUANE",
+  "agence": "ANGERS",
+  "articles": [
+   {
+    "desig": "Film de découpe Vision Glass Nano 9H certifié SGS- NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 53.64
+   }
+  ],
+  "total": 53.64
+ },
+ "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "ANGERS",
+   "total": 53.64,
+   "nb": 1
+  }
+ ]
 }
