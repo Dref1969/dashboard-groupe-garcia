@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-16 11:08",
+ "maj": "2026-09-16 11:13",
  "date": "20260916",
- "nb_factures": 1,
+ "nb_factures": 2,
  "meilleure_vente": {
   "fac": "200029527",
   "vendeur": "LOUANE",
@@ -19,6 +19,12 @@
    "vendeur": "LOUANE",
    "agence": "ANGERS",
    "total": 53.64,
+   "nb": 1
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 21.97,
    "nb": 1
   }
  ]
