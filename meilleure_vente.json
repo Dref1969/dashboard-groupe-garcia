@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-16 15:08",
+ "maj": "2026-09-16 15:13",
  "date": "20260916",
- "nb_factures": 10,
+ "nb_factures": 12,
  "meilleure_vente": {
   "fac": "200023500",
   "vendeur": "NATHAN",
@@ -48,6 +48,12 @@
   {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
+   "total": 235.72,
+   "nb": 3
+  },
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
    "total": 202.6,
    "nb": 4
   },
@@ -62,12 +68,6 @@
    "agence": "ANGERS",
    "total": 160.0,
    "nb": 1
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 100.97,
-   "nb": 3
   }
  ]
 }
