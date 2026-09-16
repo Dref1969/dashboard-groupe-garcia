@@ -983,6 +983,9 @@ var EMAILS_VENDEURS = {
   'EMILIE':  'emilieb.rlr.sfr@gmail.com',
   'ANAIS':   'anais.cholet.sfr@gmail.com',
   'LUCAS':   'lucas.cholet.sfr@gmail.com',
+  'NATHAN':    'nathan.rlr.sfr@gmail.com',      // ajoute 16/09/2026 : avait un PIN mais aucune adresse
+  'EMMY':      'emmy.cholet.sfr@gmail.com',     // ajoute 16/09/2026 : idem
+  'ROMAIN GP': 'romain.raye@anjouliaisonsradio.fr',   // ajoute 16/09/2026 : gagne le challenge Groupe, pas de PIN vendeur
   'LOUANE':  'louane.cholet.sfr@gmail.com' // ajoutee 01/09/2026 : passe en Top 3, doit recevoir l email gagnant
   // A completer quand on recoit les autres emails (NATHAN, ILIAN, AXEL, PAULINE, WILL, EMMY, CHLOE R, LOUANE, ROMAIN GP)
 };
@@ -1011,7 +1014,7 @@ var URL_DASHBOARD_VENDEURS = 'https://dref1969.github.io/garcia-vendeurs/';
 
 // ── BOOST ×2 : prime challenge du jour à 40 € au lieu de 20 € sur ces dates UNIQUEMENT ──
 // ⚠️ TEMPORAIRE — retirer '26/06/2026' après le 26/06 (aligné sur BOOST_DATES des dashboards).
-var BOOST_DATES_PRIME = ['28/05/2026','29/05/2026','30/05/2026','26/06/2026'];
+var BOOST_DATES_PRIME = ['28/05/2026','29/05/2026','30/05/2026','26/06/2026','30/06/2026','23/07/2026','28/07/2026','29/07/2026','30/07/2026','31/07/2026','11/09/2026','12/09/2026'];
 function primeJourMontant_(dateStr){ return BOOST_DATES_PRIME.indexOf(String(dateStr||'').trim()) >= 0 ? 40 : 20; }
 
 function envoyerEmailsGagnantsJour() {
@@ -1056,7 +1059,7 @@ function envoyerEmailsGagnantsJour() {
     var email = EMAILS_VENDEURS[nom];
     var pin   = PINS_VENDEURS[nom];
     var typeChall = gagnantsMap[nom];
-    if (!email || !pin) {
+    if (!email) {
       Logger.log('Skip ' + nom + ' (email=' + email + ', pin=' + pin + ')');
       nbSkip++;
       return;
@@ -1071,6 +1074,8 @@ function envoyerEmailsGagnantsJour() {
       '\u{1F449} <a href="' + URL_DASHBOARD_VENDEURS + '">' + URL_DASHBOARD_VENDEURS + '</a><br>' +
       'Prénom : <strong>' + prenomLower + '</strong> · PIN : <strong>' + pin + '</strong></p>' +
       '<p>Frederic</p>';
+    // Sans PIN (Romain GP, CDV) : meme email, sans le bloc d acces au dashboard vendeurs.
+    if (!pin) { var iA = corps.indexOf('<p>Suis'); if (iA >= 0) corps = corps.slice(0, iA) + corps.slice(corps.indexOf('</p>', iA) + 4); }
     try {
       MailApp.sendEmail({ to: email, subject: sujet, htmlBody: corps, name: 'Frederic Garcia' });
       nbEnvoyes++;

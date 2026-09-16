@@ -8,7 +8,7 @@ empreinte SHA-256 contre les modèles de l'éditeur Apps Script).
 
 | Fichier | Lignes en production |
 |---|---|
-| `MAJ_Dashboard_Jour.gs` | 1203 |
+| `MAJ_Dashboard_Jour.gs` | 1203 au 09/09 - **1230 au 16/09, miroir partiel, voir "Etat au 16/09/2026"** |
 | `MAJ_3GWIN_Autonome.gs` | 888 |
 | `Declencheur_DILAX.gs` | 87 |
 | `Code.gs` | 54 |
@@ -72,6 +72,28 @@ remplacées par leur version courante (`amboise_won` / `louane_won`, seuil group
 Les 15 liens 3GWIN distincts sont **identiques** entre repo et production : le
 workflow de surveillance « Contrôle liens 3GWIN »
 (`scripts/controle_liens_3gwin.py`) reste fiable.
+
+## État au 16/09/2026 — `MAJ_Dashboard_Jour.gs` : miroir PARTIEL
+
+Correctif déployé en production ce jour, **directement dans l'éditeur** (emails de gain du
+challenge de 20h) : `envoyerEmailsGagnantsJour()` écartait silencieusement tout gagnant
+absent de `EMAILS_VENDEURS` ou de `PINS_VENDEURS` — Romain GP (challenge Groupe), Nathan et
+Emmy n'ont jamais reçu leur email. Changements, reportés à l'identique dans ce miroir :
+
+- 3 adresses ajoutées dans `EMAILS_VENDEURS` (NATHAN, EMMY, ROMAIN GP) ;
+- filtre `if (!email || !pin)` → `if (!email)` : le PIN devient facultatif ;
+- 2 lignes avant le `try {` : sans PIN, le paragraphe « Suis tes résultats / PIN » est retiré du corps.
+
+`BOOST_DATES_PRIME` a aussi été réaligné ici sur les 12 dates : la production les avait
+déjà (vérifié le 16/09), c'est le miroir qui était resté à 4.
+
+**Écart restant, NON reporté** : la production a évolué entre le 09/09 et le 16/09 sur deux
+fonctions — **+13 lignes dans `calculerChallenges_`** (l. 419-499 en prod) et **+9 lignes dans
+`ecrireChallenges_`** (l. 507-592 en prod) — très probablement la colonne `Boosters_Assu`
+apparue dans `Historique_Challenges`. Tout le reste du fichier est aligné (carte des fonctions
+et des constantes identique, décalée de +22 puis +27 lignes). Ce contenu n'a pas pu être
+rapatrié depuis la session Claude (sortie filtrée) : **à resynchroniser par la méthode
+ci-dessous** (Ctrl+A / Ctrl+C dans l'éditeur). Compte attendu après resynchronisation : 1230 lignes.
 
 ## Rappel de méthode
 
