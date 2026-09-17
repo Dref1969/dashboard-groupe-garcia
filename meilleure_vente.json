@@ -1,20 +1,52 @@
 {
- "maj": "2026-09-17 10:53",
+ "maj": "2026-09-17 10:58",
  "date": "20260917",
- "nb_factures": 1,
+ "nb_factures": 3,
  "meilleure_vente": {
-  "fac": "200023511",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200029533",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "DORO LEVA L30 RED SFR",
-    "marge": 5.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "Folio Honor 600 Smart Wallet Fonction Stand Noir - Certifié GRS Bigben",
+    "marge": 28.43
+   },
+   {
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 10.78
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.84
+   },
+   {
+    "desig": "HONOR 600 SMART 128GO NOIR SFR",
+    "marge": 60.0
    }
   ],
-  "total": 5.0
+  "total": 195.72
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 195.72,
+   "nb": 6
+  },
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 146.0,
+   "nb": 2
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
