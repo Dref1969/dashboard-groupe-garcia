@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-17 11:43",
+ "maj": "2026-09-17 11:48",
  "date": "20260917",
- "nb_factures": 3,
+ "nb_factures": 7,
  "meilleure_vente": {
   "fac": "200029533",
   "vendeur": "ROMAIN GP",
@@ -46,6 +46,18 @@
    "agence": "CHATEAUDUN",
    "total": 146.0,
    "nb": 2
+  },
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 21.35,
+   "nb": 1
+  },
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 10.0,
+   "nb": 1
   },
   {
    "vendeur": "NATHAN",
