@@ -1,36 +1,42 @@
 {
- "maj": "2026-09-17 18:08",
+ "maj": "2026-09-17 18:13",
  "date": "20260917",
- "nb_factures": 32,
+ "nb_factures": 33,
  "meilleure_vente": {
-  "fac": "200021895",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200021266",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 32.5
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
    },
    {
-    "desig": "Coque renforcée Honor 600 Smart FEEL Origine France Garantie 2m Transparente + Garantie à vie - Vrac B2B - Origine France Garantie Force Case",
-    "marge": 25.58
+    "desig": "Coque silicone Magnet noir Galaxy A17",
+    "marge": 35.04
    },
    {
-    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.13
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 38.18
    },
    {
-    "desig": "Extension Garantie 3ème année - +1000€",
-    "marge": 100.0
+    "desig": "ABONNEMENT",
+    "marge": 185.0
    },
    {
-    "desig": "HONOR 600 SMART 128GO NOIR SFR",
-    "marge": 80.0
+    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
+    "marge": 103.0
    }
   ],
-  "total": 267.21
+  "total": 411.22
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 411.22,
+   "nb": 5
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -54,12 +60,6 @@
    "agence": "CHATEAUDUN",
    "total": 193.18,
    "nb": 3
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 188.18,
-   "nb": 4
   }
  ]
 }
