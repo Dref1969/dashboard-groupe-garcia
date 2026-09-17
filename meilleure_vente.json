@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-17 13:18",
+ "maj": "2026-09-17 13:23",
  "date": "20260917",
- "nb_factures": 12,
+ "nb_factures": 14,
  "meilleure_vente": {
   "fac": "200029533",
   "vendeur": "ROMAIN GP",
@@ -62,7 +62,7 @@
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
-   "total": 27.36,
+   "total": 37.8,
    "nb": 1
   }
  ]
