@@ -1,7 +1,25 @@
 {
- "maj": "2026-09-17 10:38",
+ "maj": "2026-09-17 10:43",
  "date": "20260917",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200023511",
+  "vendeur": "NATHAN",
+  "agence": "ROMORANTIN",
+  "articles": [
+   {
+    "desig": "DORO LEVA L30 RED SFR",
+    "marge": 5.0
+   }
+  ],
+  "total": 5.0
+ },
+ "top": [
+  {
+   "vendeur": "NATHAN",
+   "agence": "ROMORANTIN",
+   "total": 5.0,
+   "nb": 1
+  }
+ ]
 }
