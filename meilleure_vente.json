@@ -1,73 +1,7 @@
 {
- "maj": "2026-09-16 22:46",
- "date": "20260916",
- "nb_factures": 21,
- "meilleure_vente": {
-  "fac": "200023500",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
-  "articles": [
-   {
-    "desig": "Folio Honor X5C Plus Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 20.1
-   },
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
-   },
-   {
-    "desig": "ACTE GESTION",
-    "marge": 25.0
-   },
-   {
-    "desig": "Chargeur USB A 30W QC3.0 Blanc Bigben",
-    "marge": 20.0
-   },
-   {
-    "desig": "HONOR X5C PLUS 64GO NOIR SFR",
-    "marge": 80.0
-   }
-  ],
-  "total": 241.61
- },
- "top": [
-  {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 241.61,
-   "nb": 7
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 235.72,
-   "nb": 3
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 202.6,
-   "nb": 4
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 169.31,
-   "nb": 4
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "ANGERS",
-   "total": 160.0,
-   "nb": 1
-  }
- ]
+ "maj": "2026-09-17 09:03",
+ "date": "20260917",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
