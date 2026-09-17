@@ -1,40 +1,42 @@
 {
- "maj": "2026-09-17 15:28",
+ "maj": "2026-09-17 15:33",
  "date": "20260917",
- "nb_factures": 19,
+ "nb_factures": 20,
  "meilleure_vente": {
-  "fac": "200029533",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
+  "fac": "200021895",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
     "desig": "PRESTATION - SERVICE",
-    "marge": 16.67
+    "marge": 32.5
    },
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "desig": "Coque renforcée Honor 600 Smart FEEL Origine France Garantie 2m Transparente + Garantie à vie - Vrac B2B - Origine France Garantie Force Case",
+    "marge": 25.58
    },
    {
-    "desig": "Folio Honor 600 Smart Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 28.43
+    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.13
    },
    {
-    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
-    "marge": 10.78
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.84
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
    },
    {
     "desig": "HONOR 600 SMART 128GO NOIR SFR",
-    "marge": 60.0
+    "marge": 80.0
    }
   ],
-  "total": 195.72
+  "total": 267.21
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 267.21,
+   "nb": 5
+  },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
@@ -58,12 +60,6 @@
    "agence": "VENDOME",
    "total": 175.44,
    "nb": 3
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 146.0,
-   "nb": 2
   }
  ]
 }
