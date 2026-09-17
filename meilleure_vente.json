@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-17 16:38",
+ "maj": "2026-09-17 16:43",
  "date": "20260917",
- "nb_factures": 23,
+ "nb_factures": 28,
  "meilleure_vente": {
   "fac": "200021895",
   "vendeur": "HAVAL",
@@ -38,28 +38,28 @@
    "nb": 5
   },
   {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 251.31,
+   "nb": 4
+  },
+  {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
    "total": 195.72,
    "nb": 6
   },
   {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 193.18,
+   "nb": 3
+  },
+  {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
    "total": 188.18,
    "nb": 4
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 180.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 175.44,
-   "nb": 3
   }
  ]
 }
