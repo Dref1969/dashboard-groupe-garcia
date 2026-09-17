@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-17 12:38",
+ "maj": "2026-09-17 12:43",
  "date": "20260917",
- "nb_factures": 10,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200029533",
   "vendeur": "ROMAIN GP",
@@ -54,15 +54,15 @@
    "nb": 2
   },
   {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 144.52,
+   "nb": 3
+  },
+  {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 25.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 21.35,
    "nb": 1
   }
  ]
