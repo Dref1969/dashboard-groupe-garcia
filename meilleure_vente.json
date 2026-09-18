@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-18 16:23",
+ "maj": "2026-09-18 16:28",
  "date": "20260918",
- "nb_factures": 23,
+ "nb_factures": 26,
  "meilleure_vente": {
   "fac": "200021268",
   "vendeur": "HASSENE",
@@ -42,8 +42,8 @@
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
-   "total": 117.71,
-   "nb": 3
+   "total": 125.0,
+   "nb": 2
   }
  ]
 }
