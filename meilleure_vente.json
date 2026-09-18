@@ -1,20 +1,42 @@
 {
- "maj": "2026-09-18 16:53",
+ "maj": "2026-09-18 16:58",
  "date": "20260918",
- "nb_factures": 26,
+ "nb_factures": 29,
  "meilleure_vente": {
-  "fac": "200021268",
-  "vendeur": "HASSENE",
-  "agence": "AMBOISE",
+  "fac": "200021899",
+  "vendeur": "HAVAL",
+  "agence": "VENDOME",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 160.0
+    "desig": "Film de découpe Vision Glass 6H Privacy - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 28.38
+   },
+   {
+    "desig": "Coque renforcée Honor 600 FEEL 2m Transparente + Garantie à vie Force Case",
+    "marge": 24.75
+   },
+   {
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 17.88
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "HONOR 600 256GO NOIR SFR",
+    "marge": 25.0
    }
   ],
-  "total": 160.0
+  "total": 196.01
  },
  "top": [
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 196.01,
+   "nb": 5
+  },
   {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
@@ -28,21 +50,15 @@
    "nb": 1
   },
   {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 152.29,
+   "nb": 4
+  },
+  {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
    "total": 131.35,
-   "nb": 2
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 126.46,
-   "nb": 5
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 125.0,
    "nb": 2
   }
  ]
