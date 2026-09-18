@@ -1,11 +1,11 @@
 {
- "maj": "2026-09-18 12:53",
+ "maj": "2026-09-18 12:58",
  "date": "20260918",
- "nb_factures": 7,
+ "nb_factures": 9,
  "meilleure_vente": {
-  "fac": "200029535",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
+  "fac": "200021268",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
     "desig": "ABONNEMENT",
@@ -15,6 +15,12 @@
   "total": 160.0
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 160.0,
+   "nb": 1
+  },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
@@ -38,12 +44,6 @@
    "agence": "VENDOME",
    "total": 117.71,
    "nb": 3
-  },
-  {
-   "vendeur": "LOUANE",
-   "agence": "CHOLET",
-   "total": 105.0,
-   "nb": 1
   }
  ]
 }
