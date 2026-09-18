@@ -1,24 +1,42 @@
 {
- "maj": "2026-09-18 10:53",
+ "maj": "2026-09-18 10:58",
  "date": "20260918",
- "nb_factures": 1,
+ "nb_factures": 4,
  "meilleure_vente": {
-  "fac": "200023521",
-  "vendeur": "NATHAN",
-  "agence": "ROMORANTIN",
+  "fac": "200029535",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "DORO LEVA L30 RED SFR",
-    "marge": 5.0
+    "desig": "ABONNEMENT",
+    "marge": 160.0
    }
   ],
-  "total": 5.0
+  "total": 160.0
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 160.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 105.0,
+   "nb": 1
+  },
   {
    "vendeur": "NATHAN",
    "agence": "ROMORANTIN",
    "total": 5.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 1.5,
    "nb": 1
   }
  ]
