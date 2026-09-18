@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-18 12:18",
+ "maj": "2026-09-18 12:23",
  "date": "20260918",
- "nb_factures": 5,
+ "nb_factures": 7,
  "meilleure_vente": {
   "fac": "200029535",
   "vendeur": "ROMAIN GP",
@@ -22,6 +22,18 @@
    "nb": 1
   },
   {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 131.35,
+   "nb": 2
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 126.46,
+   "nb": 5
+  },
+  {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 117.71,
@@ -31,18 +43,6 @@
    "vendeur": "LOUANE",
    "agence": "CHOLET",
    "total": 105.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 5.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 1.5,
    "nb": 1
   }
  ]
