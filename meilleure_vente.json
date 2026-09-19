@@ -1,36 +1,38 @@
 {
- "maj": "2026-09-19 11:38",
+ "maj": "2026-09-19 11:43",
  "date": "20260919",
- "nb_factures": 4,
+ "nb_factures": 5,
  "meilleure_vente": {
-  "fac": "200016870",
-  "vendeur": "ANAIS",
-  "agence": "CHOLET",
+  "fac": "200021929",
+  "vendeur": "ALEXIS",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
-    "desig": "ACTE GESTION",
-    "marge": 25.0
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 38.18
+   },
+   {
+    "desig": "Coque renforcée Crystal Glitter Magsafe Iphone 18 Pro (compatible 17 Pro) - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 35.16
    },
    {
     "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
+    "marge": 100.0
    },
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 22.19
-   },
-   {
-    "desig": "Coque Silisoft souple Transparente pour iPhone 13 Bigben",
-    "marge": 22.0
-   },
-   {
-    "desig": "IPHONE 13 128GO VERT TRES BON ETAT SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 24.99
+    "desig": "IPHONE 18 PRO 256GO BORDEAUX SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 152.0
    }
   ],
-  "total": 144.18
+  "total": 325.34
  },
  "top": [
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 325.34,
+   "nb": 4
+  },
   {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
