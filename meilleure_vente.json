@@ -1,7 +1,25 @@
 {
- "maj": "2026-09-21 10:53",
+ "maj": "2026-09-21 10:58",
  "date": "20260921",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200016884",
+  "vendeur": "LOUANE",
+  "agence": "CHOLET",
+  "articles": [
+   {
+    "desig": "CONNECT TV V3 SAGCM BOX 5G NW SFR",
+    "marge": 82.5
+   }
+  ],
+  "total": 82.5
+ },
+ "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 82.5,
+   "nb": 1
+  }
+ ]
 }
