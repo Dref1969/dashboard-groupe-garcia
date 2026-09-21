@@ -1,61 +1,7 @@
 {
- "maj": "2026-09-19 21:56",
- "date": "20260919",
- "nb_factures": 34,
- "meilleure_vente": {
-  "fac": "200021929",
-  "vendeur": "ALEXIS",
-  "agence": "CHATEAUDUN",
-  "articles": [
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 38.18
-   },
-   {
-    "desig": "Coque renforcée Crystal Glitter Magsafe Iphone 18 Pro (compatible 17 Pro) - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 35.16
-   },
-   {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 100.0
-   },
-   {
-    "desig": "IPHONE 18 PRO 256GO BORDEAUX SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
-    "marge": 152.0
-   }
-  ],
-  "total": 325.34
- },
- "top": [
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 325.34,
-   "nb": 4
-  },
-  {
-   "vendeur": "NATHAN",
-   "agence": "ROMORANTIN",
-   "total": 211.76,
-   "nb": 5
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 202.95,
-   "nb": 4
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 194.48,
-   "nb": 3
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 168.19,
-   "nb": 4
-  }
- ]
+ "maj": "2026-09-21 09:03",
+ "date": "20260921",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
