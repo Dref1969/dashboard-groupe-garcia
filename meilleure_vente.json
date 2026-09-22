@@ -1,36 +1,46 @@
 {
- "maj": "2026-09-22 12:08",
+ "maj": "2026-09-22 12:13",
  "date": "20260922",
- "nb_factures": 10,
+ "nb_factures": 13,
  "meilleure_vente": {
-  "fac": "200016892",
-  "vendeur": "LOUANE",
-  "agence": "CHOLET",
+  "fac": "200021279",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
   "articles": [
    {
-    "desig": "Chargeur USB C 20W Power Delivery Blanc Bigben",
-    "marge": 19.1
+    "desig": "ABONNEMENT",
+    "marge": 160.0
    },
    {
-    "desig": "Coque Samsung Galaxy A27 5G Transparente Bigben",
-    "marge": 21.17
+    "desig": "Folio Doro 7080 Noire Doro",
+    "marge": 7.96
    },
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 29.69
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 27.36
    },
    {
-    "desig": "SAMSUNG GALAXY A27 128GO NOIR SFR",
-    "marge": 80.0
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
    },
    {
-    "desig": "ACTE GESTION",
-    "marge": 1.5
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "DORO LEVA L30 BLACK SFR",
+    "marge": 60.0
    }
   ],
-  "total": 151.46
+  "total": 321.99
  },
  "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 321.99,
+   "nb": 6
+  },
   {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
@@ -50,13 +60,7 @@
    "nb": 3
   },
   {
-   "vendeur": "JADE",
-   "agence": "ROMORANTIN",
-   "total": 84.01,
-   "nb": 2
-  },
-  {
-   "vendeur": "JADE",
+   "vendeur": "ROMAIN GP",
    "agence": "ROMORANTIN",
    "total": 84.01,
    "nb": 2
