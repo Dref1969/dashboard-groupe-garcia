@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-22 17:18",
+ "maj": "2026-09-22 17:23",
  "date": "20260922",
- "nb_factures": 27,
+ "nb_factures": 30,
  "meilleure_vente": {
   "fac": "200021279",
   "vendeur": "HASSENE",
@@ -42,6 +42,18 @@
    "nb": 6
   },
   {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 307.5,
+   "nb": 2
+  },
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ROMORANTIN",
+   "total": 196.6,
+   "nb": 5
+  },
+  {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 160.0,
@@ -51,18 +63,6 @@
    "vendeur": "LOUANE",
    "agence": "CHOLET",
    "total": 151.46,
-   "nb": 5
-  },
-  {
-   "vendeur": "HASSENE",
-   "agence": "AMBOISE",
-   "total": 141.6,
-   "nb": 4
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 138.55,
    "nb": 5
   }
  ]
