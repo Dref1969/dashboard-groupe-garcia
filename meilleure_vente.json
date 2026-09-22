@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-22 14:58",
+ "maj": "2026-09-22 15:03",
  "date": "20260922",
- "nb_factures": 16,
+ "nb_factures": 17,
  "meilleure_vente": {
   "fac": "200021279",
   "vendeur": "HASSENE",
@@ -60,10 +60,10 @@
    "nb": 3
   },
   {
-   "vendeur": "ROMAIN GP",
-   "agence": "ROMORANTIN",
-   "total": 84.01,
-   "nb": 2
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 100.0,
+   "nb": 1
   }
  ]
 }
