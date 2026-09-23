@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-23 14:08",
+ "maj": "2026-09-23 14:13",
  "date": "20260923",
- "nb_factures": 4,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200021908",
   "vendeur": "HAVAL",
@@ -45,6 +45,12 @@
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
    "total": 24.99,
+   "nb": 1
+  },
+  {
+   "vendeur": "ADMIN",
+   "agence": "ROMORANTIN",
+   "total": -75.0,
    "nb": 1
   }
  ]
