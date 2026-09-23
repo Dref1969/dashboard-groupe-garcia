@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-23 15:03",
+ "maj": "2026-09-23 15:08",
  "date": "20260923",
- "nb_factures": 7,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200021908",
   "vendeur": "HAVAL",
@@ -36,6 +36,12 @@
    "nb": 1
   },
   {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 136.51,
+   "nb": 2
+  },
+  {
    "vendeur": "HASSENE",
    "agence": "AMBOISE",
    "total": 55.0,
@@ -45,12 +51,6 @@
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 37.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "JADE",
-   "agence": "ROMORANTIN",
-   "total": 29.01,
    "nb": 1
   }
  ]
