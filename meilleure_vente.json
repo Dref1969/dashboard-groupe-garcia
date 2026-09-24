@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-24 13:48",
+ "maj": "2026-09-24 13:53",
  "date": "20260924",
- "nb_factures": 14,
+ "nb_factures": 15,
  "meilleure_vente": {
   "fac": "200021911",
   "vendeur": "HAVAL",
@@ -40,7 +40,7 @@
    "nb": 3
   },
   {
-   "vendeur": "ANAIS",
+   "vendeur": "EMMY",
    "agence": "CHOLET",
    "total": 55.0,
    "nb": 1
