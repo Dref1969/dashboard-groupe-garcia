@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-24 11:48",
+ "maj": "2026-09-24 11:53",
  "date": "20260924",
- "nb_factures": 8,
+ "nb_factures": 9,
  "meilleure_vente": {
   "fac": "200016903",
   "vendeur": "EMMY",
@@ -38,13 +38,13 @@
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
-   "total": 30.29,
-   "nb": 1
+   "total": 63.13,
+   "nb": 3
   },
   {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": -3.0,
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 30.29,
    "nb": 1
   },
   {
