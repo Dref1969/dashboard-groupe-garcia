@@ -1,57 +1,7 @@
 {
- "maj": "2026-09-23 22:58",
- "date": "20260923",
- "nb_factures": 24,
- "meilleure_vente": {
-  "fac": "200021908",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
-  "articles": [
-   {
-    "desig": "Extension Garantie 3ème année - 500 à 1000€",
-    "marge": 80.0
-   },
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 38.17
-   },
-   {
-    "desig": "SAMSUNG GALAXY A57 128GO BLEU NUIT SFR",
-    "marge": 127.0
-   }
-  ],
-  "total": 245.17
- },
- "top": [
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 245.17,
-   "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 180.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 136.51,
-   "nb": 2
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 135.67,
-   "nb": 3
-  },
-  {
-   "vendeur": "JADE",
-   "agence": "ROMORANTIN",
-   "total": 134.26,
-   "nb": 3
-  }
- ]
+ "maj": "2026-09-24 09:03",
+ "date": "20260924",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
