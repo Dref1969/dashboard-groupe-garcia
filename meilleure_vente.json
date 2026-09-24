@@ -1,20 +1,40 @@
 {
- "maj": "2026-09-24 11:28",
+ "maj": "2026-09-24 11:33",
  "date": "20260924",
- "nb_factures": 6,
+ "nb_factures": 8,
  "meilleure_vente": {
-  "fac": "200029545",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
+  "fac": "200016903",
+  "vendeur": "EMMY",
+  "agence": "CHOLET",
   "articles": [
    {
-    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 30.29
+    "desig": "Chargeur USB C 20W Power Delivery Blanc Bigben",
+    "marge": 10.77
+   },
+   {
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "DORO LEVA L30 BLACK SFR",
+    "marge": 5.0
    }
   ],
-  "total": 30.29
+  "total": 65.77
  },
  "top": [
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 65.77,
+   "nb": 3
+  },
+  {
+   "vendeur": "EMMY",
+   "agence": "CHOLET",
+   "total": 65.77,
+   "nb": 3
+  },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
@@ -31,18 +51,6 @@
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": -3.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": -3.87,
-   "nb": 1
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": -4.12,
    "nb": 1
   }
  ]
