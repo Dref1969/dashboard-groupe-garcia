@@ -1,20 +1,42 @@
 {
- "maj": "2026-09-24 14:38",
+ "maj": "2026-09-24 14:43",
  "date": "20260924",
- "nb_factures": 15,
+ "nb_factures": 16,
  "meilleure_vente": {
-  "fac": "200021911",
-  "vendeur": "HAVAL",
-  "agence": "VENDOME",
+  "fac": "200029548",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "ABONNEMENT",
-    "marge": 100.0
+    "desig": "Extension Garantie 3ème année - 0 à 500€",
+    "marge": 50.0
+   },
+   {
+    "desig": "PRESTATION - SERVICE",
+    "marge": 25.0
+   },
+   {
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 21.51
+   },
+   {
+    "desig": "Coque renforcée Crystal Honor 600 Smart - NOVIANT",
+    "marge": 21.13
+   },
+   {
+    "desig": "HONOR 600 SMART 128GO GRIS SFR",
+    "marge": 80.0
    }
   ],
-  "total": 100.0
+  "total": 197.64
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 197.64,
+   "nb": 5
+  },
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
@@ -38,12 +60,6 @@
    "agence": "ANGERS",
    "total": 63.13,
    "nb": 3
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 55.0,
-   "nb": 1
   }
  ]
 }
