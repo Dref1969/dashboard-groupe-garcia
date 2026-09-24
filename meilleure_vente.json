@@ -1,36 +1,42 @@
 {
- "maj": "2026-09-24 18:13",
+ "maj": "2026-09-24 18:18",
  "date": "20260924",
- "nb_factures": 31,
+ "nb_factures": 37,
  "meilleure_vente": {
-  "fac": "200029548",
-  "vendeur": "ROMAIN GP",
-  "agence": "ANGERS",
+  "fac": "200021957",
+  "vendeur": "ALEXIS",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
-    "desig": "Extension Garantie 3ème année - 0 à 500€",
-    "marge": 50.0
-   },
-   {
-    "desig": "PRESTATION - SERVICE",
-    "marge": 25.0
-   },
-   {
     "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 21.51
+    "marge": 79.84
    },
    {
-    "desig": "Coque renforcée Crystal Honor 600 Smart - NOVIANT",
-    "marge": 21.13
+    "desig": "Coque renforcée Samsung Miracle 1 PULSE Origine France Garantie 3m Transparente + Garantie à vie - Origine France Garantie Force Case",
+    "marge": 74.33
    },
    {
-    "desig": "HONOR 600 SMART 128GO GRIS SFR",
-    "marge": 80.0
+    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
+    "marge": 77.44
+   },
+   {
+    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
+    "marge": 64.55
+   },
+   {
+    "desig": "SAMSUNG GALAXY S26 5G 256GO NOIR SFR",
+    "marge": 5.0
    }
   ],
-  "total": 197.64
+  "total": 301.16
  },
  "top": [
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 301.16,
+   "nb": 5
+  },
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
@@ -52,12 +58,6 @@
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
-   "total": 100.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
    "total": 100.0,
    "nb": 1
   }
