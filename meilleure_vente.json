@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-24 19:08",
+ "maj": "2026-09-24 19:13",
  "date": "20260924",
- "nb_factures": 41,
+ "nb_factures": 44,
  "meilleure_vente": {
   "fac": "200021957",
   "vendeur": "ALEXIS",
@@ -58,8 +58,8 @@
   {
    "vendeur": "ROMAIN GP",
    "agence": "ANGERS",
-   "total": 100.0,
-   "nb": 1
+   "total": 131.22,
+   "nb": 3
   }
  ]
 }
