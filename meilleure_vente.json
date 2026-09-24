@@ -1,20 +1,26 @@
 {
- "maj": "2026-09-24 10:53",
+ "maj": "2026-09-24 10:58",
  "date": "20260924",
- "nb_factures": 4,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200021950",
-  "vendeur": "ALEXIS",
-  "agence": "CHATEAUDUN",
+  "fac": "200029545",
+  "vendeur": "ROMAIN GP",
+  "agence": "ANGERS",
   "articles": [
    {
-    "desig": "Coque iPhone 15 Transparente Bigben",
-    "marge": -3.0
+    "desig": "Film de découpe HD - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 30.29
    }
   ],
-  "total": -3.0
+  "total": 30.29
  },
  "top": [
+  {
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": 30.29,
+   "nb": 1
+  },
   {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
@@ -34,9 +40,9 @@
    "nb": 1
   },
   {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": -6.51,
+   "vendeur": "ROMAIN GP",
+   "agence": "ANGERS",
+   "total": -4.12,
    "nb": 1
   }
  ]
