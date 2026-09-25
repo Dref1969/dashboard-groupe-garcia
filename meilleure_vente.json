@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-25 11:48",
+ "maj": "2026-09-25 11:53",
  "date": "20260925",
- "nb_factures": 4,
+ "nb_factures": 6,
  "meilleure_vente": {
   "fac": "200016912",
   "vendeur": "LOUANE",
@@ -40,15 +40,21 @@
    "nb": 1
   },
   {
+   "vendeur": "JADE",
+   "agence": "ROMORANTIN",
+   "total": 53.35,
+   "nb": 2
+  },
+  {
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 6.5,
    "nb": 1
   },
   {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 1.5,
+   "vendeur": "JADE",
+   "agence": "ROMORANTIN",
+   "total": 5.0,
    "nb": 1
   }
  ]
