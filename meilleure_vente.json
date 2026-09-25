@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-25 12:53",
+ "maj": "2026-09-25 12:58",
  "date": "20260925",
- "nb_factures": 10,
+ "nb_factures": 11,
  "meilleure_vente": {
   "fac": "200021961",
   "vendeur": "ALEXIS",
@@ -48,9 +48,9 @@
    "nb": 4
   },
   {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 55.0,
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 80.0,
    "nb": 1
   }
  ]
