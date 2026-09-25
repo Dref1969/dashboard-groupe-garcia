@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-25 16:38",
+ "maj": "2026-09-25 16:43",
  "date": "20260925",
- "nb_factures": 19,
+ "nb_factures": 21,
  "meilleure_vente": {
   "fac": "200021961",
   "vendeur": "ALEXIS",
@@ -30,6 +30,12 @@
    "nb": 3
   },
   {
+   "vendeur": "ANAIS",
+   "agence": "CHOLET",
+   "total": 221.01,
+   "nb": 6
+  },
+  {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
    "total": 184.46,
@@ -46,12 +52,6 @@
    "agence": "ANGERS",
    "total": 171.51,
    "nb": 4
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 167.8,
-   "nb": 3
   }
  ]
 }
