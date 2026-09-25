@@ -1,32 +1,46 @@
 {
- "maj": "2026-09-25 12:33",
+ "maj": "2026-09-25 12:38",
  "date": "20260925",
- "nb_factures": 6,
+ "nb_factures": 10,
  "meilleure_vente": {
-  "fac": "200016912",
-  "vendeur": "LOUANE",
-  "agence": "CHOLET",
+  "fac": "200021961",
+  "vendeur": "ALEXIS",
+  "agence": "CHATEAUDUN",
   "articles": [
    {
-    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 30.52
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
    },
    {
-    "desig": "Chargeur 20W USB-C V3 - NOVIANT",
-    "marge": 22.05
+    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 76.51
    },
    {
-    "desig": "Folio Samsung Galaxy A17 4G/5G Wallet Fonction Stand Noir - Certifié GRS Bigben",
-    "marge": 20.1
-   },
-   {
-    "desig": "SAMSUNG GALAXY A17 5G 128GO NOIR SFR",
-    "marge": 80.0
+    "desig": "IPHONE 18 PRO 256GO NOIR SFR *** GARANTIE CONSTRUCTEUR 24 MOIS ***",
+    "marge": 79.99
    }
   ],
-  "total": 152.67
+  "total": 256.5
  },
  "top": [
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 256.5,
+   "nb": 3
+  },
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 184.46,
+   "nb": 3
+  },
+  {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 172.34,
+   "nb": 3
+  },
   {
    "vendeur": "LOUANE",
    "agence": "CHOLET",
@@ -37,24 +51,6 @@
    "vendeur": "HAVAL",
    "agence": "VENDOME",
    "total": 55.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "JADE",
-   "agence": "ROMORANTIN",
-   "total": 53.35,
-   "nb": 2
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
-   "total": 6.5,
-   "nb": 1
-  },
-  {
-   "vendeur": "JADE",
-   "agence": "ROMORANTIN",
-   "total": 5.0,
    "nb": 1
   }
  ]
