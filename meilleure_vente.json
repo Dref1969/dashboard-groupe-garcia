@@ -1,65 +1,7 @@
 {
- "maj": "2026-09-24 23:03",
- "date": "20260924",
- "nb_factures": 44,
- "meilleure_vente": {
-  "fac": "200021957",
-  "vendeur": "ALEXIS",
-  "agence": "CHATEAUDUN",
-  "articles": [
-   {
-    "desig": "Film de découpe Vision Glass 6H - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
-    "marge": 79.84
-   },
-   {
-    "desig": "Coque renforcée Samsung Miracle 1 PULSE Origine France Garantie 3m Transparente + Garantie à vie - Origine France Garantie Force Case",
-    "marge": 74.33
-   },
-   {
-    "desig": "Chargeur Intelligent GaN 30W USB-C/A - 2 ports V2 - NOVIANT",
-    "marge": 77.44
-   },
-   {
-    "desig": "Chargeur 20W USB-C V2 - NOVIANT",
-    "marge": 64.55
-   },
-   {
-    "desig": "SAMSUNG GALAXY S26 5G 256GO NOIR SFR",
-    "marge": 5.0
-   }
-  ],
-  "total": 301.16
- },
- "top": [
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 301.16,
-   "nb": 5
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 197.64,
-   "nb": 5
-  },
-  {
-   "vendeur": "EMMY",
-   "agence": "CHOLET",
-   "total": 196.62,
-   "nb": 5
-  },
-  {
-   "vendeur": "ALEXIS",
-   "agence": "CHATEAUDUN",
-   "total": 185.0,
-   "nb": 1
-  },
-  {
-   "vendeur": "ROMAIN GP",
-   "agence": "ANGERS",
-   "total": 131.22,
-   "nb": 3
-  }
- ]
+ "maj": "2026-09-25 09:03",
+ "date": "20260925",
+ "nb_factures": 0,
+ "meilleure_vente": null,
+ "top": []
 }
