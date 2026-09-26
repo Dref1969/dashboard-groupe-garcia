@@ -1,24 +1,42 @@
 {
- "maj": "2026-09-26 11:48",
+ "maj": "2026-09-26 11:53",
  "date": "20260926",
- "nb_factures": 5,
+ "nb_factures": 6,
  "meilleure_vente": {
-  "fac": "200021966",
-  "vendeur": "ALEXIS",
-  "agence": "CHATEAUDUN",
+  "fac": "200016921",
+  "vendeur": "LOUANE",
+  "agence": "CHOLET",
   "articles": [
    {
-    "desig": "CABLE CHARGE & SYNCHRO USB-C VERS USB-C PD 3.0 (100W) - LONGUEUR 1M - NOIR - JAYM®",
-    "marge": 10.68
+    "desig": "Chargeur 20W USB-C V3 - NOVIANT",
+    "marge": 26.22
    },
    {
-    "desig": "Chargeur 20W USB-C V3 - NOVIANT",
-    "marge": 16.21
+    "desig": "PRESTATION - SERVICE",
+    "marge": 16.67
+   },
+   {
+    "desig": "Film de découpe Flexible auto réparateur compatible avec écrans incurvés - NOVIANT | Activez la garantie à vie sur https://noviant-technologies.com/pages/activation-garantie-a-vie",
+    "marge": 29.69
+   },
+   {
+    "desig": "Extension Garantie 3ème année - +1000€",
+    "marge": 100.0
+   },
+   {
+    "desig": "SAMSUNG GALAXY S26 ULTRA 5G 256GO VIOLET SFR",
+    "marge": 72.0
    }
   ],
-  "total": 26.89
+  "total": 244.58
  },
  "top": [
+  {
+   "vendeur": "LOUANE",
+   "agence": "CHOLET",
+   "total": 244.58,
+   "nb": 5
+  },
   {
    "vendeur": "ALEXIS",
    "agence": "CHATEAUDUN",
@@ -40,12 +58,6 @@
   {
    "vendeur": "HAVAL",
    "agence": "VENDOME",
-   "total": 1.5,
-   "nb": 1
-  },
-  {
-   "vendeur": "ANAIS",
-   "agence": "CHOLET",
    "total": 1.5,
    "nb": 1
   }
