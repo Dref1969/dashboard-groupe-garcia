@@ -1,7 +1,25 @@
 {
- "maj": "2026-09-26 10:48",
+ "maj": "2026-09-26 10:53",
  "date": "20260926",
- "nb_factures": 0,
- "meilleure_vente": null,
- "top": []
+ "nb_factures": 1,
+ "meilleure_vente": {
+  "fac": "200021292",
+  "vendeur": "HASSENE",
+  "agence": "AMBOISE",
+  "articles": [
+   {
+    "desig": "Ecouteurs Puresound V2 ANC - NOVIANT",
+    "marge": 23.35
+   }
+  ],
+  "total": 23.35
+ },
+ "top": [
+  {
+   "vendeur": "HASSENE",
+   "agence": "AMBOISE",
+   "total": 23.35,
+   "nb": 1
+  }
+ ]
 }
