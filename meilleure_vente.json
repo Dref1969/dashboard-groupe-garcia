@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-26 17:18",
+ "maj": "2026-09-26 17:23",
  "date": "20260926",
- "nb_factures": 19,
+ "nb_factures": 21,
  "meilleure_vente": {
   "fac": "200016921",
   "vendeur": "LOUANE",
@@ -50,16 +50,16 @@
    "nb": 4
   },
   {
+   "vendeur": "ALEXIS",
+   "agence": "CHATEAUDUN",
+   "total": 167.81,
+   "nb": 3
+  },
+  {
    "vendeur": "JADE",
    "agence": "ROMORANTIN",
    "total": 126.55,
    "nb": 3
-  },
-  {
-   "vendeur": "HAVAL",
-   "agence": "VENDOME",
-   "total": 105.0,
-   "nb": 2
   }
  ]
 }
