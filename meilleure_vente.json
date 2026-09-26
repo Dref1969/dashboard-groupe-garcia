@@ -1,7 +1,7 @@
 {
- "maj": "2026-09-26 11:33",
+ "maj": "2026-09-26 11:38",
  "date": "20260926",
- "nb_factures": 4,
+ "nb_factures": 5,
  "meilleure_vente": {
   "fac": "200021966",
   "vendeur": "ALEXIS",
@@ -35,6 +35,12 @@
    "vendeur": "ANAIS",
    "agence": "CHOLET",
    "total": 5.0,
+   "nb": 1
+  },
+  {
+   "vendeur": "HAVAL",
+   "agence": "VENDOME",
+   "total": 1.5,
    "nb": 1
   },
   {
